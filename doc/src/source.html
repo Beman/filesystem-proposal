@@ -156,30 +156,18 @@ $snippet wording_prefix "$SNIPPET_FILE;"
 
 <p>This $WHAT; describes components that perform operations on file systems and 
 their components, such as paths, regular files, and directories.</p>
-<p>Operating systems such as <i>Linux, MAC OS, UNIX</i>, and <i>Windows</i> are 
-mentioned in this $WHAT; for purposes of illustration or to give guidance to 
-implementers. No slight to other operating systems is implied or intended.</p>
-<p><span style="background-color: #E0E0E0">Footnote:</span> Linux® is a 
-registered trademark of Linus Torvalds.</p>
-<p><a name="Footnote-3"><span style="background-color: #E0E0E0">Footnote</span></a><span style="background-color: #E0E0E0">:</span> <i>MAC OS</i>® is a registered trademark 
-of Apple Inc.</p>
-<p><span style="background-color: #E0E0E0">Footnote:</span> <i>UNIX</i>® is a 
-registered trademark of The Open Group. </p>
-<p><a name="Footnote-4"><span style="background-color: #E0E0E0">Footnote</span></a><span style="background-color: #E0E0E0">:</span> <i>Windows</i>® is a registered 
-trademark of Microsoft Corporation.</p>
 
 <h2><a name="Conformance">Conformance</a></h2>
-<p>Behavior is sometimes specified by reference to ISO/IEC 9945:2003, <i>
-<a href="http://www.unix.org/single_unix_specification/">POSIX</a></i>. How such behavior is actually implemented is unspecified.</p>
+<p>Behavior is sometimes specified by reference to ISO/IEC 9945. How such behavior is actually implemented is unspecified.</p>
 <blockquote>
 <p>[<i>Note:</i> This constitutes an &quot;as if&quot; rule for implementation of 
-operating system dependent behavior. Presumably implementations will usually call native 
+operating system dependent behavior. In practice implementations will usually call native 
 operating system API's. <i>--end note</i>]</p>
 </blockquote>
-<p>Implementations are encouraged, but not required, to support such behavior 
+<p>Implementations are encouraged, but not required, to provide such behavior 
  
 as it is defined by <i>POSIX</i>. Implementations shall document any 
-behavior that differs from the <i>POSIX</i> defined behavior. Implementations that do not support exact <i>POSIX</i> behavior are 
+behavior that differs from the <i>POSIX</i> defined behavior. Implementations that do not support exact POSIX behavior are 
 encouraged to provide behavior as close to <i>POSIX</i> behavior as is reasonable given the 
 limitations of actual operating systems and file systems. If an implementation cannot provide any 
 reasonable behavior, the implementation shall report an error in an 
@@ -198,11 +186,6 @@ does not support hard links, symlinks, and many other features of more capable
 file systems. Implementations are only required to support the FAT features 
 supported by the host operating system. <i>-- end example</i>]</p>
 </blockquote>
-<p>Specific operating systems such as <i>OpenVMS</i>,
-<i>UNIX</i>, and <i>Windows</i> are mentioned only for purposes of illustration or to 
-give guidance to users and implementers. No slight to other operating systems is implied 
-or intended. When unlikely to cause confusion, the term <i>POSIX</i> is 
-sometimes used to refer to &quot;POSIX-compliant operating systems&quot;.</p>
 <p>The behavior of functions described in this 
 reference 
 may differ from their specification in 
@@ -230,9 +213,9 @@ characters or specific names that are not permitted. Filenames <code>.</code>&nb
 and <code>..</code>&nbsp; have special meaning. Implementations may define 
 additional filenames that have special meaning.</p>
 <blockquote>
-  <p><i>[Note:</i> Most operating systems prohibit the ASCII control characters 
+  <p><i>[Note:</i> Many operating systems prohibit the ASCII control characters 
   (0x00-0x1F) in filenames.</p>
-  <p>Windows prohibits the characters 0x00-0x1F, <code>&quot;</code>,<code> 
+  <p>Windows API systems prohibit the characters 0x00-0x1F, <code>&quot;</code>,<code> 
   *</code>,<code>&nbsp;:</code>,<code> &lt;</code>,<code> &gt;</code>,<code>&nbsp;?</code>,<code> 
   \</code>,<code> /</code>, and<code> |</code>&nbsp;<i>--end note]</i></p>
 </blockquote>
@@ -240,23 +223,26 @@ additional filenames that have special meaning.</p>
 the location of a file within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
 root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
 A <a href="#Pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
+<p><b><i>POSIX API systems:</i></b> Operating systems that use the ISO/IEC 9945 
+API as their native application program interface.</p>
+<p><b><i>Windows API systems:</i></b> Operating systems that use the Windows API 
+as their native application program interface.</p>
 <p><b><i><a name="Absolute-path">Absolute path</a>:</i></b> A path that 
 unambiguously 
-identifies the location of a file within a file system without reference to an 
-additional starting location. The format is implementation defined. </p>
+identifies the location of a file without reference to an additional starting 
+location. The elements of a path that determine if it is absolute are 
+implementation defined.</p>
 <blockquote>
-  <p><i>[Note:</i> For POSIX-like implementations, including<b> </b>Unix 
-  variants, Linux, and Mac OS X, only paths 
-  that begin with a slash are absolute paths.</p>
-  <p>For Windows-like implementations, including <a href="http://www.cygwin.com/">
-  Cygwin</a> and
-  <a href="http://www.mingw.org/">MinGW</a>, only paths that begin with a drive 
-  specifier followed by a slash, or begin with two slashes, are absolute paths.&nbsp;<i>--end 
+  <p dir="ltr"><i>[Note:</i> For POSIX API systems, paths that begin with one or 
+  more <i>directory-specifier</i> characters are absolute paths.</p>
+  <p>For Windows API systems, paths that begin with a drive specifier (i.e. a 
+  single letter followed by a colon) followed by one or more <i>directory-specifier</i> 
+  characters, or begin with two <i>directory-specifier</i> characters, are absolute paths.&nbsp;<i>--end 
   note]</i></p>
 </blockquote>
 <p><i><b><a name="Relative-path">Relative path</a>:</b></i> A path that only 
 unambiguously 
-identifies the location of a file within a filesystem when resolved relative to 
+identifies the location of a file when resolved relative to 
 a starting location. The format is implementation defined. [<i>Note:</i> 
 Paths &quot;.&quot; and &quot;..&quot; are considered to be relative paths. <i>--end note</i>]</p>
 <p><i><b><a name="Canonical-path">Canonical path</a>:</b></i> An absolute path that has 
@@ -274,10 +260,11 @@ root-directory<sub>opt</sub> relative-path<sub>opt</sub></i></p>
 implementation-defined</i></p>
 <blockquote>
   <blockquote>
-<p>[<i>Note:</i> Most POSIX and Windows based operating systems define a name 
-beginning with two slashes (or backslashes, for Windows) as a root-name 
-identifying network locations. Windows defines a single letter followed by a
-<code>&quot;:&quot;</code> as a root-name identifying a disc drive. <i>--end note</i>]</p>
+<p>[<i>Note:</i> Many operating systems define a name 
+beginning with two <i>directory-separator</i> characters as a <i>root-name</i> 
+that identifies network locations. <span style="background-color: #FFFF00"> 
+Windows API systems</span> define a single letter followed by a colon as a drive 
+specifier; a <i>root-name</i> identifying a specific device such as a disc drive. <i>--end note</i>]</p>
   </blockquote>
 </blockquote>
 <p><i>root-directory:<br>
@@ -295,11 +282,19 @@ directory-separator filename</i></p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>&quot;.&quot;</code><i><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>
 &quot;..&quot;</code></p>
+<p><i>preferred-separator:<sub>opt</sub><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+implementation-defined</i></p>
 <p><i>directory-separator:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>&quot;/&quot;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;/&quot;</code> directory-separator</i></p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;/&quot;</code> directory-separator<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+preferred-separator<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+preferred-separator directory-separator</i></p>
 <p>Multiple successive <i>directory-separator</i> characters are considered to 
-be the same as one <i>directory-separator</i> character. The <i>filename</i>
+be the same as one <i>directory-separator</i> character.</p>
+<p>The <i>filename</i>
 <code>&quot;.&quot;</code> is considered to be a reference to the current directory. The
 <i>filename</i> <code>&quot;..&quot;</code> is considered to be a reference to the 
 parent 
@@ -307,8 +302,8 @@ directory. Specific <i>filenames</i> may have special meanings for a particular
 operating system.</p>
 </blockquote>
 <p><b><i><a name="native-pathname-format">Native pathname format:</a></i></b>&nbsp; 
-An implementation defined format. [<i>Note:</i> For POSIX-like operating 
-systems, the native format is the same as the generic format. For Windows, the 
+An implementation defined format. [<i>Note:</i> For POSIX API 
+systems, the native format is the same as the generic format. For Windows API systems, the 
 native format is similar to the generic format, but the directory-separator 
 characters can be either slashes or backslashes. <i>--end note</i>]</p>
 <p><i><b><a name="Link">Link</a>:</b> </i>A directory entry object that associates a 
@@ -580,15 +575,11 @@ and contains a <a href="#Pathname">pathname</a> Such an object is concerned only
 of a path. The path does not necessarily exist in external storage, and the 
 pathname is not necessarily valid for the current operating 
 system or for a particular file system.</p>
-<blockquote>
-<p>[<i>Example:</i> A <a href="#long-path-warning">long path name on Windows</a> is an example of an innocuous appearing path that is not actually valid. <i>-- 
-end example</i>]</p>
-</blockquote>
 <pre>$NAMESPACE_BEGIN;
       class path
       {
       public:
-        typedef <b><i><a href="#value_type">see below</a></i></b>                                    value_type;  // char for POSIX, wchar_t for Windows
+        typedef <b><i><a href="#value_type">see below</a></i></b>                                    value_type;
         typedef std::basic_string&lt;value_type&gt;                string_type;
         typedef std::codecvt&lt;wchar_t, char, std::mbstate_t&gt;  codecvt_type;
         constexpr value_type                                 preferred_separator;
@@ -650,7 +641,7 @@ end example</i>]</p>
         // <a href="#path-modifiers">modifiers</a>
         void  <a href="#path-clear">clear</a>();
         path&amp; <a href="#absolute">make_absolute</a>(const path&amp; base);
-        path&amp; <a href="#path-make_preferred">make_preferred</a>();  // POSIX: no effect. Windows: convert slashes to backslashes
+        path&amp; <a href="#path-make_preferred">make_preferred</a>();
         path&amp; <a href="#path-remove_filename">remove_filename</a>();
         path&amp; <a href="#path-replace_extension">replace_extension</a>(const path&amp; new_extension = path());
         void  <a href="#path-swap">swap</a>(path&amp; rhs);
@@ -722,33 +713,30 @@ end example</i>]</p>
 $NAMESPACE_END;</pre>
 <p><code><a name="value_type">value_type</a></code> is an implementation-defined <code>typedef</code> for the 
 character type used by the operating system to represent pathnames.</p>
-<p>Member functions described as returning <code>const string</code>, <code>const wstring</code>, <code>const u16string</code>, or <code>const u32string</code> are permitted to return <code>const string&amp;</code>, <code>const 
-wstring&amp;</code>, <code>const u16string&amp;</code>, or <code>const u32string&amp;</code>, 
-respectively.</p>
 <blockquote>
-<p>[<i>Note:</i> This allows implementations to avoid unnecessary copies when no 
-conversion is required. 
-Return-by-value is specified as <code>const</code> to ensure programs won't break if moved to a return-by-reference 
-implementation. <i>-- 
-end note</i>]</p>
+<p>[<i>Note:</i> Thus for POSIX API systems <code>value_type</code> is <code>
+char</code> and for Windows API systems <code>value_type</code> is <code>wchar_t</code>.
+<i>-- end note</i>]</p>
 </blockquote>
 <h3><a name="path-Conversions"><code>path</code> Conversions</a></h3>
-<h4><a name="path-Conversions-to-native-format"><code>path</code> Conversions to 
-native format</a></h4>
+<h4><code>path</code> argument conversions [<a name="path.arg.convert">path.arg.convert</a>]</h4>
+<h5><a name="path-Conversions-to-native-format"><code>path</code> argument 
+format conversions</a> [path.arg.format.convert]</h5>
 <p>Member function arguments that take character sequences representing paths 
 may use the <a href="#generic-pathname-format">generic pathname format</a> or 
-the <a href="#native-pathname-format">native pathname format</a>. If such an 
-argument uses the generic format, an implementation defined conversion to native format is performed 
+the <a href="#native-pathname-format">native pathname format</a>. If such  arguments 
+are in the generic format and the generic format is not acceptable to the 
+operating system, an implementation defined conversion to native format is performed 
 during the processing of the argument. </p>
 <blockquote>
-<p>[<i>Note:</i> No conversion occurs on POSIX and Windows since they have 
-native formats that conform to the generic format. <i>--end note</i>]</p>
-<p>[<i>Rationale:</i> There is no unambiguous way for an implementation to 
-always be able distinguish between native format and generic format arguments. 
+<p>[<i>Note:</i> No conversion occurs on POSIX API systems or Windows API systems since the generic format 
+is acceptable to these API's. <i>--end note</i>]</p>
+<p>[<i>Note:</i> Depending on the operating system, there may be no unambiguous way for an implementation to 
+always be able to distinguish between native format and generic format arguments. 
 This is by design as it simplifies use. Should an implementation encounter an 
-operating system where disambiguation is required, an implementation defined 
-native format prefix can be introduced to identify the native format. <i>-- end 
-rationale</i>]</p>
+operating system where disambiguation is required, an implementation can a defined 
+native format prefix or take some other step to distinguish between the formats. <i>
+-- end note</i>]</p>
 </blockquote>
 
 <div align="center">
@@ -788,41 +776,66 @@ otherwise it shall be treated as a regular file path.</p>
 
 <blockquote>
 
-<p>[<i>Note</i>: The above paragraph does not apply to POSIX and Windows since 
+<p>[<i>Note</i>: The above paragraph does not apply to POSIX API systems or Windows API systems since 
 they use the same format 
 for both regular file and directory pathnames. <i>--end note</i>]</p>
 
-<p>[<i>Example:</i> On <a href="http://en.wikipedia.org/wiki/OpenVMS">OpenVMS</a>, a path 
-constructed from <code>&quot;/cats/jane&quot;</code> would considered a regular file 
-path, and have a native format of <code>&quot;[CATS]JANE&quot;</code>, while a 
-path constructed from <code>&quot;/cats/jane/&quot;</code> would be considered a 
-directory path, and have a native format of <code>&quot;[CATS.JANE]&quot;</code>. <i>--end example</i>]</p>
+<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Example:</span></i><span style="background-color: #FFFF00"> On
+</span> <a href="http://en.wikipedia.org/wiki/OpenVMS">
+<span style="background-color: #FFFF00">OpenVMS</span></a><span style="background-color: #FFFF00">, a path 
+constructed from </span> <code><span style="background-color: #FFFF00">&quot;/cats/jane&quot;</span></code><span style="background-color: #FFFF00"> would considered a regular file 
+path, and have a native format of </span> <code>
+<span style="background-color: #FFFF00">&quot;[CATS]JANE&quot;</span></code><span style="background-color: #FFFF00">, while a 
+path constructed from </span> <code><span style="background-color: #FFFF00">&quot;/cats/jane/&quot;</span></code><span style="background-color: #FFFF00"> would be considered a 
+directory path, and have a native format of </span> <code>
+<span style="background-color: #FFFF00">&quot;[CATS.JANE]&quot;</span></code><span style="background-color: #FFFF00">.
+</span> <i><span style="background-color: #FFFF00">--end example</span></i><span style="background-color: #FFFF00">]</span></p>
 
+</blockquote>
+<h5><a name="path-Encoding-conversions"><code>path</code> argument encoding conversions</a> 
+[path.arg.encoding.convert]</h5>
+<p>If the value type of member function arguments that are character sequences 
+representing paths is not <code>value_type</code>, 
+and no <code>cvt</code> argument is supplied, conversion to <code>value_type</code> occurs using an imbued locale. This imbued locale is initialized with a <code>codecvt</code> facet appropriate for the operating system.</p>
+<blockquote>
+<p><span style="background-color: #E0E0E0">For Apple OS X implementations,
+</span> <code><span style="background-color: #E0E0E0">path::value_type</span></code><span style="background-color: #E0E0E0"> is
+</span> <code><span style="background-color: #E0E0E0">char</span></code><span style="background-color: #E0E0E0">. The default imbued locale provides a UTF-8
+</span> <code><span style="background-color: #E0E0E0">codecvt</span></code><span style="background-color: #E0E0E0"> facet. [</span><i><span style="background-color: #E0E0E0">Rationale:</span></i><span style="background-color: #E0E0E0"> &quot;All BSD system functions expect their string 
+parameters to be in UTF-8 encoding and nothing else.&quot; See </span> <a href="http://developer.apple.com/mac/library/documentation/MacOSX/Conceptual/BPInternational/Articles/FileEncodings.html">
+<span style="background-color: #E0E0E0">Apple docs</span></a><span style="background-color: #E0E0E0">.
+</span> <i><span style="background-color: #E0E0E0">-- end rationale</span></i><span style="background-color: #E0E0E0">]</span></p>
+<p><span style="background-color: #E0E0E0">For most other POSIX API systems, including</span><b><span style="background-color: #E0E0E0">
+</span> </b><span style="background-color: #E0E0E0">Linux, </span> <code>
+<span style="background-color: #E0E0E0">path::value_type</span></code><span style="background-color: #E0E0E0"> is
+</span> <code><span style="background-color: #E0E0E0">char</span></code><span style="background-color: #E0E0E0">. The default imbued locale is
+</span> <code><span style="background-color: #E0E0E0">std::locale(&quot;&quot;)</span></code><span style="background-color: #E0E0E0">. 
+[</span><i><span style="background-color: #E0E0E0">Rationale:</span></i><span style="background-color: #E0E0E0"> ISO C specifies this as &quot;the locale-specific native 
+environment&quot;, while POSIX says it &quot;Specifies an implementation-defined native 
+environment.&quot; </span> <i><span style="background-color: #E0E0E0">-- end rationale</span></i><span style="background-color: #E0E0E0">]</span></p>
+<p><span style="background-color: #E0E0E0">For Windows API systems, including
+</span> <a href="http://www.mingw.org/"><span style="background-color: #E0E0E0">MinGW</span></a><span style="background-color: #E0E0E0">,
+</span> <code><span style="background-color: #E0E0E0">path::value_type</span></code><span style="background-color: #E0E0E0"> is
+</span> <code><span style="background-color: #E0E0E0">wchar_t</span></code><span style="background-color: #E0E0E0">. The default imbued locale provides a
+</span> <code><span style="background-color: #E0E0E0">codecvt</span></code><span style="background-color: #E0E0E0"> facet 
+that invokes Windows </span> <code><span style="background-color: #E0E0E0">MultiByteToWideChar</span></code><span style="background-color: #E0E0E0"> or
+</span> <code><span style="background-color: #E0E0E0">WideCharToMultiByte</span></code><span style="background-color: #E0E0E0"> API with a codepage of
+</span> <code><span style="background-color: #E0E0E0">CP_ACP</span></code><span style="background-color: #E0E0E0"> if Windows
+</span> <code><span style="background-color: #E0E0E0">AreFileApisANSI()</span></code><span style="background-color: #E0E0E0">is</span><span style="background-color: #E0E0E0"> true, otherwise codepage
+</span> <code><span style="background-color: #E0E0E0">CP_OEMCP</span></code><span style="background-color: #E0E0E0">. [</span><i><span style="background-color: #E0E0E0">Rationale:</span></i><span style="background-color: #E0E0E0"> this is the current behavior of C and C++ 
+standard library functions that perform file operations using narrow character strings to identify 
+paths. Changing this behavior in the Filesystem library would be too surprising, 
+particularly where user input is involved. </span> <i>
+<span style="background-color: #E0E0E0">-- end rationale</span></i><span style="background-color: #E0E0E0">]</span></p>
 </blockquote>
 <h4><a name="path-Conversions-to-generic-format"><code>path</code> Conversions 
 to generic format</a></h4>
 <p><a href="#path-generic-format-observers">Generic format observer</a> functions return strings formatted according to the <a href="#generic-pathname-format">generic pathname format</a>. The conversion 
 from generic to native formats is implementation defined.</p>
 <blockquote>
-<p>[<i>Note:</i> For POSIX, no conversion is performed. For Windows,  backslashes are converted to 
+<p>[<i>Note:</i> For POSIX API systems, no conversion is performed. For Windows 
+API systems,  backslashes are converted to 
 forward slashes. <i>-- end note</i>]</p>
-</blockquote>
-<h4><a name="path-Encoding-conversions"><code>path</code> Encoding conversions</a></h4>
-<p>If the value type of member function arguments that are character sequences 
-representing paths is not <code>value_type</code>, 
-and no <code>cvt</code> argument is supplied, conversion to <code>value_type</code> occurs using an imbued locale. This imbued locale is initialized with a <code>codecvt</code> facet appropriate for the operating system.</p>
-<blockquote>
-<p>For Apple OS X implementations, <code>path::value_type</code> is <code>char</code>. The default imbued locale provides a UTF-8 <code>codecvt</code> facet. [<i>Rationale:</i> &quot;All BSD system functions expect their string 
-parameters to be in UTF-8 encoding and nothing else.&quot; See <a href="http://developer.apple.com/mac/library/documentation/MacOSX/Conceptual/BPInternational/Articles/FileEncodings.html">Apple docs</a>. <i>-- end rationale</i>]</p>
-<p>For Windows-like implementations, including <a href="http://www.mingw.org/">MinGW</a>, <code>path::value_type</code> is <code>wchar_t</code>. The default imbued locale provides a <code>codecvt</code> facet 
-that invokes Windows <code>MultiByteToWideChar</code> or <code>WideCharToMultiByte</code> API with a codepage of <code>CP_THREAD_ACP</code> if Windows <code>AreFileApisANSI()</code>is true, otherwise codepage <code>CP_OEMCP</code>. [<i>Rationale:</i> this is the current behavior of C and C++ 
-programs that perform file operations using narrow character string to identify 
-paths. Changing this in the Filesystem library would be too surprising, 
-particularly where user input is involved. <i>-- end rationale</i>]</p>
-<p>For all other implementations, including<b> </b>Linux, <code>path::value_type</code> is <code>char</code>. The default imbued locale is <code>std::locale(&quot;&quot;)</code>. 
-[<i>Rationale:</i> ISO C specifies this as &quot;the locale-specific native 
-environment&quot;, while POSIX says it &quot;Specifies an implementation-defined native 
-environment.&quot; <i>-- end rationale</i>]</p>
 </blockquote>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a></h3>
 <p>Template parameters named <code><a name="InputIterator">InputIterator</a></code> are required meet the 
@@ -841,65 +854,52 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
 
 <h3> <a name="path-constructors"> <code>
 <font size="4">path</font></code> constructors</a></h3>
-<pre><span style="background-color: #D7EEFF">path();</span></pre>
-<blockquote>
-  <p><i>Postcondition:</i> <code>empty()</code>.</p>
-  </blockquote>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
-  path(Source const&amp; source, const codecvt_type&amp; cvt=codecvt());</pre>
+  path(Source const&amp; source);</pre>
 <pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-  path(InputIterator begin, InputIterator end, const codecvt_type&amp; cvt=codecvt());</pre>
+  path(InputIterator begin, InputIterator end);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> in <code>pathname</code>. If the contents are in the 
-  generic format and the generic format is unacceptable to the operating 
-  system's API, they are converted to the native format. [<i>Note:</i> For 
-  POSIX and Windows  implementations, the generic format is already 
-  acceptable as a native format, so no generic to native conversion is 
-  performed. <i>--end note</i>]</p>
-  <p>
-  <i>Remarks:</i> If the value type of&nbsp; [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> is not <code>value_type</code>, conversion is performed 
-  by <code>cvt</code>.</p>
+  or <code>source</code> in <code>pathname</code>, converting format and 
+  encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
 </blockquote>
 <h3> <a name="path-assignments"> <code>
 <font size="4">path</font></code> assignments</a></h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; operator=(Source const&amp; source);</pre>
-<pre>template &lt;class <a href="#Source">Source</a>&gt;
-  path&amp; assign(Source const&amp; source, const codecvt_type&amp; cvt);</pre>
 <pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-  path&amp; assign(InputIterator begin, InputIterator end, const codecvt_type&amp; cvt=codecvt());</pre>
+  path&amp; assign(InputIterator begin, InputIterator end);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> in <code>pathname</code>. If the contents are in the 
-  generic format, they are converted to the native format. [<i>Note:</i> For 
-  POSIX and Windows based implementations, the generic format is already 
-  acceptable as a native format, so no generic to native conversion is 
-  performed. <i>--end note</i>]</p>
+  or <code>source</code> in <code>pathname</code>, converting format and 
+  encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]). </p>
   <p>
   <i>Returns: </i><code>*this</code></p>
-  <p>
-  <i>Remarks:</i> If the value type of&nbsp; [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> is not <code>value_type</code>, conversion is performed 
-  by <code>cvt</code>.</p>
   </blockquote>
 <h3><a name="path-appends"><code><font size="4"> path</font></code> appends</a></h3>
-  <p>The append operations use <code>operator/=</code> to denote their semantic 
+  <p><span style="background-color: #FFFF00">The append operations use </span> <code>
+  <span style="background-color: #FFFF00">operator/=</span></code><span style="background-color: #FFFF00"> to denote their semantic 
   effect of appending the platform's preferred directory separator when needed. The 
   preferred 
-  directory separator is implementation-defined.</p>
+  directory separator is implementation-defined.</span></p>
 <blockquote>
-    <p align="left">[<i>Note: </i>For POSIX-like implementations, including<b> </b>Unix variants, Linux, and Mac OS X, the preferred directory separator is a 
-    single forward slash.</p>
-    <p align="left">For Windows-like implementations, including <a href="http://www.cygwin.com/">Cygwin</a> and <a href="http://www.mingw.org/">MinGW</a>, the preferred directory 
-    separator is a single backslash.<i>--end note</i>]</p>
+    <p align="left"><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:
+    </span> </i><span style="background-color: #FFFF00">For POSIX-like implementations, including</span><b><span style="background-color: #FFFF00">
+    </span> </b><span style="background-color: #FFFF00">Unix variants, Linux, and Mac OS X, the preferred directory separator is a 
+    single forward slash.</span></p>
+    <p align="left"><span style="background-color: #FFFF00">For Windows-like implementations, including
+    </span> <a href="http://www.cygwin.com/">
+    <span style="background-color: #FFFF00">Cygwin</span></a><span style="background-color: #FFFF00"> and
+    </span> <a href="http://www.mingw.org/">
+    <span style="background-color: #FFFF00">MinGW</span></a><span style="background-color: #FFFF00">, the preferred directory 
+    separator is a single backslash.</span><i><span style="background-color: #FFFF00">--end note</span></i><span style="background-color: #FFFF00">]</span></p>
       </blockquote>
 <pre>path&amp; operator/=(const path&amp; p);</pre>
 <blockquote>
   <p><i>Effects:</i></p>
   <blockquote>
-    Appends the preferred directory separator to the contained pathname, unless:<ul>
+    Appends the preferred directory separator to <code>pathname</code>, 
+    converting format and encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]), unless:<ul>
     <li>an added separator 
     would be redundant, or</li>
     <li>would change an relative path to an absolute path, or</li>
@@ -911,32 +911,25 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
   <p><i>Returns: </i><code>*this</code></p>
 </blockquote>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
-  path&amp; operator/=(Source const &amp; source);</pre>
-<pre>template &lt;class <a href="#Source">Source</a>&gt;
-  path&amp; append(Source const &amp; source, const codecvt_type&amp; cvt);</pre>
+  path&amp; operator/=(Source const&amp; source);</pre>
 <pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-  path&amp; append(InputIterator begin, InputIterator end, const codecvt_type&amp; cvt=codecvt());</pre>
+  path&amp; append(InputIterator begin, InputIterator end);</pre>
 <blockquote>
   <p><i>Effects:</i></p>
   <blockquote>
-    <p>Appends a native directory separator to the contained pathname, unless:</p>
+    <p>Appends a native directory separator to <code>pathname</code>, converting 
+    format and encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]), unless:</p>
     <ul>
     <li>an added separator 
     would be redundant, or</li>
-    <li>would change an relative path to an absoute path, or</li>
+    <li>would change an relative path to an absolute path, or</li>
     <li><code>p.empty()</code>, or</li>
     <li><code>*p.native().cbegin()</code> is a separator.</li>
   </ul>
     <p>Appends the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> to <code>pathname</code>. If the contents are in the 
-    generic format, they are converted to the native format. [<i>Note:</i> For 
-    POSIX and Windows based implementations, the generic format is already 
-    acceptable as a native format, so no generic to native conversion is 
-    performed. <i>--end note</i>]</p>
+  or <code>source</code> to <code>pathname</code>, converting format and 
+    encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
   </blockquote>
-  <p><i>Remarks:</i> If the value type of&nbsp; [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> is not <code>value_type</code>, conversion is performed 
-  by <code>cvt</code>.</p>
   <p><i>Returns: </i><code>*this</code></p>
   </blockquote>
   
@@ -949,12 +942,10 @@ template &lt;class Source&gt;
   path&amp; operator+=(Source const&amp; x);
 template &lt;class CharT&gt;
   path&amp; operator+=(CharT x);
-template &lt;class Source&gt;
-  path&amp; concat(Source const&amp; x, const codecvt_type&amp; cvt);
 template &lt;class InputIterator&gt;
   path&amp; concat(InputIterator begin, InputIterator end);
 template &lt;class InputIterator&gt;
-  path&amp; concat(InputIterator begin, InputIterator end, const codecvt_type&amp; cvt);</pre>
+  path&amp; concat(InputIterator begin, InputIterator end);</pre>
 <blockquote><p><i>Postcondition:</i> <code>native() == prior_native + <i>effective-argument</i></code>,
  where <code>prior_native</code> is <code>native()</code> prior to the call to <code>operator+=</code>,
  and <code><i>effective-argument</i></code> is:</p>
@@ -973,9 +964,10 @@ path</code> modifiers</a></h3><pre>void <a name="path-clear">clear</a>();</pre>
 </blockquote>
 <pre>path&amp; <a name="path-make_preferred">make_preferred</a>();</pre>
 <blockquote>
-  <p><i>Effects:</i> The contained pathname is converted to the preferred native 
-  format. [<i>Note:</i> On Windows, the effect is to replace slashes with 
-  backslashes. On POSIX, there is no effect. <i>-- end note</i>]</p>
+  <p><i><span style="background-color: #FFFF00">Effects:</span></i><span style="background-color: #FFFF00"> The contained pathname is converted to the preferred native 
+  format. [</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00"> 
+  On POSIX API systems there is thus no effect.&nbsp; On Windows API systems the 
+  effect is thus to replace slashes with backslashes.</span><i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
 
@@ -1030,14 +1022,15 @@ const u32wstring <a name="u32wstring">u32wstring</a>() const; </pre>
 <p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Remarks:</i> If <code>string_type</code> is a different type than 
 function's return type, conversion is performed by <code>cvt</code>.</p>
-<p>If <code>string_type</code> is the same type as the 
-function's return type, the function is permitted to return by <code>const&amp;</code> rather than <code>const</code> value. [<i>Note:</i> For POSIX, this occurs for <code>string()</code>, for Windows, <code>wstring()</code>. <i>--end note</i>]</p>
 </blockquote>
 
 <h3> <a name="path-generic-format-observers"><code><font size="4">path</font></code> generic format observers</a></h3>
 <p>The string returned by all generic format observers is in the <a href="#generic-pathname-format">generic pathname format</a>.</p>
-<p>[<i>Note:</i> For POSIX, no conversion occurs, since the native format and 
-generic format are the same. For Windows, backslashes are converted to slashes <i>--end note</i>]</p>
+<blockquote>
+<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00"> For POSIX, no conversion occurs, since the native format and 
+generic format are the same. For Windows API systems, backslashes are converted to slashes
+</span> <i><span style="background-color: #FFFF00">--end note</span></i><span style="background-color: #FFFF00">]</span></p>
+</blockquote>
 <pre>template &lt;class String&gt;
 String <a name="generic_string-template">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;</pre>
 <blockquote>
@@ -1052,10 +1045,6 @@ const u32wstring <a name="generic_u32wstring">generic_u32wstring</a>() const; </
 <p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Remarks:</i>&nbsp; If <code>string_type</code> is a different type than 
 function's return type, conversion is performed by <code>cvt</code>.</p>
-<p>If <code>string_type</code> is of the same type as the 
-function's return type, and the generic format is the same as the native format, 
-the function is permitted to return by <code>const&amp;</code> rather than <code>const</code> value. [<i>Note:</i> For POSIX, this occurs for <code>string()</code>. 
-It never occurs for Windows, because backslashes must be converted to slashes. <i>--end note</i>]</p>
 </blockquote>
 
 <h3> <a name="path-compare"><code>path</code> compare</a></h3>
@@ -1114,7 +1103,7 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
 </blockquote>
 <pre>path <a name="path-stem">stem</a>(const path&amp; p) const;</pre>
 <blockquote>
-  <p><i>Returns:</i> if <code>p.filename()</code>contains a dot but does not 
+  <p><i>Returns:</i> if <code>p.filename()</code> contains a dot but does not 
   consist solely of one or to two dots, returns 
   the substring of <code>p.filename()</code> starting at its beginning and 
   ending at the last dot (the dot is not included). Otherwise, 
@@ -1189,7 +1178,6 @@ for (; !p.extension().empty(); p = p.stem())
 <pre>bool <a name="path-is_absolute">is_absolute</a>() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>true</code> if the elements of <code>root_path()</code> uniquely identify a directory, else <code>false</code>.</p>
-  <p>[<i>Note:</i> On POSIX,<code> path(&quot;/foo&quot;).is_absolute()</code> returns <code>true</code>. On Windows, <code>path(&quot;/foo&quot;).is_absolute()</code> returns <code>false</code>. <i>--end note</i>]</p>
 </blockquote>
 <pre>bool <a name="path-is_relative">is_relative</a>() const;</pre>
 <blockquote>
@@ -1530,20 +1518,23 @@ $WHAT;.</p>
   </tr>
 </table>
 <h3><a name="Enum-perms">Enum perms</a></h3>
-<p>This enum specifies bitmask constants uses to identify file 
+<p><span style="background-color: #FFFF00">This </span>
+<span style="background-color: #FFFF00">enum</span><span style="background-color: #FFFF00"> specifies bitmask constants uses to identify file 
 permissions. The POSIX standard specifies actual values, and those values have 
 been adopted here because they are very familiar and ingrained for many POSIX 
-users.</p>
+users.</span></p>
 <blockquote>
-<p>Caution: Operating systems do not always support permissions as described in 
-the table.</p>
-<p>There is much variation in the meaning of <code><a href="#sticky_bit">sticky_bit</a></code>; do not use it unless you understand what it means for 
-your operating system.</p>
-<p>There is much variation in how operating systems treat symlinks. See <code><a href="#symlink_perms">symlink_perms</a></code>.</p>
-<p>Windows: All permissions except write are currently ignored. There is only a 
+<p><span style="background-color: #FFFF00">Caution: Operating systems do not always support permissions as described in 
+the table.</span></p>
+<p><span style="background-color: #FFFF00">There is much variation in the meaning of
+</span> <code><a href="#sticky_bit"><span style="background-color: #FFFF00">sticky_bit</span></a></code><span style="background-color: #FFFF00">; do not use it unless you understand what it means for 
+your operating system.</span></p>
+<p><span style="background-color: #FFFF00">There is much variation in how operating systems treat symlinks. See
+</span> <code><a href="#symlink_perms"><span style="background-color: #FFFF00">symlink_perms</span></a></code><span style="background-color: #FFFF00">.</span></p>
+<p><span style="background-color: #FFFF00">Windows: All permissions except write are currently ignored. There is only a 
 single write permission; setting write permission for owner, group, or others 
 sets write permission for all, and removing write permission for owner, group, 
-or others removes write permission for all. </p>
+or others removes write permission for all. </span> </p>
 </blockquote>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
@@ -1728,7 +1719,7 @@ $NAMESPACE_END;</pre>
 <p>A <code>directory_entry</code> object stores a <code>path object</code>, 
 a <code>file_status</code> object for non-symbolic link status, and a <code>file_status</code> object for symbolic link status. The <code>file_status</code> objects act as value caches.</p>
 <blockquote>
-<p>[<i>Note:</i> Because <code>status()</code>on a pathname may be a very expensive operation, 
+<p>[<i>Note:</i> Because <code>status()</code>on a pathname may be a relatively expensive operation, 
 some operating systems provide status information as a byproduct of directory 
 iteration. Caching such status information can result is significant time savings. Cached and 
 non-cached results may differ in the presence of file system races. <i>-- end note</i>]</p>
@@ -3281,7 +3272,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
 <h2><a name="References">References</a></h2>
 <table border="0" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
   <tr>
-    <td width="16%" valign="top">[<a name="ISO_POSIX">ISO-POSIX</a>]</td>
+    <td width="16%" valign="top">[<a name="ISO_POSIX">ISO/IEC 9945</a>]</td>
     <td width="84%">ISO/IEC 9945:2003, IEEE&nbsp;Std&nbsp;1003.1-2001, and The Open Group 
     Base Specifications, Issue 6. Also known as The Single Unix<font face="Times New Roman">® 
     Specification, Version 3. Available from each of the organizations involved 
