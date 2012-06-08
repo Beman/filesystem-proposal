@@ -157,18 +157,21 @@ $snippet wording_prefix "$SNIPPET_FILE;"
 <p>This $WHAT; describes components that perform operations on file systems and 
 their components, such as paths, regular files, and directories.</p>
 
-<h2><a name="Conformance">Conformance</a></h2>
-<p>Behavior is sometimes specified by reference to ISO/IEC 9945. How such behavior is actually implemented is unspecified.</p>
+<h2><a name="Conformance">Conformance</a> [fs.conformance]</h2>
+
+<h3>ISO/IEC 9945 conformance [fs.conform.9945]</h3>
+<p>Some behavior in this $WHAT; is specified by reference to ISO/IEC 9945. How such behavior is actually implemented is unspecified.</p>
 <blockquote>
 <p>[<i>Note:</i> This constitutes an &quot;as if&quot; rule for implementation of 
 operating system dependent behavior. In practice implementations will usually call native 
 operating system API's. <i>--end note</i>]</p>
 </blockquote>
-<p>Implementations are encouraged, but not required, to provide such behavior 
+<p>Implementations are encouraged to provide such behavior 
  
-as it is defined by <i>POSIX</i>. Implementations shall document any 
-behavior that differs from the <i>POSIX</i> defined behavior. Implementations that do not support exact POSIX behavior are 
-encouraged to provide behavior as close to <i>POSIX</i> behavior as is reasonable given the 
+as it is defined by ISO/IEC 9945. Implementations shall document any 
+behavior that differs from the behavior defined by ISO/IEC 9945. Implementations that do not support exact 
+ISO/IEC 9945 behavior are 
+encouraged to provide behavior as close to ISO/IEC 9945 behavior as is reasonable given the 
 limitations of actual operating systems and file systems. If an implementation cannot provide any 
 reasonable behavior, the implementation shall report an error in an 
 implementation-defined manner.</p>
@@ -199,72 +202,103 @@ specified as a <i>Throws</i> condition.</p>
 is unreasonable for a program to detect them prior to calling the function. <i>
 -- end note</i>]</p>
 </blockquote>
-<h2><a name="Definitions">Definitions</a></h2>
-<p>The following definitions  shall apply throughout this reference documentation:</p>
-<p><i><b><a name="File">File</a>:</b> </i>An object that can be written to, or read from, or both. A file 
+<h3>Operating system dependent conformance [fs.conform.os]</h3>
+<p>Some behavior and other characteristics is specified in this $WHAT; as being 
+operating system dependent ([fs.def.osdep]). What operation systems an 
+implementation supports is implementation defined.</p>
+<h2 dir="ltr"><a name="Definitions">Definitions</a> [fs.definitions]</h2>
+<p dir="ltr">The following definitions  shall apply throughout this $WHAT;:</p>
+<h3 dir="ltr"><a name="operating system dependent">operating system dependent</a> 
+[fs.def.osdep]</h3>
+<p dir="ltr">Behavior and other characteristics that is defined by the behavior 
+and characteristics of an operating system.</p>
+<h3 dir="ltr"><a name="file">file</a> [fs.def.file]</h3>
+<p dir="ltr">An object that can be written to, or read from, or both. A file 
 has certain attributes, including type. File types include regular files 
 and directories. Other types of files, such as symbolic links, may be supported by the 
 implementation.</p>
-<p><b><i><a name="File-system">File system</a>:</i></b> A collection of files and certain of their attributes.</p>
-<p><b><i><a name="Filename">Filename</a>:</i></b> The name of a file. Slash and 
+<h3 dir="ltr"><a name="file-system">file system</a> [fs.def.filesystem]</h3>
+<p dir="ltr">A collection of files and certain of their attributes.</p>
+<h3 dir="ltr"><a name="filename">filename</a> [fs.def.filename]</h3>
+<p dir="ltr"><span style="background-color: #FFFF00">The name of a file. Slash and 
 0x00 
 characters are not permitted. Implementations may define additional 
-characters or specific names that are not permitted. Filenames <code>.</code>&nbsp; 
-and <code>..</code>&nbsp; have special meaning. Implementations may define 
-additional filenames that have special meaning.</p>
-<blockquote>
-  <p><i>[Note:</i> Many operating systems prohibit the ASCII control characters 
-  (0x00-0x1F) in filenames.</p>
-  <p>Windows API systems prohibit the characters 0x00-0x1F, <code>&quot;</code>,<code> 
-  *</code>,<code>&nbsp;:</code>,<code> &lt;</code>,<code> &gt;</code>,<code>&nbsp;?</code>,<code> 
-  \</code>,<code> /</code>, and<code> |</code>&nbsp;<i>--end note]</i></p>
+characters or specific names that are not permitted. Filenames </span> <code>
+<span style="background-color: #FFFF00">.</span></code><span style="background-color: #FFFF00">&nbsp; 
+and </span> <code><span style="background-color: #FFFF00">..</span></code><span style="background-color: #FFFF00">&nbsp; have special meaning. Implementations may define 
+additional filenames that have special meaning.</span></p>
+<blockquote dir="ltr">
+  <p dir="ltr"><i><span style="background-color: #FFFF00">[Note:</span></i><span style="background-color: #FFFF00"> Many operating systems prohibit the ASCII control characters 
+  (0x00-0x1F) in filenames.</span></p>
+  <p dir="ltr"><span style="background-color: #FFFF00">Windows API systems prohibit the characters 0x00-0x1F,
+  </span> <code><span style="background-color: #FFFF00">&quot;</span></code><span style="background-color: #FFFF00">,</span><code><span style="background-color: #FFFF00"> 
+  *</span></code><span style="background-color: #FFFF00">,</span><code><span style="background-color: #FFFF00">&nbsp;:</span></code><span style="background-color: #FFFF00">,</span><code><span style="background-color: #FFFF00"> &lt;</span></code><span style="background-color: #FFFF00">,</span><code><span style="background-color: #FFFF00"> &gt;</span></code><span style="background-color: #FFFF00">,</span><code><span style="background-color: #FFFF00">&nbsp;?</span></code><span style="background-color: #FFFF00">,</span><code><span style="background-color: #FFFF00"> 
+  \</span></code><span style="background-color: #FFFF00">,</span><code><span style="background-color: #FFFF00"> /</span></code><span style="background-color: #FFFF00">, and</span><code><span style="background-color: #FFFF00"> |</span></code><span style="background-color: #FFFF00">&nbsp;</span><i><span style="background-color: #FFFF00">--end note]</span></i></p>
 </blockquote>
-<p><b><i><a name="Path">Path</a>:</i></b> A sequence of elements that identify 
+<h3 dir="ltr"><a name="path">path</a> [fs.def.path]</h3>
+<p dir="ltr">A sequence of elements that identify 
 the location of a file within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
 root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
 A <a href="#Pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
-<p><b><i>POSIX API systems:</i></b> Operating systems that use the ISO/IEC 9945 
-API as their native application program interface.</p>
-<p><b><i>Windows API systems:</i></b> Operating systems that use the Windows API 
-as their native application program interface.</p>
-<p><b><i><a name="Absolute-path">Absolute path</a>:</i></b> A path that 
+<p dir="ltr"><b><i><a name="Absolute-path">Absolute path</a>:</i></b> A path that 
 unambiguously 
 identifies the location of a file without reference to an additional starting 
 location. The elements of a path that determine if it is absolute are 
-implementation defined.</p>
-<blockquote>
-  <p dir="ltr"><i>[Note:</i> For POSIX API systems, paths that begin with one or 
-  more <i>directory-specifier</i> characters are absolute paths.</p>
-  <p>For Windows API systems, paths that begin with a drive specifier (i.e. a 
-  single letter followed by a colon) followed by one or more <i>directory-specifier</i> 
-  characters, or begin with two <i>directory-specifier</i> characters, are absolute paths.&nbsp;<i>--end 
-  note]</i></p>
-</blockquote>
-<p><i><b><a name="Relative-path">Relative path</a>:</b></i> A path that only 
+operating system dependent.</p>
+<p dir="ltr"><i><b><a name="Relative-path">Relative path</a>:</b></i> A path that 
+is not absolute, and so only 
 unambiguously 
 identifies the location of a file when resolved relative to 
-a starting location. The format is implementation defined. [<i>Note:</i> 
-Paths &quot;.&quot; and &quot;..&quot; are considered to be relative paths. <i>--end note</i>]</p>
-<p><i><b><a name="Canonical-path">Canonical path</a>:</b></i> An absolute path that has 
-no elements which are symbolic links, and no dot or dot dot elements.</p>
-<p><i><b><a name="Pathname">Pathname</a>:</b> </i>A character string that represents a 
-path. Pathnames are formatted according to the generic pathname format or an implementation defined 
+an implied starting location. The elements of a path that determine if it is 
+relative are operating system dependent.&nbsp; [<i>Note:</i> 
+Paths <code>&quot;.&quot;</code> and <code>&quot;..&quot;</code> are relative paths. <i>--end note</i>]</p>
+<p dir="ltr"><i><b><a name="Canonical-path">Canonical path</a>:</b></i> An absolute path that has 
+no elements that are symbolic links, and no <code>&quot;.&quot;</code> or <code>&quot;..&quot;</code> elements.</p>
+<p dir="ltr"><i><b><a name="Pathname">Pathname</a>:</b> </i>A character string that represents 
+the name of a 
+path. Pathnames are formatted according to the generic pathname grammar or an 
+operating system dependent 
 native pathname format.</p>
-<p><b><i><a name="generic-pathname-format">Generic pathname format:</a></i></b></p>
-<blockquote>
+<p dir="ltr"><b><i><a name="generic-pathname-format">Generic pathname format:</a>&nbsp;
+<span style="background-color: #FFFF00">[TBS]</span></i></b></p>
+<p dir="ltr"><b><i><a name="native-pathname-format">Native pathname format:</a></i></b>&nbsp; 
+An operating system dependent format acceptable to the native operating system.</p>
+<p dir="ltr"><i><b><a name="Link">Link</a>:</b> </i>A directory entry object that associates a 
+filename with a file. On some file systems, several directory entries can 
+associate names with the same file.</p>
+<p dir="ltr"><b><i><a name="Hard-link">Hard link</a>:</i></b> A link to an existing file. Some 
+file systems support multiple hard links to a file. If the last hard link to a 
+file is removed, the file itself is removed.</p>
+<blockquote dir="ltr">
+<p dir="ltr">[<i>Note:</i> A hard link can be thought of as a shared-ownership smart 
+pointer to a file.<i> -- end note</i>]<i> </i></p>
+</blockquote>
+<p dir="ltr"><i><a name="Symbolic-link">S<b>ymbolic link</b></a><b>:</b> </i>A type of file with the 
+property that when the file is encountered during pathname resolution, a string 
+stored by the file is used to modify the pathname resolution.</p>
+<blockquote dir="ltr">
+<p dir="ltr">[<i>Note:</i> A symbolic link can be thought of as a raw pointer to a file. 
+If the file pointed to does not exist, the symbolic link is said to be a 
+&quot;dangling&quot; symbolic link.<i> -- end note</i>]<i> </i></p>
+</blockquote>
+<p dir="ltr"><b><i><a name="Race-condition">File system race</a>:</i></b> The condition that occurs 
+when multiple threads, processes, or computers interleave access and 
+modification of 
+the same object within a file system.</p>
+<h2><a name="Generic-pathname-grammar">Generic pathname grammar</a> [pathname.grammar]</h2>
 <p><i>pathname:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root-name<sub>opt</sub> 
 root-directory<sub>opt</sub> relative-path<sub>opt</sub></i></p>
 <p><i>root-name:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-implementation-defined</i></p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>An 
+operating system dependent name that identifies the starting location for 
+absolute paths. </p>
 <blockquote>
   <blockquote>
 <p>[<i>Note:</i> Many operating systems define a name 
 beginning with two <i>directory-separator</i> characters as a <i>root-name</i> 
-that identifies network locations. <span style="background-color: #FFFF00"> 
-Windows API systems</span> define a single letter followed by a colon as a drive 
-specifier; a <i>root-name</i> identifying a specific device such as a disc drive. <i>--end note</i>]</p>
+that identifies network or other resource locations. Some operating systems define a single letter followed by a colon as a drive 
+specifier - a <i>root-name</i> identifying a specific device such as a disc drive. <i>--end note</i>]</p>
   </blockquote>
 </blockquote>
 <p><i>root-directory:<br>
@@ -282,9 +316,9 @@ directory-separator filename</i></p>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>&quot;.&quot;</code><i><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>
 &quot;..&quot;</code></p>
-<p><i>preferred-separator:<sub>opt</sub><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-implementation-defined</i></p>
+<p><i>preferred-separator:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>An 
+operating system dependent directory separator character. May be a synonym for <i> <code>&quot;/&quot;</code>.</i></p>
 <p><i>directory-separator:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>&quot;/&quot;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;/&quot;</code> directory-separator<br>
@@ -300,37 +334,74 @@ be the same as one <i>directory-separator</i> character.</p>
 parent 
 directory. Specific <i>filenames</i> may have special meanings for a particular 
 operating system.</p>
-</blockquote>
-<p><b><i><a name="native-pathname-format">Native pathname format:</a></i></b>&nbsp; 
-An implementation defined format. [<i>Note:</i> For POSIX API 
-systems, the native format is the same as the generic format. For Windows API systems, the 
-native format is similar to the generic format, but the directory-separator 
-characters can be either slashes or backslashes. <i>--end note</i>]</p>
-<p><i><b><a name="Link">Link</a>:</b> </i>A directory entry object that associates a 
-filename with a file. On some file systems, several directory entries can 
-associate names with the same file.</p>
-<p><b><i><a name="Hard-link">Hard link</a>:</i></b> A link to an existing file. Some 
-file systems support multiple hard links to a file. If the last hard link to a 
-file is removed, the file itself is removed.</p>
-<blockquote>
-<p>[<i>Note:</i> A hard link can be thought of as a shared-ownership smart 
-pointer to a file.<i> -- end note</i>]<i> </i></p>
-</blockquote>
-<p><i><a name="Symbolic-link">S<b>ymbolic link</b></a><b>:</b> </i>A type of file with the 
-property that when the file is encountered during pathname resolution, a string 
-stored by the file is used to modify the pathname resolution.</p>
-<blockquote>
-<p>[<i>Note:</i> A symbolic link can be thought of as a raw pointer to a file. 
-If the file pointed to does not exist, the symbolic link is said to be a 
-&quot;dangling&quot; symbolic link.<i> -- end note</i>]<i> </i></p>
-</blockquote>
-<p><b><i><a name="Race-condition">File system race</a>:</i></b> The condition that occurs 
-when multiple threads, processes, or computers interleave access and 
-modification of 
-the same object within a file system.</p>
-<p><b><i><a name="Dot">Dot</a>, Dot Dot:</i></b> Synonyms for the filenames <code>&quot;.&quot;</code> 
-and <code>&quot;..&quot;</code>, respectively. The dot filename names the current 
-directory. The dot dot filename names the parent directory.</p>
+<h2><a name="Operating-system-examples">Operating system examples</a> (Informative) [fs.os.examples]</h2>
+<p>Certain features are specified in this $WHAT; as being dependent the 
+underlying operating system. The following table shows the application of those 
+specifications for operating systems that use the ISO/IEC 9945 API or Windows 
+API application program interfaces.</p>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td><b>Feature</b></td>
+    <td><b>Section</b></td>
+    <td><b>ISO/IEC 9945</b></td>
+    <td><b>Windows</b></td>
+    <td><b>Notes</b></td>
+  </tr>
+  <tr>
+    <td><code>path::value_type</code></td>
+    <td>[<a href="#class-path">class.path</a>]</td>
+    <td><code>char</code></td>
+    <td><code>wchar_t</code></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><code>path::preferred_separator</code></td>
+    <td>[<a href="#class-path">class.path</a>]</td>
+    <td><code>'/'</code></td>
+    <td><code>L'\\'</code></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><code>path(&quot;/&quot;).is_absolute()<br>
+    path(&quot;c:&quot;).is_absolute()</code></td>
+    <td>&nbsp;</td>
+    <td><code>true<br>
+    false</code></td>
+    <td><code>false<br>
+    true</code></td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><code>path</code> argument format conversion</td>
+    <td>[<a href="#path-Conversions-to-native-format">path.arg.format.convert</a>]</td>
+    <td>No conversion performed</td>
+    <td>No conversion performed</td>
+    <td>For efficiency, the generic format is already acceptable to the native 
+    operating system API for these operating systems.</td>
+  </tr>
+  <tr>
+    <td><code>path</code> generic format observers</td>
+    <td>&nbsp;</td>
+    <td>No conversion performed</td>
+    <td>Backslashes converted to slashes</td>
+    <td>&nbsp;</td>
+  </tr>
+  <tr>
+    <td><code>path</code> native format observers</td>
+    <td>&nbsp;</td>
+    <td>No conversion performed</td>
+    <td>No conversion performed</td>
+    <td>For efficiency, <code>path</code> objects store pathnames in the native 
+    format.</td>
+  </tr>
+  <tr>
+    <td><code>p.make_preferred()</code></td>
+    <td>[<a href="#path-modifiers">fs.path.modifiers</a>]</td>
+    <td>No change</td>
+    <td>Slashes converted to backslashes</td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
 <h2><a name="Header-filesystem-synopsis">Header <code>&lt;$HEADER;&gt;</code> synopsis</a></h2>
 <pre>$NAMESPACE_BEGIN;
     class <a href="#class-path">path</a>;    
@@ -569,7 +640,7 @@ errors are truly exceptional and indicate a serious failure. Throwing an
   throwing an exception as described in the C++ standard, 
   17.6.4.10 [res.on.exception.handling].</li>
 </ul>
-<h2><a name="class-path">Class <code>path</code></a></h2>
+<h2><a name="class-path">Class <code>path</code> [class.path]</a></h2>
 <p>An object of class <code>path</code> represents a <a href="#Path">path</a>, 
 and contains a <a href="#Pathname">pathname</a> Such an object is concerned only with the lexical and syntactic aspects 
 of a path. The path does not necessarily exist in external storage, and the 
@@ -590,10 +661,10 @@ system or for a particular file system.</p>
         path(path&amp;&amp; p) noexcept;
 
         template &lt;class <a href="#Source">Source</a>&gt;
-          path(Source const&amp; source, const codecvt_type&amp; cvt=codecvt());
+          path(Source const&amp; source);
 
         template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-          path(InputIterator begin, InputIterator end, const codecvt_type&amp; cvt=codecvt());
+          path(InputIterator begin, InputIterator end);
 
        ~path();
 
@@ -604,11 +675,8 @@ system or for a particular file system.</p>
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator=(Source const&amp; source);
 
-        template &lt;class <a href="#Source">Source</a>&gt;
-          path&amp; assign(Source const&amp; source, const codecvt_type&amp; cvt)
-
         template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-          path&amp; assign(InputIterator begin, InputIterator end, const codecvt_type&amp; cvt=codecvt());
+          path&amp; assign(InputIterator begin, InputIterator end);
 
         // <a href="#path-appends">appends</a>
         path&amp; operator/=(const path&amp; p);
@@ -616,11 +684,8 @@ system or for a particular file system.</p>
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator/=(Source const&amp; source);
 
-        template &lt;class <a href="#Source">Source</a>&gt;
-          path&amp; append(Source const&amp; source, const codecvt_type&amp; cvt);
-
         template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-          path&amp; append(InputIterator begin, InputIterator end, const codecvt_type&amp; cvt=codecvt());
+          path&amp; append(InputIterator begin, InputIterator end);
 
         // <a href="#path-concatenation">concatenation</a>
         path&amp; operator+=(const path&amp; x);
@@ -631,12 +696,10 @@ system or for a particular file system.</p>
           path&amp; operator+=(Source const&amp; x);
         template &lt;class CharT&gt;
           path&amp; operator+=(CharT x);
-        template &lt;class Source&gt;
-          path&amp; concat(Source const&amp; x, const codecvt_type&amp; cvt);
         template &lt;class InputIterator&gt;
           path&amp; concat(InputIterator begin, InputIterator end);
         template &lt;class InputIterator&gt;
-          path&amp; concat(InputIterator begin, InputIterator end, const codecvt_type&amp; cvt);
+          path&amp; concat(InputIterator begin, InputIterator end);
         
         // <a href="#path-modifiers">modifiers</a>
         void  <a href="#path-clear">clear</a>();
@@ -654,18 +717,18 @@ system or for a particular file system.</p>
         String <a href="#string-template">string</a>(const codecvt_type&amp; cvt=codecvt()) const;                // native format
 
         const string        <a href="#string">string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // native format
-        const wstring       <a href="#wstring">wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // ditto
-        const u16string     <a href="#u16string">u16string</a>() const;                                 // ditto
-        const u32string     <a href="#u32wstring">u32string</a>() const;                                 // ditto
+        const wstring       <a href="#wstring">wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // native format
+        const u16string     <a href="#u16string">u16string</a>() const;                                 // native format
+        const u32string     <a href="#u32wstring">u32string</a>() const;                                 // native format
 
         // <a href="#path-generic-format-observers">generic format observers</a>
         template &lt;class String&gt;
         String <a href="#generic_string-template">generic_string</a>() const;
 
-        const string        <a href="#generic_string">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // generic format
-        const wstring       <a href="#generic_wstring">generic_wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // ditto
-        const u16string     <a href="#generic_u16string">generic_u16string</a>() const;                                 // ditto
-        const u32string     <a href="#generic_u32wstring">generic_u32string</a>() const;                                 // ditto
+        const string        <a href="#generic_string">generic_string</a>(<span style="background-color: #FFFF00">const</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">codecvt_type</span><span style="background-color: #FFFF00">&amp; </span><span style="background-color: #FFFF00">cvt</span><span style="background-color: #FFFF00">=</span><span style="background-color: #FFFF00">codecvt</span><span style="background-color: #FFFF00">()</span>) const;   // generic format
+        const wstring       <a href="#generic_wstring">generic_wstring</a>(<span style="background-color: #FFFF00">const</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">codecvt_type</span><span style="background-color: #FFFF00">&amp; </span><span style="background-color: #FFFF00">cvt</span><span style="background-color: #FFFF00">=</span><span style="background-color: #FFFF00">codecvt</span><span style="background-color: #FFFF00">()</span>) const;  // generic format
+        const u16string     <a href="#generic_u16string">generic_u16string</a>() const;                                 // generic format
+        const u32string     <a href="#generic_u32wstring">generic_u32string</a>() const;                                 // generic format
 
         // <a href="#path-compare">compare</a>
         int                 <a href="#path-compare">compare</a>(const path&amp; p) const noexcept;
@@ -711,13 +774,8 @@ system or for a particular file system.</p>
       };
 
 $NAMESPACE_END;</pre>
-<p><code><a name="value_type">value_type</a></code> is an implementation-defined <code>typedef</code> for the 
+<p><code><a name="value_type">value_type</a></code> is a <code>typedef</code> for the 
 character type used by the operating system to represent pathnames.</p>
-<blockquote>
-<p>[<i>Note:</i> Thus for POSIX API systems <code>value_type</code> is <code>
-char</code> and for Windows API systems <code>value_type</code> is <code>wchar_t</code>.
-<i>-- end note</i>]</p>
-</blockquote>
 <h3><a name="path-Conversions"><code>path</code> Conversions</a></h3>
 <h4><code>path</code> argument conversions [<a name="path.arg.convert">path.arg.convert</a>]</h4>
 <h5><a name="path-Conversions-to-native-format"><code>path</code> argument 
@@ -726,48 +784,17 @@ format conversions</a> [path.arg.format.convert]</h5>
 may use the <a href="#generic-pathname-format">generic pathname format</a> or 
 the <a href="#native-pathname-format">native pathname format</a>. If such  arguments 
 are in the generic format and the generic format is not acceptable to the 
-operating system, an implementation defined conversion to native format is performed 
-during the processing of the argument. </p>
+operating system as a native path, an implementation defined conversion to native format is performed 
+during the processing of the argument. See [<a href="#Operating-system-examples">fs.os.examples</a>].</p>
 <blockquote>
-<p>[<i>Note:</i> No conversion occurs on POSIX API systems or Windows API systems since the generic format 
-is acceptable to these API's. <i>--end note</i>]</p>
 <p>[<i>Note:</i> Depending on the operating system, there may be no unambiguous way for an implementation to 
 always be able to distinguish between native format and generic format arguments. 
 This is by design as it simplifies use. Should an implementation encounter an 
-operating system where disambiguation is required, an implementation can a defined 
+operating system where disambiguation is required, an implementation can defined 
+a 
 native format prefix or take some other step to distinguish between the formats. <i>
 -- end note</i>]</p>
 </blockquote>
-
-<div align="center">
-  <center>
-
-<table border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" bgcolor="#E0E0E0" width="90%">
-  <tr>
-    <td>
-    <i>Class <code>path</code> does not currently map invalid characters in 
-    filenames to valid characters. In the future we might add something like 
-    this:</i><blockquote>
-<p><i>When converting filenames to the native operating system format, 
-implementations are encouraged, but not required, to convert otherwise invalid 
-characters or character sequences to valid characters or character sequences. 
-Such conversions are implementation-defined.</i></p>
-<blockquote>
-<p><i>[Note: Filename conversion allows much wider portability of both 
-programs and filenames that would otherwise be possible.</i></p>
-<p><i>Implementations are encouraged to base conversion on existing standards or 
-practice. Examples include the Uniform Resource Locator escape syntax of a percent sign (<code>'%'</code>) 
-followed by two hex digits representing the character value. On OpenVMS, which does not allow percent signs in filenames, a dollar sign (<code>'&#36;'</code>) 
-followed by two hex digits is the existing practice, as is converting lowercase 
-letters to uppercase. -- end note.]</i></p>
-</blockquote>
-    </blockquote>
-    </td>
-  </tr>
-</table>
-
-  </center>
-</div>
 
 <p>If the native format requires 
 paths for regular files to be formatted differently from paths for directories, the 
@@ -776,7 +803,8 @@ otherwise it shall be treated as a regular file path.</p>
 
 <blockquote>
 
-<p>[<i>Note</i>: The above paragraph does not apply to POSIX API systems or Windows API systems since 
+<p>[<i>Note</i>: The above paragraph does not apply to POSIX API systems or 
+<span style="background-color: #FFFF00">Windows API systems</span> since 
 they use the same format 
 for both regular file and directory pathnames. <i>--end note</i>]</p>
 
@@ -829,14 +857,9 @@ particularly where user input is involved. </span> <i>
 <span style="background-color: #E0E0E0">-- end rationale</span></i><span style="background-color: #E0E0E0">]</span></p>
 </blockquote>
 <h4><a name="path-Conversions-to-generic-format"><code>path</code> Conversions 
-to generic format</a></h4>
-<p><a href="#path-generic-format-observers">Generic format observer</a> functions return strings formatted according to the <a href="#generic-pathname-format">generic pathname format</a>. The conversion 
-from generic to native formats is implementation defined.</p>
-<blockquote>
-<p>[<i>Note:</i> For POSIX API systems, no conversion is performed. For Windows 
-API systems,  backslashes are converted to 
-forward slashes. <i>-- end note</i>]</p>
-</blockquote>
+to generic format</a> [fs.cvt.to.generic]</h4>
+<p><a href="#path-generic-format-observers">Generic format observer</a> functions return strings formatted according to the <a href="#generic-pathname-format">generic pathname format</a> 
+using <i>preferred-separator</i>. See [<a href="#Operating-system-examples">fs.os.examples</a>].</p>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a></h3>
 <p>Template parameters named <code><a name="InputIterator">InputIterator</a></code> are required meet the 
 requirements for a C++ standard library <code>RandomIterator</code> compliant iterator. The iterator's value type is required to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
@@ -877,28 +900,14 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
   <i>Returns: </i><code>*this</code></p>
   </blockquote>
 <h3><a name="path-appends"><code><font size="4"> path</font></code> appends</a></h3>
-  <p><span style="background-color: #FFFF00">The append operations use </span> <code>
-  <span style="background-color: #FFFF00">operator/=</span></code><span style="background-color: #FFFF00"> to denote their semantic 
-  effect of appending the platform's preferred directory separator when needed. The 
-  preferred 
-  directory separator is implementation-defined.</span></p>
-<blockquote>
-    <p align="left"><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:
-    </span> </i><span style="background-color: #FFFF00">For POSIX-like implementations, including</span><b><span style="background-color: #FFFF00">
-    </span> </b><span style="background-color: #FFFF00">Unix variants, Linux, and Mac OS X, the preferred directory separator is a 
-    single forward slash.</span></p>
-    <p align="left"><span style="background-color: #FFFF00">For Windows-like implementations, including
-    </span> <a href="http://www.cygwin.com/">
-    <span style="background-color: #FFFF00">Cygwin</span></a><span style="background-color: #FFFF00"> and
-    </span> <a href="http://www.mingw.org/">
-    <span style="background-color: #FFFF00">MinGW</span></a><span style="background-color: #FFFF00">, the preferred directory 
-    separator is a single backslash.</span><i><span style="background-color: #FFFF00">--end note</span></i><span style="background-color: #FFFF00">]</span></p>
-      </blockquote>
+  <p>The append operations use <code>
+  operator/=</code> to denote their semantic effect of appending <i>
+  preferred-separator</i> when needed. </p>
 <pre>path&amp; operator/=(const path&amp; p);</pre>
 <blockquote>
   <p><i>Effects:</i></p>
   <blockquote>
-    Appends the preferred directory separator to <code>pathname</code>, 
+    Appends <code>path::preferred_separator</code> to <code>pathname</code>, 
     converting format and encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]), unless:<ul>
     <li>an added separator 
     would be redundant, or</li>
@@ -906,7 +915,7 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
     <li><code>p.empty()</code>, or</li>
     <li><code>*p.native().cbegin()</code> is a directory separator.</li>
   </ul>
-    <p>Appends <code>p.native()</code> to <code>pathname</code>.</p>
+    <p>Then appends <code>p.native()</code> to <code>pathname</code>.</p>
   </blockquote>
   <p><i>Returns: </i><code>*this</code></p>
 </blockquote>
@@ -917,7 +926,7 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
 <blockquote>
   <p><i>Effects:</i></p>
   <blockquote>
-    <p>Appends a native directory separator to <code>pathname</code>, converting 
+    <p>Appends <code>path::preferred_separator</code> to <code>pathname</code>, converting 
     format and encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]), unless:</p>
     <ul>
     <li>an added separator 
@@ -958,16 +967,14 @@ template &lt;class InputIterator&gt;
  <p><i>Returns: </i><code>*this</code></p>
  </blockquote>
 <h3><a name="path-modifiers"> <code>
-path</code> modifiers</a></h3><pre>void <a name="path-clear">clear</a>();</pre>
+path</code> modifiers</a> [fs.path.modifiers]</h3><pre>void <a name="path-clear">clear</a>();</pre>
 <blockquote>
 <p><i>Postcondition:</i> <code>this-&gt;empty()</code> is true.</p>
 </blockquote>
 <pre>path&amp; <a name="path-make_preferred">make_preferred</a>();</pre>
 <blockquote>
-  <p><i><span style="background-color: #FFFF00">Effects:</span></i><span style="background-color: #FFFF00"> The contained pathname is converted to the preferred native 
-  format. [</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00"> 
-  On POSIX API systems there is thus no effect.&nbsp; On Windows API systems the 
-  effect is thus to replace slashes with backslashes.</span><i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
+  <p><i>Effects:</i> <i>directory-separator</i>s are converted to <i>prefered-separator</i>s. 
+  See [<a href="#Operating-system-examples">fs.os.examples</a>].</p>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
 
@@ -1026,11 +1033,6 @@ function's return type, conversion is performed by <code>cvt</code>.</p>
 
 <h3> <a name="path-generic-format-observers"><code><font size="4">path</font></code> generic format observers</a></h3>
 <p>The string returned by all generic format observers is in the <a href="#generic-pathname-format">generic pathname format</a>.</p>
-<blockquote>
-<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span></i><span style="background-color: #FFFF00"> For POSIX, no conversion occurs, since the native format and 
-generic format are the same. For Windows API systems, backslashes are converted to slashes
-</span> <i><span style="background-color: #FFFF00">--end note</span></i><span style="background-color: #FFFF00">]</span></p>
-</blockquote>
 <pre>template &lt;class String&gt;
 String <a name="generic_string-template">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;</pre>
 <blockquote>
