@@ -206,7 +206,7 @@ is unreasonable for a program to detect them prior to calling the function. <i>
 <p>Some behavior and other characteristics is specified in this $WHAT; as being 
 operating system dependent ([fs.def.osdep]). What operation systems an 
 implementation supports is implementation defined.</p>
-<h2 dir="ltr"><a name="Definitions">Definitions</a> [fs.definitions]</h2>
+<h2><a name="Definitions">Definitions</a> [fs.definitions]</h2>
 <p dir="ltr">The following definitions  shall apply throughout this $WHAT;:</p>
 <h3 dir="ltr"><a name="operating system dependent">operating system dependent</a> 
 [fs.def.osdep]</h3>
@@ -240,21 +240,26 @@ additional filenames that have special meaning.</span></p>
 the location of a file within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
 root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
 A <a href="#Pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
-<p dir="ltr"><b><i><a name="Absolute-path">Absolute path</a>:</i></b> A path that 
+<h3 dir="ltr"><a name="Absolute-path">a</a><b><a name="Absolute-path">bsolute 
+path</a> [fs.def.absolute-path]</b></h3>
+<p dir="ltr">A path that 
 unambiguously 
 identifies the location of a file without reference to an additional starting 
 location. The elements of a path that determine if it is absolute are 
 operating system dependent.</p>
-<p dir="ltr"><i><b><a name="Relative-path">Relative path</a>:</b></i> A path that 
+<h3 dir="ltr"><a name="Relative-path">relative path</a> [fs.def.relative-path]</h3>
+<p dir="ltr">A path that 
 is not absolute, and so only 
 unambiguously 
 identifies the location of a file when resolved relative to 
 an implied starting location. The elements of a path that determine if it is 
 relative are operating system dependent.&nbsp; [<i>Note:</i> 
 Paths <code>&quot;.&quot;</code> and <code>&quot;..&quot;</code> are relative paths. <i>--end note</i>]</p>
-<p dir="ltr"><i><b><a name="Canonical-path">Canonical path</a>:</b></i> An absolute path that has 
+<h3 dir="ltr"><a name="canonical-path">canonical path</a> [fs.def.cannonical-path]</h3>
+<p dir="ltr">An absolute path that has 
 no elements that are symbolic links, and no <code>&quot;.&quot;</code> or <code>&quot;..&quot;</code> elements.</p>
-<p dir="ltr"><i><b><a name="Pathname">Pathname</a>:</b> </i>A character string that represents 
+<h3 dir="ltr">pathname [fs.def.pathname]</h3>
+<p dir="ltr">A character string that represents 
 the name of a 
 path. Pathnames are formatted according to the generic pathname grammar or an 
 operating system dependent 
@@ -263,17 +268,20 @@ native pathname format.</p>
 <span style="background-color: #FFFF00">[TBS]</span></i></b></p>
 <p dir="ltr"><b><i><a name="native-pathname-format">Native pathname format:</a></i></b>&nbsp; 
 An operating system dependent format acceptable to the native operating system.</p>
-<p dir="ltr"><i><b><a name="Link">Link</a>:</b> </i>A directory entry object that associates a 
+<h3 dir="ltr"><a name="link">link</a> [fs.def.link]</h3>
+<p dir="ltr">A directory entry object that associates a 
 filename with a file. On some file systems, several directory entries can 
 associate names with the same file.</p>
-<p dir="ltr"><b><i><a name="Hard-link">Hard link</a>:</i></b> A link to an existing file. Some 
+<h3 dir="ltr"><a name="hard-link">hard link</a> [fs.def.hardlink]</h3>
+<p dir="ltr">A link to an existing file. Some 
 file systems support multiple hard links to a file. If the last hard link to a 
 file is removed, the file itself is removed.</p>
 <blockquote dir="ltr">
 <p dir="ltr">[<i>Note:</i> A hard link can be thought of as a shared-ownership smart 
 pointer to a file.<i> -- end note</i>]<i> </i></p>
 </blockquote>
-<p dir="ltr"><i><a name="Symbolic-link">S<b>ymbolic link</b></a><b>:</b> </i>A type of file with the 
+<h3 dir="ltr"><a name="symbolic-link">symbolic link</a> [fs.def.symlink]</h3>
+<p dir="ltr">A type of file with the 
 property that when the file is encountered during pathname resolution, a string 
 stored by the file is used to modify the pathname resolution.</p>
 <blockquote dir="ltr">
@@ -281,7 +289,8 @@ stored by the file is used to modify the pathname resolution.</p>
 If the file pointed to does not exist, the symbolic link is said to be a 
 &quot;dangling&quot; symbolic link.<i> -- end note</i>]<i> </i></p>
 </blockquote>
-<p dir="ltr"><b><i><a name="Race-condition">File system race</a>:</i></b> The condition that occurs 
+<h3 dir="ltr"><a name="file-system-race">file system race</a> [fs.def.race]</h3>
+<p dir="ltr">The condition that occurs 
 when multiple threads, processes, or computers interleave access and 
 modification of 
 the same object within a file system.</p>
