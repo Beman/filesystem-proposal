@@ -1643,9 +1643,13 @@ or others removes write permission for all. </span> </p>
   file's current bits</td>
 </tr>
 <tr><td><code><a name="symlink_perms">symlink_perms</a></code></td><td><code>0x4000</code></td><td></td><td>
-  On ISO/IEC 9945 <code>permissions()</code> resolves symlinks unless <code>symlink_perms</code> is specified. 
-  Meaningless on Windows as <code>permissions()</code> never resolves symlinks. 
-  Meaningless on Mac OS X and some other BSD systems as <code>permissions()</code> always resolves symlinks. Get over it.</td>
+  <span style="background-color: #FFFF00">On ISO/</span><span style="background-color: #FFFF00">IEC</span><span style="background-color: #FFFF00"> 9945
+  </span> <code><span style="background-color: #FFFF00">permissions()</span></code><span style="background-color: #FFFF00"> resolves symlinks unless
+  </span> <code><span style="background-color: #FFFF00">symlink_perms</span></code><span style="background-color: #FFFF00"> is specified. 
+  Meaningless on Windows as </span> <code>
+  <span style="background-color: #FFFF00">permissions()</span></code><span style="background-color: #FFFF00"> never resolves symlinks. 
+  Meaningless on Mac OS X and some other BSD systems as </span> <code>
+  <span style="background-color: #FFFF00">permissions()</span></code><span style="background-color: #FFFF00"> always resolves symlinks. Get over it.</span></td>
 </tr>
 
 </table>
@@ -2368,7 +2372,7 @@ bool <a name="equivalent2">equivalent</a>(const path&amp; p1, const path&amp; p2
   file system entity if two candidate entities reside on the same device at the 
   same location. This is determined as if by the values of the ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">stat</a></code> structure<code>,</code> obtained as if by <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code> for the two paths, having equal <code>st_dev</code> values 
   and equal <code>st_ino</code> values.</p>
-  <p>[<i>Note:</i> ISO/IEC 9945 requires that <i>&quot;st_dev</i> must be unique within a Local Area Network&quot;. Conservative <i>
+  <p>[<i>Note:</i> ISO/IEC 9945 requires that <i>&quot;st_dev</i> must be unique within a Local Area Network&quot;. Conservative
   ISO/IEC 9945 implementations may also wish to check for equal <code>st_size</code> and <code>st_mtime</code> values. <i>Windows</i> implementations may use <code>GetFileInformationByHandle()</code> as a surrogate for <code>stat()</code>, 
   and consider &quot;same&quot; to be equal values for <code>dwVolumeSerialNumber</code>, <code>nFileIndexHigh</code>, <code>nFileIndexLow</code>, <code>nFileSizeHigh</code>, <code>nFileSizeLow</code>, <code>ftLastWriteTime.dwLowDateTime</code>, and <code>ftLastWriteTime.dwHighDateTime</code>. <i>-- end note</i>]</p>
   </blockquote>
@@ -2479,7 +2483,7 @@ void <a name="last_write_time4">last_write_time</a>(const path&amp; p, const std
 <blockquote>
   <p><i>Effects:</i> Sets the time of last data modification of the file 
   resolved to by <code>p</code> to <code>new_time</code>, as if by ISO/IEC 
-  9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code> followed by <i>
+  9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code> followed by
   ISO/IEC 9945 <a href="http://www.opengroup.org/onlinepubs/000095399/functions/utime.html"><code>utime()</code></a>.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   <p>[<i>Note:</i> A postcondition of <code>last_write_time(p) == new_time</code> is not specified since it might not hold for file systems 
@@ -2490,7 +2494,7 @@ void permissions(const path&amp; p, <a href="#symlink_perms">perms</a> prms, sys
 <blockquote>
   <p>
   <i>Requires:</i> <code>!((prms &amp; add_perms) &amp;&amp; (prms &amp; remove_perms))</code>.</p>
-  <p><i>Effects:</i> Applies the effective permissions bits from <code>prms</code> to the file <code>p</code> resolves to, as if by <i>
+  <p><i>Effects:</i> Applies the effective permissions bits from <code>prms</code> to the file <code>p</code> resolves to, as if by
   ISO/IEC 9945 <code><a href="http://pubs.opengroup.org/onlinepubs/9699919799/functions/fchmodat.html">fchmodat()</a></code>. The effective permission bits are determined as 
   specified by the following table. </p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
