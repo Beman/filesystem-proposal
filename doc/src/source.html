@@ -157,9 +157,6 @@ $endif
 
 $snippet wording_prefix "$SNIPPET_FILE;"
 
-<p>This $WHAT; describes components that perform operations on file systems and 
-their components, such as paths, regular files, and directories.</p>
-
 <h2><a name="Conformance">Conformance</a> [fs.conformance]</h2>
 
 <h3>ISO/IEC 9945 conformance [fs.conform.9945]</h3>
@@ -424,7 +421,7 @@ specifications for operating systems that use the ISO/IEC 9945  or Windows® appl
   </tr>
   <tr>
     <td>
-    <p dir="ltr">Format conversion by <code>path</code> generic format observers</td>
+    <p>Format conversion by <code>path</code> generic format observers</td>
     <td>[<a href="#path-generic-format-observers">path.generic.obs</a>]</td>
     <td>No conversion performed</td>
     <td>Backslashes converted to slashes</td>
@@ -852,7 +849,7 @@ $NAMESPACE_END;</pre>
 character type used by the operating system to represent pathnames.</p>
 <h3><a name="path-Conversions"><code>path</code> Conversions</a> [path.cvt]</h3>
 <h4><code>path</code> argument conversions [<a name="path.arg.convert">path.arg.cvt</a>]</h4>
-<h5 dir="ltr"><a name="path-Conversions-to-native-format"><code>path</code> argument 
+<h5><a name="path-Conversions-to-native-format"><code>path</code> argument 
 format conversions</a> [path.arg.fmt.cvt]</h5>
 <p>Member function arguments that take character sequences representing paths 
 may use the <a href="#generic-pathname-format">generic pathname format</a> or 
@@ -1403,7 +1400,7 @@ inline std::basic_istream&lt;Char, Traits&gt;&amp; operator&gt;&gt;(std::basic_i
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p = str;</code></p>
   <p><i>Returns:</i> <code>is</code></p>
   </blockquote>
-<h2 dir="ltr"><a name="Class-filesystem_error">Class <code>filesystem_error</code> 
+<h2><a name="Class-filesystem_error">Class <code>filesystem_error</code> 
 [class.filesystem_error]</a></h2>
 <pre>$NAMESPACE_BEGIN;
       class filesystem_error : public system_error
@@ -1693,7 +1690,7 @@ or others removes write permission for all. </span> </p>
 </tr>
 
 </table>
-<h2 dir="ltr"><a name="file_status">Class file_status</a> [class.file_status]</h2>
+<h2><a name="file_status">Class file_status</a> [class.file_status]</h2>
 <pre>$NAMESPACE_BEGIN;
       class file_status
       {
@@ -1958,7 +1955,7 @@ file_status  symlink_status(system::error_code&amp; ec) const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path &gt;= rhs.m_path</code>.</p>
 </blockquote>
-<h2 dir="ltr"><a name="Class-directory_iterator">Class <code>directory_iterator</code> 
+<h2><a name="Class-directory_iterator">Class <code>directory_iterator</code> 
 [class.directory_iterator]</a></h2>
 <p>Objects of type <code>directory_iterator</code> provide standard library 
 compliant iteration over the contents of a directory. Also see class <code><a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a></code>.</p>
