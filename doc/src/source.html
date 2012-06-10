@@ -2,6 +2,9 @@
 <!-- © Copyright Beman Dawes, 2002, 2006, 2007, 2009, 2010, 2011 -->
 <!-- Distributed under the Boost Software License, Version 1.0. -->
 <!-- See http://www.boost.org/LICENSE_1_0.txt -->
+
+<!-- generate-section-numbers=false -->
+
 <head>
 <meta http-equiv="Content-Language" content="en-us">
 <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
@@ -352,14 +355,14 @@ directory. Specific <i>filenames</i> may have special meanings for a particular
 operating system.</p>
 <h2><a name="Operating-system-examples">Operating system dependent examples</a> (Informative) [fs.os.examples]</h2>
 <p>Certain features are specified in this $WHAT; as being operating system dependent. The following table shows the application of those 
-specifications for operating systems that use the ISO/IEC 9945 API or Windows 
-API application program interfaces.</p>
+specifications for operating systems that use the ISO/IEC 9945  or Windows® application program interfaces 
+(APIs).<sup>[footnote1]</sup></p>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td><b>Feature</b></td>
     <td><b>Section</b></td>
-    <td><b>ISO/IEC 9945</b></td>
-    <td><b>Windows</b></td>
+    <td><b>ISO/IEC 9945 API</b></td>
+    <td><b>Windows</b>®<b> API</b></td>
     <td><b>Notes</b></td>
   </tr>
   <tr>
@@ -449,23 +452,27 @@ API application program interfaces.</p>
     <td>Initial imbued <code>path</code> locale</td>
     <td>[<a href="#path-imbued-locale">path.imbued.locale</a>]</td>
     <td> <code>std::locale(&quot;&quot;)<br>
-    </code><sup>[footnote 1]</sup></td>
+    </code><sup>[footnote 2]</sup></td>
     <td>Implementation supplied locale using <code>MultiByteToWideChar</code> 
     and <code>WideCharToMultiByte</code> with a codepage of <code>CP_ACP</code> 
     if <code>AreFileApisANSI()</code>is true, otherwise codepage <code>CP_OEMCP</code>.<sup>[footnote 
-    2]</sup></td>
-    <td>Apple OS X:&nbsp; Implementation supplied locale providing UTF-8 <code>codecvt</code> 
-    facet.<sup>[footnote 3]</sup></td>
+    3]</sup></td>
+    <td>Apple OS X®:&nbsp; Implementation supplied locale providing UTF-8 <code>codecvt</code> 
+    facet.<sup>[footnote 4]</sup></td>
   </tr>
 </table>
-<p><sup>[footnote 1] </sup>Rationale: ISO C specifies <code>std::locale(&quot;&quot;)</code> as &quot;the locale-specific native 
+<p><sup>[footnote1]</sup> OS X® and Windows® are examples of commercially 
+available operating systems. This information is given for the convenience of 
+users of this document and does not constitute an endorsement by ISO or IEC of 
+these products.</p>
+<p><sup>[footnote 2] </sup>Rationale: ISO C specifies <code>std::locale(&quot;&quot;)</code> as &quot;the locale-specific native 
 environment&quot;, while ISO/IEC 9945 says it &quot;Specifies an implementation-defined native 
 environment.&quot;</p>
-<p><sup>[footnote 2] </sup>Rationale: This is the current behavior of C and C++ 
+<p><sup>[footnote 3] </sup>Rationale: This is the current behavior of C and C++ 
 standard library functions that perform file operations using narrow character strings to identify 
 paths. Changing this behavior would be  surprising, 
 particularly where user input is involved.</p>
-<p><sup>[footnote 3]</sup> Rationale: Vendor documentation states &quot;All BSD 
+<p><sup>[footnote 4]</sup> Rationale: Vendor documentation states &quot;All BSD 
 system functions expect their string parameters to be in UTF-8 encoding and 
 nothing else.&quot;</p>
 <h2><a name="Header-filesystem-synopsis">Header <code>&lt;$HEADER;&gt;</code> synopsis</a> 
@@ -792,8 +799,8 @@ system or for a particular file system.</p>
         template &lt;class String&gt;
         String <a href="#generic_string-template">generic_string</a>() const;
 
-        const string        <a href="#generic_string">generic_string</a>(<span style="background-color: #FFFF00">const</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">codecvt_type</span><span style="background-color: #FFFF00">&amp; </span><span style="background-color: #FFFF00">cvt</span><span style="background-color: #FFFF00">=</span><span style="background-color: #FFFF00">codecvt</span><span style="background-color: #FFFF00">()</span>) const;   // generic format
-        const wstring       <a href="#generic_wstring">generic_wstring</a>(<span style="background-color: #FFFF00">const</span><span style="background-color: #FFFF00"> </span><span style="background-color: #FFFF00">codecvt_type</span><span style="background-color: #FFFF00">&amp; </span><span style="background-color: #FFFF00">cvt</span><span style="background-color: #FFFF00">=</span><span style="background-color: #FFFF00">codecvt</span><span style="background-color: #FFFF00">()</span>) const;  // generic format
+        const string        <a href="#generic_string">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // generic format
+        const wstring       <a href="#generic_wstring">generic_wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // generic format
         const u16string     <a href="#generic_u16string">generic_u16string</a>() const;                                 // generic format
         const u32string     <a href="#generic_u32wstring">generic_u32string</a>() const;                                 // generic format
 
@@ -1177,9 +1184,9 @@ for (; !p.extension().empty(); p = p.stem())
     <pre><code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).extension(); //</code> outputs &quot;<code>.txt</code>&quot;</pre>
   </blockquote>
   <p> <i>--end example</i>]</p>
-  <p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span><b><span style="background-color: #FFFF00">
-  </span> </b></i><span style="background-color: #FFFF00">The dot is included in the return value so that 
-  it is possible to distinguish between no extension and an empty extension. See
+  <p>[<i>Note:<b> </b></i>The dot is included in the return value so that it is 
+  possible to distinguish between no extension and an empty extension. <span style="background-color: #FFFF00">
+  See
   </span> <a href="http://permalink.gmane.org/gmane.comp.lib.boost.devel/199744">
   <span style="background-color: #FFFF00">http://permalink.gmane.org/gmane.comp.lib.boost.devel/199744</span></a><span style="background-color: #FFFF00"> for more 
   extensive rationale.&nbsp; </span> <i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
@@ -1580,12 +1587,11 @@ $WHAT;.</p>
   </tr>
 </table>
 <h2><a name="Enum-perms">Enum perms</a> [enum.perms]</h2>
-<p><span style="background-color: #FFFF00">This </span>
-<span style="background-color: #FFFF00">enum</span><span style="background-color: #FFFF00"> specifies bitmask constants uses to identify file 
-permissions. The ISO/IEC 9945 standard specifies actual values, and those values have 
-been adopted here because they are very familiar and ingrained for many ISO/IEC 
-9945 
-users.</span></p>
+<p>This <code>enum</code> specifies bitmask constants uses to identify file 
+permissions. <i><span style="background-color: #E0E0E0">ISO/</span><span style="background-color: #E0E0E0">IEC</span><span style="background-color: #E0E0E0"> 9945 
+(POSIX) specifies actual values, and those values have been adopted here because 
+they are very familiar and ingrained for many POSIX 
+users.</span></i></p>
 <blockquote>
 <p><span style="background-color: #FFFF00">Caution: Operating systems do not always support permissions as described in 
 the table.</span></p>
@@ -2809,6 +2815,10 @@ path unique_path(const path&amp; model, system::error_code&amp; ec);</pre>
   provided by the operating system. [<i>Note</i>: Such generators may block 
   until sufficient entropy develops. <i>--end note</i>]</p>
 </blockquote>
+<hr>
+
+<!-- generate-section-numbers=false -->
+
 $snippet wording_suffix "$SNIPPET_FILE;"
 
 <h2><a name="Path-decomposition-table">Path decomposition table</a></h2>
