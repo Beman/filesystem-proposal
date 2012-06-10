@@ -468,7 +468,8 @@ particularly where user input is involved.</p>
 <p><sup>[footnote 3]</sup> Rationale: Vendor documentation states &quot;All BSD 
 system functions expect their string parameters to be in UTF-8 encoding and 
 nothing else.&quot;</p>
-<h2><a name="Header-filesystem-synopsis">Header <code>&lt;$HEADER;&gt;</code> synopsis</a></h2>
+<h2><a name="Header-filesystem-synopsis">Header <code>&lt;$HEADER;&gt;</code> synopsis</a> 
+[filesystem.synopsis]</h2>
 <pre>$NAMESPACE_BEGIN;
     class <a href="#class-path">path</a>;    
 $if $TARGET; == BOOST
@@ -661,7 +662,7 @@ $endif
     path         <a href="#unique_path">unique_path</a>(const path&amp; model, system::error_code&amp; ec);
 
 $NAMESPACE_END;</pre>
-<h2><a name="Error-reporting">Error reporting</a></h2>
+<h2><a name="Error-reporting">Error reporting</a> [fs.err.report]</h2>
 <p>Filesystem library functions often provide two overloads, one that 
 throws an exception to report file system errors, and another that sets an <code>error_code</code>.</p>
 <blockquote>
@@ -842,8 +843,8 @@ system or for a particular file system.</p>
 $NAMESPACE_END;</pre>
 <p><code><a name="value_type">value_type</a></code> is a <code>typedef</code> for the 
 character type used by the operating system to represent pathnames.</p>
-<h3><a name="path-Conversions"><code>path</code> Conversions</a></h3>
-<h4><code>path</code> argument conversions [<a name="path.arg.convert">path.arg.convert</a>]</h4>
+<h3><a name="path-Conversions"><code>path</code> Conversions</a> [path.cvt]</h3>
+<h4><code>path</code> argument conversions [<a name="path.arg.convert">path.arg.cvt</a>]</h4>
 <h5 dir="ltr"><a name="path-Conversions-to-native-format"><code>path</code> argument 
 format conversions</a> [path.arg.fmt.cvt]</h5>
 <p>Member function arguments that take character sequences representing paths 
@@ -896,7 +897,7 @@ shall be performed using the imbued locale (). This imbued locale shall be initi
 to generic format</a> [fs.cvt.to.generic]</h4>
 <p><a href="#path-generic-format-observers">Generic format observer</a> functions return strings formatted according to the <a href="#generic-pathname-format">generic pathname format</a> 
 using <i>preferred-separator</i>. See [<a href="#Operating-system-examples">fs.os.examples</a>].</p>
-<h3><a name="path-Requirements"><code>path</code> Requirements</a></h3>
+<h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
 <p>Template parameters named <code><a name="InputIterator">InputIterator</a></code> are required meet the 
 requirements for a C++ standard library <code>RandomIterator</code> compliant iterator. The iterator's value type is required to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
 <p>Template parameters named <code><a name="Source">Source</a></code> are required to be one of:</p>
@@ -912,7 +913,7 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
 </ul>
 
 <h3> <a name="path-constructors"> <code>
-<font size="4">path</font></code> constructors</a></h3>
+<font size="4">path</font></code> constructors</a> [path.construct]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path(Source const&amp; source);</pre>
 <pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
@@ -923,7 +924,7 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
 </blockquote>
 <h3> <a name="path-assignments"> <code>
-<font size="4">path</font></code> assignments</a></h3>
+<font size="4">path</font></code> assignments</a> [path.assign]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; operator=(Source const&amp; source);</pre>
 <pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
@@ -935,7 +936,8 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
   <p>
   <i>Returns: </i><code>*this</code></p>
   </blockquote>
-<h3><a name="path-appends"><code><font size="4"> path</font></code> appends</a></h3>
+<h3><a name="path-appends"><code><font size="4"> path</font></code> appends</a> 
+[path.append]</h3>
   <p>The append operations use <code>
   operator/=</code> to denote their semantic effect of appending <i>
   preferred-separator</i> when needed. </p>
@@ -978,7 +980,7 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
   <p><i>Returns: </i><code>*this</code></p>
   </blockquote>
   
-<h3><a name="path-concatenation"><code>path</code> concatenation</a></h3>
+<h3><a name="path-concatenation"><code>path</code> concatenation</a> [path.concat]</h3>
 <pre>path&amp; operator+=(const path&amp; x);
 path&amp; operator+=(const string_type&amp; x);
 path&amp; operator+=(const value_type* x);
@@ -1003,7 +1005,7 @@ template &lt;class InputIterator&gt;
  <p><i>Returns: </i><code>*this</code></p>
  </blockquote>
 <h3><a name="path-modifiers"> <code>
-path</code> modifiers</a> [fs.path.modifiers]</h3><pre>void <a name="path-clear">clear</a>();</pre>
+path</code> modifiers</a> [path.modifiers]</h3><pre>void <a name="path-clear">clear</a>();</pre>
 <blockquote>
 <p><i>Postcondition:</i> <code>this-&gt;empty()</code> is true.</p>
 </blockquote>
@@ -1087,7 +1089,7 @@ const u32wstring <a name="generic_u32wstring">generic_u32wstring</a>() const; </
 function's return type, conversion is performed by <code>cvt</code>.</p>
 </blockquote>
 
-<h3> <a name="path-compare"><code>path</code> compare</a></h3>
+<h3> <a name="path-compare"><code>path</code> compare</a> [path.compare]</h3>
 <pre>int compare(const path&amp; p) const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> A value less than 0 if the elements of <code>*this</code> are lexicographically less than the elements of <code>p</code>, otherwise a 
@@ -1104,7 +1106,8 @@ function's return type, conversion is performed by <code>cvt</code>.</p>
 <blockquote>
   <p><i>Returns:</i> <code>compare(path(s))</code>.</p>
 </blockquote>
-<h3> <a name="path-decomposition"> <code><font size="4">path</font></code> decomposition</a></h3>
+<h3> <a name="path-decomposition"> <code><font size="4">path</font></code> decomposition</a> 
+[path.decompose]</h3>
 <p><span style="background-color: #E0E0E0"><i>See the <a href="#Path-decomposition-table">Path decomposition table</a> for examples 
 for values returned by decomposition functions. The <a href="tutorial.html#Using-path-decomposition">Tutorial</a> may also be 
 helpful.</i></span></p>
@@ -1181,7 +1184,7 @@ for (; !p.extension().empty(); p = p.stem())
   <span style="background-color: #FFFF00">http://permalink.gmane.org/gmane.comp.lib.boost.devel/199744</span></a><span style="background-color: #FFFF00"> for more 
   extensive rationale.&nbsp; </span> <i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
 </blockquote>
-<h3> <a name="path-query"> <code><font size="4">path</font></code> query</a></h3>
+<h3> <a name="path-query"> <code><font size="4">path</font></code> query</a> [path.query]</h3>
 <pre>bool <a name="path-empty">empty</a>() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_pathname.empty()</code>.</p>
@@ -1227,7 +1230,7 @@ for (; !p.extension().empty(); p = p.stem())
   <p><i>Returns:</i> <code>!is_absolute()</code>.</p>
 </blockquote>
 <h3> <a name="path-iterators"> <code>
-<font size="4">path</font></code> iterators</a></h3>
+<font size="4">path</font></code> iterators</a> [path.itr]</h3>
 <p> Path iterators iterate over the elements of the stored pathname.</p>
 <p> A <code>path::iterator</code> is a constant iterator satisfying all 
 the requirements of a bidirectional iterator (C++ Std, 24.1.4 Bidirectional 
@@ -1304,7 +1307,8 @@ const string_type  external_directory_string() const { return native(); }</pre>
 
 $endif
 
-<h3> <a name="path-non-member-functions"> <code><font size="4">path</font></code> non-member functions</a></h3>
+<h3> <a name="path-non-member-functions"> <code><font size="4">path</font></code> non-member functions</a> 
+[path.non-member]</h3>
 $if $TARGET; == BOOST
   <pre>bool lexicographical_compare(path::iterator first1, path::iterator last1,
                              path::iterator first2, path::iterator last2);</pre>
@@ -1370,7 +1374,7 @@ $endif
   <p><i>Returns:</i> <code>path(lhs) /= rhs</code>.</p>
 </blockquote>
 <h3> <a name="path-non-member-operators"><code><font size="4">path</font></code></a><a name="path-inserter-extractor"> inserter 
-  and extractor</a></h3>
+  and extractor</a> [path.io]</h3>
 <p> The inserter and extractor delimit the string with double-quotes (<code>&quot;</code>) 
 to ensure that paths with embedded spaces will round trip correctly. Ampersand (<code>&amp;</code>) 
 is used as an escape character, so the path can itself contain double quotes.</p>
@@ -1392,7 +1396,8 @@ inline std::basic_istream&lt;Char, Traits&gt;&amp; operator&gt;&gt;(std::basic_i
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p = str;</code></p>
   <p><i>Returns:</i> <code>is</code></p>
   </blockquote>
-<h3><a name="Class-filesystem_error">Class <code>filesystem_error</code></a></h3>
+<h2 dir="ltr"><a name="Class-filesystem_error">Class <code>filesystem_error</code> 
+[class.filesystem_error]</a></h2>
 <pre>$NAMESPACE_BEGIN;
       class filesystem_error : public system_error
       {
@@ -1420,7 +1425,8 @@ $NAMESPACE_END;</pre>
 <p>The class template <code>filesystem_error</code> defines the type of 
 objects thrown as exceptions to report file system errors from functions described in this 
 $WHAT;.</p>
-<h4> <a name="filesystem_error-members"> <code>filesystem_error</code> members</a></h4>
+<h3> <a name="filesystem_error-members"> <code>filesystem_error</code> members</a> 
+[filesystem_error.members]</h3>
 <pre><a name="filesystem_error-2-arg">filesystem_error</a>(const std::string&amp; what_arg, error_code ec);</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
@@ -1523,7 +1529,7 @@ $WHAT;.</p>
   not empty, and <code>system_error::what()</code> strings in the returned 
   string.</p>
 </blockquote>
-<h3><a name="Enum-file_type">Enum file_type</a></h3>
+<h2><a name="Enum-file_type">Enum file_type</a> [enum.file_type]</h2>
 <p>This enum specifies constants uses to identify file types.</p>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
@@ -1573,7 +1579,7 @@ $WHAT;.</p>
     of the above cases.</td>
   </tr>
 </table>
-<h3><a name="Enum-perms">Enum perms</a></h3>
+<h2><a name="Enum-perms">Enum perms</a> [enum.perms]</h2>
 <p><span style="background-color: #FFFF00">This </span>
 <span style="background-color: #FFFF00">enum</span><span style="background-color: #FFFF00"> specifies bitmask constants uses to identify file 
 permissions. The ISO/IEC 9945 standard specifies actual values, and those values have 
@@ -1681,7 +1687,7 @@ or others removes write permission for all. </span> </p>
 </tr>
 
 </table>
-<h3><a name="file_status">Class file_status</a></h3>
+<h2 dir="ltr"><a name="file_status">Class file_status</a> [class.file_status]</h2>
 <pre>$NAMESPACE_BEGIN;
       class file_status
       {
@@ -1707,7 +1713,8 @@ or others removes write permission for all. </span> </p>
 $NAMESPACE_END;</pre>
 <p>An object of type <code>file_status</code> stores information about the type 
 and permissions of a file.</p>
-<h4><a name="file_status-constructors"><code>file_status</code> constructors</a></h4>
+<h3><a name="file_status-constructors"><code>file_status</code> constructors</a> 
+[file_status.cons]</h3>
 <pre>explicit file_status() noexcept;</pre>
 <blockquote>
   <p><i>Postconditions:</i> <code>type() == status_error</code>, <code>permissions() == perms_not_known</code>.</p>
@@ -1716,7 +1723,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Postconditions:</i> <code>type() == ft</code>, <code>permissions() == prms</code>.</p>
 </blockquote>
-  <h4><a name="file_status-observers"><code>file_status</code> observers</a></h4>
+  <h3><a name="file_status-observers"><code>file_status</code> observers</a> [file_status.obs]</h3>
 <pre><a href="#file_type">file_type</a> type() const noexcept;</pre>
 <blockquote>
   <p><i>Returns: </i>The value of <code>type()</code> specified by the <i>postconditions</i> of the most recent call to a constructor, operator=, or <code>type(file_type)</code> function.</p>
@@ -1725,7 +1732,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Returns: </i>The value of <code>permissions()</code> specified by the <i>postconditions</i> of the most recent call to a constructor, operator=, or <code>permissions(perms)</code> function.</p>
 </blockquote>
-<h4><a name="file_status-modifiers"><code>file_status</code> modifiers</a></h4>
+<h3><a name="file_status-modifiers"><code>file_status</code> modifiers</a> [file_status.mods]</h3>
 <pre>void type(<a href="#file_type">file_type</a> ft) noexcept;</pre>
 <blockquote>
   <p><i>Postconditions:</i> <code>type() == ft</code>.</p>
@@ -1734,7 +1741,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Postconditions:</i> <code>permissions() == prms</code>.</p>
 </blockquote>
-<h3><a name="Class-directory_entry">Class <code>directory_entry</code></a></h3>
+<h2><a name="Class-directory_entry">Class <code>directory_entry</code></a> [class.directory_entry]</h2>
 <div>
 <pre>$NAMESPACE_BEGIN;
       class directory_entry
@@ -1790,7 +1797,8 @@ versus one second for cached status queries. Windows XP, 3.0 GHz processor, with
 a moderately fast hard-drive. Similar speedups are expected on Linux and BSD-derived 
 systems that provide status as a by-product of directory iteration.</i></span></p>
 </blockquote>
-<h4> <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a></h4>
+<h3> <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a> 
+[directory_entry.cons]</h3>
 <pre>directory_entry();</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
@@ -1835,7 +1843,8 @@ systems that provide status as a by-product of directory iteration.</i></span></
     </tr>
   </table>
 </blockquote>
-<h4> <a name="directory_entry-modifiers"> <code>directory_entry </code>modifiers</a></h4>
+<h3> <a name="directory_entry-modifiers"> <code>directory_entry </code>modifiers</a> 
+[directory_entry.mods]</h3>
 <pre>void assign(const path_type&amp; p, file_status st=file_status(), file_status symlink_st=file_status());</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
@@ -1880,7 +1889,8 @@ systems that provide status as a by-product of directory iteration.</i></span></
     </tr>
   </table>
 </blockquote>
-<h4> <a name="directory_entry-observers"> <code>directory_entry</code> observers</a></h4>
+<h3> <a name="directory_entry-observers"> <code>directory_entry</code> observers</a> 
+[directory_entry.obs]</h3>
 <pre>const path&amp; path() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path</code></p>
@@ -1942,7 +1952,8 @@ file_status  symlink_status(system::error_code&amp; ec) const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path &gt;= rhs.m_path</code>.</p>
 </blockquote>
-<h3><a name="Class-directory_iterator">Class <code>directory_iterator</code></a></h3>
+<h2 dir="ltr"><a name="Class-directory_iterator">Class <code>directory_iterator</code> 
+[class.directory_iterator]</a></h2>
 <p>Objects of type <code>directory_iterator</code> provide standard library 
 compliant iteration over the contents of a directory. Also see class <code><a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a></code>.</p>
 <pre>$NAMESPACE_BEGIN;
@@ -2006,7 +2017,8 @@ unspecified whether or not subsequent incrementing of the iterator will ever
 result in an iterator whose value is the removed or added directory entry. See
 ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/readdir_r.html">readdir_r()</a></code>. <i>--end note</i>]</p>
 </blockquote>
-<h4><a name="directory_iterator-members"><code>directory_iterator</code> members</a></h4>
+<h3><a name="directory_iterator-members"><code>directory_iterator</code> members</a> 
+[directory_iterator.members]</h3>
 
 <p><code><a name="directory_iterator-default-ctor">directory_iterator</a>() 
 noexcept;</code></p>
@@ -2039,7 +2051,8 @@ directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 
 </blockquote>
-<h3><a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code></a></h3>
+<h2><a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
+[class.rec.dir.itr]</a></h2>
 <p>Objects of type <code>recursive_directory_iterator</code> provide standard library 
 compliant iteration over the contents of a directory, including recursion into 
 its sub-directories.</p>
@@ -2172,7 +2185,7 @@ is decremented and iteration of the parent directory resumes.</li>
   <p>[<i>Note:</i> <code>no_push()</code> is used to prevent 
   unwanted recursion into a directory. <i>--end note</i>]</p>
 </blockquote>
-<h3><a name="Operational-functions">Operational functions</a></h3>
+<h2><a name="Operational-functions">Operational functions</a> [fs.op.funcs]</h2>
 <p>Operational functions query or modify files, including directories, in external 
 storage.</p>
 <p>Operational functions access a file by resolving an 
@@ -2182,7 +2195,6 @@ path is resolved as if by the ISO/IEC 9945 <a href="http://www.opengroup.org/onl
 other kinds of errors occur frequently in file system operations, users should be aware 
 that any filesystem operational function, no matter how apparently innocuous, may encounter 
 an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end note</i>]</p>
-<h4><a name="Function-specifications">Operational function specifications</a></h4>
 <pre>path <a name="absolute">absolute</a>(const path&amp; p, const path&amp; base=current_path());</pre>
   <blockquote>
   <p><i>Returns:</i> A <a href="#Absolute-path">absolute path</a> composed according to the 
