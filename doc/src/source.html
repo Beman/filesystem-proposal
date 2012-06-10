@@ -350,9 +350,8 @@ be the same as one <i>directory-separator</i> character.</p>
 parent 
 directory. Specific <i>filenames</i> may have special meanings for a particular 
 operating system.</p>
-<h2><a name="Operating-system-examples">Operating system examples</a> (Informative) [fs.os.examples]</h2>
-<p>Certain features are specified in this $WHAT; as being dependent the 
-underlying operating system. The following table shows the application of those 
+<h2><a name="Operating-system-examples">Operating system dependent examples</a> (Informative) [fs.os.examples]</h2>
+<p>Certain features are specified in this $WHAT; as being operating system dependent. The following table shows the application of those 
 specifications for operating systems that use the ISO/IEC 9945 API or Windows 
 API application program interfaces.</p>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
@@ -374,7 +373,7 @@ API application program interfaces.</p>
     <td><code>path::preferred_separator</code></td>
     <td>[<a href="#class-path">class.path</a>]</td>
     <td><code>'/'</code></td>
-    <td><code>L'\\'</code></td>
+    <td><code>L'\\'</code> (single backslash)</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
@@ -388,27 +387,45 @@ API application program interfaces.</p>
     <td>&nbsp;</td>
   </tr>
   <tr>
-    <td><code>path</code> argument format conversion</td>
-    <td>[<a href="#path-Conversions-to-native-format">path.arg.format.convert</a>]</td>
-    <td>No conversion performed</td>
-    <td>No conversion performed</td>
-    <td>For efficiency, the generic format is already acceptable to the native 
-    operating system API for these operating systems.</td>
+    <td><code>path</code> argument disambiguation between generic format and 
+    native format</td>
+    <td>[<a href="#path-Conversions-to-native-format">path.arg.fmt.cvt</a>]</td>
+    <td>Not required</td>
+    <td>Not required</td>
+    <td>There is no need to distinguish between the generic format and native 
+    format for these operating systems.</td>
   </tr>
   <tr>
-    <td><code>path</code> generic format observers</td>
-    <td>&nbsp;</td>
+    <td><code>path</code> argument format conversion</td>
+    <td>[<a href="#path-Conversions-to-native-format">path.arg.fmt.cvt</a>]</td>
+    <td>No conversion performed</td>
+    <td>No conversion performed</td>
+    <td>The generic format is already acceptable to the native API of these operating systems.</td>
+  </tr>
+  <tr>
+    <td><code>path</code> argument disambiguation between file paths and 
+    directory paths</td>
+    <td>[<a href="#path-Conversions-to-native-format">path.arg.fmt.cvt</a>]</td>
+    <td>Not required</td>
+    <td>Not required</td>
+    <td>The native format for regular file paths and directory paths is the same 
+    for these operating systems.</td>
+  </tr>
+  <tr>
+    <td>Format conversion by <code>path</code> native format observers</td>
+    <td>[<a href="#path-native-format-observers">path.native.obs</a>]</td>
+    <td>No conversion performed</td>
+    <td>No conversion performed</td>
+    <td>For efficiency, <code>path</code> objects are required to store pathnames in the native 
+    format regardless of operating system.</td>
+  </tr>
+  <tr>
+    <td>
+    <p dir="ltr">Format conversion by <code>path</code> generic format observers</td>
+    <td>[<a href="#path-generic-format-observers">path.generic.obs</a>]</td>
     <td>No conversion performed</td>
     <td>Backslashes converted to slashes</td>
     <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><code>path</code> native format observers</td>
-    <td>&nbsp;</td>
-    <td>No conversion performed</td>
-    <td>No conversion performed</td>
-    <td>For efficiency, <code>path</code> objects store pathnames in the native 
-    format.</td>
   </tr>
   <tr>
     <td><code>p.make_preferred()</code></td>
@@ -419,15 +436,38 @@ API application program interfaces.</p>
   </tr>
   <tr>
     <td>Characters prohibited in filenames</td>
-    <td>
-    <p>[<a href="#filename">fs.def.filename</a>]</td>
-    <td>0x00, slash.</td>
-    <td>0x00-0x1F, double-quote, asterisk,&nbsp;colon, less-than-sign, 
-    greater-than-sign,&nbsp;question-mark, backslash, slash, and or-bar.</td>
+    <td>[<a href="#filename">fs.def.filename</a>]</td>
+    <td>0x00, <code>'/'</code></td>
+    <td>0x00-0x1F, <code>'&quot;'</code>, <code>'*'</code>,<code>&nbsp;'*'</code>, 
+    <code>'&lt;'</code>, 
+    <code>'&gt;'</code>, <code>'?'</code>, <code>'\\'</code> (single backslash), 
+    <code>'/'</code>, <code>'|'</code></td>
     <td>Many operating systems prohibit the ASCII control characters (0x00-0x1F) 
     in filenames.</td>
   </tr>
+  <tr>
+    <td>Initial imbued <code>path</code> locale</td>
+    <td>[<a href="#path-imbued-locale">path.imbued.locale</a>]</td>
+    <td> <code>std::locale(&quot;&quot;)<br>
+    </code><sup>[footnote 1]</sup></td>
+    <td>Implementation supplied locale using <code>MultiByteToWideChar</code> 
+    and <code>WideCharToMultiByte</code> with a codepage of <code>CP_ACP</code> 
+    if <code>AreFileApisANSI()</code>is true, otherwise codepage <code>CP_OEMCP</code>.<sup>[footnote 
+    2]</sup></td>
+    <td>Apple OS X:&nbsp; Implementation supplied locale providing UTF-8 <code>codecvt</code> 
+    facet.<sup>[footnote 3]</sup></td>
+  </tr>
 </table>
+<p><sup>[footnote 1] </sup>Rationale: ISO C specifies <code>std::locale(&quot;&quot;)</code> as &quot;the locale-specific native 
+environment&quot;, while ISO/IEC 9945 says it &quot;Specifies an implementation-defined native 
+environment.&quot;</p>
+<p><sup>[footnote 2] </sup>Rationale: This is the current behavior of C and C++ 
+standard library functions that perform file operations using narrow character strings to identify 
+paths. Changing this behavior would be  surprising, 
+particularly where user input is involved.</p>
+<p><sup>[footnote 3]</sup> Rationale: Vendor documentation states &quot;All BSD 
+system functions expect their string parameters to be in UTF-8 encoding and 
+nothing else.&quot;</p>
 <h2><a name="Header-filesystem-synopsis">Header <code>&lt;$HEADER;&gt;</code> synopsis</a></h2>
 <pre>$NAMESPACE_BEGIN;
     class <a href="#class-path">path</a>;    
@@ -791,8 +831,8 @@ system or for a particular file system.</p>
         iterator begin() const;
         iterator end() const;
         
-        // <a href="#path_encoding">encoding conversion</a>
-        static std::locale <a href="#path-imbue">imbue</a>( const std::locale&amp; loc );
+        // <a href="#path-imbued-locale">imbued locale</a>
+        static std::locale <a href="#path-imbue">imbue</a>(const std::locale&amp; loc);
         static const codecvt_type &amp; <a href="#path-codecvt">codecvt</a>();
 
       private:
@@ -804,21 +844,21 @@ $NAMESPACE_END;</pre>
 character type used by the operating system to represent pathnames.</p>
 <h3><a name="path-Conversions"><code>path</code> Conversions</a></h3>
 <h4><code>path</code> argument conversions [<a name="path.arg.convert">path.arg.convert</a>]</h4>
-<h5><a name="path-Conversions-to-native-format"><code>path</code> argument 
-format conversions</a> [path.arg.format.convert]</h5>
+<h5 dir="ltr"><a name="path-Conversions-to-native-format"><code>path</code> argument 
+format conversions</a> [path.arg.fmt.cvt]</h5>
 <p>Member function arguments that take character sequences representing paths 
 may use the <a href="#generic-pathname-format">generic pathname format</a> or 
-the <a href="#native-pathname-format">native pathname format</a>. If such  arguments 
+the <a href="#native-pathname-format">native pathname format</a>. Iff such  arguments 
 are in the generic format and the generic format is not acceptable to the 
-operating system as a native path, an implementation defined conversion to native format is performed 
+operating system as a native path,  conversion to native format shall be performed 
 during the processing of the argument. See [<a href="#Operating-system-examples">fs.os.examples</a>].</p>
 <blockquote>
 <p>[<i>Note:</i> Depending on the operating system, there may be no unambiguous way for an implementation to 
 always be able to distinguish between native format and generic format arguments. 
-This is by design as it simplifies use. Should an implementation encounter an 
+This is by design as it simplifies use for operating systems that do not require 
+disambiguation. Should an implementation encounter an 
 operating system where disambiguation is required, an implementation can defined 
-a 
-native format prefix or take some other step to distinguish between the formats. <i>
+an extension to distinguish between the formats. <i>
 -- end note</i>]</p>
 </blockquote>
 
@@ -829,59 +869,29 @@ otherwise it shall be treated as a regular file path.</p>
 
 <blockquote>
 
-<p>[<i>Note</i>: The above paragraph does not apply to ISO/IEC 9945 API systems or 
-<span style="background-color: #FFFF00">Windows API systems</span> since 
-they use the same format 
-for both regular file and directory pathnames. <i>--end note</i>]</p>
-
 <p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Example:</span></i><span style="background-color: #FFFF00"> On
 </span> <a href="http://en.wikipedia.org/wiki/OpenVMS">
 <span style="background-color: #FFFF00">OpenVMS</span></a><span style="background-color: #FFFF00">, a path 
-constructed from </span> <code><span style="background-color: #FFFF00">&quot;/cats/jane&quot;</span></code><span style="background-color: #FFFF00"> would considered a regular file 
+constructed from </span> <code><span style="background-color: #FFFF00">&quot;/cats/jane&quot;</span></code><span style="background-color: #FFFF00"> 
+is considered a regular file 
 path, and have a native format of </span> <code>
 <span style="background-color: #FFFF00">&quot;[CATS]JANE&quot;</span></code><span style="background-color: #FFFF00">, while a 
-path constructed from </span> <code><span style="background-color: #FFFF00">&quot;/cats/jane/&quot;</span></code><span style="background-color: #FFFF00"> would be considered a 
+path constructed from </span> <code><span style="background-color: #FFFF00">&quot;/cats/jane/&quot;</span></code><span style="background-color: #FFFF00"> 
+is considered a 
 directory path, and have a native format of </span> <code>
 <span style="background-color: #FFFF00">&quot;[CATS.JANE]&quot;</span></code><span style="background-color: #FFFF00">.
 </span> <i><span style="background-color: #FFFF00">--end example</span></i><span style="background-color: #FFFF00">]</span></p>
 
 </blockquote>
-<h5><a name="path-Encoding-conversions"><code>path</code> argument encoding conversions</a> 
-[path.arg.encoding.convert]</h5>
-<p>If the value type of member function arguments that are character sequences 
-representing paths is not <code>value_type</code>, 
-and no <code>cvt</code> argument is supplied, conversion to <code>value_type</code> occurs using an imbued locale. This imbued locale is initialized with a <code>codecvt</code> facet appropriate for the operating system.</p>
-<blockquote>
-<p><span style="background-color: #E0E0E0">For Apple OS X implementations,
-</span> <code><span style="background-color: #E0E0E0">path::value_type</span></code><span style="background-color: #E0E0E0"> is
-</span> <code><span style="background-color: #E0E0E0">char</span></code><span style="background-color: #E0E0E0">. The default imbued locale provides a UTF-8
-</span> <code><span style="background-color: #E0E0E0">codecvt</span></code><span style="background-color: #E0E0E0"> facet. [</span><i><span style="background-color: #E0E0E0">Rationale:</span></i><span style="background-color: #E0E0E0"> &quot;All BSD system functions expect their string 
-parameters to be in UTF-8 encoding and nothing else.&quot; See </span> <a href="http://developer.apple.com/mac/library/documentation/MacOSX/Conceptual/BPInternational/Articles/FileEncodings.html">
-<span style="background-color: #E0E0E0">Apple docs</span></a><span style="background-color: #E0E0E0">.
-</span> <i><span style="background-color: #E0E0E0">-- end rationale</span></i><span style="background-color: #E0E0E0">]</span></p>
-<p><span style="background-color: #E0E0E0">For most other ISO/IEC 9945 API systems, including</span><b><span style="background-color: #E0E0E0">
-</span> </b><span style="background-color: #E0E0E0">Linux, </span> <code>
-<span style="background-color: #E0E0E0">path::value_type</span></code><span style="background-color: #E0E0E0"> is
-</span> <code><span style="background-color: #E0E0E0">char</span></code><span style="background-color: #E0E0E0">. The default imbued locale is
-</span> <code><span style="background-color: #E0E0E0">std::locale(&quot;&quot;)</span></code><span style="background-color: #E0E0E0">. 
-[</span><i><span style="background-color: #E0E0E0">Rationale:</span></i><span style="background-color: #E0E0E0"> ISO C specifies this as &quot;the locale-specific native 
-environment&quot;, while ISO/IEC 9945 says it &quot;Specifies an implementation-defined native 
-environment.&quot; </span> <i><span style="background-color: #E0E0E0">-- end rationale</span></i><span style="background-color: #E0E0E0">]</span></p>
-<p><span style="background-color: #E0E0E0">For Windows API systems, including
-</span> <a href="http://www.mingw.org/"><span style="background-color: #E0E0E0">MinGW</span></a><span style="background-color: #E0E0E0">,
-</span> <code><span style="background-color: #E0E0E0">path::value_type</span></code><span style="background-color: #E0E0E0"> is
-</span> <code><span style="background-color: #E0E0E0">wchar_t</span></code><span style="background-color: #E0E0E0">. The default imbued locale provides a
-</span> <code><span style="background-color: #E0E0E0">codecvt</span></code><span style="background-color: #E0E0E0"> facet 
-that invokes Windows </span> <code><span style="background-color: #E0E0E0">MultiByteToWideChar</span></code><span style="background-color: #E0E0E0"> or
-</span> <code><span style="background-color: #E0E0E0">WideCharToMultiByte</span></code><span style="background-color: #E0E0E0"> API with a codepage of
-</span> <code><span style="background-color: #E0E0E0">CP_ACP</span></code><span style="background-color: #E0E0E0"> if Windows
-</span> <code><span style="background-color: #E0E0E0">AreFileApisANSI()</span></code><span style="background-color: #E0E0E0">is</span><span style="background-color: #E0E0E0"> true, otherwise codepage
-</span> <code><span style="background-color: #E0E0E0">CP_OEMCP</span></code><span style="background-color: #E0E0E0">. [</span><i><span style="background-color: #E0E0E0">Rationale:</span></i><span style="background-color: #E0E0E0"> this is the current behavior of C and C++ 
-standard library functions that perform file operations using narrow character strings to identify 
-paths. Changing this behavior in the Filesystem library would be too surprising, 
-particularly where user input is involved. </span> <i>
-<span style="background-color: #E0E0E0">-- end rationale</span></i><span style="background-color: #E0E0E0">]</span></p>
-</blockquote>
+<h5><a name="path-Encoding-conversions"><code>
+<span style="background-color: #FFFF00">path</span></code><span style="background-color: #FFFF00"> argument encoding conversions</span></a><span style="background-color: #FFFF00"> 
+[</span><span style="background-color: #FFFF00">path.arg.encoding.cvt</span><span style="background-color: #FFFF00">]</span></h5>
+<p><span style="background-color: #FFFF00">If the value type of member function arguments that are character sequences 
+representing paths is not </span> <code><span style="background-color: #FFFF00">value_type</span></code><span style="background-color: #FFFF00">, 
+and no </span> <code><span style="background-color: #FFFF00">cvt</span></code><span style="background-color: #FFFF00"> argument is supplied, conversion to
+</span> <code><span style="background-color: #FFFF00">value_type</span></code><span style="background-color: #FFFF00"> 
+shall be performed using the imbued locale (). This imbued locale shall be initialized with a
+</span> <code><span style="background-color: #FFFF00">codecvt</span></code><span style="background-color: #FFFF00"> facet appropriate for the operating system.</span></p>
 <h4><a name="path-Conversions-to-generic-format"><code>path</code> Conversions 
 to generic format</a> [fs.cvt.to.generic]</h4>
 <p><a href="#path-generic-format-observers">Generic format observer</a> functions return strings formatted according to the <a href="#generic-pathname-format">generic pathname format</a> 
@@ -1031,7 +1041,8 @@ path</code> modifiers</a> [fs.path.modifiers]</h3><pre>void <a name="path-clear"
   <p><i>Complexity: </i>constant time.</p>
 </blockquote>
 
-<h3> <a name="path-native-format-observers"><code><font size="4">path</font></code> native format observers</a></h3>
+<h3> <a name="path-native-format-observers"><code><font size="4">path</font></code> native format observers</a> 
+[path.native.obs]</h3>
 <p>The string returned by all native format observers is in the <a href="#native-pathname-format">native pathname format</a>.</p>
 <pre>const string_type&amp;  <a name="native">native</a>() const noexcept;</pre>
 <blockquote>
@@ -1057,7 +1068,8 @@ const u32wstring <a name="u32wstring">u32wstring</a>() const; </pre>
 function's return type, conversion is performed by <code>cvt</code>.</p>
 </blockquote>
 
-<h3> <a name="path-generic-format-observers"><code><font size="4">path</font></code> generic format observers</a></h3>
+<h3> <a name="path-generic-format-observers"><code><font size="4">path</font></code> generic format observers</a> 
+[path.generic.obs]</h3>
 <p>The string returned by all generic format observers is in the <a href="#generic-pathname-format">generic pathname format</a>.</p>
 <pre>template &lt;class String&gt;
 String <a name="generic_string-template">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;</pre>
@@ -1162,9 +1174,12 @@ for (; !p.extension().empty(); p = p.stem())
     <pre><code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).extension(); //</code> outputs &quot;<code>.txt</code>&quot;</pre>
   </blockquote>
   <p> <i>--end example</i>]</p>
-  <p>[<i>Note:<b> </b></i>The dot is included in the return value so that 
-  it is possible to distinguish between no extension and an empty extension. See <a href="http://permalink.gmane.org/gmane.comp.lib.boost.devel/199744">http://permalink.gmane.org/gmane.comp.lib.boost.devel/199744</a> for more 
-  extensive rationale.&nbsp; <i>-- end note</i>]</p>
+  <p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Note:</span><b><span style="background-color: #FFFF00">
+  </span> </b></i><span style="background-color: #FFFF00">The dot is included in the return value so that 
+  it is possible to distinguish between no extension and an empty extension. See
+  </span> <a href="http://permalink.gmane.org/gmane.comp.lib.boost.devel/199744">
+  <span style="background-color: #FFFF00">http://permalink.gmane.org/gmane.comp.lib.boost.devel/199744</span></a><span style="background-color: #FFFF00"> for more 
+  extensive rationale.&nbsp; </span> <i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
 </blockquote>
 <h3> <a name="path-query"> <code><font size="4">path</font></code> query</a></h3>
 <pre>bool <a name="path-empty">empty</a>() const;</pre>
@@ -1239,17 +1254,30 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
 <blockquote>
   <p><i>Returns:</i> The end iterator.</p>
 </blockquote>
- <h3><a name="path_encoding"><code><font size="4"> path</font></code> encoding</a> conversion</h3>
+ <h3><a name="path-imbued-locale"><code><font size="4"> path</font></code> 
+ imbued locale</a> [path.imbued.locale]</h3>
+ <p><code>path</code> operations sometimes require encoding conversions between
+ <code>pathname</code> and some other string object where one of the value types 
+ is <code>char</code> and the other is <code>wchar_t</code>. Such conversions 
+ shall be performed by the <code>path::codecvt()</code> facet.</p>
+ <blockquote>
+ <p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Example:</span></i><span style="background-color: #FFFF00"> 
+ ... </span><i><span style="background-color: #FFFF00">--end example</span></i><span style="background-color: #FFFF00">]</span></p>
+ </blockquote>
  <pre>static std::locale <a name="path-imbue">imbue</a>(const std::locale&amp; loc);</pre>
 <blockquote>
-  <p><i>Effects:</i> Stores <code>loc</code> as the default locale for all 
-  objects of type <code>path</code>.</p>
-  <p><i>Returns:</i> The previous default locale for all objects of type <code>path</code>.</p>
+  <p><i>Effects:</i> Stores a copy of <code>loc</code> as the imbued <code>path</code> 
+  locale.</p>
+  <p><i>Returns:</i> The previous imbued <code>path</code> locale.</p>
+  <p><i>Remarks:</i> The initial value of the imbued <code>path</code> locale is 
+  operating system dependent. It shall be a locale with a <code>codecvt</code> 
+  facet for a <code>char</code> string encoding appropriate for the operating 
+  system. See ([<a href="#Operating-system-examples">fs.os.examples</a>]).&nbsp; </p>
 </blockquote>
 <pre>static const codecvt_type&amp; <a name="path-codecvt">codecvt</a>();</pre>
 <blockquote>
-  <p><i>Returns:</i> The <code>codecvt</code> facet for the default locale for 
-  all objects of type <code>path</code>.</p>
+  <p><i>Returns:</i> The <code>codecvt</code> facet for the imbued<code> path</code> 
+  locale .</p>
 </blockquote>
 
 $if $TARGET; == BOOST
