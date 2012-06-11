@@ -271,10 +271,8 @@ the name of a
 path. Pathnames are formatted according to the generic pathname grammar or an 
 operating system dependent 
 native pathname format.</p>
-<p><b><i><a name="generic-pathname-format">Generic pathname format:</a>&nbsp;
-<span style="background-color: #FFFF00">[TBS]</span></i></b></p>
-<p><b><i><a name="native-pathname-format">Native pathname format:</a></i></b>&nbsp; 
-An operating system dependent format acceptable to the native operating system.</p>
+<h3 dir="ltr">native pathname format [fs.def.native]</h3>
+<p>The operating system dependent pathname format accepted by the host operating system.</p>
 <h3><a name="link">link</a> [fs.def.link]</h3>
 <p>A directory entry object that associates a 
 filename with a file. On some file systems, several directory entries can 
@@ -301,7 +299,7 @@ If the file pointed to does not exist, the symbolic link is said to be a
 when multiple threads, processes, or computers interleave access and 
 modification of 
 the same object within a file system.</p>
-<h2><a name="Generic-pathname-grammar">Generic pathname grammar</a> [pathname.grammar]</h2>
+<h2><a name="Generic-pathname-grammar">Generic pathname format</a> [path.generic]</h2>
 <p><i>pathname:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root-name<sub>opt</sub> 
 root-directory<sub>opt</sub> relative-path<sub>opt</sub></i></p>
@@ -378,8 +376,8 @@ specifications for operating systems that use the ISO/IEC 9945  or Windows® appl
   </tr>
   <tr>
     <td><code>path(&quot;/&quot;).is_absolute()<br>
-    path(&quot;c:&quot;).is_absolute()</code></td>
-    <td>&nbsp;</td>
+    path(&quot;c:/&quot;).is_absolute()</code></td>
+    <td>[<a href="#path-query">path.query</a>]</td>
     <td><code>true<br>
     false</code></td>
     <td><code>false<br>
@@ -403,13 +401,18 @@ specifications for operating systems that use the ISO/IEC 9945  or Windows® appl
     <td>The generic format is already acceptable to the native API of these operating systems.</td>
   </tr>
   <tr>
-    <td><code>path</code> argument disambiguation between file paths and 
-    directory paths</td>
+    <td valign="top">
+    <p dir="ltr"><code>path(&quot;/cats/jane&quot;).c_str()<br>
+    path(&quot;/cats/jane/&quot;).c_str()</code></td>
     <td>[<a href="#path-Conversions-to-native-format">path.arg.fmt.cvt</a>]</td>
-    <td>Not required</td>
-    <td>Not required</td>
-    <td>The native format for regular file paths and directory paths is the same 
-    for these operating systems.</td>
+    <td valign="top"> <code>&quot;/cats/jane&quot;<br>
+    &quot;/cats/jane/&quot;</code></td>
+    <td valign="top">
+    <p dir="ltr"><code>L&quot;/cats/jane&quot;<br>
+    L&quot;/cats/jane/&quot;</code></td>
+    <td>These operating systems accept the same native separator between 
+    directory names and a final file name, so no format conversion is performed. 
+    Other operating systems might require conversion.</td>
   </tr>
   <tr>
     <td>Format conversion by <code>path</code> native format observers</td>
@@ -466,10 +469,10 @@ these products.</p>
 environment&quot;, while ISO/IEC 9945 says it &quot;Specifies an implementation-defined native 
 environment.&quot;</p>
 <p><sup>[footnote 3] </sup>Rationale: This is the current behavior of C and C++ 
-standard library functions that perform file operations using narrow character strings to identify 
-paths. Changing this behavior would be  surprising, 
-particularly where user input is involved.</p>
-<p><sup>[footnote 4]</sup> Rationale: Vendor documentation states &quot;All BSD 
+standard library functions that perform file operations using narrow character 
+strings to identify paths. Changing this behavior would be surprising and at 
+variance with existing code, particularly where user input is involved.</p>
+<p><sup>[footnote 4]</sup> Rationale: Vendor's documentation states &quot;All BSD 
 system functions expect their string parameters to be in UTF-8 encoding and 
 nothing else.&quot;</p>
 <h2><a name="Header-filesystem-synopsis">Header <code>&lt;$HEADER;&gt;</code> synopsis</a> 
@@ -872,34 +875,17 @@ paths for regular files to be formatted differently from paths for directories, 
 path shall be treated as a directory path if last element is a separator, 
 otherwise it shall be treated as a regular file path.</p>
 
-<blockquote>
-
-<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Example:</span></i><span style="background-color: #FFFF00"> On
-</span> <a href="http://en.wikipedia.org/wiki/OpenVMS">
-<span style="background-color: #FFFF00">OpenVMS</span></a><span style="background-color: #FFFF00">, a path 
-constructed from </span> <code><span style="background-color: #FFFF00">&quot;/cats/jane&quot;</span></code><span style="background-color: #FFFF00"> 
-is considered a regular file 
-path, and have a native format of </span> <code>
-<span style="background-color: #FFFF00">&quot;[CATS]JANE&quot;</span></code><span style="background-color: #FFFF00">, while a 
-path constructed from </span> <code><span style="background-color: #FFFF00">&quot;/cats/jane/&quot;</span></code><span style="background-color: #FFFF00"> 
-is considered a 
-directory path, and have a native format of </span> <code>
-<span style="background-color: #FFFF00">&quot;[CATS.JANE]&quot;</span></code><span style="background-color: #FFFF00">.
-</span> <i><span style="background-color: #FFFF00">--end example</span></i><span style="background-color: #FFFF00">]</span></p>
-
-</blockquote>
 <h5><a name="path-Encoding-conversions"><code>
-<span style="background-color: #FFFF00">path</span></code><span style="background-color: #FFFF00"> argument encoding conversions</span></a><span style="background-color: #FFFF00"> 
-[</span><span style="background-color: #FFFF00">path.arg.encoding.cvt</span><span style="background-color: #FFFF00">]</span></h5>
-<p><span style="background-color: #FFFF00">If the value type of member function arguments that are character sequences 
-representing paths is not </span> <code><span style="background-color: #FFFF00">value_type</span></code><span style="background-color: #FFFF00">, 
-and no </span> <code><span style="background-color: #FFFF00">cvt</span></code><span style="background-color: #FFFF00"> argument is supplied, conversion to
-</span> <code><span style="background-color: #FFFF00">value_type</span></code><span style="background-color: #FFFF00"> 
-shall be performed using the imbued locale (). This imbued locale shall be initialized with a
-</span> <code><span style="background-color: #FFFF00">codecvt</span></code><span style="background-color: #FFFF00"> facet appropriate for the operating system.</span></p>
+path</code> argument encoding conversions</a> 
+[path.arg.encoding.cvt]</h5>
+<p>For member function arguments that take character sequences representing 
+paths, if the value type of the argument is not <code>value_type and </code>one 
+of the value types is <code>char</code> and the other is <code>wchar_t</code>, conversion to <code>value_type</code> 
+shall be performed by the <code>path::codecvt()</code> facet. ([<a href="#path-imbued-locale">path.imbued.locale</a>]).</p>
 <h4><a name="path-Conversions-to-generic-format"><code>path</code> Conversions 
 to generic format</a> [fs.cvt.to.generic]</h4>
-<p><a href="#path-generic-format-observers">Generic format observer</a> functions return strings formatted according to the <a href="#generic-pathname-format">generic pathname format</a> 
+<p><a href="#path-generic-format-observers">Generic format observer</a> functions 
+shall return strings formatted according to the <a href="#generic-pathname-format">generic pathname format</a> 
 using <i>preferred-separator</i>. See [<a href="#Operating-system-examples">fs.os.examples</a>].</p>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
 <p>Template parameters named <code><a name="InputIterator">InputIterator</a></code> are required meet the 
@@ -1590,13 +1576,6 @@ permissions. <i><span style="background-color: #E0E0E0">ISO/</span><span style="
 they are very familiar and ingrained for many POSIX 
 users.</span></i></p>
 <blockquote>
-<p><span style="background-color: #FFFF00">Caution: Operating systems do not always support permissions as described in 
-the table.</span></p>
-<p><span style="background-color: #FFFF00">There is much variation in the meaning of
-</span> <code><a href="#sticky_bit"><span style="background-color: #FFFF00">sticky_bit</span></a></code><span style="background-color: #FFFF00">; do not use it unless you understand what it means for 
-your operating system.</span></p>
-<p><span style="background-color: #FFFF00">There is much variation in how operating systems treat symlinks. See
-</span> <code><a href="#symlink_perms"><span style="background-color: #FFFF00">symlink_perms</span></a></code><span style="background-color: #FFFF00">.</span></p>
 <p><span style="background-color: #FFFF00">Windows: All permissions except write are currently ignored. There is only a 
 single write permission; setting write permission for owner, group, or others 
 sets write permission for all, and removing write permission for owner, group, 
@@ -1661,7 +1640,8 @@ or others removes write permission for all. </span> </p>
   <td> Set-group-ID on execution</td>
 </tr>
 <tr><td><code><a name="sticky_bit">sticky_bit</a> </code></td><td><code>01000</code></td><td> <code>S_ISVTX</code></td>
-  <td> Meaning varies; see <a href="http://en.wikipedia.org/wiki/Sticky_bit">http:en.wikipedia.org/wiki/Sticky_bit</a></td>
+  <td> Operating system dependent. Inherently non-portable, even between ISO/IEC 9945 
+  operating systems.</td>
 </tr>
 <tr><td><code><a name="perms_mask">perms_mask</a></code></td><td><code>07777</code></td><td> &nbsp;</td>
   <td><code>all_all | set_uid_on_exe | set_gid_on_exe | sticky_bit</code></td>
@@ -1990,12 +1970,13 @@ it reads a directory element and stores information about it in a object of type
 <p>[<i>Note:</i> The practical consequence of not preserving equality is that directory iterators 
 can only be used for single-pass algorithms. <i>--end note</i>]</p>
 </blockquote>
-<p>If the end of the directory elements is reached, the iterator becomes equal to 
-the end iterator value. The constructor <code>directory_iterator()</code> with no arguments always constructs an end iterator object, which is the only 
-legitimate iterator to be used for the end condition. The result of <code>operator*</code> on an end iterator is not defined. For any other iterator value 
-a <code>const directory_entry&amp;</code> is returned. The result of <code>operator-&gt;</code> on an end iterator is not defined. For any other iterator value a <code>const directory_entry*</code> is 
+<p>If the end of the directory elements is reached, the iterator shall become equal to 
+the end iterator value. The constructor <code>directory_iterator()</code> with no arguments always constructs an end iterator object, which 
+shall be the only valid iterator for the end condition. The result of <code>operator*</code> on an end iterator is not defined. For any other iterator value 
+a <code>const directory_entry&amp;</code> is returned. The result of <code>operator-&gt;</code> on an end iterator is 
+undefined behavior. For any other iterator value a <code>const directory_entry*</code> is 
 returned. </p>
-<p>Two end iterators are always equal. An end iterator is not equal to a non-end 
+<p>Two end iterators are always equal. An end iterator shall not be equal to a non-end 
 iterator.</p>
 <blockquote>
 <p><i><span style="background-color: #E0E0E0">The above wording is based on the 
