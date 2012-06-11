@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-06-10<!--webbot bot="Timestamp" endspan i-checksum="12359" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-06-11<!--webbot bot="Timestamp" endspan i-checksum="12361" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -60,6 +60,17 @@ Library Proposal (Revision 3). Changes include:</p>
 <ul>
   <li>Add path::operator+= and concat functions to tack on things like suffixes 
   or numbers. Suggested by Ed Smith-Rowland and others.</li>
+    <li>Add section tags and section numbers, per LWG 
+    discussion in Kona.</li>
+  <li>Bring use of trademarked names into ISO compliance, and minimize use of 
+  such names by moving into a single examples section. Thanks to Stefanus Du 
+  Toit for advice on how to do this.</li>
+  <li>Introduce a definition for &quot;operating system dependent&quot;, and then use it 
+  to replace most &quot;implementation defined behavior&quot;.</li>
+  <li>Replace uses of&nbsp; const string return types with non-const string 
+  return types, per LWG discussion in Kona.</li>
+  <li>Remove permission for implementations to return const string&amp; in certain 
+  cases, per LWG discussion in Kona.</li>
 </ul>
 
 
@@ -178,12 +189,9 @@ class would be the best place to experiment with this concept, not a path class.
     <li>Dinkumware/Microsoft report slightly different results for Decomposition 
     table. Rerun table. Check discrepancies.</li>
     <li>Apply issue resolutions from Kona.</li>
-    <li>Remove registered trademarks from normative text per ISO policy.</li>
     <li>Review Nick Stoughton's email for suggestions, action items.</li>
     <li>Change <code>time_t</code> to <code>chrono system_clock::time_point</code>, 
     per LWG discussion in Kona. </li>
-    <li>Add [section.name] and, if possible, section numbering, per LWG 
-    discussion in Kona.</li>
     <li>Ed Smith-Rowland:<br>
     &gt; I found it less confusing to switch to positive logic for 
     recursive_directory_iterator:<br>

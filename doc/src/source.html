@@ -788,21 +788,21 @@ system or for a particular file system.</p>
         const value_type*   <a href="#c_str">c_str</a>() const noexcept;   // native().c_str()
 
         template &lt;class String&gt;
-        String <a href="#string-template">string</a>(const codecvt_type&amp; cvt=codecvt()) const;                // native format
+          String  <a href="#string-template">string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // native format
 
-        const string        <a href="#string">string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // native format
-        const wstring       <a href="#wstring">wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // native format
-        const u16string     <a href="#u16string">u16string</a>() const;                                 // native format
-        const u32string     <a href="#u32wstring">u32string</a>() const;                                 // native format
+        string    <a href="#string">string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // native format
+        wstring   <a href="#wstring">wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // native format
+        u16string <a href="#u16string">u16string</a>() const;                                 // native format
+        u32string <a href="#u32wstring">u32string</a>() const;                                 // native format
 
         // <a href="#path-generic-format-observers">generic format observers</a>
         template &lt;class String&gt;
-        String <a href="#generic_string-template">generic_string</a>() const;
+          String  <a href="#generic_string-template">generic_string</a>() const;
 
-        const string        <a href="#generic_string">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // generic format
-        const wstring       <a href="#generic_wstring">generic_wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // generic format
-        const u16string     <a href="#generic_u16string">generic_u16string</a>() const;                                 // generic format
-        const u32string     <a href="#generic_u32wstring">generic_u32string</a>() const;                                 // generic format
+        string    <a href="#generic_string">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // generic format
+        wstring   <a href="#generic_wstring">generic_wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // generic format
+        u16string <a href="#generic_u16string">generic_u16string</a>() const;                                 // generic format
+        u32string <a href="#generic_u32wstring">generic_u32string</a>() const;                                 // generic format
 
         // <a href="#path-compare">compare</a>
         int                 <a href="#path-compare">compare</a>(const path&amp; p) const noexcept;
@@ -1050,10 +1050,10 @@ String <a name="string-template">string</a>(const codecvt_type&amp; cvt=codecvt(
   <p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Remarks:</i> If <code>string_type</code> is a different type than <code>String</code>, conversion is performed by <code>cvt</code>.</p>
 </blockquote>
-<pre>const string <a name="string">string</a>(const codecvt_type&amp; cvt=codecvt()) const;
-const wstring <a name="wstring">wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;
-const u16string <a name="u16string">u16string</a>() const;
-const u32wstring <a name="u32wstring">u32wstring</a>() const; </pre>
+<pre>string <a name="string">string</a>(const codecvt_type&amp; cvt=codecvt()) const;
+wstring <a name="wstring">wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;
+u16string <a name="u16string">u16string</a>() const;
+u32wstring <a name="u32wstring">u32wstring</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Remarks:</i> If <code>string_type</code> is a different type than 
@@ -1069,10 +1069,10 @@ String <a name="generic_string-template">generic_string</a>(const codecvt_type&a
   <p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Remarks:</i> If <code>string_type</code> is a different type than <code>String</code>, conversion is performed by <code>cvt</code>.</p>
 </blockquote>
-<pre>const string <a name="generic_string">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;
-const wstring <a name="generic_wstring">generic_wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;
-const u16string <a name="generic_u16string">generic_u16string</a>() const;
-const u32wstring <a name="generic_u32wstring">generic_u32wstring</a>() const; </pre>
+<pre>string <a name="generic_string">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;
+wstring <a name="generic_wstring">generic_wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;
+u16string <a name="generic_u16string">generic_u16string</a>() const;
+u32wstring <a name="generic_u32wstring">generic_u32wstring</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Remarks:</i>&nbsp; If <code>string_type</code> is a different type than 
