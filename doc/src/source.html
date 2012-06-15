@@ -203,15 +203,28 @@ is unreasonable for a program to detect them prior to calling the function. <i>
 -- end note</i>]</p>
 </blockquote>
 <h3>Operating system dependent conformance [fs.conform.os]</h3>
-<p>Some behavior and other characteristics is specified in this $WHAT; as being 
-operating system dependent ([fs.def.osdep]). What operation systems an 
-implementation supports is implementation defined.</p>
+<p>Some behavior is specified in this $WHAT; as being 
+operating system dependent ([fs.def.osdep]). The operation system an 
+implementation is dependent upon is implementation defined.</p>
+<p>It is permissible for an implementation to be dependent upon an operating 
+system emulator rather than the actual operating system.</p>
+<blockquote>
+<p>[<i>Example:</i> An implementation uses Cygwin, a Linux® API emulator for 
+some Windows® operating system versions. The implementation would define Cygwin 
+as its operating system. Users could refer to the Cygwin documentation to find 
+details of the operating system dependent behavior.&nbsp; <i>--end example</i>]</p>
+<p><span style="background-color: #E0E0E0"><i>It is user and conformance test 
+detectable that such an implementation is running on Cygwin. Users would be 
+misled and conformance tests would fail if the implementation defined Linux or 
+Windows rather than Cygwin as the operating system, since real behavior is a 
+blend of the two.</i></span> </p>
+</blockquote>
 <h2><a name="Definitions">Definitions</a> [fs.definitions]</h2>
 <p>The following definitions  shall apply throughout this $WHAT;:</p>
-<h3><a name="operating system dependent">operating system dependent</a> 
+<h3><a name="operating system dependent">operating system dependent</a> behavior 
 [fs.def.osdep]</h3>
-<p>Behavior and other characteristics that is defined by the behavior 
-and characteristics of an operating system.</p>
+<p>Behavior  that is dependent upon the behavior 
+and characteristics of an operating system. See [fs.conform.os].</p>
 <h3><a name="file">file</a> [fs.def.file]</h3>
 <p>An object that can be written to, or read from, or both. A file 
 has certain attributes, including type. File types include regular files 
