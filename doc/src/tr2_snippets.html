@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-06-11<!--webbot bot="Timestamp" endspan i-checksum="12361" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-06-15<!--webbot bot="Timestamp" endspan i-checksum="12369" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -71,6 +71,8 @@ Library Proposal (Revision 3). Changes include:</p>
   return types, per LWG discussion in Kona.</li>
   <li>Remove permission for implementations to return const string&amp; in certain 
   cases, per LWG discussion in Kona.</li>
+  <li>Remove path inserter and extractor dependency on Boost quoted manip (Issue 
+  7).</li>
 </ul>
 
 
@@ -188,7 +190,8 @@ class would be the best place to experiment with this concept, not a path class.
     need to be reviewed, revised, tested, peer reviewed.</li>
     <li>Dinkumware/Microsoft report slightly different results for Decomposition 
     table. Rerun table. Check discrepancies.</li>
-    <li>Apply issue resolutions from Kona.</li>
+    <li>Apply issue resolutions from Kona. Complete except some remaining 
+    codecvt arguments</li>
     <li>Review Nick Stoughton's email for suggestions, action items.</li>
     <li>Change <code>time_t</code> to <code>chrono system_clock::time_point</code>, 
     per LWG discussion in Kona. </li>
@@ -289,7 +292,7 @@ rare and it adds considerable interface clutter.</p>
 <h4>Proposed resolution</h4>
 <p dir="ltr"><i>Kona:</i></p>
 <p dir="ltr"><i>Remove all existing class path <code>const codecvt_type&amp;</code> 
-arguments.</i></p>
+arguments. </i></p>
 <p dir="ltr"><i>Beman to pursue separate encoding conversion functionality, per 
 Thursday N3336 &quot;Adapting standard library strings and IO to a Unicode World&quot; 
 discussion. See Kona wiki.</i></p>
@@ -323,6 +326,7 @@ Status: Resolved</h3>
 return const refs, since uses are not in performace critical code and subtle 
 portability bugs may occur.</i></p>
 <p><i>Action: Beman to apply to proposed wording.</i></p>
+<p><i>Version 3: Resolution applied.</i></p>
 <hr>
 <h3>Issue 5: Is there a way to handle characters that are illegal for particular 
 OS?&nbsp;&nbsp;&nbsp;&nbsp; Status: NAD</h3>
@@ -367,6 +371,7 @@ should go in TR2.</p>
 behavior without reference to how it is achieved. (If someone wants to propose a 
 quoted manipulator, that's a separate proposal for a different TR.)</i></p>
 <p><i>Action:&nbsp; Beman to apply to proposed wording.</i></p>
+<p><i>Version 3: Resolution applied.</i></p>
 <hr>
 <h3>Issue 8: Rename <code>rename</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 Status: New</h3>

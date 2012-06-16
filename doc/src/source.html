@@ -260,13 +260,14 @@ and <code>&quot;..&quot;</code>&nbsp; have special meaning. The follow character
 the location of a file within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
 root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
 A <a href="#Pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
-<h3><a name="Absolute-path">a</a><b><a name="Absolute-path">bsolute 
-path</a> [fs.def.absolute-path]</b></h3>
+
+<h3><a name="Absolute-path">absolute path</a> [fs.def.absolute-path]</h3>
 <p>A path that 
 unambiguously 
 identifies the location of a file without reference to an additional starting 
 location. The elements of a path that determine if it is absolute are 
 operating system dependent.</p>
+
 <h3><a name="Relative-path">relative path</a> [fs.def.relative-path]</h3>
 <p>A path that 
 is not absolute, and so only 
@@ -284,7 +285,8 @@ the name of a
 path. Pathnames are formatted according to the generic pathname grammar or an 
 operating system dependent 
 native pathname format.</p>
-<h3 dir="ltr">native pathname format [fs.def.native]</h3>
+
+<h3>native pathname format [fs.def.native]</h3>
 <p>The operating system dependent pathname format accepted by the host operating system.</p>
 <h3><a name="link">link</a> [fs.def.link]</h3>
 <p>A directory entry object that associates a 
@@ -415,13 +417,13 @@ specifications for operating systems that use the ISO/IEC 9945  or Windows® appl
   </tr>
   <tr>
     <td valign="top">
-    <p dir="ltr"><code>path(&quot;/cats/jane&quot;).c_str()<br>
+    <p><code>path(&quot;/cats/jane&quot;).c_str()<br>
     path(&quot;/cats/jane/&quot;).c_str()</code></td>
     <td>[<a href="#path-Conversions-to-native-format">path.arg.fmt.cvt</a>]</td>
     <td valign="top"> <code>&quot;/cats/jane&quot;<br>
     &quot;/cats/jane/&quot;</code></td>
     <td valign="top">
-    <p dir="ltr"><code>L&quot;/cats/jane&quot;<br>
+    <p><code>L&quot;/cats/jane&quot;<br>
     L&quot;/cats/jane/&quot;</code></td>
     <td>These operating systems accept the same native separator between 
     directory names and a final file name, so no format conversion is performed. 
@@ -1379,14 +1381,28 @@ $endif
 <h3> <a name="path-non-member-operators"><code><font size="4">path</font></code></a><a name="path-inserter-extractor"> inserter 
   and extractor</a> [path.io]</h3>
 <p> The inserter and extractor delimit the string with double-quotes (<code>&quot;</code>) 
-to ensure that paths with embedded spaces will round trip correctly. Ampersand (<code>&amp;</code>) 
-is used as an escape character, so the path can itself contain double quotes.</p>
+so that paths with embedded spaces will round trip correctly. Ampersand (<code>&amp;</code>) 
+is as an escape character, so the path can itself contain double quotes.</p>
 <pre>template &lt;class Char, class Traits&gt;
 std::basic_ostream&lt;Char, Traits&gt;&amp; operator&lt;&lt;(std::basic_ostream&lt;Char, Traits&gt;&amp; os,
                                              const path&amp; p)
 </pre>
 <blockquote>
-  <p><i>Effects:</i>&nbsp; <code>os &lt;&lt; <a href="../../io/doc/quoted_manip.html">boost::io::quoted</a>(p.string&lt;std::basic_string&lt;Char&gt;&gt;(), static_cast&lt;Char&gt;('&amp;'));</code></p>
+  <p><i>Effects: </i>Insert characters into <code>os</code>:</p>
+  <ul>
+    <li>
+  <p>A double-quote.</p>
+    </li>
+    <li>
+  <p>Each character in <code>p.string&lt;std::basic_string&lt;Char&gt;&gt;()</code>. 
+  If the character to be inserted is equal to the escape character or a 
+  double-quote, as determined by <code>operator==</code>, first insert the 
+  escape character.</p>
+    </li>
+    <li>
+  <p>A double-quote.</p>
+    </li>
+  </ul>
   <p><i>Returns:</i> <code>os</code></p>
 </blockquote>
 <pre>template &lt;class Char, class Traits&gt;
@@ -1397,6 +1413,23 @@ inline std::basic_istream&lt;Char, Traits&gt;&amp; operator&gt;&gt;(std::basic_i
   <p><i>Effects:&nbsp; </i><code>&nbsp;std::basic_string&lt;Char&gt; str;<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; is &gt;&gt; <a href="../../io/doc/quoted_manip.html">boost::io::quoted</a>(str, static_cast&lt;Char&gt;('&amp;'));<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p = str;</code></p>
+  <p><i>Effects:&nbsp; </i>Extract characters from os:</p>
+  <ul>
+    <li>If the first character that would be extracted is equal to double-quote, 
+    as determined by <code>operator==</code>, then:<ul>
+      <li>Discard the initial double-quote.</li>
+      <li>Save the value and then turn off the <code>skipws</code> flag.</li>
+      <li><code>p.clear()</code></li>
+      <li>Until an unescaped double-quote character is reached or <code>
+      is.not_good()</code>, extract characters from <code>os</code> and append 
+      them to <code>p</code>, except that if an escape character is reached, 
+      ignore it and append the next character to <code>p</code>.</li>
+      <li>Discard the final double-quote character.</li>
+      <li>Restore the <code>skipws</code> flag to its original value.</li>
+    </ul>
+    </li>
+    <li>Otherwise, <code>os &gt;&gt; p</code>.</li>
+  </ul>
   <p><i>Returns:</i> <code>is</code></p>
   </blockquote>
 <h2><a name="Class-filesystem_error">Class <code>filesystem_error</code> 
