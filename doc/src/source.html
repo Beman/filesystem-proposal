@@ -803,26 +803,28 @@ system or for a particular file system.</p>
         const value_type*   <a href="#c_str">c_str</a>() const noexcept;   // native().c_str()
 
         template &lt;class String&gt;
-          String  <a href="#string-template">string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // native format
+          String  <a href="#string-template">string</a>() const;     // native format
 
-        string    <a href="#string">string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // native format
-        wstring   <a href="#wstring">wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // native format
-        u16string <a href="#u16string">u16string</a>() const;                                 // native format
-        u32string <a href="#u32wstring">u32string</a>() const;                                 // native format
+        string    <a href="#string">string</a>() const;     // native format
+        wstring   <a href="#wstring">wstring</a>() const;    // native format
+        u8string  u8string() const;
+        u16string <a href="#u16string">u16string</a>() const;  // native format
+        u32string <a href="#u32wstring">u32string</a>() const;  // native format
 
         // <a href="#path-generic-format-observers">generic format observers</a>
         template &lt;class String&gt;
           String  <a href="#generic_string-template">generic_string</a>() const;
 
-        string    <a href="#generic_string">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // generic format
-        wstring   <a href="#generic_wstring">generic_wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // generic format
-        u16string <a href="#generic_u16string">generic_u16string</a>() const;                                 // generic format
-        u32string <a href="#generic_u32wstring">generic_u32string</a>() const;                                 // generic format
+        string    <a href="#generic_string">generic_string</a>() const;     // generic format
+        wstring   <a href="#generic_wstring">generic_wstring</a>() const;    // generic format
+        u8string  generic_u8string() const;
+        u16string <a href="#generic_u16string">generic_u16string</a>() const;  // generic format
+        u32string <a href="#generic_u32wstring">generic_u32string</a>() const;  // generic format
 
         // <a href="#path-compare">compare</a>
-        int                 <a href="#path-compare">compare</a>(const path&amp; p) const noexcept;
-        int                 <a href="#path-compare">compare</a>(const std::string&amp; s) const;
-        int                 <a href="#path-compare">compare</a>(const value_type* s) const;
+        int       <a href="#path-compare">compare</a>(const path&amp; p) const noexcept;
+        int       <a href="#path-compare">compare</a>(const std::string&amp; s) const;
+        int       <a href="#path-compare">compare</a>(const value_type* s) const;
 
         // <a href="#path-decomposition">decomposition</a>
         path  <a href="#path-root_name">root_name</a>() const;
