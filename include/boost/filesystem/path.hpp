@@ -39,6 +39,9 @@
 #include <cassert>
 #include <locale>
 #include <algorithm>
+#ifndef BOOST_NO_0X_HDR_CODECVT
+# include <codecvt>
+#endif
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
@@ -363,7 +366,7 @@ namespace filesystem
     template <class String>
     String string(const codecvt_type& cvt) const;
 
-#   ifdef BOOST_WINDOWS_API
+# ifdef BOOST_WINDOWS_API
     const std::string string() const { return string(codecvt()); } 
     const std::string string(const codecvt_type& cvt) const
     { 
@@ -378,7 +381,19 @@ namespace filesystem
     const std::wstring&  wstring() const { return m_pathname; }
     const std::wstring&  wstring(const codecvt_type&) const { return m_pathname; }
 
-#   else   // BOOST_POSIX_API
+#   ifndef BOOST_NO_0X_HDR_CODECVT
+    //std::u32string u32string() const
+    //{
+    //  static std::codecvt_utf16<char32_t> cvt;
+    //  std::u32string tmp;
+    //  if (!m_pathname.empty())
+    //    path_traits::convert(&*m_pathname.begin(), &*m_pathname.begin()+m_pathname.size(),
+    //      tmp, cvt);
+    //  return tmp;
+    //}
+#   endif
+
+# else   // BOOST_POSIX_API
     //  string_type is std::string, so there is no conversion
     const std::string&  string() const { return m_pathname; }
     const std::string&  string(const codecvt_type&) const { return m_pathname; }
@@ -393,7 +408,7 @@ namespace filesystem
       return tmp;
     }
 
-#   endif
+# endif
 
     //  -----  generic format observers  -----
 

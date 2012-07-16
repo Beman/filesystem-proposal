@@ -50,15 +50,12 @@ namespace {
 //--------------------------------------------------------------------------------------//
 
 //--------------------------------------------------------------------------------------//
-//                      convert_aux const char* to wstring                             //
+//                          convert_narrow_to_wide_aux                                  //
 //--------------------------------------------------------------------------------------//
 
-  void convert_aux(
-                   const char* from,
-                   const char* from_end,
-                   wchar_t* to, wchar_t* to_end,
-                   std::wstring & target,
-                   const pt::codecvt_type & cvt)
+  template <class NarrowT, class WideT, class Codecvt>
+  void convert_narrow_to_wide_aux(const NarrowT* from, const NarrowT* from_end,
+    WideT* to, WideT* to_end, std::basic_string<WideT>& target, const Codecvt& cvt)
   {
     //std::cout << std::hex
     //          << " from=" << std::size_t(from)
@@ -68,8 +65,8 @@ namespace {
     //          << std::endl;
 
     std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
-    const char* from_next;
-    wchar_t* to_next;
+    const NarrowT* from_next;
+    WideT* to_next;
 
     std::codecvt_base::result res;
 
@@ -78,21 +75,22 @@ namespace {
     {
       //std::cout << " result is " << static_cast<int>(res) << std::endl;
       BOOST_FILESYSTEM_THROW(bs::system_error(res, fs::codecvt_error_category(),
-        "boost::filesystem::path codecvt to wstring"));
+        "boost::filesystem::path convert_narrow_to_wide_aux"));
     }
     target.append(to, to_next); 
   }
 
 //--------------------------------------------------------------------------------------//
-//                      convert_aux const wchar_t* to string                           //
+//                           convert_wide_to_narrow_aux                                 //
 //--------------------------------------------------------------------------------------//
 
-  void convert_aux(
-                   const wchar_t* from,
-                   const wchar_t* from_end,
-                   char* to, char* to_end,
-                   std::string & target,
-                   const pt::codecvt_type & cvt)
+  template <class WideT, class NarrowT, class Codecvt>
+  void convert_wide_to_narrow_aux(
+                   const WideT* from,
+                   const WideT* from_end,
+                   NarrowT* to, NarrowT* to_end,
+                   std::basic_string<NarrowT>& target,
+                   const Codecvt& cvt)
   {
     //std::cout << std::hex
     //          << " from=" << std::size_t(from)
@@ -102,8 +100,8 @@ namespace {
     //          << std::endl;
 
     std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
-    const wchar_t* from_next;
-    char* to_next;
+    const WideT* from_next;
+    NarrowT* to_next;
 
     std::codecvt_base::result res;
 
@@ -112,7 +110,7 @@ namespace {
     {
       //std::cout << " result is " << static_cast<int>(res) << std::endl;
       BOOST_FILESYSTEM_THROW(bs::system_error(res, fs::codecvt_error_category(),
-        "boost::filesystem::path codecvt to string"));
+        "boost::filesystem::path convert_wide_to_narrow_aux"));
     }
     target.append(to, to_next); 
   }
@@ -126,14 +124,14 @@ namespace {
 namespace boost { namespace filesystem { namespace path_traits {
 
 //--------------------------------------------------------------------------------------//
-//                          convert const char* to wstring                             //
+//                          convert const char* to wstring                              //
 //--------------------------------------------------------------------------------------//
 
   BOOST_FILESYSTEM_DECL
   void convert(const char* from,
                 const char* from_end,    // 0 for null terminated MBCS
-                std::wstring & to,
-                const codecvt_type & cvt)
+                std::wstring& to,
+                const codecvt_type& cvt)
   {
     BOOST_ASSERT(from);
 
@@ -150,17 +148,19 @@ namespace boost { namespace filesystem { namespace path_traits {
     if (buf_size > default_codecvt_buf_size)
     {
       boost::scoped_array< wchar_t > buf(new wchar_t [buf_size]);
-      convert_aux(from, from_end, buf.get(), buf.get()+buf_size, to, cvt);
+      convert_narrow_to_wide_aux(from, from_end,
+        buf.get(), buf.get()+buf_size, to, cvt);
     }
     else
     {
       wchar_t buf[default_codecvt_buf_size];
-      convert_aux(from, from_end, buf, buf+default_codecvt_buf_size, to, cvt);
+      convert_narrow_to_wide_aux(from, from_end,
+        buf, buf+default_codecvt_buf_size, to, cvt);
     }
   }
 
 //--------------------------------------------------------------------------------------//
-//                         convert const wchar_t* to string                            //
+//                         convert const wchar_t* to string                             //
 //--------------------------------------------------------------------------------------//
 
   BOOST_FILESYSTEM_DECL
@@ -188,13 +188,13 @@ namespace boost { namespace filesystem { namespace path_traits {
     //  dynamically allocate a buffer only if source is unusually large
     if (buf_size > default_codecvt_buf_size)
     {
-      boost::scoped_array< char > buf(new char [buf_size]);
-      convert_aux(from, from_end, buf.get(), buf.get()+buf_size, to, cvt);
+      boost::scoped_array<char> buf(new char [buf_size]);
+      convert_wide_to_narrow_aux(from, from_end, buf.get(), buf.get()+buf_size, to, cvt);
     }
     else
     {
       char buf[default_codecvt_buf_size];
-      convert_aux(from, from_end, buf, buf+default_codecvt_buf_size, to, cvt);
+      convert_wide_to_narrow_aux(from, from_end, buf, buf+default_codecvt_buf_size, to, cvt);
     }
   }
 }}} // namespace boost::filesystem::path_traits

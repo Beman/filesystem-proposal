@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-06-15<!--webbot bot="Timestamp" endspan i-checksum="12369" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-07-14<!--webbot bot="Timestamp" endspan i-checksum="12431" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -58,7 +58,7 @@ Library Proposal (Revision 3). Changes include:</p>
 
 
 <ul>
-  <li>Add path::operator+= and concat functions to tack on things like suffixes 
+  <li>Add <code>path::operator+=</code> and <code>concat</code> functions to tack on things like suffixes 
   or numbers. Suggested by Ed Smith-Rowland and others.</li>
     <li>Add section tags and section numbers, per LWG 
     discussion in Kona.</li>
@@ -73,6 +73,10 @@ Library Proposal (Revision 3). Changes include:</p>
   cases, per LWG discussion in Kona.</li>
   <li>Remove path inserter and extractor dependency on Boost quoted manip (Issue 
   7).</li>
+  <li>Add <code>begin()</code> and <code>end()</code> non-member functions 
+  taking <code>directory_iterator</code> and <code>recursive_directory_iterator</code> 
+  arguments, thus enabling use of these iterators in C++11 range-based for 
+  statements. </li>
 </ul>
 
 

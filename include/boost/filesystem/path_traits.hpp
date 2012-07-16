@@ -50,6 +50,8 @@ namespace boost { namespace filesystem {
 namespace path_traits {
  
   typedef std::codecvt<wchar_t, char, std::mbstate_t> codecvt_type;
+# ifndef BOOST_NO_0X_HDR_CODECVT
+# endif
 
   //  is_pathable type trait; allows disabling over-agressive class path member templates
 
@@ -67,6 +69,14 @@ namespace path_traits {
   template<> struct is_pathable<std::list<char> >       { static const bool value = true; };
   template<> struct is_pathable<std::list<wchar_t> >    { static const bool value = true; };
   template<> struct is_pathable<directory_entry>        { static const bool value = true; };
+# ifndef BOOST_NO_0X_HDR_CODECVT
+  template<> struct is_pathable<char16_t*>              { static const bool value = true; };
+  template<> struct is_pathable<const char16_t*>        { static const bool value = true; };
+  template<> struct is_pathable<std::u16string>         { static const bool value = true; };
+  template<> struct is_pathable<char32_t*>              { static const bool value = true; };
+  template<> struct is_pathable<const char32_t*>        { static const bool value = true; };
+  template<> struct is_pathable<std::u32string>         { static const bool value = true; };
+# endif
 
   //  Pathable empty
 
@@ -88,26 +98,68 @@ namespace path_traits {
      bool empty(T (&x)[N])
        { return !x[0]; }
 
+  //------------------------------------------------------------------------------------//
+  //                                                                                    //
+  //                                  Conversions                                       //
+  //                                                                                    //
+  //------------------------------------------------------------------------------------//
+  /*
+
+       POSIX
+       from      to        facet
+       ----      ----      -----
+       char      char      n/a
+       wchar_t   char      codecvt_utf8<wchar_t> to-narrow
+       char8_t   char      n/a
+       char16_t  char      codecvt_utf8<char16_t> to-narrow
+       char32_t  char      codecvt_utf8<char32_t> to-narrow
+       char      char8_t   n/a
+       char      wchar_t   codecvt_utf8<wchar_t> to-wide
+       char      char16_t  codecvt_utf8<char16_t> to-wide
+       char      char32_t  codecvt_utf8<char32_t> to-wide
+
+       Windows
+       from      to        facet
+       ----      ----      -----
+       char      wchar_t   windows_file_codecvt to-wide
+       char8_t   wchar_t
+       wchar_t   wchar_t   n/a
+       char16_t  wchar_t   codecvt_utf16<wchar_t> to-wide
+       char32_t  wchar_t   codecvt_utf16<char32_t> to-narrow (cast wchar_t to char16_t)
+       wchar_t   char      windows_file_codecvt to-narrow
+       wchar_t   char8_t
+       wchar_t   char16_t  codecvt_utf16<wchar_t> to-narrow
+       wchar_t   char32_t  codecvt_utf16<char32_t> to-wide (cast wchar_t to char16_t)
+
+  */
+
+
   // value types differ  ---------------------------------------------------------------//
   //
   //   A from_end argument of 0 is less efficient than a known end, so use only if needed
   
   BOOST_FILESYSTEM_DECL
   void convert(const char* from,
-                const char* from_end,    // 0 for null terminated MBCS
-                std::wstring & to,
-                const codecvt_type& cvt);
+               const char* from_end,    // 0 for null terminated MBCS
+               std::wstring & to,
+               const codecvt_type& cvt);
 
   BOOST_FILESYSTEM_DECL
   void convert(const wchar_t* from,
-                const wchar_t* from_end,  // 0 for null terminated MBCS
-                std::string & to,
-                const codecvt_type& cvt);
+               const wchar_t* from_end,  // 0 for null terminated MBCS
+               std::string & to,
+               const codecvt_type& cvt);
+
+  BOOST_FILESYSTEM_DECL
+  void convert(const wchar_t* from,
+               const wchar_t* from_end,  // 0 for null terminated MBCS
+               std::u32string & to,
+               const codecvt_type& cvt);
 
   inline 
   void convert(const char* from,
-                std::wstring & to,
-                const codecvt_type& cvt)
+               std::wstring & to,
+               const codecvt_type& cvt)
   {
     BOOST_ASSERT(from);
     convert(from, 0, to, cvt);
@@ -115,8 +167,8 @@ namespace path_traits {
 
   inline 
   void convert(const wchar_t* from,
-                std::string & to,
-                const codecvt_type& cvt)
+               std::string & to,
+               const codecvt_type& cvt)
   {
     BOOST_ASSERT(from);
     convert(from, 0, to, cvt);
