@@ -775,9 +775,9 @@ system or for a particular file system.</p>
         constexpr value_type                                 preferred_separator;
 
         // <a href="#path-constructors">constructors</a> and destructor
-        path();
-        path(const path&amp; p);
-        path(path&amp;&amp; p) noexcept;
+        path() = default;
+        path(const path&) = default;
+        path(path&amp;&amp;) = default;
 
         template &lt;class <a href="#Source">Source</a>&gt;
           path(Source const&amp; source$CODECVT_ARG2;$CODECVT_DEFAULT;);
@@ -788,8 +788,8 @@ system or for a particular file system.</p>
        ~path();
 
         // <a href="#path-assignments">assignments</a>
-        path&amp; operator=(const path&amp; p);
-        path&amp; operator=(path&amp;&amp; p) noexcept;
+        path&amp; operator=(const path&amp;) = default;
+        path&amp; operator=(path&amp;&amp;) = default;
 
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator=(Source const&amp; source);

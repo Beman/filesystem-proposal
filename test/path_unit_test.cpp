@@ -170,6 +170,14 @@ namespace
     PATH_IS(x2, L"string");
     BOOST_TEST_EQ(x2.native().size(), 6U);
 
+# ifndef BOOST_NO_RVALUE_REFERENCES
+    std::cout << "  with rvalue references" << std::endl;
+    path x2source("source------------------------32");
+    path x2m(std::move(x2source));                     // move constructor
+    BOOST_TEST(x2m == "source------------------------32");
+    BOOST_TEST(x2source.empty());
+# endif
+
     path x3(wl.begin(), wl.end());                     // iterator range wchar_t
     PATH_IS(x3, L"wstring");
     BOOST_TEST_EQ(x3.native().size(), 7U);
@@ -245,9 +253,18 @@ namespace
   {
     std::cout << "testing assignments..." << std::endl;
 
-    x = path("yet another path");                      // another path
+    x = path("yet another path");                      // copy assignment
     PATH_IS(x, L"yet another path");
     BOOST_TEST_EQ(x.native().size(), 16U);
+ 
+# ifndef BOOST_NO_RVALUE_REFERENCES
+    std::cout << "  with rvalue references" << std::endl;
+    path x2source("source------------------------32");
+    path x2;
+    x2 = std::move(x2source);                          // move assignment
+    BOOST_TEST(x2 == "source------------------------32");
+    BOOST_TEST(x2source.empty());
+# endif
 
     x = x;                                             // self-assignment
     PATH_IS(x, L"yet another path");

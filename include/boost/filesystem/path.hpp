@@ -127,9 +127,21 @@ namespace filesystem
 
     //  -----  constructors  -----
 
-    path(){}                                          
-
+# ifndef BOOST_NO_DEFAULTED_FUNCTIONS
+    path() = default;
+    path(const path&) = default;
+# else
+    path(){}
     path(const path& p) : m_pathname(p.m_pathname) {}
+# endif
+
+# ifndef BOOST_NO_RVALUE_REFERENCES
+#   ifndef BOOST_NO_DEFAULTED_FUNCTIONS
+      path(path&&) = default;
+#   else
+      path(path&& p) {m_pathname.swap(p.m_pathname);}
+#   endif
+# endif
 
     template <class Source>
     path(Source const& source,
@@ -181,11 +193,24 @@ namespace filesystem
 
     //  -----  assignments  -----
 
-    path& operator=(const path& p)
-    {
-      m_pathname = p.m_pathname;
-      return *this;
-    }
+# ifndef BOOST_NO_DEFAULTED_FUNCTIONS
+    path& operator=(const path&) = default;
+# else
+     path& operator=(const path& p)
+     {
+       m_pathname = p.m_pathname;
+       return *this;
+     }
+# endif
+
+# ifndef BOOST_NO_RVALUE_REFERENCES
+#   if !defined(BOOST_NO_DEFAULTED_FUNCTIONS) \
+  && (!defined(__GNUC__) || (__GNUC__ >= 4 && __GNUC_MINOR__ >= 6))
+      path& operator=(path&&) = default;
+#   else
+      path& operator=(path&& p) {m_pathname.swap(p.m_pathname); return *this;}
+#   endif
+# endif
 
     path& operator=(const value_type* ptr)  // required in case ptr overlaps *this
     {
