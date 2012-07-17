@@ -24,6 +24,9 @@ $if $TARGET; == BOOST
   {"
   $def NAMESPACE_END "  }  // namespace filesystem
 }  // namespace boost"
+  $def CODECVT_ARG "const codecvt_type&amp; cvt" 
+  $def CODECVT_ARG2 ", const codecvt_type&amp; cvt" 
+  $def CODECVT_DEFAULT "=codecvt()" 
 $else
   Filesystem Proposal
   $def WHAT "Clause"
@@ -34,6 +37,9 @@ $else
   $def NAMESPACE_BEGIN "namespace std { namespace tbd { namespace filesystem {
 "
   $def NAMESPACE_END "} } }  // namespaces std::tbd::filesystem"
+  $def CODECVT_ARG "" 
+  $def CODECVT_ARG2 "" 
+  $def CODECVT_DEFAULT "" 
 $endif
 </title>
 <style type="text/css">
@@ -493,14 +499,11 @@ nothing else.&quot;</p>
 <h2><a name="Header-filesystem-synopsis">Header <code>&lt;$HEADER;&gt;</code> synopsis</a> 
 [filesystem.synopsis]</h2>
 <pre>$NAMESPACE_BEGIN;
-    class <a href="#class-path">path</a>;    
-$if $TARGET; == BOOST
-    bool lexicographical_compare(path::iterator first1, path::iterator last1,
+    class <a href="#class-path">path</a>;
+    
+$if $TARGET; == BOOST    bool lexicographical_compare(path::iterator first1, path::iterator last1,
       path::iterator first2, path::iterator last2);
-      
-$endif
-      
-    void swap(path&amp; lhs, path&amp; rhs);
+$endif;    void swap(path&amp; lhs, path&amp; rhs);
     std::size_t <a href="#hash_value">hash_value</a>(const path&amp; p);
 
     bool operator==(const path&amp; lhs, const path&amp; rhs);
@@ -522,8 +525,30 @@ $endif
 
     class <a href="#Class-directory_iterator">directory_iterator</a>;
 
+    // enable c++11 range-based for statements
+    const directory_iterator&amp; <a href="#directory_iterator-non-member-functions">begin</a>(const directory_iterator&amp; iter);
+    directory_iterator <a href="#directory_iterator-non-member-functions">end</a>(const directory_iterator&amp;);
+
+$if $TARGET; == BOOST
+    // enable BOOST_FOREACH
+    directory_iterator&amp; range_begin(directory_iterator&amp; iter);
+    directory_iterator range_begin(const directory_iterator&amp; iter);
+    directory_iterator range_end(const directory_iterator&amp;);
+
+$endif
     class <a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a>;
 
+    // enable c++11 range-based for statements
+    const recursive_directory_iterator&amp; <a href="#recursive_directory_iterator-non-member-functions">begin</a>(const recursive_directory_iterator&amp; iter);
+    recursive_directory_iterator <a href="#recursive_directory_iterator-non-member-functions">end</a>(const recursive_directory_iterator&amp;);
+
+$if $TARGET; == BOOST
+    // enable BOOST_FOREACH
+    recursive_directory_iterator&amp; range_begin(recursive_directory_iterator&amp; iter);
+    recursive_directory_iterator range_begin(const recursive_directory_iterator&amp; iter);
+    recursive_directory_iterator range_end(const recursive_directory_iterator&amp;);
+
+$endif
     enum <a name="file_type" href="#Enum-file_type">file_type</a>
     {
       status_error, file_not_found, regular_file, directory_file,
@@ -586,7 +611,8 @@ $endif
                            system::error_code&amp; ec);
 
     void         <a href="#copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink);
-    void         <a href="#copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink, system::error_code&amp; ec);
+    void         <a href="#copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink,
+                              system::error_code&amp; ec);
 
     bool         <a href="#create_directories">create_directories</a>(const path&amp; p);
     bool         <a href="#create_directories">create_directories</a>(const path&amp; p, system::error_code&amp; ec);
@@ -595,13 +621,16 @@ $endif
     bool         <a href="#create_directory">create_directory</a>(const path&amp; p, system::error_code&amp; ec);
 
     void         <a href="#create_directory_symlink">create_directory_symlink</a>(const path&amp; to, const path&amp; new_symlink);
-    void         <a href="#create_directory_symlink">create_directory_symlink</a>(const path&amp; to, const path&amp; new_symlink, system::error_code&amp; ec);
+    void         <a href="#create_directory_symlink">create_directory_symlink</a>(const path&amp; to, const path&amp; new_symlink,
+                                          system::error_code&amp; ec);
 
     void         <a href="#create_hard_link">create_hard_link</a>(const path&amp; to, const path&amp; new_hard_link);
-    void         <a href="#create_hard_link">create_hard_link</a>(const path&amp; to, const path&amp; new_hard_link, system::error_code&amp; ec);
+    void         <a href="#create_hard_link">create_hard_link</a>(const path&amp; to, const path&amp; new_hard_link,
+                                  system::error_code&amp; ec);
 
     void         <a href="#create_symlink">create_symlink</a>(const path&amp; to, const path&amp; new_symlink);
-    void         <a href="#create_symlink">create_symlink</a>(const path&amp; to, const path&amp; new_symlink, system::error_code&amp; ec);
+    void         <a href="#create_symlink">create_symlink</a>(const path&amp; to, const path&amp; new_symlink,
+                                system::error_code&amp; ec);
 
     path         <a href="#current_path">current_path</a>();
     path         <a href="#current_path">current_path</a>(system::error_code&amp; ec);
@@ -646,7 +675,8 @@ $endif
     std::time_t  <a href="#last_write_time">last_write_time</a>(const path&amp; p);
     std::time_t  <a href="#last_write_time">last_write_time</a>(const path&amp; p, system::error_code&amp; ec);
     void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time);
-    void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time, system::error_code&amp; ec);
+    void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time,
+                                 system::error_code&amp; ec);
 
     path         <a href="#read_symlink">read_symlink</a>(const path&amp; p);
     path         <a href="#read_symlink">read_symlink</a>(const path&amp; p, system::error_code&amp; ec);
@@ -750,10 +780,10 @@ system or for a particular file system.</p>
         path(path&amp;&amp; p) noexcept;
 
         template &lt;class <a href="#Source">Source</a>&gt;
-          path(Source const&amp; source);
+          path(Source const&amp; source$CODECVT_ARG2;$CODECVT_DEFAULT;);
 
         template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-          path(InputIterator begin, InputIterator end);
+          path(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
 
        ~path();
 
@@ -764,8 +794,11 @@ system or for a particular file system.</p>
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator=(Source const&amp; source);
 
-        template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-          path&amp; assign(InputIterator begin, InputIterator end);
+$if $TARGET; == BOOST        template &lt;class <a href="#Source">Source</a>&gt;
+          path&amp; assign(Source const&amp; source$CODECVT_ARG2;)
+
+$endif;        template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+          path&amp; assign(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
 
         // <a href="#path-appends">appends</a>
         path&amp; operator/=(const path&amp; p);
@@ -773,8 +806,11 @@ system or for a particular file system.</p>
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator/=(Source const&amp; source);
 
-        template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-          path&amp; append(InputIterator begin, InputIterator end);
+$if $TARGET; == BOOST        template &lt;class <a href="#Source">Source</a>&gt;
+          path&amp; append(Source const&amp; source$CODECVT_ARG2;);
+
+$endif;        template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+          path&amp; append(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
 
         // <a href="#path-concatenation">concatenation</a>
         path&amp; operator+=(const path&amp; x);
@@ -785,10 +821,12 @@ system or for a particular file system.</p>
           path&amp; operator+=(Source const&amp; x);
         template &lt;class CharT&gt;
           path&amp; operator+=(CharT x);
-        template &lt;class InputIterator&gt;
+$if $TARGET; == BOOST        template &lt;class Source&gt;
+          path&amp; concat(Source const&amp; x$CODECVT_ARG2;);
+$endif;        template &lt;class InputIterator&gt;
           path&amp; concat(InputIterator begin, InputIterator end);
         template &lt;class InputIterator&gt;
-          path&amp; concat(InputIterator begin, InputIterator end);
+          path&amp; concat(InputIterator begin, InputIterator end$CODECVT_ARG2;);
         
         // <a href="#path-modifiers">modifiers</a>
         void  <a href="#path-clear">clear</a>();
@@ -803,10 +841,10 @@ system or for a particular file system.</p>
         const value_type*   <a href="#c_str">c_str</a>() const noexcept;   // native().c_str()
 
         template &lt;class String&gt;
-          String  <a href="#string-template">string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // native format
+          String  <a href="#string-template">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;   // native format
 
-        string    <a href="#string">string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // native format
-        wstring   <a href="#wstring">wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // native format
+        string    <a href="#string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;   // native format
+        wstring   <a href="#wstring">wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;  // native format
         u16string <a href="#u16string">u16string</a>() const;                                 // native format
         u32string <a href="#u32wstring">u32string</a>() const;                                 // native format
 
@@ -814,8 +852,8 @@ system or for a particular file system.</p>
         template &lt;class String&gt;
           String  <a href="#generic_string-template">generic_string</a>() const;
 
-        string    <a href="#generic_string">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;   // generic format
-        wstring   <a href="#generic_wstring">generic_wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;  // generic format
+        string    <a href="#generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;   // generic format
+        wstring   <a href="#generic_wstring">generic_wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;  // generic format
         u16string <a href="#generic_u16string">generic_u16string</a>() const;                                 // generic format
         u32string <a href="#generic_u32wstring">generic_u32string</a>() const;                                 // generic format
 
@@ -920,9 +958,9 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
 <h3> <a name="path-constructors"> <code>
 <font size="4">path</font></code> constructors</a> [path.construct]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
-  path(Source const&amp; source);</pre>
+  path(Source const&amp; source$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
 <pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-  path(InputIterator begin, InputIterator end);</pre>
+  path(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
   or <code>source</code> in <code>pathname</code>, converting format and 
@@ -931,9 +969,11 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
 <h3> <a name="path-assignments"> <code>
 <font size="4">path</font></code> assignments</a> [path.assign]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
-  path&amp; operator=(Source const&amp; source);</pre>
-<pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-  path&amp; assign(InputIterator begin, InputIterator end);</pre>
+  path&amp; operator=(Source const&amp; source);
+$if $TARGET; == BOOST  template &lt;class <a href="#Source">Source</a>&gt;
+  path&amp; assign(Source const&amp; source$CODECVT_ARG2;);
+$endif;  template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+  path&amp; assign(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
   or <code>source</code> in <code>pathname</code>, converting format and 
@@ -963,9 +1003,11 @@ requirements for a C++ standard library <code>RandomIterator</code> compliant it
   <p><i>Returns: </i><code>*this</code></p>
 </blockquote>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
-  path&amp; operator/=(Source const&amp; source);</pre>
-<pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
-  path&amp; append(InputIterator begin, InputIterator end);</pre>
+  path&amp; operator/=(Source const &amp; source);
+$if $TARGET; == BOOST  template &lt;class <a href="#Source">Source</a>&gt;
+  path&amp; append(Source const &amp; source$CODECVT_ARG2;);
+$endif;  template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+  path&amp; append(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
 <blockquote>
   <p><i>Effects:</i></p>
   <blockquote>
@@ -997,7 +1039,7 @@ template &lt;class CharT&gt;
 template &lt;class InputIterator&gt;
   path&amp; concat(InputIterator begin, InputIterator end);
 template &lt;class InputIterator&gt;
-  path&amp; concat(InputIterator begin, InputIterator end);</pre>
+  path&amp; concat(InputIterator begin, InputIterator end$CODECVT_ARG2;);</pre>
 <blockquote><p><i>Postcondition:</i> <code>native() == prior_native + <i>effective-argument</i></code>,
  where <code>prior_native</code> is <code>native()</code> prior to the call to <code>operator+=</code>,
  and <code><i>effective-argument</i></code> is:</p>
@@ -1060,13 +1102,13 @@ path</code> modifiers</a> [path.modifiers]</h3><pre>void <a name="path-clear">cl
 <p><i>Returns:</i> <code>pathname.c_str()</code>.</p>
 </blockquote>
 <pre>template &lt;class String&gt;
-String <a name="string-template">string</a>(const codecvt_type&amp; cvt=codecvt()) const;</pre>
+String <a name="string-template">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Remarks:</i> If <code>string_type</code> is a different type than <code>String</code>, conversion is performed by <code>cvt</code>.</p>
 </blockquote>
-<pre>string <a name="string">string</a>(const codecvt_type&amp; cvt=codecvt()) const;
-wstring <a name="wstring">wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;
+<pre>string <a name="string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+wstring <a name="wstring">wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 u16string <a name="u16string">u16string</a>() const;
 u32wstring <a name="u32wstring">u32wstring</a>() const; </pre>
 <blockquote>
@@ -1079,13 +1121,13 @@ function's return type, conversion is performed by <code>cvt</code>.</p>
 [path.generic.obs]</h3>
 <p>The string returned by all generic format observers is in the <a href="#generic-pathname-format">generic pathname format</a>.</p>
 <pre>template &lt;class String&gt;
-String <a name="generic_string-template">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;</pre>
+String <a name="generic_string-template">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Remarks:</i> If <code>string_type</code> is a different type than <code>String</code>, conversion is performed by <code>cvt</code>.</p>
 </blockquote>
-<pre>string <a name="generic_string">generic_string</a>(const codecvt_type&amp; cvt=codecvt()) const;
-wstring <a name="generic_wstring">generic_wstring</a>(const codecvt_type&amp; cvt=codecvt()) const;
+<pre>string <a name="generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+wstring <a name="generic_wstring">generic_wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 u16string <a name="generic_u16string">generic_u16string</a>() const;
 u32wstring <a name="generic_u32wstring">generic_u32wstring</a>() const; </pre>
 <blockquote>
@@ -2081,6 +2123,15 @@ directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 
 </blockquote>
+<h3><a name="directory_iterator-non-member-functions"><code>directory_iterator</code> non-member functions</a></h3>
+<pre>const directory_iterator&amp; begin(const directory_iterator&amp; iter);</pre>
+<blockquote>
+  <p><i>Returns: </i><code>iter</code>.</p>
+</blockquote>
+<pre>directory_iterator end(const directory_iterator&amp;);</pre>
+<blockquote>
+  <p><i>Returns: </i><code>directory_iterator()</code>.</p>
+</blockquote>
 <h2><a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
 [class.rec.dir.itr]</a></h2>
 <p>Objects of type <code>recursive_directory_iterator</code> provide standard library 
@@ -2214,6 +2265,15 @@ is decremented and iteration of the parent directory resumes.</li>
 <p><i>Postcondition:</i> <code>no_push_pending() == value</code>.</p>
   <p>[<i>Note:</i> <code>no_push()</code> is used to prevent 
   unwanted recursion into a directory. <i>--end note</i>]</p>
+</blockquote>
+<h3><a name="recursive_directory_iterator-non-member-functions"><code>recursive_directory_iterator</code> non-member functions</a></h3>
+<pre>const recursive_directory_iterator&amp; begin(const recursive_directory_iterator&amp; iter);</pre>
+<blockquote>
+  <p><i>Returns: </i><code>iter</code>.</p>
+</blockquote>
+<pre>recursive_directory_iterator end(const recursive_directory_iterator&amp;);</pre>
+<blockquote>
+  <p><i>Returns: </i><code>recursive_directory_iterator()</code>.</p>
 </blockquote>
 <h2><a name="Operational-functions">Operational functions</a> [fs.op.funcs]</h2>
 <p>Operational functions query or modify files, including directories, in external 
