@@ -503,15 +503,15 @@ nothing else.&quot;</p>
     
 $if $TARGET; == BOOST    bool lexicographical_compare(path::iterator first1, path::iterator last1,
       path::iterator first2, path::iterator last2);
-$endif;    void swap(path&amp; lhs, path&amp; rhs);
-    std::size_t <a href="#hash_value">hash_value</a>(const path&amp; p);
+$endif;    void swap(path&amp; lhs, path&amp; rhs) noexcept;
+    std::size_t <a href="#hash_value">hash_value</a>(const path&amp; p) noexcept;
 
-    bool operator==(const path&amp; lhs, const path&amp; rhs);
-    bool operator!=(const path&amp; lhs, const path&amp; rhs);
-    bool operator&lt; (const path&amp; lhs, const path&amp; rhs);
-    bool operator&lt;=(const path&amp; lhs, const path&amp; rhs);
-    bool operator&gt; (const path&amp; lhs, const path&amp; rhs);
-    bool operator&gt;=(const path&amp; lhs, const path&amp; rhs);
+    bool operator==(const path&amp; lhs, const path&amp; rhs) noexcept;
+    bool operator!=(const path&amp; lhs, const path&amp; rhs) noexcept;
+    bool operator&lt; (const path&amp; lhs, const path&amp; rhs) noexcept;
+    bool operator&lt;=(const path&amp; lhs, const path&amp; rhs) noexcept;
+    bool operator&gt; (const path&amp; lhs, const path&amp; rhs) noexcept;
+    bool operator&gt;=(const path&amp; lhs, const path&amp; rhs) noexcept;
 
     path operator/ (const path&amp; lhs, const path&amp; rhs);
 
@@ -526,26 +526,26 @@ $endif;    void swap(path&amp; lhs, path&amp; rhs);
     class <a href="#Class-directory_iterator">directory_iterator</a>;
 
     // enable c++11 range-based for statements
-    const directory_iterator&amp; <a href="#directory_iterator-non-member-functions">begin</a>(const directory_iterator&amp; iter);
-    directory_iterator <a href="#directory_iterator-non-member-functions">end</a>(const directory_iterator&amp;);
+    const directory_iterator&amp; <a href="#directory_iterator-non-member-functions">begin</a>(const directory_iterator&amp; iter) noexcept;
+    directory_iterator <a href="#directory_iterator-non-member-functions">end</a>(const directory_iterator&amp;) noexcept;
 
 $if $TARGET; == BOOST
     // enable BOOST_FOREACH
-    directory_iterator&amp; range_begin(directory_iterator&amp; iter);
-    directory_iterator range_begin(const directory_iterator&amp; iter);
-    directory_iterator range_end(const directory_iterator&amp;);
+    directory_iterator&amp; range_begin(directory_iterator&amp; iter) noexcept;
+    directory_iterator range_begin(const directory_iterator&amp; iter) noexcept;
+    directory_iterator range_end(const directory_iterator&amp;) noexcept;
 
 $endif;    class <a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a>;
 
     // enable c++11 range-based for statements
-    const recursive_directory_iterator&amp; <a href="#recursive_directory_iterator-non-member-functions">begin</a>(const recursive_directory_iterator&amp; iter);
-    recursive_directory_iterator <a href="#recursive_directory_iterator-non-member-functions">end</a>(const recursive_directory_iterator&amp;);
+    const recursive_directory_iterator&amp; <a href="#recursive_directory_iterator-non-member-functions">begin</a>(const recursive_directory_iterator&amp; iter) noexcept;
+    recursive_directory_iterator <a href="#recursive_directory_iterator-non-member-functions">end</a>(const recursive_directory_iterator&amp;) noexcept;
 
 $if $TARGET; == BOOST
     // enable BOOST_FOREACH
-    recursive_directory_iterator&amp; range_begin(recursive_directory_iterator&amp; iter);
-    recursive_directory_iterator range_begin(const recursive_directory_iterator&amp; iter);
-    recursive_directory_iterator range_end(const recursive_directory_iterator&amp;);
+    recursive_directory_iterator&amp; range_begin(recursive_directory_iterator&amp; iter) noexcept;
+    recursive_directory_iterator range_begin(const recursive_directory_iterator&amp; iter) noexcept;
+    recursive_directory_iterator range_end(const recursive_directory_iterator&amp;) noexcept;
 
 $endif;    enum <a name="file_type" href="#Enum-file_type">file_type</a>
     {
@@ -593,70 +593,70 @@ $endif;    enum <a name="file_type" href="#Enum-file_type">file_type</a>
     path         <a href="#absolute">absolute</a>(const path&amp; p, const path&amp; base=current_path());
 
     path         <a href="#canonical">canonical</a>(const path&amp; p, const path&amp; base = current_path());
-    path         <a href="#canonical">canonical</a>(const path&amp; p, system::error_code&amp; ec);
-    path         <a href="#canonical">canonical</a>(const path&amp; p, const path&amp; base, system::error_code&amp; ec);
+    path         <a href="#canonical">canonical</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
+    path         <a href="#canonical">canonical</a>(const path&amp; p, const path&amp; base, system::error_code&amp; ec) noexcept;
 
     void         <a href="#copy">copy</a>(const path&amp; from, const path&amp; to);
-    void         <a href="#copy">copy</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec);
+    void         <a href="#copy">copy</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;
 
     void         <a href="#create_directory">copy_directory</a>(const path&amp; from, const path&amp; to);
-    void         <a href="#create_directory">copy_directory</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec);
+    void         <a href="#create_directory">copy_directory</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;
 
     void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to);
-    void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec);
+    void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;
     void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_option</a> option);
     void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_option</a> option,
-                           system::error_code&amp; ec);
+                           system::error_code&amp; ec noexcept);
 
     void         <a href="#copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink);
     void         <a href="#copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink,
-                              system::error_code&amp; ec);
+                              system::error_code&amp; ec) noexcept;
 
     bool         <a href="#create_directories">create_directories</a>(const path&amp; p);
-    bool         <a href="#create_directories">create_directories</a>(const path&amp; p, system::error_code&amp; ec);
+    bool         <a href="#create_directories">create_directories</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     bool         <a href="#create_directory">create_directory</a>(const path&amp; p);
-    bool         <a href="#create_directory">create_directory</a>(const path&amp; p, system::error_code&amp; ec);
+    bool         <a href="#create_directory">create_directory</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     void         <a href="#create_directory_symlink">create_directory_symlink</a>(const path&amp; to, const path&amp; new_symlink);
     void         <a href="#create_directory_symlink">create_directory_symlink</a>(const path&amp; to, const path&amp; new_symlink,
-                                          system::error_code&amp; ec);
+                                          system::error_code&amp; ec) noexcept;
 
     void         <a href="#create_hard_link">create_hard_link</a>(const path&amp; to, const path&amp; new_hard_link);
     void         <a href="#create_hard_link">create_hard_link</a>(const path&amp; to, const path&amp; new_hard_link,
-                                  system::error_code&amp; ec);
+                                  system::error_code&amp; ec) noexcept;
 
     void         <a href="#create_symlink">create_symlink</a>(const path&amp; to, const path&amp; new_symlink);
     void         <a href="#create_symlink">create_symlink</a>(const path&amp; to, const path&amp; new_symlink,
-                                system::error_code&amp; ec);
+                                system::error_code&amp; ec) noexcept;
 
     path         <a href="#current_path">current_path</a>();
-    path         <a href="#current_path">current_path</a>(system::error_code&amp; ec);
+    path         <a href="#current_path">current_path</a>(system::error_code&amp; ec) noexcept;
     void         <a href="#current_path">current_path</a>(const path&amp; p);
-    void         <a href="#current_path">current_path</a>(const path&amp; p, system::error_code&amp; ec);
+    void         <a href="#current_path">current_path</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     bool         <a href="#exists">exists</a>(file_status s) noexcept;
     bool         <a href="#exists">exists</a>(const path&amp; p);
     bool         <a href="#exists">exists</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     bool         <a href="#equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2);
-    bool         <a href="#equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2, system::error_code&amp; ec);
+    bool         <a href="#equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2, system::error_code&amp; ec) noexcept;
 
     uintmax_t    <a href="#file_size">file_size</a>(const path&amp; p);
-    uintmax_t    <a href="#file_size">file_size</a>(const path&amp; p, system::error_code&amp; ec);
+    uintmax_t    <a href="#file_size">file_size</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     uintmax_t    <a href="#hard_link_count">hard_link_count</a>(const path&amp; p);
-    uintmax_t    <a href="#hard_link_count">hard_link_count</a>(const path&amp; p, system::error_code&amp; ec);
+    uintmax_t    <a href="#hard_link_count">hard_link_count</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     const path&amp;  <a href="#initial_path">initial_path</a>();
-    const path&amp;  <a href="#initial_path">initial_path</a>(<code>system::error_code&amp; ec</code>);
+    const path&amp;  <a href="#initial_path">initial_path</a>(<code>system::error_code&amp; ec</code>) noexcept;
 
     bool         <a href="#is_directory">is_directory</a>(file_status s) noexcept;
     bool         <a href="#is_directory2">is_directory</a>(const path&amp; p);
     bool         <a href="#is_directory2">is_directory</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     bool         <a href="#is_empty">is_empty</a>(const path&amp; p);
-    bool         <a href="#is_empty">is_empty</a>(const path&amp; p, system::error_code&amp; ec);
+    bool         <a href="#is_empty">is_empty</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     bool         <a href="#is_other">is_other</a>(file_status s) noexcept;
     bool         <a href="#is_other2">is_other</a>(const path&amp; p,);
@@ -671,28 +671,28 @@ $endif;    enum <a name="file_type" href="#Enum-file_type">file_type</a>
     bool         <a href="#is_symlink2">is_symlink</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     std::time_t  <a href="#last_write_time">last_write_time</a>(const path&amp; p);
-    std::time_t  <a href="#last_write_time">last_write_time</a>(const path&amp; p, system::error_code&amp; ec);
+    std::time_t  <a href="#last_write_time">last_write_time</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
     void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time);
     void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time,
-                                 system::error_code&amp; ec);
+                                 system::error_code&amp; ec) noexcept;
 
     path         <a href="#read_symlink">read_symlink</a>(const path&amp; p);
-    path         <a href="#read_symlink">read_symlink</a>(const path&amp; p, system::error_code&amp; ec);
+    path         <a href="#read_symlink">read_symlink</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     bool         <a href="#remove">remove</a>(const path&amp; p);
-    bool         <a href="#remove">remove</a>(const path&amp; p, system::error_code&amp; ec);
+    bool         <a href="#remove">remove</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     uintmax_t    <a href="#remove_all">remove_all</a>(const path&amp; p);
-    uintmax_t    <a href="#remove_all">remove_all</a>(const path&amp; p, system::error_code&amp; ec);
+    uintmax_t    <a href="#remove_all">remove_all</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     void         <a href="#rename">rename</a>(const path&amp; from, const path&amp; to);
-    void         <a href="#rename">rename</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec);
+    void         <a href="#rename">rename</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;
 
     void         <a href="#resize_file">resize_file</a>(const path&amp; p, uintmax_t size);
-    void         <a href="#resize_file2">resize_file</a>(const path&amp; p, uintmax_t size, system::error_code&amp; ec);
+    void         <a href="#resize_file2">resize_file</a>(const path&amp; p, uintmax_t size, system::error_code&amp; ec) noexcept;
 
     <a href="#space_info">space_info</a>   <a href="#space">space</a>(const path&amp; p);
-    <a href="#space_info">space_info</a>   <a href="#space">space</a>(const path&amp; p, system::error_code&amp; ec);
+    <a href="#space_info">space_info</a>   <a href="#space">space</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     <a href="#file_status">file_status</a>  <a href="#status">status</a>(const path&amp; p);
     <a href="#file_status">file_status</a>  <a href="#status">status</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
@@ -703,13 +703,13 @@ $endif;    enum <a name="file_type" href="#Enum-file_type">file_type</a>
     <a href="#file_status">file_status</a>  <a href="#symlink_status">symlink_status</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     path         <a href="#system_complete">system_complete</a>(const path&amp; p);
-    path         <a href="#system_complete">system_complete</a>(const path&amp; p, system::error_code&amp; ec);
+    path         <a href="#system_complete">system_complete</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
     path         <a href="#temp_directory_path">temp_directory_path</a>();
-    path         <a href="#temp_directory_path">temp_directory_path</a>(system::error_code&amp; ec);
+    path         <a href="#temp_directory_path">temp_directory_path</a>(system::error_code&amp; ec) noexcept;
 
     path         <a href="#unique_path">unique_path</a>(const path&amp; model=&quot;%%%%-%%%%-%%%%-%%%%&quot;);
-    path         <a href="#unique_path">unique_path</a>(const path&amp; model, system::error_code&amp; ec);
+    path         <a href="#unique_path">unique_path</a>(const path&amp; model, system::error_code&amp; ec) noexcept;
 
 $NAMESPACE_END;</pre>
 <h2><a name="Error-reporting">Error reporting</a> [fs.err.report]</h2>
@@ -751,11 +751,7 @@ errors are truly exceptional and indicate a serious failure. Throwing an
 <code>system::error_code&amp;</code> argument is set as 
   appropriate appropriate for the specific error. Otherwise, <code>clear()</code> 
   is called on the
-<code>system::error_code&amp;</code> argument.<br>
-&nbsp;</li>
-  <li>Failure to allocate storage is reported by 
-  throwing an exception as described in the C++ standard, 
-  17.6.4.10 [res.on.exception.handling].</li>
+<code>system::error_code&amp;</code> argument.</li>
 </ul>
 <h2><a name="class-path">Class <code>path</code> [class.path]</a></h2>
 <p>An object of class <code>path</code> represents a <a href="#Path">path</a>, 
@@ -763,6 +759,7 @@ and contains a <a href="#Pathname">pathname</a> Such an object is concerned only
 of a path. The path does not necessarily exist in external storage, and the 
 pathname is not necessarily valid for the current operating 
 system or for a particular file system.</p>
+<blockquote>
 <pre>$NAMESPACE_BEGIN;
       class path
       {
@@ -856,9 +853,9 @@ $endif;        template &lt;class InputIterator&gt;
         u32string <a href="#generic_u32wstring">generic_u32string</a>() const;
 
         // <a href="#path-compare">compare</a>
-        int <a href="#path-compare">compare</a>(const path&amp; p) const noexcept;
-        int <a href="#path-compare">compare</a>(const std::string&amp; s) const;
-        int <a href="#path-compare">compare</a>(const value_type* s) const;
+        int  <a href="#path-compare">compare</a>(const path&amp; p) const noexcept;
+        int  <a href="#path-compare">compare</a>(const std::string&amp; s) const;
+        int  <a href="#path-compare">compare</a>(const value_type* s) const;
 
         // <a href="#path-decomposition">decomposition</a>
         path <a href="#path-root_name">root_name</a>() const;
@@ -871,7 +868,7 @@ $endif;        template &lt;class InputIterator&gt;
         path <a href="#path-extension">extension</a>() const;
 
         // <a href="#path-query">query</a>
-        bool <a href="#path-query">empty</a>() const;
+        bool <a href="#path-query">empty</a>() const noexcept;
         bool <a href="#path-has_root_name">has_root_name</a>() const;
         bool <a href="#path-has_root_directory">has_root_directory</a>() const;
         bool <a href="#path-has_root_path">has_root_path</a>() const;
@@ -899,6 +896,7 @@ $endif;        template &lt;class InputIterator&gt;
       };
 
 $NAMESPACE_END;</pre>
+</blockquote>
 <p><code><a name="value_type">value_type</a></code> is a <code>typedef</code> for the 
 character type used by the operating system to represent pathnames.</p>
 <h3><a name="path-Conversions"><code>path</code> Conversions</a> [path.cvt]</h3>
@@ -1230,7 +1228,7 @@ for (; !p.extension().empty(); p = p.stem())
   extensive rationale.&nbsp; </span> <i><span style="background-color: #FFFF00">-- end note</span></i><span style="background-color: #FFFF00">]</span></p>
 </blockquote>
 <h3> <a name="path-query"> <code><font size="4">path</font></code> query</a> [path.query]</h3>
-<pre>bool <a name="path-empty">empty</a>() const;</pre>
+<pre>bool <a name="path-empty">empty</a>() const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_pathname.empty()</code>.</p>
 </blockquote>
@@ -1811,40 +1809,41 @@ and permissions of a file.</p>
   <p><i>Postconditions:</i> <code>permissions() == prms</code>.</p>
 </blockquote>
 <h2><a name="Class-directory_entry">Class <code>directory_entry</code></a> [class.directory_entry]</h2>
-<div>
 <pre>$NAMESPACE_BEGIN;
       class directory_entry
       {
       public:
 
         // <a href="#directory_entry-constructors">constructors</a> and destructor
-        directory_entry();
-        directory_entry(const directory_entry&amp;);
+        directory_entry() noexcept = default;
+        directory_entry(const directory_entry&amp;) = default;
+        directory_entry(directory_entry&amp;&amp;) noexcept = default;
         explicit directory_entry(const path_type&amp; p, file_status st=file_status(),
           file_status symlink_st=file_status());
-       ~directory_entry(); 
+       ~directory_entry() noexcept = default; 
 
         // <a href="#directory_entry-modifiers">modifiers</a>
-        directory_entry&amp; operator=(const directory_entry&amp;);
+        directory_entry&amp; operator=(const directory_entry&amp;) = default;
+        directory_entry&amp; operator=(directory_entry&amp;&amp;) noexcept = default;
         void assign(const path_type&amp; p, file_status st=file_status(),
           file_status symlink_st=file_status());
         void replace_filename(const path&amp; p, file_status st=file_status(),
           file_status symlink_st=file_status());
 
         // <a href="#directory_entry-observers">observers</a>
-        const path&amp;  path() const;
+        const path&amp;  path() const noexcept;
         file_status  status() const;
-        file_status  status(system::error_code&amp; ec) const;
+        file_status  status(system::error_code&amp; ec) const noexcept;
         file_status  symlink_status() const;
-        file_status  symlink_status(system::error_code&amp; ec) const;
+        file_status  symlink_status(system::error_code&amp; ec) const noexcept;
 
-        bool operator&lt; (const directory_entry&amp; rhs);
-        bool operator==(const directory_entry&amp; rhs); 
-        bool operator!=(const directory_entry&amp; rhs); 
-        bool operator&lt; (const directory_entry&amp; rhs);
-        bool operator&lt;=(const directory_entry&amp; rhs);
-        bool operator&gt; (const directory_entry&amp; rhs);
-        bool operator&gt;=(const directory_entry&amp; rhs);
+        bool operator&lt; (const directory_entry&amp; rhs) const noexcept;
+        bool operator==(const directory_entry&amp; rhs) const noexcept; 
+        bool operator!=(const directory_entry&amp; rhs) const noexcept; 
+        bool operator&lt; (const directory_entry&amp; rhs) const noexcept;
+        bool operator&lt;=(const directory_entry&amp; rhs) const noexcept;
+        bool operator&gt; (const directory_entry&amp; rhs) const noexcept;
+        bool operator&gt;=(const directory_entry&amp; rhs) const noexcept;
       private:
         path_type            m_path;           // for exposition only
         mutable file_status  m_status;         // for exposition only; stat()-like
@@ -1852,7 +1851,6 @@ and permissions of a file.</p>
       };
 
 $NAMESPACE_END;</pre>
-</div>
 <p>A <code>directory_entry</code> object stores a <code>path object</code>, 
 a <code>file_status</code> object for non-symbolic link status, and a <code>file_status</code> object for symbolic link status. The <code>file_status</code> objects act as value caches.</p>
 <blockquote>
@@ -1868,29 +1866,8 @@ systems that provide status as a by-product of directory iteration.</i></span></
 </blockquote>
 <h3> <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a> 
 [directory_entry.cons]</h3>
-<pre>directory_entry();</pre>
-<blockquote>
-  <p><i>Postcondition:</i></p>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="36%">
-    <tr>
-      <td width="18%"><b>Expression</b></td>
-      <td width="82%"><b>Value</b></td>
-    </tr>
-    <tr>
-      <td width="18%"><code>path().empty()</code></td>
-      <td width="82%"><code>true</code></td>
-    </tr>
-    <tr>
-      <td width="18%"><code>status()</code></td>
-      <td width="82%"><code>file_status()</code></td>
-    </tr>
-    <tr>
-      <td width="18%"><code>symlink_status()</code></td>
-      <td width="82%"><code>file_status()</code></td>
-    </tr>
-  </table>
-</blockquote>
-<pre>explicit directory_entry(const path_type&amp; p, file_status st=file_status(), file_status symlink_st=file_status());</pre>
+<pre>explicit directory_entry(const path_type&amp; p, file_status st=file_status(),
+                         file_status symlink_st=file_status());</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="36%">
@@ -1914,7 +1891,8 @@ systems that provide status as a by-product of directory iteration.</i></span></
 </blockquote>
 <h3> <a name="directory_entry-modifiers"> <code>directory_entry </code>modifiers</a> 
 [directory_entry.mods]</h3>
-<pre>void assign(const path_type&amp; p, file_status st=file_status(), file_status symlink_st=file_status());</pre>
+<pre>void assign(const path_type&amp; p, file_status st=file_status(),
+            file_status symlink_st=file_status());</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="36%">
@@ -1936,7 +1914,8 @@ systems that provide status as a by-product of directory iteration.</i></span></
     </tr>
   </table>
 </blockquote>
-<pre>void replace_filename(const path&amp; p, file_status st=file_status(), file_status symlink_st=file_status());</pre>
+<pre>void replace_filename(const path&amp; p, file_status st=file_status(),
+                      file_status symlink_st=file_status());</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="43%">
@@ -1960,12 +1939,12 @@ systems that provide status as a by-product of directory iteration.</i></span></
 </blockquote>
 <h3> <a name="directory_entry-observers"> <code>directory_entry</code> observers</a> 
 [directory_entry.obs]</h3>
-<pre>const path&amp; path() const;</pre>
+<pre>const path&amp; path() const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path</code></p>
 </blockquote>
 <pre>file_status status() const;
-file_status status(system::error_code&amp; ec) const;</pre>
+file_status status(system::error_code&amp; ec) const noexcept;</pre>
 <blockquote>
 <p><i>Effects:</i> As if,</p>
   <blockquote>
@@ -1982,7 +1961,7 @@ file_status status(system::error_code&amp; ec) const;</pre>
   
 </blockquote>
 <pre>file_status  symlink_status() const;
-file_status  symlink_status(system::error_code&amp; ec) const;</pre>
+file_status  symlink_status(system::error_code&amp; ec) const noexcept;</pre>
 <blockquote>
 <p>
   <i>Effects:</i> As if,</p>
@@ -1997,27 +1976,27 @@ file_status  symlink_status(system::error_code&amp; ec) const;</pre>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
 </blockquote>
-<pre>bool operator==(const directory_entry&amp; rhs);</pre>
+<pre>bool operator==(const directory_entry&amp; rhs) const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path == rhs.m_path</code>.</p>
 </blockquote>
-<pre>bool operator!=(const directory_entry&amp; rhs);</pre>
+<pre>bool operator!=(const directory_entry&amp; rhs) const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path != rhs.m_path</code>.</p>
 </blockquote>
-<pre>bool operator&lt; (const directory_entry&amp; rhs);</pre>
+<pre>bool operator&lt; (const directory_entry&amp; rhs) const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path &lt; rhs.m_path</code>.</p>
 </blockquote>
-<pre>bool operator&lt;=(const directory_entry&amp; rhs);</pre>
+<pre>bool operator&lt;=(const directory_entry&amp; rhs) const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path &lt;= rhs.m_path</code>.</p>
 </blockquote>
-<pre>bool operator&gt; (const directory_entry&amp; rhs);</pre>
+<pre>bool operator&gt; (const directory_entry&amp; rhs) const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path &gt; rhs.m_path</code>.</p>
 </blockquote>
-<pre>bool operator&gt;=(const directory_entry&amp; rhs);</pre>
+<pre>bool operator&gt;=(const directory_entry&amp; rhs) const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path &gt;= rhs.m_path</code>.</p>
 </blockquote>
@@ -2122,11 +2101,11 @@ directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
 
 </blockquote>
 <h3><a name="directory_iterator-non-member-functions"><code>directory_iterator</code> non-member functions</a></h3>
-<pre>const directory_iterator&amp; begin(const directory_iterator&amp; iter);</pre>
+<pre>const directory_iterator&amp; begin(const directory_iterator&amp; iter) noexcept;</pre>
 <blockquote>
   <p><i>Returns: </i><code>iter</code>.</p>
 </blockquote>
-<pre>directory_iterator end(const directory_iterator&amp;);</pre>
+<pre>directory_iterator end(const directory_iterator&amp;) noexcept;</pre>
 <blockquote>
   <p><i>Returns: </i><code>directory_iterator()</code>.</p>
 </blockquote>
@@ -2265,11 +2244,11 @@ is decremented and iteration of the parent directory resumes.</li>
   unwanted recursion into a directory. <i>--end note</i>]</p>
 </blockquote>
 <h3><a name="recursive_directory_iterator-non-member-functions"><code>recursive_directory_iterator</code> non-member functions</a></h3>
-<pre>const recursive_directory_iterator&amp; begin(const recursive_directory_iterator&amp; iter);</pre>
+<pre>const recursive_directory_iterator&amp; begin(const recursive_directory_iterator&amp; iter) noexcept;</pre>
 <blockquote>
   <p><i>Returns: </i><code>iter</code>.</p>
 </blockquote>
-<pre>recursive_directory_iterator end(const recursive_directory_iterator&amp;);</pre>
+<pre>recursive_directory_iterator end(const recursive_directory_iterator&amp;) noexcept;</pre>
 <blockquote>
   <p><i>Returns: </i><code>recursive_directory_iterator()</code>.</p>
 </blockquote>
@@ -2311,8 +2290,8 @@ an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end not
   memory allocation fails.</p>
 </blockquote>
 <pre>path <a name="canonical">canonical</a>(const path&amp; p, const path&amp; base = current_path());
-path canonical(const path&amp; p, system::error_code&amp; ec);
-path canonical(const path&amp; p, const path&amp; base, system::error_code&amp; ec);</pre>
+path canonical(const path&amp; p, system::error_code&amp; ec) noexcept;
+path canonical(const path&amp; p, const path&amp; base, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
 <p><i>Overview:</i> Converts <code>p</code>, which must exist, to an absolute 
 path that has no symbolic link, <a href="#Dot">dot</a>, 
@@ -2329,7 +2308,7 @@ without a <code>base</code> argument, <code>base</code> is <code>current_path()<
   
 </blockquote>
 <pre>void <a name="copy">copy</a>(const path&amp; from, const path&amp; to);
-void copy(const path&amp; from, const path&amp; to, system::error_code&amp; ec);</pre>
+void copy(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> As if</p>
   
@@ -2348,7 +2327,7 @@ else
   
 </blockquote>
 <pre>void <a name="copy_directory">copy_directory</a>(const path&amp; from, const path&amp; to);
-void copy_directory(const path&amp; from, const path&amp; to, system::error_code&amp; ec);</pre>
+void copy_directory(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects: </i></p>
   
@@ -2356,7 +2335,7 @@ void copy_directory(const path&amp; from, const path&amp; to, system::error_code
   
 </blockquote>
 <pre>void copy_file(const path&amp; from, const path&amp; to);
-void copy_file(const path&amp; from, const path&amp; to, system::error_code&amp; ec);</pre>
+void copy_file(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects: </i><code>copy_file(from, to, copy_option::fail_if_exists</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
   
@@ -2364,13 +2343,15 @@ void copy_file(const path&amp; from, const path&amp; to, system::error_code&amp;
   
 </blockquote>
 <pre>void <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_option</a> option);
-void <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_option</a> option, system::error_code&amp; ec);</pre>
+void <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_option</a> option,
+               system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> If <code>option == copy_option::</code><code>fail_if_exists &amp;&amp; exists(to)</code>, an error is reported. Otherwise, the contents and attributes of the file <code>from</code> resolves to are copied to the file <code>to</code> resolves to.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink);
-void copy_symlink(const path&amp; existing_symlink, const path&amp; new_symlink, system::error_code&amp; ec);</pre>
+void copy_symlink(const path&amp; existing_symlink, const path&amp; new_symlink,
+                  system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects: </i><code>create_symlink(read_symlink(existing_symlink</code><i>[</i><code>, ec</code><i>]</i><code>), new_symlink</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
   
@@ -2378,7 +2359,7 @@ void copy_symlink(const path&amp; existing_symlink, const path&amp; new_symlink,
   
 </blockquote>
 <pre>bool <a name="create_directories">create_directories</a>(const path&amp; p);
-bool <a name="create_directories2">create_directories</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+bool <a name="create_directories2">create_directories</a>(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> Establishes the postcondition by calling <code>
   create_directory()</code> for any element of <code>p</code> that does not 
@@ -2391,7 +2372,7 @@ bool <a name="create_directories2">create_directories</a>(const path&amp; p, sys
   of <code>p</code> that do not exist.</p>
 </blockquote>
 <pre>bool <a name="create_directory">create_directory</a>(const path&amp; p);
-bool <a name="create_directory2">create_directory</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+bool <a name="create_directory2">create_directory</a>(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> Establishes the postcondition by attempting to create the 
   directory <code>p</code> resolves to, as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/mkdir.html">
@@ -2403,7 +2384,8 @@ bool <a name="create_directory2">create_directory</a>(const path&amp; p, system:
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="create_directory_symlink">create_directory_symlink</a>(const path&amp; to, const path&amp; new_symlink);
-void create_directory_symlink(const path&amp; to, const path&amp; new_symlink, system::error_code&amp; ec);</pre>
+void create_directory_symlink(const path&amp; to, const path&amp; new_symlink,
+                              system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> Establishes the postcondition, as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/symlink.html">symlink()</a></code>.</p>
   <p><i>
@@ -2420,7 +2402,8 @@ void create_directory_symlink(const path&amp; to, const path&amp; new_symlink, s
   memory cards and flash drives, for example. <i>-- end note</i>]</p>
   </blockquote>
 <pre>void <a name="create_hard_link">create_hard_link</a>(const path&amp; to, const path&amp; new_hard_link);
-void <a name="create_hard_link2">create_hard_link</a>(const path&amp; to, const path&amp; new_hard_link, system::error_code&amp; ec);</pre>
+void <a name="create_hard_link2">create_hard_link</a>(const path&amp; to, const path&amp; new_hard_link,
+                                      system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> Establishes the postcondition, as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/link.html">link()</a></code>.</p>
   <p><i>Postcondition:</i></p>
@@ -2440,7 +2423,8 @@ void <a name="create_hard_link2">create_hard_link</a>(const path&amp; to, const 
   links per file. <i>-- end note</i>]</p>
   </blockquote>
 <pre>void <a name="create_symlink">create_symlink</a>(const path&amp; to, const path&amp; new_symlink);
-void <a name="create_symlink2">create_symlink</a>(const path&amp; to, const path&amp; new_symlink, system::error_code&amp; ec);</pre>
+void <a name="create_symlink2">create_symlink</a>(const path&amp; to, const path&amp; new_symlink,
+                    system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> Establishes the postcondition, as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/symlink.html">symlink()</a></code>.</p>
   <p><i>
@@ -2455,7 +2439,7 @@ void <a name="create_symlink2">create_symlink</a>(const path&amp; to, const path
   memory cards and flash drives, for example. <i>-- end note</i>]</p>
   </blockquote>
 <pre>path <a name="current_path">current_path</a>();
-path <a name="current_path2">current_path</a>(system::error_code&amp; ec);</pre>
+path <a name="current_path2">current_path</a>(system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> The current working directory path, as if by ISO/IEC  
   9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/getcwd.html">getcwd()</a></code>. <code>is_absolute()</code> is true for the returned path.</p>
@@ -2467,7 +2451,7 @@ path <a name="current_path2">current_path</a>(system::error_code&amp; ec);</pre>
   library functions, or by another thread.&nbsp; <i>-- end note</i>]</p>
 </blockquote>
 <pre>void current_path(const path&amp; p);
-void current_path(const path&amp; p, system::error_code&amp; ec);</pre>
+void current_path(const path&amp; p, system::error_code&amp; ec noexcept);</pre>
 <blockquote>
   <p><i>Effects:</i> Establishes the postcondition, as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/chdir.html">chdir()</a></code>.</p>
 <p><i>Postcondition:</i> <code>equivalent(p, current_path())</code>.</p>
@@ -2488,7 +2472,7 @@ bool <a name="exists3">exists</a>(const path&amp; p, system::error_code&amp; ec)
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre><code>bool <a name="equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2);
-bool <a name="equivalent2">equivalent</a>(const path&amp; p1, const path&amp; p2, system::error_code&amp; ec);</code></pre>
+bool <a name="equivalent2">equivalent</a>(const path&amp; p1, const path&amp; p2, system::error_code&amp; ec)</code> noexcept<code>;</code></pre>
 <blockquote>
   <p><i>Effects:</i> Determines <code>file_status s1</code> and <code>s2</code>, as if by <code>status(p1)</code> and&nbsp; <code>status(p2)</code>, 
   respectively.</p>
@@ -2509,7 +2493,7 @@ bool <a name="equivalent2">equivalent</a>(const path&amp; p1, const path&amp; p2
 </blockquote>
 <div>
 <pre>uintmax_t <a name="file_size">file_size</a>(const path&amp; p);
-uintmax_t <a name="file_size2">file_size</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+uintmax_t <a name="file_size2">file_size</a>(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
 </div>
 <blockquote>
   <p><i>Returns:</i> If <code>exists(p) &amp;&amp; is_regular_file(p)</code>, the size 
@@ -2521,7 +2505,7 @@ uintmax_t <a name="file_size2">file_size</a>(const path&amp; p, system::error_co
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>uintmax_t <a name="hard_link_count">hard_link_count</a>(const path&amp; p);
-uintmax_t hard_link_count(const path&amp; p, system::error_code&amp; ec);</pre>
+uintmax_t hard_link_count(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
 
   <p><i>Returns:</i> The number of hard links for <code>p</code>.</p>
@@ -2530,7 +2514,7 @@ uintmax_t hard_link_count(const path&amp; p, system::error_code&amp; ec);</pre>
 </blockquote>
 
 <pre>const path&amp; <a name="initial_path">initial_path</a>();
-const path&amp; <a name="initial_path2">initial_path</a>(<code>system::error_code&amp; ec</code>);</pre>
+const path&amp; <a name="initial_path2">initial_path</a>(<code>system::error_code&amp; ec</code>) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>current_path()</code> as of the first call to <code>initial_path()</code>.</p>
   <p>[<i>Note:</i> <code>initial_path()</code> is not thread safe, and may return an undesirable result 
@@ -2552,7 +2536,7 @@ bool <a name="is_directory3">is_directory</a>(const path&amp; p, system::error_c
 nothing.</p>
 </blockquote>
 <pre><code>bool <a name="is_empty">is_empty</a>(const path&amp; p);
-bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, system::error_code&amp; ec);</code></pre>
+bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, system::error_code&amp; ec)</code> noexcept<code>;</code></pre>
 <blockquote>
   <p><i>Effects:</i> Determines <code>file_status s</code>, as if by <code>status(p, ec)</code>.</p>
   <p><i>Returns:</i> <code>is_directory(s)<br>
@@ -2599,7 +2583,7 @@ bool <a name="is_symlink3">is_symlink</a>(const path&amp; p, system::error_code&
   nothing.</p>
 </blockquote>
 <pre>std::time_t <a name="last_write_time">last_write_time</a>(const path&amp; p);
-std::time_t <a name="last_write_time2">last_write_time</a>(const path&amp; p<code>, system::error_code&amp; ec</code>);</pre>
+std::time_t <a name="last_write_time2">last_write_time</a>(const path&amp; p<code>, system::error_code&amp; ec</code>) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> The time of last data modification of <code>p</code>, determined as if by the 
   value of the ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">stat</a></code> structure member <code>st_mtime</code>&nbsp; obtained 
@@ -2607,7 +2591,8 @@ std::time_t <a name="last_write_time2">last_write_time</a>(const path&amp; p<cod
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="last_write_time3">last_write_time</a>(const path&amp; p, const std::time_t new_time);
-void <a name="last_write_time4">last_write_time</a>(const path&amp; p, const std::time_t new_time<code>, system::error_code&amp; ec</code>);</pre>
+void <a name="last_write_time4">last_write_time</a>(const path&amp; p, const std::time_t new_time<code>,
+                     system::error_code&amp; ec</code>) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> Sets the time of last data modification of the file 
   resolved to by <code>p</code> to <code>new_time</code>, as if by ISO/IEC 
@@ -2618,7 +2603,7 @@ void <a name="last_write_time4">last_write_time</a>(const path&amp; p, const std
   with coarse time granularity. <i>-- end note</i>]</p>
 </blockquote>
 <pre>void <a name="permissions">permissions</a>(const path&amp; p, <a href="#symlink_perms">perms</a> prms);
-void permissions(const path&amp; p, <a href="#symlink_perms">perms</a> prms, system::error_code&amp; ec);</pre>
+void permissions(const path&amp; p, <a href="#symlink_perms">perms</a> prms, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p>
   <i>Requires:</i> <code>!((prms &amp; add_perms) &amp;&amp; (prms &amp; remove_perms))</code>.</p>
@@ -2649,7 +2634,7 @@ void permissions(const path&amp; p, <a href="#symlink_perms">perms</a> prms, sys
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>path <a name="read_symlink">read_symlink</a>(const path&amp; p);
-path read_symlink(const path&amp; p, system::error_code&amp; ec);</pre>
+path read_symlink(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i>&nbsp; If <code>p</code> resolves to a symbolic 
   link, a <code>path</code> object containing the contents of that symbolic 
@@ -2658,7 +2643,7 @@ path read_symlink(const path&amp; p, system::error_code&amp; ec);</pre>
   resolve to a symbolic link. <i>-- end note</i>]</p>
 </blockquote>
 <pre>bool <a name="remove">remove</a>(const path&amp; p);
-bool <a name="remove2">remove</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+bool <a name="remove2">remove</a>(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i>&nbsp; If <code>exists(symlink_status(p,ec))</code>, it is 
   removed 
@@ -2673,7 +2658,7 @@ bool <a name="remove2">remove</a>(const path&amp; p, system::error_code&amp; ec)
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>uintmax_t <a name="remove_all">remove_all</a>(const path&amp; p);
-uintmax_t <a name="remove_all2">remove_all</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+uintmax_t <a name="remove_all2">remove_all</a>(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i>&nbsp; Recursively deletes the contents of p if it exists, 
   then deletes file <code>p</code> itself, 
@@ -2687,7 +2672,7 @@ uintmax_t <a name="remove_all2">remove_all</a>(const path&amp; p, system::error_
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p);
-void <a name="rename2">rename</a>(const path&amp; old_p, const path&amp; new_p, system::error_code&amp; ec);</pre>
+void <a name="rename2">rename</a>(const path&amp; old_p, const path&amp; new_p, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> Renames <code>old_p</code> to <code>new_p</code>, as if by
   ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/rename.html">rename()</a></code>.</p>
@@ -2701,14 +2686,14 @@ void <a name="rename2">rename</a>(const path&amp; old_p, const path&amp; new_p, 
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="resize_file">resize_file</a>(const path&amp; p, uintmax_t new_size);
-void <a name="resize_file2">resize_file</a>(const path&amp; p, uintmax_t new_size, system::error_code&amp; ec);</pre>
+void <a name="resize_file2">resize_file</a>(const path&amp; p, uintmax_t new_size, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
 <p><i>Postcondition:</i> <code>file_size() == new_size</code>.</p>
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   <p><i>Remarks:</i> Achieves its postconditions as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/truncate.html">truncate()</a></code>.</p>
 </blockquote>
 <pre>space_info <a name="space">space</a>(const path&amp; p);
-space_info <a name="space2">space</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+space_info <a name="space2">space</a>(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> An object of type <code><a href="#space_info">space_info</a></code>. The value of the <code>space_info</code> object is determined as if by 
   using ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/statvfs.html"
@@ -2733,7 +2718,8 @@ return result;</pre>
   </blockquote>
   <p><i>Returns:</i> See above.</p>
   <p><i>Throws:</i> <code>filesystem_error</code>. 
-[<i>Note:</i> <code>result</code> values of <code>file_status(file_not_found)</code>and <code>file_status(type_unknown)</code> are not considered failures and do not 
+[<i>Note:</i> <code>result</code> values of <code>file_status(file_not_found)</code> 
+  and <code>file_status(type_unknown)</code> are not considered failures and do not 
   cause an exception to be 
 thrown.<i> -- end note</i>] </p>
   </blockquote>
@@ -2845,7 +2831,7 @@ file_status <a name="symlink_status2">symlink_status</a>(const path&amp; p, syst
   nothing.</p>
 </blockquote>
 <pre>path <a name="system_complete">system_complete</a>(const path&amp; p);
-path <a name="system_complete2">system_complete</a>(const path&amp; p, system::error_code&amp; ec);</pre>
+path <a name="system_complete2">system_complete</a>(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> Composes an absolute path from <code>p</code>, using the 
   same rules used by the operating system to resolve a path passed as the 
@@ -2864,7 +2850,7 @@ path <a name="system_complete2">system_complete</a>(const path&amp; p, system::e
   <p>See <a href="#complete_note"><i>complete()</i> note</a> for usage suggestions. <i>-- end note</i>]</p>
 </blockquote>
 <pre>path <a name="temp_directory_path">temp_directory_path</a>();
-path temp_directory_path(system::error_code&amp; ec);</pre>
+path temp_directory_path(system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> A directory path suitable for temporary files under the 
   conventions of the operating system. The specifics of how this path is 

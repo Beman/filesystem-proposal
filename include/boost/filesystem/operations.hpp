@@ -146,37 +146,48 @@ namespace boost
   class BOOST_FILESYSTEM_DECL file_status
   {
   public:
-             file_status()            : m_value(status_error), m_perms(perms_not_known) {}
+             file_status()
+               BOOST_NOEXCEPT : m_value(status_error), m_perms(perms_not_known) {}
     explicit file_status(file_type v, perms prms = perms_not_known)
-                                      : m_value(v), m_perms(prms) {}
+               BOOST_NOEXCEPT : m_value(v), m_perms(prms) {}
 
     // observers
-    file_type  type() const                       { return m_value; }
-    perms      permissions() const                { return m_perms; } 
+    file_type  type() const BOOST_NOEXCEPT        { return m_value; }
+    perms      permissions() const BOOST_NOEXCEPT { return m_perms; } 
 
     // modifiers
-    void       type(file_type v)                  { m_value = v; }
-    void       permissions(perms prms)            { m_perms = prms; }
+    void       type(file_type v) BOOST_NOEXCEPT   { m_value = v; }
+    void       permissions(perms prms) BOOST_NOEXCEPT
+                                                  { m_perms = prms; }
 
-    bool operator==(const file_status& rhs) const { return type() == rhs.type() && 
+    bool operator==(const file_status& rhs) const BOOST_NOEXCEPT 
+                                                  { return type() == rhs.type() && 
                                                     permissions() == rhs.permissions(); }
-    bool operator!=(const file_status& rhs) const { return !(*this == rhs); }
+    bool operator!=(const file_status& rhs) const BOOST_NOEXCEPT 
+                                                  { return !(*this == rhs); }
 
   private:
     file_type   m_value;
     enum perms  m_perms;
   };
 
-  inline bool type_present(file_status f) { return f.type() != status_error; }
-  inline bool permissions_present(file_status f)
+  inline bool type_present(file_status f) BOOST_NOEXCEPT 
+                                          { return f.type() != status_error; }
+  inline bool permissions_present(file_status f) BOOST_NOEXCEPT 
                                           {return f.permissions() != perms_not_known;}
-  inline bool status_known(file_status f) { return type_present(f) && permissions_present(f); }
-  inline bool exists(file_status f)       { return f.type() != status_error
+  inline bool status_known(file_status f) BOOST_NOEXCEPT 
+                                          { return type_present(f) && permissions_present(f); }
+  inline bool exists(file_status f) BOOST_NOEXCEPT       
+                                          { return f.type() != status_error
                                                 && f.type() != file_not_found; }
-  inline bool is_regular_file(file_status f){ return f.type() == regular_file; }
-  inline bool is_directory(file_status f) { return f.type() == directory_file; }
-  inline bool is_symlink(file_status f)   { return f.type() == symlink_file; }
-  inline bool is_other(file_status f)     { return exists(f) && !is_regular_file(f)
+  inline bool is_regular_file(file_status f) BOOST_NOEXCEPT
+                                          { return f.type() == regular_file; }
+  inline bool is_directory(file_status f) BOOST_NOEXCEPT
+                                          { return f.type() == directory_file; }
+  inline bool is_symlink(file_status f) BOOST_NOEXCEPT
+                                          { return f.type() == symlink_file; }
+  inline bool is_other(file_status f) BOOST_NOEXCEPT
+                                          { return exists(f) && !is_regular_file(f)
                                                 && !is_directory(f) && !is_symlink(f); }
 
 # ifndef BOOST_FILESYSTEM_NO_DEPRECATED
@@ -560,10 +571,19 @@ namespace boost
 class BOOST_FILESYSTEM_DECL directory_entry
 {
 public:
+#ifndef BOOST_NO_DEFAULTED_FUNCTIONS
+  directory_entry() BOOST_NOEXCEPT = default;
+  directory_entry(const directory_entry&) = default;
+  directory_entry& operator=(const directory_entry&) = default;
+  ~directory_entry() BOOST_NOEXCEPT = default;
+# ifndef BOOST_NO_RVALUE_REFERENCES
+  directory_entry(directory_entry&&) BOOST_NOEXCEPT = default;
+  directory_entry& operator=(directory_entry&&) BOOST_NOEXCEPT = default;
+# endif
+#else
+  directory_entry() BOOST_NOEXCEPT {}
+#endif
 
-  // compiler generated copy constructor, copy assignment, and destructor apply
-
-  directory_entry() {}
   explicit directory_entry(const boost::filesystem::path& p,
     file_status st = file_status(), file_status symlink_st=file_status())
     : m_path(p), m_status(st), m_symlink_status(symlink_st)
@@ -588,18 +608,26 @@ public:
       { replace_filename(p, st, symlink_st); }
 # endif
 
-  const boost::filesystem::path&  path() const               {return m_path;}
+  const boost::filesystem::path& path() const BOOST_NOEXCEPT {return m_path;}
   file_status   status() const                               {return m_get_status();}
-  file_status   status(system::error_code& ec) const         {return m_get_status(&ec);}
+  file_status   status(system::error_code& ec) const BOOST_NOEXCEPT
+                                                             {return m_get_status(&ec);}
   file_status   symlink_status() const                       {return m_get_symlink_status();}
-  file_status   symlink_status(system::error_code& ec) const {return m_get_symlink_status(&ec);}
+  file_status   symlink_status(system::error_code& ec) const BOOST_NOEXCEPT
+                                                             {return m_get_symlink_status(&ec);}
 
-  bool operator==(const directory_entry& rhs) {return m_path == rhs.m_path;} 
-  bool operator!=(const directory_entry& rhs) {return m_path != rhs.m_path;} 
-  bool operator< (const directory_entry& rhs) {return m_path < rhs.m_path;} 
-  bool operator<=(const directory_entry& rhs) {return m_path <= rhs.m_path;} 
-  bool operator> (const directory_entry& rhs) {return m_path > rhs.m_path;} 
-  bool operator>=(const directory_entry& rhs) {return m_path >= rhs.m_path;} 
+  bool operator==(const directory_entry& rhs) const BOOST_NOEXCEPT
+    {return m_path == rhs.m_path;} 
+  bool operator!=(const directory_entry& rhs) const BOOST_NOEXCEPT
+    {return m_path != rhs.m_path;} 
+  bool operator< (const directory_entry& rhs) const BOOST_NOEXCEPT
+    {return m_path < rhs.m_path;} 
+  bool operator<=(const directory_entry& rhs) const BOOST_NOEXCEPT
+    {return m_path <= rhs.m_path;} 
+  bool operator> (const directory_entry& rhs) const BOOST_NOEXCEPT
+    {return m_path > rhs.m_path;} 
+  bool operator>=(const directory_entry& rhs) const BOOST_NOEXCEPT
+    {return m_path >= rhs.m_path;} 
 
 private:
   boost::filesystem::path   m_path;
@@ -674,7 +702,18 @@ namespace detail
   {
   public:
 
-    directory_iterator(){}  // creates the "end" iterator
+#  ifndef BOOST_NO_DEFAULTED_FUNCTIONS
+    directory_iterator() BOOST_NOEXCEPT = default;
+    directory_iterator(const directory_iterator&) = default;
+    directory_iterator& operator=(const directory_iterator&) = default;
+    ~directory_iterator() BOOST_NOEXCEPT = default;
+#   ifndef BOOST_NO_RVALUE_REFERENCES
+    directory_iterator(directory_iterator&&) = deleted;
+    directory_iterator& operator=(directory_iterator&&) BOOST_NOEXCEPT = deleted;
+#   endif
+#  else
+    directory_iterator() BOOST_NOEXCEPT {} // creates the "end" iterator
+#  endif
 
     // iterator_facade derived classes don't seem to like implementations in
     // separate translation unit dll's, so forward to detail functions
@@ -688,7 +727,7 @@ namespace detail
 
    ~directory_iterator() {} // never throws
 
-    directory_iterator& increment(system::error_code& ec)
+    directory_iterator& increment(system::error_code& ec) BOOST_NOEXCEPT
     { 
       detail::directory_iterator_increment(*this, &ec);
       return *this;
@@ -728,18 +767,23 @@ namespace detail
   //  auto - thus the top-level const is stripped - so returning const is harmless and
   //  emphasizes begin() is just a pass through.
   inline
-  const directory_iterator& begin(const directory_iterator& iter)  {return iter;}
+  const directory_iterator& begin(const directory_iterator& iter) BOOST_NOEXCEPT
+                                                                            {return iter;}
   inline
-  directory_iterator end(const directory_iterator&)  {return directory_iterator();}
+  directory_iterator end(const directory_iterator&) BOOST_NOEXCEPT
+                                                            {return directory_iterator();}
 
   //  enable BOOST_FOREACH  ------------------------------------------------------------//
 
   inline
-  directory_iterator& range_begin(directory_iterator& iter) {return iter;}
+  directory_iterator& range_begin(directory_iterator& iter) BOOST_NOEXCEPT {return iter;}
+
   inline
-  directory_iterator range_begin(const directory_iterator& iter) {return iter;}
+  directory_iterator range_begin(const directory_iterator& iter) BOOST_NOEXCEPT
+                                                                           {return iter;}
   inline
-  directory_iterator range_end(const directory_iterator&) {return directory_iterator();}
+  directory_iterator range_end(const directory_iterator&) BOOST_NOEXCEPT
+                                                           {return directory_iterator();}
   }  // namespace filesystem
 
   //  namespace boost template specializations
