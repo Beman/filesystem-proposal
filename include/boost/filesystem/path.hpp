@@ -365,8 +365,6 @@ namespace filesystem
     //  is a trailing separator, in which case returns are formatted as directory
     //  paths. POSIX and Windows make no such distinction.
 
-    //  Implementations are permitted to return const values or const references.
-
     //  The string or path returned by an observer are specified as being formatted
     //  as "native" or "generic".
     //
@@ -389,8 +387,8 @@ namespace filesystem
     String string(const codecvt_type& cvt) const;
 
 #   ifdef BOOST_WINDOWS_API
-    const std::string string() const { return string(codecvt()); } 
-    const std::string string(const codecvt_type& cvt) const
+    std::string string() const { return string(codecvt()); } 
+    std::string string(const codecvt_type& cvt) const
     { 
       std::string tmp;
       if (!m_pathname.empty())
@@ -400,16 +398,16 @@ namespace filesystem
     }
     
     //  string_type is std::wstring, so there is no conversion
-    const std::wstring&  wstring() const { return m_pathname; }
-    const std::wstring&  wstring(const codecvt_type&) const { return m_pathname; }
+    std::wstring  wstring() const { return m_pathname; }
+    std::wstring  wstring(const codecvt_type&) const { return m_pathname; }
 
 #   else   // BOOST_POSIX_API
     //  string_type is std::string, so there is no conversion
-    const std::string&  string() const { return m_pathname; }
-    const std::string&  string(const codecvt_type&) const { return m_pathname; }
+    std::string  string() const { return m_pathname; }
+    std::string  string(const codecvt_type&) const { return m_pathname; }
 
-    const std::wstring  wstring() const { return wstring(codecvt()); }
-    const std::wstring  wstring(const codecvt_type& cvt) const
+    std::wstring  wstring() const { return wstring(codecvt()); }
+    std::wstring  wstring(const codecvt_type& cvt) const
     { 
       std::wstring tmp;
       if (!m_pathname.empty())
@@ -429,17 +427,17 @@ namespace filesystem
     String generic_string(const codecvt_type& cvt) const;
 
 #   ifdef BOOST_WINDOWS_API
-    const std::string   generic_string() const { return generic_string(codecvt()); } 
-    const std::string   generic_string(const codecvt_type& cvt) const; 
-    const std::wstring  generic_wstring() const;
-    const std::wstring  generic_wstring(const codecvt_type&) const { return generic_wstring(); };
+    std::string   generic_string() const { return generic_string(codecvt()); } 
+    std::string   generic_string(const codecvt_type& cvt) const; 
+    std::wstring  generic_wstring() const;
+    std::wstring  generic_wstring(const codecvt_type&) const { return generic_wstring(); };
 
 #   else // BOOST_POSIX_API
     //  On POSIX-like systems, the generic format is the same as the native format
-    const std::string&  generic_string() const  { return m_pathname; }
-    const std::string&  generic_string(const codecvt_type&) const  { return m_pathname; }
-    const std::wstring  generic_wstring() const { return wstring(codecvt()); }
-    const std::wstring  generic_wstring(const codecvt_type& cvt) const { return wstring(cvt); }
+    std::string   generic_string() const  { return m_pathname; }
+    std::string   generic_string(const codecvt_type&) const  { return m_pathname; }
+    std::wstring  generic_wstring() const { return wstring(codecvt()); }
+    std::wstring  generic_wstring(const codecvt_type& cvt) const { return wstring(cvt); }
 
 #   endif
 
