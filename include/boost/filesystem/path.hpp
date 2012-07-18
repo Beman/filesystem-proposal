@@ -42,6 +42,10 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
+//--------------------------------------------------------------------------------------//
+//  TODO: 
+//--------------------------------------------------------------------------------------//
+
 namespace boost
 {
 namespace filesystem
@@ -127,20 +131,18 @@ namespace filesystem
 
     //  -----  constructors  -----
 
-# ifndef BOOST_NO_DEFAULTED_FUNCTIONS
+# ifndef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
+    // Until compilers catch up, destructor and move construct/assign are not defaulted
     path() = default;
     path(const path&) = default;
 # else
     path(){}
     path(const path& p) : m_pathname(p.m_pathname) {}
 # endif
+   ~path () {}
 
-# ifndef BOOST_NO_RVALUE_REFERENCES
-#   ifndef BOOST_NO_DEFAULTED_FUNCTIONS
-      path(path&&) = default;
-#   else
-      path(path&& p) {m_pathname.swap(p.m_pathname);}
-#   endif
+# ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+    path(path&& p) BOOST_NOEXCEPT {m_pathname.swap(p.m_pathname);}
 # endif
 
     template <class Source>
@@ -193,7 +195,7 @@ namespace filesystem
 
     //  -----  assignments  -----
 
-# ifndef BOOST_NO_DEFAULTED_FUNCTIONS
+# ifndef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
     path& operator=(const path&) = default;
 # else
      path& operator=(const path& p)
@@ -203,13 +205,8 @@ namespace filesystem
      }
 # endif
 
-# ifndef BOOST_NO_RVALUE_REFERENCES
-#   if !defined(BOOST_NO_DEFAULTED_FUNCTIONS) \
-  && (!defined(__GNUC__) || (__GNUC__ >= 4 && __GNUC_MINOR__ >= 6))
-      path& operator=(path&&) = default;
-#   else
-      path& operator=(path&& p) {m_pathname.swap(p.m_pathname); return *this;}
-#   endif
+# ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
+    path& operator=(path&& p) BOOST_NOEXCEPT {m_pathname.swap(p.m_pathname); return *this;}
 # endif
 
     path& operator=(const value_type* ptr)  // required in case ptr overlaps *this

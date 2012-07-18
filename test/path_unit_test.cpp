@@ -170,7 +170,7 @@ namespace
     PATH_IS(x2, L"string");
     BOOST_TEST_EQ(x2.native().size(), 6U);
 
-# ifndef BOOST_NO_RVALUE_REFERENCES
+# ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
     std::cout << "  with rvalue references" << std::endl;
     path x2source("source------------------------32");
     path x2m(std::move(x2source));                     // move constructor
@@ -257,7 +257,7 @@ namespace
     PATH_IS(x, L"yet another path");
     BOOST_TEST_EQ(x.native().size(), 16U);
  
-# ifndef BOOST_NO_RVALUE_REFERENCES
+# ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
     std::cout << "  with rvalue references" << std::endl;
     path x2source("source------------------------32");
     path x2;

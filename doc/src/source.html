@@ -772,7 +772,7 @@ system or for a particular file system.</p>
         // <a href="#path-constructors">constructors</a> and destructor
         path() = default;
         path(const path&) = default;
-        path(path&amp;&amp;) = default;
+        path(path&amp;&amp;) noexcept = default;
 
         template &lt;class <a href="#Source">Source</a>&gt;
           path(Source const&amp; source$CODECVT_ARG2;$CODECVT_DEFAULT;);
@@ -780,11 +780,11 @@ system or for a particular file system.</p>
         template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
           path(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
 
-       ~path();
+       ~path() noexcept = default;
 
         // <a href="#path-assignments">assignments</a>
         path&amp; operator=(const path&amp;) = default;
-        path&amp; operator=(path&amp;&amp;) = default;
+        path&amp; operator=(path&amp;&amp;) noexcept = default;
 
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator=(Source const&amp; source);
@@ -1761,13 +1761,14 @@ or others removes write permission for all. </span> </p>
       public:
 
         // <a href="#file_status-constructors">constructors</a>
-        file_status() noexcept;
-        explicit file_status(<a href="#file_type">file_type</a> ft, <a href="#Enum-perms">perms</a> prms = perms_not_known) noexcept;
+        explicit file_status(<a href="#file_type">file_type</a> ft = status_error,
+                             <a href="#Enum-perms">perms</a> prms = perms_not_known) noexcept;
+        file_status(const file_status&amp;) noexcept = default;
+        file_status(file_status&amp;&amp;) noexcept = default;
+       ~file_status() noexcept = default;
 
-        // compiler generated
-        file_status(const file_status&amp;) noexcept;
-        file_status&amp; operator=(const file_status&amp;) noexcept;
-       ~file_status() noexcept;
+        file_status&amp; operator=(const file_status&amp;) noexcept = default;
+        file_status&amp; operator=(file_status&amp;&amp;) noexcept = default;
 
         // <a href="#file_status-observers">observers</a>
         <a href="#file_type">file_type</a>  type() const noexcept;
@@ -2009,17 +2010,18 @@ compliant iteration over the contents of a directory. Also see class <code><a hr
       {
       public:
         // <a href="#directory_iterator-members">member functions</a>
-
-        directory_iterator() noexcept;  // creates the &quot;end&quot; iterator
-        directory_iterator(const directory_iterator&amp;);
+        directory_iterator() noexcept;
         explicit directory_iterator(const path&amp; p);
-        directory_iterator(const path&amp; p, system::error_code&amp; ec);
-       ~directory_iterator();
+        directory_iterator(const path&amp; p, system::error_code&amp; ec) noexcept;
+        directory_iterator(const directory_iterator&amp;) noexcept;
+        directory_iterator(directory_iterator&amp;&amp;) = deleted;
+       ~directory_iterator() noexcept = default;
 
-        directory_iterator&amp; operator=(const directory_iterator&amp;);
+        directory_iterator&amp; operator=(const directory_iterator&amp;) = default;
+        directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = deleted;
 
         directory_iterator&amp; operator++();
-        directory_iterator&amp; increment(system::error_code&amp; ec);
+        directory_iterator&amp; increment(system::error_code&amp; ec) noexcept;
 
         // other members as required by
         //  C++ Std, 24.1.1 Input iterators [input.iterators]
@@ -2079,7 +2081,7 @@ noexcept;</code></p>
 </blockquote>
 
 <pre><code>explicit <a name="directory_iterator-ctor-path">directory_iterator</a>(</code>const path&amp; p<code>);
-directory_iterator(</code>const path&amp; p, system::error_code&amp; ec<code>);</code></pre>
+directory_iterator(</code>const path&amp; p, system::error_code&amp; ec<code>) noexcept;</code></pre>
 <blockquote>
 
 <p><i>Effects:</i> Constructs a iterator representing the first 
@@ -2090,7 +2092,7 @@ entry in the directory <code>p</code> resolves to, if any; otherwise, the end it
 <p>[<i>Note:</i> To iterate over the current directory, use <code>directory_iterator(&quot;.&quot;)</code> rather than <code>directory_iterator(&quot;&quot;)</code>. <i>-- end note</i>]</p>
 </blockquote>
 <pre>directory_iterator&amp; <a name="directory_iterator-increment">operator++</a>();
-directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
+directory_iterator&amp; increment(system::error_code&amp; ec)<code> noexcept</code>;</pre>
 <blockquote>
 
 <p><i>Effects:</i> As specified by the C++ Standard, 24.1.1 Input iterators [input.iterators]</p>
@@ -2122,20 +2124,22 @@ its sub-directories.</p>
 
         // constructors and destructor
         recursive_directory_iterator() noexcept;
-        recursive_directory_iterator(const recursive_directory_iterator&amp;);
+        recursive_directory_iterator(const recursive_directory_iterator&amp;) noexcept;
         explicit recursive_directory_iterator(const path&amp; p,
           <a href="#symlink_option">symlink_option</a> opt = symlink_option::none);
         recursive_directory_iterator(const path&amp; p,
-          <a href="#symlink_option">symlink_option</a> opt, system::error_code&amp; ec);
-        recursive_directory_iterator(const path&amp; p, system::error_code&amp; ec);
-       ~recursive_directory_iterator();
+          <a href="#symlink_option">symlink_option</a> opt, system::error_code&amp; ec) noexcept;
+        recursive_directory_iterator(const path&amp; p, system::error_code&amp; ec) noexcept;
+        recursive_directory_iterator(directory_iterator&amp;&amp;) = deleted;
+       ~recursive_directory_iterator() noexcept = default;
 
         // observers
         int level() const noexcept;
         bool no_push<code>_pending</code>() const noexcept;
 
         // modifiers
-        recursive_directory_iterator&amp; operator=(const recursive_directory_iterator&amp;);
+        recursive_directory_iterator&amp; operator=(const directory_iterator&amp;) = default;
+        recursive_directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = deleted;
 
         recursive_directory_iterator&amp; operator++();
         recursive_directory_iterator&amp; increment(system::error_code&amp; ec);
