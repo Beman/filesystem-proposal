@@ -11,6 +11,7 @@ To experiment (Windows):
   git clone git://github.com/Beman/filesystem-proposal-mods.git libs/filesystem
   pushd boost
   mklink filesystem.hpp ..\libs\filesystem\include\boost\filesystem.hpp
+  mklink cxx11_char_types.hpp ..\libs\filesystem\include\boost\cxx11_char_types.hpp
   mklink /d filesystem ..\libs\filesystem\include\boost\filesystem
   popd
   popd

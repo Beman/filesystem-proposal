@@ -31,6 +31,7 @@
 #include <boost/static_assert.hpp>
 #include <boost/functional/hash_fwd.hpp>
 #include <boost/type_traits/is_integral.hpp>
+#include <boost/cxx11_char_types.hpp>
 #include <string>
 #include <iterator>
 #include <cstring>
