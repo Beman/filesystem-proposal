@@ -31,7 +31,6 @@
 #include <boost/static_assert.hpp>
 #include <boost/functional/hash_fwd.hpp>
 #include <boost/type_traits/is_integral.hpp>
-#include <boost/cxx11_char_types.hpp>
 #include <string>
 #include <iterator>
 #include <cstring>
@@ -384,6 +383,9 @@ namespace filesystem
     template <class String>
     String string(const codecvt_type& cvt) const;
 
+    boost::u16string u16string() const;
+    boost::u32string u32string() const;
+
 #   ifdef BOOST_WINDOWS_API
     std::string string() const { return string(codecvt()); } 
     std::string string(const codecvt_type& cvt) const
@@ -423,6 +425,9 @@ namespace filesystem
 
     template <class String>
     String generic_string(const codecvt_type& cvt) const;
+
+    boost::u16string generic_u16string() const;
+    boost::u32string generic_u32string() const;
 
 #   ifdef BOOST_WINDOWS_API
     std::string   generic_string() const { return generic_string(codecvt()); } 

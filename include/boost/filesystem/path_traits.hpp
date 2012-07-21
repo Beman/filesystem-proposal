@@ -17,6 +17,7 @@
 # endif
 
 #include <boost/filesystem/config.hpp>
+#include <boost/cxx11_char_types.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/decay.hpp>
@@ -56,17 +57,27 @@ namespace path_traits {
   template <class T>
   struct is_pathable { static const bool value = false; };
 
-  template<> struct is_pathable<char*>                  { static const bool value = true; };
-  template<> struct is_pathable<const char*>            { static const bool value = true; };
-  template<> struct is_pathable<wchar_t*>               { static const bool value = true; };
-  template<> struct is_pathable<const wchar_t*>         { static const bool value = true; };
-  template<> struct is_pathable<std::string>            { static const bool value = true; };
-  template<> struct is_pathable<std::wstring>           { static const bool value = true; };
-  template<> struct is_pathable<std::vector<char> >     { static const bool value = true; };
-  template<> struct is_pathable<std::vector<wchar_t> >  { static const bool value = true; };
-  template<> struct is_pathable<std::list<char> >       { static const bool value = true; };
-  template<> struct is_pathable<std::list<wchar_t> >    { static const bool value = true; };
-  template<> struct is_pathable<directory_entry>        { static const bool value = true; };
+  template<> struct is_pathable<char*>                  {static const bool value = true;};
+  template<> struct is_pathable<const char*>            {static const bool value = true;};
+  template<> struct is_pathable<wchar_t*>               {static const bool value = true;};
+  template<> struct is_pathable<const wchar_t*>         {static const bool value = true;};
+  template<> struct is_pathable<boost::char16*>         {static const bool value = true;};
+  template<> struct is_pathable<const boost::char16*>   {static const bool value = true;};
+  template<> struct is_pathable<boost::char32*>         {static const bool value = true;};
+  template<> struct is_pathable<const boost::char32*>   {static const bool value = true;};
+  template<> struct is_pathable<std::string>            {static const bool value = true;};
+  template<> struct is_pathable<std::wstring>           {static const bool value = true;};
+  template<> struct is_pathable<boost::u16string>       {static const bool value = true;};
+  template<> struct is_pathable<boost::u32string>       {static const bool value = true;};
+  template<> struct is_pathable<std::vector<char> >     {static const bool value = true;};
+  template<> struct is_pathable<std::vector<wchar_t> >  {static const bool value = true;};
+  template<> struct is_pathable<std::vector<boost::char16> > {static const bool value = true;};
+  template<> struct is_pathable<std::vector<boost::char32> > {static const bool value = true;};
+  template<> struct is_pathable<std::list<char> >       {static const bool value = true;};
+  template<> struct is_pathable<std::list<wchar_t> >    {static const bool value = true;};
+  template<> struct is_pathable<std::list<boost::char16> > {static const bool value = true;};
+  template<> struct is_pathable<std::list<boost::char32> > {static const bool value = true;};
+  template<> struct is_pathable<directory_entry>        {static const bool value = true;};
 
   //  Pathable empty
 

@@ -440,6 +440,10 @@ namespace
     CHECK(p0.string().size() == 3);
     CHECK(p0.wstring() == L"abc");
     CHECK(p0.wstring().size() == 3);
+//    CHECK(p0.u16string() == L"abc");
+    CHECK(p0.u16string().size() == 3);
+//    CHECK(p0.u32string() == L"abc");
+    CHECK(p0.u32string().size() == 3);
 
 # ifdef BOOST_WINDOWS_API
 
