@@ -17,7 +17,7 @@
 # endif
 
 #include <boost/filesystem/config.hpp>
-#include <boost/cxx11_char_types.hpp>
+#include <boost/interop/cxx11_char_types.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/decay.hpp>

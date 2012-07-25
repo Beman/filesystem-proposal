@@ -26,6 +26,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/iterator/iterator_facade.hpp>
+#include <boost/interop/string_interop.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/io/detail/quoted_manip.hpp>
 #include <boost/static_assert.hpp>
@@ -383,8 +384,18 @@ namespace filesystem
     template <class String>
     String string(const codecvt_type& cvt) const;
 
-    boost::u16string u16string() const;
-    boost::u32string u32string() const;
+    boost::u16string u16string() const
+    { 
+      return boost::interop::make_string<boost::interop::utf16,
+        boost::interop::select_codec<value_type>::type,
+          boost::u16string>(m_pathname);
+    }
+    boost::u32string u32string() const
+    { 
+      return boost::interop::make_string<boost::interop::utf32,
+        boost::interop::select_codec<value_type>::type,
+          boost::u32string>(m_pathname);
+    }
 
 #   ifdef BOOST_WINDOWS_API
     std::string string() const { return string(codecvt()); } 
