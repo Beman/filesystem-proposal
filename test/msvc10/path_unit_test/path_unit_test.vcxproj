@@ -99,6 +99,9 @@
       <Project>{ffd738f7-96f0-445c-81ea-551665ef53d1}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+    <ProjectReference Include="..\interop_lib\interop_lib.vcxproj">
+      <Project>{0579bf02-b4d6-43f0-9f14-6784f355057a}</Project>
+    </ProjectReference>
     <ProjectReference Include="..\system_dll\system_dll.vcxproj">
       <Project>{f94ccadd-a90b-480c-a304-c19d015d36b1}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

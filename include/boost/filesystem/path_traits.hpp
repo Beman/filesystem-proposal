@@ -17,7 +17,7 @@
 # endif
 
 #include <boost/filesystem/config.hpp>
-#include <boost/interop/cxx11_char_types.hpp>
+#include <boost/interop/string_interop.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/decay.hpp>
@@ -106,18 +106,46 @@ namespace path_traits {
   BOOST_FILESYSTEM_DECL
   void convert(const char* from,
                 const char* from_end,    // 0 for null terminated MBCS
-                std::wstring & to,
+                std::wstring& to,
                 const codecvt_type& cvt);
 
   BOOST_FILESYSTEM_DECL
   void convert(const wchar_t* from,
                 const wchar_t* from_end,  // 0 for null terminated MBCS
-                std::string & to,
+                std::string& to,
                 const codecvt_type& cvt);
+
+  inline
+  void convert(const char16* from,
+                const char16* from_end,
+                std::wstring& to,
+                const codecvt_type&)
+  {
+    typedef interop::conversion_iterator<interop::wide, interop::utf16, const char16*>
+        iter_type;
+
+    iter_type itr(from, from_end);
+    for (; itr != iter_type(); ++itr)
+      to.push_back(*itr);
+  }
+
+  inline
+  void convert(const char32* from,
+                const char32* from_end,
+                std::wstring& to,
+                const codecvt_type&)
+  {
+    typedef interop::conversion_iterator<interop::wide, interop::utf32, const char32*>
+        iter_type;
+
+    iter_type itr(from, from_end);
+    for (; itr != iter_type(); ++itr)
+      to.push_back(*itr);
+  }
 
   inline 
   void convert(const char* from,
-                std::wstring & to,
+                std::wstring& to,
                 const codecvt_type& cvt)
   {
     BOOST_ASSERT(from);
@@ -126,7 +154,7 @@ namespace path_traits {
 
   inline 
   void convert(const wchar_t* from,
-                std::string & to,
+                std::string& to,
                 const codecvt_type& cvt)
   {
     BOOST_ASSERT(from);
@@ -138,7 +166,7 @@ namespace path_traits {
   // char
 
   inline 
-  void convert(const char* from, const char* from_end, std::string & to,
+  void convert(const char* from, const char* from_end, std::string& to,
     const codecvt_type&)
   {
     BOOST_ASSERT(from);
@@ -148,7 +176,7 @@ namespace path_traits {
 
   inline 
   void convert(const char* from,
-                std::string & to,
+                std::string& to,
                 const codecvt_type&)
   {
     BOOST_ASSERT(from);
@@ -158,7 +186,7 @@ namespace path_traits {
   // wchar_t
 
   inline 
-  void convert(const wchar_t* from, const wchar_t* from_end, std::wstring & to,
+  void convert(const wchar_t* from, const wchar_t* from_end, std::wstring& to,
     const codecvt_type&)
   {
     BOOST_ASSERT(from);

@@ -60,6 +60,15 @@ using std::cout;
 using std::endl;
 using std::string;
 using std::wstring;
+using boost::char16;
+using boost::char32;
+using boost::u16string;
+using boost::u32string;
+using boost::interop::make_string;
+using boost::interop::narrow;
+using boost::interop::wide;
+using boost::interop::utf16;
+using boost::interop::utf32;
 
 #define CHECK(x) check(x, __FILE__, __LINE__)
 #define PATH_IS(a, b) check_path(a, b, __FILE__, __LINE__)
@@ -143,8 +152,26 @@ namespace
 
   string s("string");
   wstring ws(L"wstring");
+
+  //  Test with cases that require UTF-16 surrogate pairs
+  //  U+1F60A SMILING FACE WITH SMILING EYES
+  //  U+1F60E SMILING FACE WITH SUNGLASSES
+
+  // build test strings character by character so they work with C++03 compilers
+  const char32 u32c[] = {0x1F60A, 0x1F60E, 0};
+  const char16 u16c[] = {0xD83D, 0xDE0A, 0xD83D, 0xDE0E, 0};
+
+  const u32string u32s(u32c);
+  const u16string u16s(u16c);
+  const string u8s("\xF0\x9F\x98\x8A\xF0\x9F\x98\x8E");
+  const string chars("\xF0\x9F\x98\x8A\xF0\x9F\x98\x8E");
+  const wstring wchars(L"\xF0\x9F\x98\x8A\xF0\x9F\x98\x8E");
+
+
   std::list<char> l;      // see main() for initialization to s, t, r, i, n, g
   std::list<wchar_t> wl;  // see main() for initialization to w, s, t, r, i, n, g
+  std::list<char16> u16l; // see main() for initialization to u, 1, 6, s, t, r, i, n, g
+  std::list<char32> u32l; // see main() for initialization to u, 3, 2, s, t, r, i, n, g
   std::vector<char> v;      // see main() for initialization to f, u, z
   std::vector<wchar_t> wv;  // see main() for initialization to w, f, u, z
 
@@ -182,6 +209,14 @@ namespace
     PATH_IS(x3, L"wstring");
     BOOST_TEST_EQ(x3.native().size(), 7U);
 
+    path x3_16(u16l.begin(), u16l.end());              // iterator range char16
+    PATH_IS(x3_16, L"u16string");
+    BOOST_TEST_EQ(x3_16.native().size(), 9U);
+
+    path x3_32(u32l.begin(), u32l.end());              // iterator range char32
+    PATH_IS(x3_32, L"u32string");
+    BOOST_TEST_EQ(x3_32.native().size(), 9U);
+
     // contiguous containers
     path x4(string("std::string"));                    // std::string
     PATH_IS(x4, L"std::string");
@@ -190,6 +225,14 @@ namespace
     path x5(wstring(L"std::wstring"));                 // std::wstring
     PATH_IS(x5, L"std::wstring");
     BOOST_TEST_EQ(x5.native().size(), 12U);
+
+    path x4_16(make_string<utf16, narrow, u16string>("u16string")); // u16string
+    PATH_IS(x4_16, L"u16string");
+    BOOST_TEST_EQ(x4_16.native().size(), 9U);
+
+    path x4_32(make_string<utf32, narrow, u32string>("u32string")); // u32string
+    PATH_IS(x4_32, L"u32string");
+    BOOST_TEST_EQ(x4_32.native().size(), 9U);
 
     path x4v(v);                                       // std::vector<char>
     PATH_IS(x4v, L"fuz");
@@ -1083,6 +1126,26 @@ int cpp_main(int, char*[])
   wl.push_back(L'i');
   wl.push_back(L'n');
   wl.push_back(L'g');
+
+  u16l.push_back('u');
+  u16l.push_back('1');
+  u16l.push_back('6');
+  u16l.push_back('s');
+  u16l.push_back('t');
+  u16l.push_back('r');
+  u16l.push_back('i');
+  u16l.push_back('n');
+  u16l.push_back('g');
+
+  u32l.push_back('u');
+  u32l.push_back('3');
+  u32l.push_back('2');
+  u32l.push_back('s');
+  u32l.push_back('t');
+  u32l.push_back('r');
+  u32l.push_back('i');
+  u32l.push_back('n');
+  u32l.push_back('g');
 
   v.push_back('f');
   v.push_back('u');
