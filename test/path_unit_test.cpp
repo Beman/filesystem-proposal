@@ -492,9 +492,9 @@ namespace
     CHECK(p0.string().size() == 3);
     CHECK(p0.wstring() == L"abc");
     CHECK(p0.wstring().size() == 3);
-//    CHECK(p0.u16string() == L"abc");
+    CHECK(p0.u16string() == (make_string<utf16, narrow, u16string>("abc")));
     CHECK(p0.u16string().size() == 3);
-//    CHECK(p0.u32string() == L"abc");
+    CHECK(p0.u32string() == (make_string<utf32, narrow, u32string>("abc")));
     CHECK(p0.u32string().size() == 3);
 
 # ifdef BOOST_WINDOWS_API
@@ -508,6 +508,8 @@ namespace
 
     CHECK(p.generic_string() == "abc/def/ghi");
     CHECK(p.generic_wstring() == L"abc/def/ghi");
+    CHECK(p.generic_u16string() == (make_string<utf16, narrow, u16string>("abc/def/ghi")));
+    CHECK(p.generic_u32string() == (make_string<utf32, narrow, u32string>("abc/def/ghi")));
 
     CHECK(p.generic_string<string>() == "abc/def/ghi");
     CHECK(p.generic_string<wstring>() == L"abc/def/ghi");
@@ -524,6 +526,8 @@ namespace
 
     CHECK(p.generic_string() == "abc\\def/ghi");
     CHECK(p.generic_wstring() == L"abc\\def/ghi");
+    CHECK(p.generic_u16string() == (make_string<utf16, narrow, u16string>("abc\\def/ghi")));
+    CHECK(p.generic_u32string() == (make_string<utf32, narrow, u32string>("abc\\def/ghi")));
 
     CHECK(p.generic_string<string>() == "abc\\def/ghi");
     CHECK(p.generic_string<wstring>() == L"abc\\def/ghi");

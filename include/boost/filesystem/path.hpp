@@ -437,14 +437,21 @@ namespace filesystem
     template <class String>
     String generic_string(const codecvt_type& cvt) const;
 
-    boost::u16string generic_u16string() const;
-    boost::u32string generic_u32string() const;
-
 #   ifdef BOOST_WINDOWS_API
     std::string   generic_string() const { return generic_string(codecvt()); } 
     std::string   generic_string(const codecvt_type& cvt) const; 
     std::wstring  generic_wstring() const;
     std::wstring  generic_wstring(const codecvt_type&) const { return generic_wstring(); };
+    boost::u16string generic_u16string() const
+    {
+      return interop::make_string<interop::utf16, interop::wide,
+        boost::u16string>(generic_wstring());
+    }
+    boost::u32string generic_u32string() const
+    {
+      return interop::make_string<interop::utf32, interop::wide,
+        boost::u32string>(generic_wstring());
+    }
 
 #   else // BOOST_POSIX_API
     //  On POSIX-like systems, the generic format is the same as the native format
@@ -452,6 +459,8 @@ namespace filesystem
     std::string   generic_string(const codecvt_type&) const  { return m_pathname; }
     std::wstring  generic_wstring() const { return wstring(codecvt()); }
     std::wstring  generic_wstring(const codecvt_type& cvt) const { return wstring(cvt); }
+    boost::u16string generic_u16string() const {return u16string();}
+    boost::u32string generic_u32string() const {return u32string();}
 
 #   endif
 
