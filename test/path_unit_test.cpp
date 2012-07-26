@@ -198,11 +198,12 @@ namespace
     BOOST_TEST_EQ(x2.native().size(), 6U);
 
 # ifndef BOOST_NO_CXX11_RVALUE_REFERENCES
-    std::cout << "  with rvalue references" << std::endl;
+    std::cout << "  with rvalue references..." << std::endl;
     path x2source("source------------------------32");
     path x2m(std::move(x2source));                     // move constructor
     BOOST_TEST(x2m == "source------------------------32");
     BOOST_TEST(x2source.empty());
+    std::cout << "  with rvalue references complete" << std::endl;
 # endif
 
     path x3(wl.begin(), wl.end());                     // iterator range wchar_t
@@ -269,6 +270,14 @@ namespace
     path x9(ws.c_str());                               // const wchar_t* null terminated
     PATH_IS(x9, L"wstring");
     BOOST_TEST_EQ(x9.native().size(), 7U);
+
+    path x9_16(make_string<utf16, narrow, u16string>("cvt-u16string").c_str()); // const char16* null terminated
+    PATH_IS(x9_16, L"cvt-u16string");
+    BOOST_TEST_EQ(x9_16.native().size(), 13U);
+
+    path x9_32(make_string<utf32, narrow, u32string>("cvt-u32string").c_str()); // const char32* null terminated
+    PATH_IS(x9_32, L"cvt-u32string");
+    BOOST_TEST_EQ(x9_32.native().size(), 13U);
 
     // non-contiguous containers
     path x10(l);                                       // std::list<char>

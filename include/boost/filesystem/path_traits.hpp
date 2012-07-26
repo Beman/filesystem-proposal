@@ -118,13 +118,41 @@ namespace path_traits {
   inline
   void convert(const char16* from,
                 const char16* from_end,
+                std::string& to,
+                const codecvt_type&)
+  {
+    typedef interop::conversion_iterator<interop::narrow, interop::utf16, const char16*>
+        iter_type;
+
+    iter_type itr(from_end ? iter_type(from, from_end) : iter_type(from));
+    for (; itr != iter_type(); ++itr)
+      to.push_back(*itr);
+  }
+
+  inline
+  void convert(const char16* from,
+                const char16* from_end,
                 std::wstring& to,
                 const codecvt_type&)
   {
     typedef interop::conversion_iterator<interop::wide, interop::utf16, const char16*>
         iter_type;
 
-    iter_type itr(from, from_end);
+    iter_type itr(from_end ? iter_type(from, from_end) : iter_type(from));
+    for (; itr != iter_type(); ++itr)
+      to.push_back(*itr);
+  }
+
+  inline
+  void convert(const char32* from,
+                const char32* from_end,
+                std::string& to,
+                const codecvt_type&)
+  {
+    typedef interop::conversion_iterator<interop::narrow, interop::utf32, const char32*>
+        iter_type;
+
+    iter_type itr(from_end ? iter_type(from, from_end) : iter_type(from));
     for (; itr != iter_type(); ++itr)
       to.push_back(*itr);
   }
@@ -138,7 +166,7 @@ namespace path_traits {
     typedef interop::conversion_iterator<interop::wide, interop::utf32, const char32*>
         iter_type;
 
-    iter_type itr(from, from_end);
+    iter_type itr(from_end ? iter_type(from, from_end) : iter_type(from));
     for (; itr != iter_type(); ++itr)
       to.push_back(*itr);
   }
@@ -155,6 +183,42 @@ namespace path_traits {
   inline 
   void convert(const wchar_t* from,
                 std::string& to,
+                const codecvt_type& cvt)
+  {
+    BOOST_ASSERT(from);
+    convert(from, 0, to, cvt);
+  }
+
+  inline 
+  void convert(const char16* from,
+                std::string& to,
+                const codecvt_type& cvt)
+  {
+    BOOST_ASSERT(from);
+    convert(from, 0, to, cvt);
+  }
+
+  inline 
+  void convert(const char32* from,
+                std::string& to,
+                const codecvt_type& cvt)
+  {
+    BOOST_ASSERT(from);
+    convert(from, 0, to, cvt);
+  }
+
+  inline 
+  void convert(const char16* from,
+                std::wstring& to,
+                const codecvt_type& cvt)
+  {
+    BOOST_ASSERT(from);
+    convert(from, 0, to, cvt);
+  }
+
+  inline 
+  void convert(const char32* from,
+                std::wstring& to,
                 const codecvt_type& cvt)
   {
     BOOST_ASSERT(from);
