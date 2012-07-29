@@ -215,15 +215,19 @@ implementation is dependent upon is implementation defined.</p>
 <p>It is permissible for an implementation to be dependent upon an operating 
 system emulator rather than the actual operating system.</p>
 <blockquote>
-<p>[<i>Example:</i> An implementation uses Cygwin, a Linux® API emulator for 
-some Windows® operating system versions. The implementation would define Cygwin 
-as its operating system. Users could refer to the Cygwin documentation to find 
-details of the operating system dependent behavior.&nbsp; <i>--end example</i>]</p>
-<p><span style="background-color: #E0E0E0"><i>It is user and conformance test 
+<p><span style="background-color: #FFFF00">[</span><i><span style="background-color: #FFFF00">Example:</span></i><span style="background-color: #FFFF00"> An implementation uses 
+</span><span style="background-color: #FFFF00">Cygwin</span><span style="background-color: #FFFF00">, a Linux® API emulator for 
+some Windows® operating system versions. The implementation would define </span>
+<span style="background-color: #FFFF00">Cygwin</span><span style="background-color: #FFFF00"> 
+as its operating system. Users could refer to the </span>
+<span style="background-color: #FFFF00">Cygwin</span><span style="background-color: #FFFF00"> documentation to find 
+details of the operating system dependent behavior.&nbsp; </span> <i>
+<span style="background-color: #FFFF00">--end example</span></i><span style="background-color: #FFFF00">]</span></p>
+<p><span style="background-color: #FFFF00"><i>It is user and conformance test 
 detectable that such an implementation is running on Cygwin. Users would be 
 misled and conformance tests would fail if the implementation defined Linux or 
 Windows rather than Cygwin as the operating system, since real behavior is a 
-blend of the two.</i></span> </p>
+blend of the two.</i> </span> </p>
 </blockquote>
 <h2><a name="Definitions">Definitions</a> [fs.definitions]</h2>
 <p>The following definitions  shall apply throughout this $WHAT;:</p>
@@ -320,55 +324,6 @@ If the file pointed to does not exist, the symbolic link is said to be a
 when multiple threads, processes, or computers interleave access and 
 modification of 
 the same object within a file system.</p>
-<h2><a name="Generic-pathname-grammar">Generic pathname format</a> [path.generic]</h2>
-<p><i>pathname:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root-name<sub>opt</sub> 
-root-directory<sub>opt</sub> relative-path<sub>opt</sub></i></p>
-<p><i>root-name:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>An 
-operating system dependent name that identifies the starting location for 
-absolute paths. </p>
-<blockquote>
-  <blockquote>
-<p>[<i>Note:</i> Many operating systems define a name 
-beginning with two <i>directory-separator</i> characters as a <i>root-name</i> 
-that identifies network or other resource locations. Some operating systems define a single letter followed by a colon as a drive 
-specifier - a <i>root-name</i> identifying a specific device such as a disc drive. <i>--end note</i>]</p>
-  </blockquote>
-</blockquote>
-<p><i>root-directory:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-directory-separator</i></p>
-<p><i>relative-path:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-filename<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
-directory-separator<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
-directory-separator filename</i></p>
-<p><i>filename:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>&quot;.&quot;</code><i><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>
-&quot;..&quot;</code></p>
-<p><i>preferred-separator:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>An 
-operating system dependent directory separator character. May be a synonym for <i> <code>&quot;/&quot;</code>.</i></p>
-<p><i>directory-separator:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>&quot;/&quot;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;/&quot;</code> directory-separator<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-preferred-separator<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-preferred-separator directory-separator</i></p>
-<p>Multiple successive <i>directory-separator</i> characters are considered to 
-be the same as one <i>directory-separator</i> character.</p>
-<p>The <i>filename</i>
-<code>&quot;.&quot;</code> is considered to be a reference to the current directory. The
-<i>filename</i> <code>&quot;..&quot;</code> is considered to be a reference to the 
-parent 
-directory. Specific <i>filenames</i> may have special meanings for a particular 
-operating system.</p>
 <h2><a name="Operating-system-examples">Operating system dependent examples</a> (Informative) [fs.os.examples]</h2>
 <p>Certain features are specified in this $WHAT; as being operating system dependent. The following table shows the application of those 
 specifications for operating systems that use the ISO/IEC 9945  or Windows® application program interfaces 
@@ -382,20 +337,6 @@ specifications for operating systems that use the ISO/IEC 9945  or Windows® appl
     <td><b>Notes</b></td>
   </tr>
   <tr>
-    <td><code>path::value_type</code></td>
-    <td>[<a href="#class-path">class.path</a>]</td>
-    <td><code>char</code></td>
-    <td><code>wchar_t</code></td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><code>path::preferred_separator</code></td>
-    <td>[<a href="#class-path">class.path</a>]</td>
-    <td><code>'/'</code></td>
-    <td><code>L'\\'</code> (single backslash)</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
     <td><code>path(&quot;/&quot;).is_absolute()<br>
     path(&quot;c:/&quot;).is_absolute()</code></td>
     <td>[<a href="#path-query">path.query</a>]</td>
@@ -403,59 +344,6 @@ specifications for operating systems that use the ISO/IEC 9945  or Windows® appl
     false</code></td>
     <td><code>false<br>
     true</code></td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><code>path</code> argument disambiguation between generic format and 
-    native format</td>
-    <td>[<a href="#path-Conversions-to-native-format">path.arg.fmt.cvt</a>]</td>
-    <td>Not required</td>
-    <td>Not required</td>
-    <td>There is no need to distinguish between the generic format and native 
-    format for these operating systems.</td>
-  </tr>
-  <tr>
-    <td><code>path</code> argument format conversion</td>
-    <td>[<a href="#path-Conversions-to-native-format">path.arg.fmt.cvt</a>]</td>
-    <td>No conversion performed</td>
-    <td>No conversion performed</td>
-    <td>The generic format is already acceptable to the native API of these operating systems.</td>
-  </tr>
-  <tr>
-    <td valign="top">
-    <p><code>path(&quot;/cats/jane&quot;).c_str()<br>
-    path(&quot;/cats/jane/&quot;).c_str()</code></td>
-    <td>[<a href="#path-Conversions-to-native-format">path.arg.fmt.cvt</a>]</td>
-    <td valign="top"> <code>&quot;/cats/jane&quot;<br>
-    &quot;/cats/jane/&quot;</code></td>
-    <td valign="top">
-    <p><code>L&quot;/cats/jane&quot;<br>
-    L&quot;/cats/jane/&quot;</code></td>
-    <td>These operating systems accept the same native separator between 
-    directory names and a final file name, so no format conversion is performed. 
-    Other operating systems might require conversion.</td>
-  </tr>
-  <tr>
-    <td>Format conversion by <code>path</code> native format observers</td>
-    <td>[<a href="#path-native-format-observers">path.native.obs</a>]</td>
-    <td>No conversion performed</td>
-    <td>No conversion performed</td>
-    <td>For efficiency, <code>path</code> objects are required to store pathnames in the native 
-    format regardless of operating system.</td>
-  </tr>
-  <tr>
-    <td>
-    <p>Format conversion by <code>path</code> generic format observers</td>
-    <td>[<a href="#path-generic-format-observers">path.generic.obs</a>]</td>
-    <td>No conversion performed</td>
-    <td>Backslashes converted to slashes</td>
-    <td>&nbsp;</td>
-  </tr>
-  <tr>
-    <td><code>p.make_preferred()</code></td>
-    <td>[<a href="#path-modifiers">fs.path.modifiers</a>]</td>
-    <td>No change</td>
-    <td>Slashes converted to backslashes</td>
     <td>&nbsp;</td>
   </tr>
   <tr>
@@ -766,9 +654,9 @@ system or for a particular file system.</p>
       public:
         typedef <b><i><a href="#value_type">see below</a></i></b>                                    value_type;
         typedef std::basic_string&lt;value_type&gt;                string_type;
-        typedef std::codecvt&lt;wchar_t, char, std::mbstate_t&gt;  codecvt_type;
         constexpr value_type                                 preferred_separator;
-
+$if $TARGET; == BOOST        typedef std::codecvt&lt;wchar_t, char, std::mbstate_t&gt;  codecvt_type;
+$endif;
         // <a href="#path-constructors">constructors</a> and destructor
         path() = default;
         path(const path&) = default;
@@ -886,59 +774,185 @@ $endif;        template &lt;class InputIterator&gt;
 
         iterator begin() const;
         iterator end() const;
-        
+
+$if $TARGET; == BOOST
         // <a href="#path-imbued-locale">imbued locale</a>
         static std::locale <a href="#path-imbue">imbue</a>(const std::locale&amp; loc);
         static const codecvt_type &amp; <a href="#path-codecvt">codecvt</a>();
 
-      private:
+$endif;      private:
         string_type pathname;  // <b><i>exposition only</i></b>
       };
 
 $NAMESPACE_END;</pre>
 </blockquote>
 <p><code><a name="value_type">value_type</a></code> is a <code>typedef</code> for the 
-character type used by the operating system to represent pathnames.</p>
-<h3><a name="path-Conversions"><code>path</code> Conversions</a> [path.cvt]</h3>
-<h4><code>path</code> argument conversions [<a name="path.arg.convert">path.arg.cvt</a>]</h4>
-<h5><a name="path-Conversions-to-native-format"><code>path</code> argument 
-format conversions</a> [path.arg.fmt.cvt]</h5>
-<p>Member function arguments that take character sequences representing paths 
-may use the <a href="#generic-pathname-format">generic pathname format</a> or 
-the <a href="#native-pathname-format">native pathname format</a>. Iff such  arguments 
-are in the generic format and the generic format is not acceptable to the 
-operating system as a native path,  conversion to native format shall be performed 
-during the processing of the argument. See [<a href="#Operating-system-examples">fs.os.examples</a>].</p>
+operating system dependent character type used  to represent pathnames.</p>
 <blockquote>
-<p>[<i>Note:</i> Depending on the operating system, there may be no unambiguous way for an implementation to 
-always be able to distinguish between native format and generic format arguments. 
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">[<i>Example:</i> <i><code>value_type</code></i> is <code>char</code> for ISO 
+9945/POSIX based operating systems, and <code>wchar_t</code> for Windows based 
+operating systems.&nbsp; <i>--end example</i>]</td>
+    </tr>
+  </table>
+</blockquote>
+<h3>Generic pathname format [<a name="path.generic">path.generic</a>]</h3>
+<p><i>pathname:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root-name 
+root-directory<sub>opt</sub> relative-path<sub>opt<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </sub>root-directory relative-path<sub>opt<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </sub>relative-path</i></p>
+<p><i>root-name:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>An 
+operating system dependent name that identifies the starting location for 
+absolute paths. </p>
+<blockquote>
+  <blockquote>
+<p>[<i>Note:</i> Many operating systems define a name 
+beginning with two <i>directory-separator</i> characters as a <i>root-name</i> 
+that identifies network or other resource locations. Some operating systems define a single letter followed by a colon as a drive 
+specifier - a <i>root-name</i> identifying a specific device such as a disc drive. <i>--end note</i>]</p>
+  </blockquote>
+</blockquote>
+<p><i>root-directory:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+directory-separator</i></p>
+<p><i>relative-path:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+filename<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
+directory-separator<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
+directory-separator filename</i></p>
+<p><i>filename:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>&quot;.&quot;</code><i><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>
+&quot;..&quot;</code></p>
+<p><i>preferred-separator:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>An 
+operating system dependent directory separator character. May be a synonym for <i> <code>&quot;/&quot;</code>.</i></p>
+    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+     bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+      <tr>
+        <td width="100%">[<i>Note:</i> For ISO 9945/POSIX based operating 
+        systems the <i>preferred-separator</i> is a slash. For Windows based 
+        operating systems the <i>preferred-separator</i> is a backslash. <i>
+-- end note</i>]</td>
+      </tr>
+    </table>
+<p><i>directory-separator:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>&quot;/&quot;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;/&quot;</code> directory-separator<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+preferred-separator<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+preferred-separator directory-separator</i></p>
+<p>Multiple successive <i>directory-separator</i> characters are considered to 
+be the same as one <i>directory-separator</i> character.</p>
+<p>The <i>filename</i>
+<code>&quot;.&quot;</code> is considered to be a reference to the current directory. The
+<i>filename</i> <code>&quot;..&quot;</code> is considered to be a reference to the 
+parent 
+directory. Specific <i>filenames</i> may have special meanings for a particular 
+operating system.</p>
+<h3><a name="path-Conversions"><code>path</code> conversions</a> [path.cvt]</h3>
+<h4><a name="path-Conversions-to-native-format"><code>path</code> argument 
+format conversions</a> [path.fmt.cvt]</h4>
+<p>Member functions arguments that take character sequences representing paths 
+may use the generic pathname format ([<a href="#path.generic">path.generic</a>]) or 
+the <a href="#native-pathname-format">native pathname format</a>. Iff such 
+arguments are in the generic format and the generic format is not acceptable to 
+the operating system as a native path, conversion to native format shall be 
+performed during the processing of the argument. </p>
+<blockquote>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">[<i>Note:</i> For ISO 9945/POSIX and Windows based operating 
+      systems, the generic format is acceptable as a native path so format 
+      conversion is not performed. <i>
+-- end note</i>]</td>
+    </tr>
+  </table>
+<p>[<i>Note:</i> Some operating systems may have no unambiguous way to distinguish between native format and generic format arguments. 
 This is by design as it simplifies use for operating systems that do not require 
-disambiguation. Should an implementation encounter an 
-operating system where disambiguation is required, an implementation can defined 
-an extension to distinguish between the formats. <i>
+disambiguation. An implementation for an operating system where disambiguation 
+is required is permitted 
+as an extension to distinguish between the formats. <i>
 -- end note</i>]</p>
+    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+     bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+      <tr>
+        <td width="100%">[<i>Note:</i> For ISO 9945/POSIX and Windows based operating 
+        systems, there is no need to distinguish so no extension is required. <i>
+-- end note</i>]</td>
+      </tr>
+    </table>
 </blockquote>
 
-<p>If the native format requires 
-paths for regular files to be formatted differently from paths for directories, the 
-path shall be treated as a directory path if last element is a separator, 
+<p>If the native format requires paths for regular files to be formatted 
+differently from paths for directories, the path shall be treated as a directory 
+path if last element is <i>directory-separator</i>, 
 otherwise it shall be treated as a regular file path.</p>
+<blockquote>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">[<i>Note:</i> For ISO 9945/POSIX and Windows based operating 
+      systems, paths for regular files and paths for directories share the same 
+      syntax so there is no special treatment for a path with a last element of
+      <i>directory-separator</i>. <i>
+-- end note</i>]</td>
+    </tr>
+  </table>
+</blockquote>
+<h4><code>path</code> type and encoding conversions [<a name="path.arg.convert">path.type.cvt</a>]</h4>
+<p dir="ltr">For member function arguments that take character sequences representing 
+paths and for member function returning strings, value type and encoding 
+conversion is performed if the value type of the argument or return differs from <code>
+path::value_type</code>. Encoding is determined based on the value type:</p>
+<blockquote>
+  <ul>
+    <li>
+<p dir="ltr"><code>char</code>: Operating system dependent narrow character path 
+encoding. [<i>Note:</i> The intent is to preserve the current behavior of C and C++ 
+standard library functions that perform file operations using narrow character 
+strings to identify paths. Changing this behavior would be surprising and break 
+much existing code. <i>--end note</i>]</p>
+    </li>
+    <li>
+<p dir="ltr"><code>wchar_t</code>: Encoding of the implementation's native wide 
+character set.</p>
+    </li>
+    <li>
+<p dir="ltr"><code>char16_t</code>: UTF-16</p>
+    </li>
+    <li>
+<p dir="ltr"><code>char32_t</code>: UTF-32</p>
+    </li>
+  </ul>
+<blockquote>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">[<i>Note:</i> Narrow character path encoding:<ul>
+        <li>OS X : Always UTF-8.</li>
+        <li>Some ISO 9945/POSIX based systems: determined by <code>locale(&quot;&quot;)</code>;</li>
+        <li>Windows: Codepage of <code>CP_ACP</code> 
+    if <code>AreFileApisANSI()</code>is true, otherwise codepage <code>CP_OEMCP</code>.</li>
+      </ul>
+      <p>&nbsp;<i>-- end note</i>]</td>
+    </tr>
+  </table>
+</blockquote>
 
-<h5><a name="path-Encoding-conversions"><code>
-path</code> argument encoding conversions</a> 
-[path.arg.encoding.cvt]</h5>
-<p>For member function arguments that take character sequences representing 
-paths, if the value type of the argument is not <code>value_type and </code>one 
-of the value types is <code>char</code> and the other is <code>wchar_t</code>, conversion to <code>value_type</code> 
-shall be performed by the <code>path::codecvt()</code> facet. ([<a href="#path-imbued-locale">path.imbued.locale</a>]).</p>
-<h4><a name="path-Conversions-to-generic-format"><code>path</code> Conversions 
-to generic format</a> [fs.cvt.to.generic]</h4>
-<p><a href="#path-generic-format-observers">Generic format observer</a> functions 
-shall return strings formatted according to the <a href="#generic-pathname-format">generic pathname format</a> 
-using <i>preferred-separator</i>. See [<a href="#Operating-system-examples">fs.os.examples</a>].</p>
+</blockquote>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
-<p>Template parameters named <code><a name="InputIterator">InputIterator</a></code> are required meet the 
-requirements for a C++ standard library <code>RandomIterator</code> compliant iterator. The iterator's value type is required to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
+<p>Template parameters named <code><a name="InputIterator">InputIterator</a></code> are required meet the C++ standard library
+<code>InputIterator</code> requirements. The iterator's value type is required to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
 <p>Template parameters named <code><a name="Source">Source</a></code> are required to be one of:</p>
 <ul>
   <li>A container with a value type of <code>char</code>, <code>
@@ -1054,9 +1068,12 @@ path</code> modifiers</a> [path.modifiers]</h3><pre>void <a name="path-clear">cl
 </blockquote>
 <pre>path&amp; <a name="path-make_preferred">make_preferred</a>();</pre>
 <blockquote>
-  <p><i>Effects:</i> <i>directory-separator</i>s are converted to <i>prefered-separator</i>s. 
-  See [<a href="#Operating-system-examples">fs.os.examples</a>].</p>
+  <p><i>Effects: </i>For an operating system whereach <i>directory-separator</i> 
+  is converted to <i>preferred-separator</i>.</p>
   <p><i>Returns:</i> <code>*this</code></p>
+<p dir="ltr">[<i>Example:</i> On an operating system that uses backslash as 
+its preferred-separator,&nbsp; <code>path(&quot;foo/bar&quot;).make_preferred()</code> 
+returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
 </blockquote>
 
 <pre>path&amp; <a name="path-remove_filename">remove_filename</a>();</pre>
@@ -1115,7 +1132,16 @@ function's return type, conversion is performed by <code>cvt</code>.</p>
 
 <h3> <a name="path-generic-format-observers"><code><font size="4">path</font></code> generic format observers</a> 
 [path.generic.obs]</h3>
-<p>The string returned by all generic format observers is in the <a href="#generic-pathname-format">generic pathname format</a>.</p>
+<p>Generic format observer functions 
+ 
+return strings formatted according to the generic pathname format ([<a href="#path.generic">path.generic</a>]). 
+The forward slash (<code>'/'</code>) character is used as the <i>
+directory-separator</i> character.</p>
+<blockquote>
+<p dir="ltr">[<i>Example:</i> On an operating system that uses backslash as 
+its preferred-separator,&nbsp; <code>path(&quot;foo\\bar&quot;).generic_string()</code> 
+returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
+</blockquote>
 <pre>template &lt;class String&gt;
 String <a name="generic_string-template">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;</pre>
 <blockquote>
@@ -1300,6 +1326,7 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
 <blockquote>
   <p><i>Returns:</i> The end iterator.</p>
 </blockquote>
+ <p>$if $TARGET; == BOOST </p>
  <h3><a name="path-imbued-locale"><code><font size="4"> path</font></code> 
  imbued locale</a> [path.imbued.locale]</h3>
  <p><code>path</code> operations sometimes require encoding conversions between
@@ -1326,7 +1353,6 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
   locale .</p>
 </blockquote>
 
-$if $TARGET; == BOOST
 <h3> <a name="path-deprecated-functions"><code><font size="4"> path</font></code> deprecated functions</a></h3>
 <p> Several member functions from previous versions of <code>class path</code> have been deprecated, either because they have been renamed or because the 
 functionality is no longer desirable or has become obsolete.</p>
@@ -1423,8 +1449,7 @@ so that paths with embedded spaces will round trip correctly. Ampersand (<code>&
 is as an escape character, so the path can itself contain double quotes.</p>
 <pre>template &lt;class Char, class Traits&gt;
 std::basic_ostream&lt;Char, Traits&gt;&amp; operator&lt;&lt;(std::basic_ostream&lt;Char, Traits&gt;&amp; os,
-                                             const path&amp; p)
-</pre>
+                                             const path&amp; p)</pre>
 <blockquote>
   <p><i>Effects: </i>Insert characters into <code>os</code>:</p>
   <ul>

@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-06-15<!--webbot bot="Timestamp" endspan i-checksum="12369" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-07-26<!--webbot bot="Timestamp" endspan i-checksum="12436" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -41,7 +41,7 @@ Filesystem Library Proposal (Revision 3)</h1>
 Standard Library Technical Specification</i> or for the <i>C++ Standard Library</i>. 
 The proposed library is based on Version 3 of the Boost Filesystem 
 Library (see <a href="http://www.boost.org/libs/filesystem">
-www.boost.org/libs/filesystem</a>). Preliminary wording is provided. A
+www.boost.org/libs/filesystem</a>). Proposed wording is provided. A
 <a href="#TODO">TODO</a> list identifies remaining work to be done.</p>
 
 
@@ -73,6 +73,18 @@ Library Proposal (Revision 3). Changes include:</p>
   cases, per LWG discussion in Kona.</li>
   <li>Remove path inserter and extractor dependency on Boost quoted manip (Issue 
   7).</li>
+  <li>Add C++11 features to both the proposal and the Boost implementation and 
+  test suite:<ul>
+  <li>r-value reference move semantics.</li>
+  <li><code>noexcept</code>.</li>
+  <li>range-based for statement support.</li>
+  <li>new character types.</li>
+  <li>replace replace explicit codecvt manipulation by reference to <code>&lt;cuchar&gt;</code> 
+  conversion facilities</li>
+</ul>
+
+
+  </li>
 </ul>
 
 
@@ -178,8 +190,6 @@ class would be the best place to experiment with this concept, not a path class.
     application is correct.</li>
     <li>Ion Todirel suggests &quot;Would be nice if path::append was variadic, to 
     improve usability&quot;.</li>
-    <li>Boost.Filesystem needs to implement <code>char16_t</code> and <code>char32_t</code> support to verify the 
-    specification for these is correct.</li>
     <li>The Boost implementation has more class path non-member relational 
     functions that shown in the docs, and the specific set of relational 
     functions varies between Windows and POSIX. Figure out what's happening and 
