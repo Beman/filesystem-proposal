@@ -17,6 +17,7 @@
 #  define BOOST_SYSTEM_NO_DEPRECATED
 #endif
 
+#define BOOST_CHRONO_HEADER_ONLY
 #include <boost/filesystem/operations.hpp>
 
 #include <boost/config.hpp>
@@ -116,6 +117,20 @@ namespace
   unsigned short language_id;  // 0 except for Windows
 
   const fs::path temp_dir(fs::unique_path("operations-test-%%%%-%%%%-%%%%-%%%%"));
+
+  std::time_t to_time_t(fs::file_time_type ft)
+# ifdef BOOST_FILESYSTEM_USE_TIME_T
+    {return ft;}
+# else
+    {return boost::chrono::system_clock::to_time_t(ft);}
+# endif
+
+  fs::file_time_type from_time_t(std::time_t ft)
+# ifdef BOOST_FILESYSTEM_USE_TIME_T
+    {return ft;}
+# else
+    {return boost::chrono::system_clock::from_time_t(ft);}
+# endif
 
   void create_file(const fs::path & ph, const std::string & contents = std::string())
   {
@@ -1587,7 +1602,7 @@ namespace
     // others (NTFS) report it as UTC. The C standard does not specify
     // if time_t is local or UTC. 
 
-    std::time_t ft = fs::last_write_time(f1);
+    std::time_t ft = to_time_t(fs::last_write_time(f1));
     cout << "\n  UTC last_write_time() for a file just created is "
       << std::asctime(std::gmtime(&ft)) << endl;
 
@@ -1595,15 +1610,15 @@ namespace
     cout << "\n  Year is " << tmp->tm_year << endl;
     --tmp->tm_year;
     cout << "  Change year to " << tmp->tm_year << endl;
-    fs::last_write_time(f1, std::mktime(tmp));
-    std::time_t ft2 = fs::last_write_time(f1);
+    fs::last_write_time(f1, from_time_t(std::mktime(tmp)));
+    std::time_t ft2 = to_time_t(fs::last_write_time(f1));
     cout << "  last_write_time() for the file is now "
       << std::asctime(std::gmtime(&ft2)) << endl;
-    BOOST_TEST(ft != fs::last_write_time(f1));
+    BOOST_TEST(ft != to_time_t(fs::last_write_time(f1)));
 
     cout << "\n  Reset to current time" << endl;
-    fs::last_write_time(f1, ft);
-    double time_diff = std::difftime(ft, fs::last_write_time(f1));
+    fs::last_write_time(f1, from_time_t(ft));
+    double time_diff = std::difftime(ft, to_time_t(fs::last_write_time(f1)));
     cout 
       << "  original last_write_time() - current last_write_time() is "
       << time_diff << " seconds" << endl;

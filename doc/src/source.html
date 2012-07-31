@@ -401,7 +401,11 @@ $endif;    enum <a name="file_type" href="#Enum-file_type">file_type</a>
       no_recurse = none,
       recurse
     };
-
+$if $TARGET; == BOOST
+    typedef std::time_t  file_time_type;
+$else
+    typedef boost::chrono::system_clock::time_point  file_time_type;
+$endif;
     // <a href="#Operational-functions">operational functions</a>
 
     path         <a href="#absolute">absolute</a>(const path&amp; p, const path&amp; base=current_path());
@@ -484,10 +488,10 @@ $endif;    enum <a name="file_type" href="#Enum-file_type">file_type</a>
     bool         <a href="#is_symlink2">is_symlink</a>(const path&amp; p);
     bool         <a href="#is_symlink2">is_symlink</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
-    std::time_t  <a href="#last_write_time">last_write_time</a>(const path&amp; p);
-    std::time_t  <a href="#last_write_time">last_write_time</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
-    void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time);
-    void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, const std::time_t new_time,
+    file_time_type  <a href="#last_write_time">last_write_time</a>(const path&amp; p);
+    file_time_type  <a href="#last_write_time">last_write_time</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
+    void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, file_time_type new_time);
+    void         <a href="#last_write_time2">last_write_time</a>(const path&amp; p, file_time_type new_time,
                                  system::error_code&amp; ec) noexcept;
 
     path         <a href="#read_symlink">read_symlink</a>(const path&amp; p);
@@ -2536,16 +2540,16 @@ bool <a name="is_symlink3">is_symlink</a>(const path&amp; p, system::error_code&
   <p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
   nothing.</p>
 </blockquote>
-<pre>std::time_t <a name="last_write_time">last_write_time</a>(const path&amp; p);
-std::time_t <a name="last_write_time2">last_write_time</a>(const path&amp; p<code>, system::error_code&amp; ec</code>) noexcept;</pre>
+<pre>file_time_type <a name="last_write_time">last_write_time</a>(const path&amp; p);
+file_time_type <a name="last_write_time2">last_write_time</a>(const path&amp; p<code>, system::error_code&amp; ec</code>) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> The time of last data modification of <code>p</code>, determined as if by the 
   value of the ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">stat</a></code> structure member <code>st_mtime</code>&nbsp; obtained 
   as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
-<pre>void <a name="last_write_time3">last_write_time</a>(const path&amp; p, const std::time_t new_time);
-void <a name="last_write_time4">last_write_time</a>(const path&amp; p, const std::time_t new_time<code>,
+<pre>void <a name="last_write_time3">last_write_time</a>(const path&amp; p, file_time_type new_time);
+void <a name="last_write_time4">last_write_time</a>(const path&amp; p, file_time_type new_time<code>,
                      system::error_code&amp; ec</code>) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> Sets the time of last data modification of the file 

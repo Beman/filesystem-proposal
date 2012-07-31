@@ -83,14 +83,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "file_status", "file_status\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "locale_info", "locale_info\locale_info.vcxproj", "{3667C35E-78D5-43D4-AAC2-349145E4341D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "thread_test", "thread_test\thread_test.vcxproj", "{20E2805D-9634-46CE-B979-21CCBBD16EA3}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "symlinked_cpp", "symlinked_cpp\symlinked_cpp.vcxproj", "{E37919AE-1A38-4E61-8E5E-FE4F981C6BFD}"
-	ProjectSection(ProjectDependencies) = postProject
-		{F94CCADD-A90B-480C-A304-C19D015D36B1} = {F94CCADD-A90B-480C-A304-C19D015D36B1}
-		{FFD738F7-96F0-445C-81EA-551665EF53D1} = {FFD738F7-96F0-445C-81EA-551665EF53D1}
-	EndProjectSection
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "system_lib", "system_lib\system_lib.vcxproj", "{3640605D-6F82-493D-879F-8F30762DA554}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "filesystem_lib", "filesystem_lib\filesystem_lib.vcxproj", "{2C1770A4-4AC3-4102-9D36-E652DBB686D8}"
@@ -209,14 +201,6 @@ Global
 		{3667C35E-78D5-43D4-AAC2-349145E4341D}.Debug|Win32.Build.0 = Debug|Win32
 		{3667C35E-78D5-43D4-AAC2-349145E4341D}.Release|Win32.ActiveCfg = Release|Win32
 		{3667C35E-78D5-43D4-AAC2-349145E4341D}.Release|Win32.Build.0 = Release|Win32
-		{20E2805D-9634-46CE-B979-21CCBBD16EA3}.Debug|Win32.ActiveCfg = Debug|Win32
-		{20E2805D-9634-46CE-B979-21CCBBD16EA3}.Debug|Win32.Build.0 = Debug|Win32
-		{20E2805D-9634-46CE-B979-21CCBBD16EA3}.Release|Win32.ActiveCfg = Release|Win32
-		{20E2805D-9634-46CE-B979-21CCBBD16EA3}.Release|Win32.Build.0 = Release|Win32
-		{E37919AE-1A38-4E61-8E5E-FE4F981C6BFD}.Debug|Win32.ActiveCfg = Debug|Win32
-		{E37919AE-1A38-4E61-8E5E-FE4F981C6BFD}.Debug|Win32.Build.0 = Debug|Win32
-		{E37919AE-1A38-4E61-8E5E-FE4F981C6BFD}.Release|Win32.ActiveCfg = Release|Win32
-		{E37919AE-1A38-4E61-8E5E-FE4F981C6BFD}.Release|Win32.Build.0 = Release|Win32
 		{3640605D-6F82-493D-879F-8F30762DA554}.Debug|Win32.ActiveCfg = Debug|Win32
 		{3640605D-6F82-493D-879F-8F30762DA554}.Debug|Win32.Build.0 = Debug|Win32
 		{3640605D-6F82-493D-879F-8F30762DA554}.Release|Win32.ActiveCfg = Release|Win32

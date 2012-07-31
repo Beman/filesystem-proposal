@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-07-30<!--webbot bot="Timestamp" endspan i-checksum="12425" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-07-31<!--webbot bot="Timestamp" endspan i-checksum="12427" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -62,26 +62,29 @@ Library Proposal (Revision 3). Changes include:</p>
   or numbers. Suggested by Ed Smith-Rowland and others.</li>
     <li>Add section tags and section numbers, per LWG 
     discussion in Kona.</li>
-  <li>Bring use of trademarked names into ISO compliance, and minimize use of 
-  such names by moving into a single examples section. Thanks to Stefanus Du 
-  Toit for advice on how to do this.</li>
+  <li>Minimize use of trademarked names. Enclose uses in green highlighted boxes 
+  to facilitate discussion.</li>
   <li>Introduce a definition for &quot;operating system dependent&quot;, and then use it 
-  to replace most &quot;implementation defined behavior&quot;.</li>
+  to replace &quot;implementation defined behavior&quot; wherever the operating 
+  system's rules determine behavior.</li>
   <li>Replace uses of&nbsp; const string return types with non-const string 
   return types, per LWG discussion in Kona.</li>
   <li>Remove permission for implementations to return const string&amp; in certain 
   cases, per LWG discussion in Kona.</li>
   <li>Remove path inserter and extractor dependency on Boost quoted manip (Issue 
   7).</li>
+  <li>Replace use of <code>time_t</code> with <code>file_time_type</code>, a 
+  typedef for <code>std::chrono::system_clock::time_point</code>, per LWG 
+  discussion in Kona. </li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
-  <li>r-value reference move semantics.</li>
+  <li>R-value reference move semantics.</li>
   <li><code>noexcept</code>.</li>
   <li><code>constexpr</code>.</li>
-  <li>range-based for statement support.</li>
-  <li>new character types.</li>
-  <li>replace replace explicit codecvt manipulation by reference to <code>&lt;cuchar&gt;</code> 
-  conversion facilities</li>
+  <li>Range-based for statement support.</li>
+  <li>New character types.</li>
+  <li>Replace replace explicit codecvt manipulation with a reference to <code>&lt;cuchar&gt;</code> 
+  conversion facilities.</li>
 </ul>
 
 
@@ -200,8 +203,6 @@ class would be the best place to experiment with this concept, not a path class.
     <li>Dinkumware/Microsoft report slightly different results for Decomposition 
     table. Rerun table. Check discrepancies.</li>
     <li>Review Nick Stoughton's email for suggestions, action items.</li>
-    <li>Change <code>time_t</code> to <code>chrono system_clock::time_point</code>, 
-    per LWG discussion in Kona. </li>
     <li>Ed Smith-Rowland:<br>
     &gt; I found it less confusing to switch to positive logic for 
     recursive_directory_iterator:<br>
@@ -291,7 +292,7 @@ a placeholder. Thus the full namespace is changed to <code>
 std::tbs::filesystem.</code></i></p>
 <hr>
 <h3>Issue 2: Excessive use of <code>const codecvt_type&amp;</code> arguments&nbsp;&nbsp;&nbsp; 
-Status: Open</h3>
+Status: Closed</h3>
 <h4>Discussion</h4>
 <p>Users sometimes need to do path conversions that use something other than the 
 imbued codecvt facet. The need is particularly acute in multi-threaded 
@@ -299,7 +300,7 @@ applications where changing the imbued facet would introduce a data race. That
 said, providing an optional <code>const codecvt_type&amp;</code> argument for every 
 function where the need might possibly arise is excessive because its use is so 
 rare and it adds considerable interface clutter.</p>
-<h4>Proposed resolution</h4>
+<h4>Resolution</h4>
 <p dir="ltr"><i>Kona:</i></p>
 <p dir="ltr"><i>Remove all existing class path <code>const codecvt_type&amp;</code> 
 arguments. </i></p>
@@ -328,10 +329,10 @@ fstream classes friends).</i></p>
 header and classes is much desired.</i></p>
 <hr>
 <h3>Issue 4: Given move semantics, it is best not to return const strings.&nbsp;&nbsp;&nbsp;&nbsp; 
-Status: Resolved</h3>
+Status: Closed</h3>
 <h4>Discussion</h4>
 <p>The issue title pretty much says it all.</p>
-<h4>Proposed resolution</h4>
+<h4>Resolution</h4>
 <p><i>Kona: Return plain strings. Remove the permission for implementations to 
 return const refs, since uses are not in performace critical code and subtle 
 portability bugs may occur.</i></p>

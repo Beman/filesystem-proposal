@@ -35,6 +35,7 @@
 #include <boost/cstdint.hpp>
 #include <boost/range/mutable_iterator.hpp>
 #include <boost/range/const_iterator.hpp>
+#include <boost/chrono.hpp>
 #include <boost/assert.hpp>
 #include <string>
 #include <utility> // for pair
@@ -200,6 +201,10 @@ namespace boost
   inline bool is_regular(file_status f)   { return f.type() == regular_file; }
 # endif
 
+//--------------------------------------------------------------------------------------//
+//                                       misc                                           //
+//--------------------------------------------------------------------------------------//
+
   struct space_info
   {
     // all values are byte counts
@@ -211,6 +216,12 @@ namespace boost
   BOOST_SCOPED_ENUM_START(copy_option)
     {none, fail_if_exists = none, overwrite_if_exists};
   BOOST_SCOPED_ENUM_END
+
+#ifdef BOOST_FILESYSTEM_USE_TIME_T
+  typedef std::time_t file_time_type;
+#else
+  typedef boost::chrono::system_clock::time_point file_time_type;
+#endif
 
 //--------------------------------------------------------------------------------------//
 //                             implementation details                                   //
@@ -494,18 +505,38 @@ namespace boost
                                        {return detail::initial_path(&ec);}
 
   inline
-  std::time_t last_write_time(const path& p) {return detail::last_write_time(p);}
+  file_time_type last_write_time(const path& p)
+#ifdef BOOST_FILESYSTEM_USE_TIME_T
+    {return detail::last_write_time(p);}
+#else
+    {return boost::chrono::system_clock::from_time_t(detail::last_write_time(p));}
+#endif
 
   inline
-  std::time_t last_write_time(const path& p, system::error_code& ec) BOOST_NOEXCEPT
-                                       {return detail::last_write_time(p, &ec);}
+  file_time_type last_write_time(const path& p, system::error_code& ec) BOOST_NOEXCEPT
+#ifdef BOOST_FILESYSTEM_USE_TIME_T
+    {return detail::last_write_time(p, &ec);}
+#else
+    {return boost::chrono::system_clock::from_time_t(detail::last_write_time(p, &ec));}
+#endif
+
   inline
-  void last_write_time(const path& p, const std::time_t new_time)
-                                       {detail::last_write_time(p, new_time);}
+  void last_write_time(const path& p, file_time_type new_time)
+#ifdef BOOST_FILESYSTEM_USE_TIME_T
+    {detail::last_write_time(p, new_time);}
+#else
+    {detail::last_write_time(p, boost::chrono::system_clock::to_time_t(new_time));}
+#endif
+
   inline
-  void last_write_time(const path& p, const std::time_t new_time,
+  void last_write_time(const path& p, file_time_type new_time,
                        system::error_code& ec) BOOST_NOEXCEPT
-                                       {detail::last_write_time(p, new_time, &ec);}
+#ifdef BOOST_FILESYSTEM_USE_TIME_T
+    {detail::last_write_time(p, new_time, &ec);}
+#else
+    {detail::last_write_time(p, boost::chrono::system_clock::to_time_t(new_time), &ec);}
+#endif
+
   inline
   void permissions(const path& p, perms prms)
                                        {detail::permissions(p, prms);}
