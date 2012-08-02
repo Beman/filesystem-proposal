@@ -550,32 +550,35 @@ namespace
     CHECK(hash(path("c:\\abc")) == hash(path("c:/abc")));
 # endif
 
-    const path p("bar");
-    const path p2("baz");
+    const path p("a/b");    
+    const path p2("a.b");
+
+    // verify "a.c" < "a/c", so tests will detect failure to do lexicographic compare
+    CHECK(string("a.b") < string("a/b"));  
 
     CHECK(!(p < p));
     CHECK(p < p2);
     CHECK(!(p2 < p));
-    CHECK(p < "baz");
-    CHECK(p < string("baz"));
-    CHECK(p < L"baz");
-    CHECK(p < wstring(L"baz"));
-    CHECK(!("baz" < p));
-    CHECK(!(string("baz") < p));
-    CHECK(!(L"baz" < p));
-    CHECK(!(wstring(L"baz") < p));
+    CHECK(p < "a.b");
+    CHECK(p < string("a.b"));
+    CHECK(p < L"a.b");
+    CHECK(p < wstring(L"a.b"));
+    CHECK(!("a.b" < p));
+    CHECK(!(string("a.b") < p));
+    CHECK(!(L"a.b" < p));
+    CHECK(!(wstring(L"a.b") < p));
 
     CHECK(p == p);
     CHECK(!(p == p2));
     CHECK(!(p2 == p));
-    CHECK(p2 == "baz");
-    CHECK(p2 == string("baz"));
-    CHECK(p2 == L"baz");
-    CHECK(p2 == wstring(L"baz"));
-    CHECK("baz" == p2);
-    CHECK(string("baz") == p2);
-    CHECK(L"baz" == p2);
-    CHECK(wstring(L"baz") == p2);
+    CHECK(p2 == "a.b");
+    CHECK(p2 == string("a.b"));
+    CHECK(p2 == L"a.b");
+    CHECK(p2 == wstring(L"a.b"));
+    CHECK("a.b" == p2);
+    CHECK(string("a.b") == p2);
+    CHECK(L"a.b" == p2);
+    CHECK(wstring(L"a.b") == p2);
 
     CHECK(hash(p) == hash(p));
     CHECK(hash(p) != hash(p2)); // Not strictly required, but desirable

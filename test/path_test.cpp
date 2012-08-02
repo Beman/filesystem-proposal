@@ -597,10 +597,47 @@ namespace
     BOOST_TEST(!(as < acs));
     BOOST_TEST(!(acs < as));
 
+    // verify compare is actually lexicographical
+
     // character set reality check before lexicographical tests
     BOOST_TEST(std::string("a.b") < std::string("a/b"));
-    // verify compare is actually lexicographical
-    BOOST_TEST(path("a/b") < path("a.b"));
+
+    path lex_lo("a/b"), lex_hi("a.b");
+    const char* plex_lo = "a/b";
+    const char* plex_hi = "a.b";
+    const std::string slex_lo("a/b"), slex_hi("a.b");
+
+    BOOST_TEST(lex_lo < lex_hi);
+    BOOST_TEST(lex_lo < "a.b");
+    BOOST_TEST(lex_lo < plex_hi);
+    BOOST_TEST(lex_lo < slex_hi);
+    BOOST_TEST("a/b" < lex_hi);
+    BOOST_TEST(plex_lo < lex_hi);
+    BOOST_TEST(slex_lo < lex_hi);
+
+    BOOST_TEST(!(lex_lo == lex_hi));
+    BOOST_TEST(!(lex_lo == "a.b"));
+    BOOST_TEST(!(lex_lo == plex_hi));
+    BOOST_TEST(!(lex_lo == slex_hi));
+    BOOST_TEST(!("a/b" == lex_hi));
+    BOOST_TEST(!(plex_lo == lex_hi));
+    BOOST_TEST(!(slex_lo == lex_hi));
+
+    // verify path overloads aren't knocking out string overloads
+
+    BOOST_TEST(!(slex_lo < slex_hi));
+    BOOST_TEST(!(slex_lo < "a.b"));
+    BOOST_TEST(!(slex_lo < plex_hi));
+    BOOST_TEST(!("a/b" < slex_hi));
+    BOOST_TEST(!(plex_lo < slex_hi)); 
+    BOOST_TEST(!(slex_lo == slex_hi));
+    BOOST_TEST(!(slex_lo == "a.b"));
+    BOOST_TEST(!(slex_lo == plex_hi));
+    BOOST_TEST(!("a/b" == slex_hi));
+    BOOST_TEST(!(plex_lo == slex_hi)); 
+    
+    // misc test cases
+
     BOOST_TEST(path("a/b") == path("a///b"));
     BOOST_TEST(path("a/b/") == path("a/b/."));
     BOOST_TEST(path("a/b") != path("a/b/"));
