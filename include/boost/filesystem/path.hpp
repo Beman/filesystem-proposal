@@ -658,20 +658,8 @@ namespace filesystem
     path::iterator first2, path::iterator last2)
     { return detail::lex_compare(first1, last1, first2, last2) < 0; }
   
-  inline bool operator==(const path& lhs, const path& rhs)              {return lhs.compare(rhs) == 0;}
-  inline bool operator==(const path& lhs, const path::string_type& rhs) {return lhs.compare(rhs) == 0;} 
-  inline bool operator==(const path::string_type& lhs, const path& rhs) {return rhs.compare(lhs) == 0;}
-  inline bool operator==(const path& lhs, const path::value_type* rhs)  {return lhs.compare(rhs) == 0;}
-  inline bool operator==(const path::value_type* lhs, const path& rhs)  {return rhs.compare(lhs) == 0;}
-  
-  inline bool operator!=(const path& lhs, const path& rhs)              {return lhs.compare(rhs) != 0;}
-  inline bool operator!=(const path& lhs, const path::string_type& rhs) {return lhs.compare(rhs) != 0;} 
-  inline bool operator!=(const path::string_type& lhs, const path& rhs) {return rhs.compare(lhs) != 0;}
-  inline bool operator!=(const path& lhs, const path::value_type* rhs)  {return lhs.compare(rhs) != 0;}
-  inline bool operator!=(const path::value_type* lhs, const path& rhs)  {return rhs.compare(lhs) != 0;}
-
-  // TODO: why do == and != have additional overloads, but the others don't?
-
+  inline bool operator==(const path& lhs, const path& rhs) {return lhs.compare(rhs) == 0;}
+  inline bool operator!=(const path& lhs, const path& rhs) {return lhs.compare(rhs) != 0;}
   inline bool operator<(const path& lhs, const path& rhs)  {return lhs.compare(rhs) < 0;}
   inline bool operator<=(const path& lhs, const path& rhs) {return !(rhs < lhs);}
   inline bool operator> (const path& lhs, const path& rhs) {return rhs < lhs;}
