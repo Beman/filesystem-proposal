@@ -7,7 +7,7 @@
 
 #include <locale>
 #include <iostream>
-#include <exception>
+#include <stdexcept>
 #include <cstdlib>
 #include <boost/config.hpp>
 
@@ -131,7 +131,7 @@ namespace
     cout << hex;
     for (int i = 0; i < 128; ++i)
     {
-      cout << s[i] << ':' << unsigned short(ws[i]);
+      cout << s[i] << ':' << (unsigned short)(ws[i]);
       if (i % 8)
         cout << ',';
       else

@@ -877,17 +877,19 @@ character set.</p>
 </blockquote>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
 <p>Template parameters named <code><a name="InputIterator">InputIterator</a></code> are required meet the C++ standard library
-<code>InputIterator</code> requirements. The iterator's value type is required to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
-<p>Template parameters named <code><a name="Source">Source</a></code> are required to be one of:</p>
+<code>InputIterator</code> requirements. The value type is required to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
+<p>Template parameters named <code><a name="Source">Source</a></code> are required to be 
+one of:</p>
 <ul>
-  <li>A container with a value type of <code>char</code>, <code>
+  <li>A <code>basic_string</code> with <code>charT</code> of <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li>An iterator for a null terminated byte-string. The value type is required 
+  <li>An iterator meeting the <a name="InputIterator"><code>InputIterator</code></a> 
+  requirements and pointing to a null terminated byte-string. The value type is required 
   to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
   char32_t</code>.</li>
   <li>A C-array. The value type is required to be <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li>A <code>$NAMESPACE;::$SUBNAMESPACE;::directory_entry</code>.</li>
+  <li>A <code>directory_entry</code>.</li>
 </ul>
 
 <h3> <a name="path-constructors"> <code>

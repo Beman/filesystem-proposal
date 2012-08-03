@@ -9,6 +9,7 @@ project
       <library>/boost/filesystem//boost_filesystem
       <library>/boost/system//boost_system
       <library>/boost/test//boost_prg_exec_monitor
+      <library>/boost/interop//boost_interop
       <toolset>msvc:<asynch-exceptions>on
     ;
     
