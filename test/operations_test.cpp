@@ -264,7 +264,7 @@ namespace
   void dump_tree(const fs::path & root)
   {
     cout << "dumping tree rooted at " << root << endl;
-    for (fs::recursive_directory_iterator it (root, fs::directory_option::follow_directory_symlink);
+    for (fs::recursive_directory_iterator it (root, fs::directory_options::follow_directory_symlink);
          it != fs::recursive_directory_iterator();
          ++it)
     {
@@ -615,13 +615,16 @@ namespace
   int walk_tree(bool recursive)
   {
     int d1f1_count = 0;
-//    for (fs::recursive_directory_iterator it (dir, fs::directory_option::none);
+//    for (fs::recursive_directory_iterator it (dir, fs::directory_options::none);
       for (fs::recursive_directory_iterator it (dir,
-      recursive ? fs::directory_option::follow_directory_symlink
-                : fs::directory_option::none);
+      recursive ? fs::directory_options::follow_directory_symlink
+                : fs::directory_options::none);
          it != fs::recursive_directory_iterator();
          ++it)
     {
+      BOOST_TEST(it.options() == 
+        (recursive ? fs::directory_options::follow_directory_symlink
+                  : fs::directory_options::none));
       if (it->path().filename() == "d1f1")
         ++d1f1_count;
     }
@@ -1477,14 +1480,14 @@ namespace
     BOOST_TEST(copy_ex_ok);
 
     copy_ex_ok = false;
-    try { fs::copy_file(f1, d1 / "f2", fs::copy_option::fail_if_exists); }
+    try { fs::copy_file(f1, d1 / "f2", fs::copy_options::fail_if_exists); }
     catch (const fs::filesystem_error &) { copy_ex_ok = true; }
     BOOST_TEST(copy_ex_ok);
 
     create_file(d1 / "f2", "1234567890");
     BOOST_TEST_EQ(fs::file_size(d1 / "f2"), 10U);
     copy_ex_ok = true;
-    try { fs::copy_file(f1, d1 / "f2", fs::copy_option::overwrite_if_exists); }
+    try { fs::copy_file(f1, d1 / "f2", fs::copy_options::overwrite_if_exists); }
     catch (const fs::filesystem_error &) { copy_ex_ok = false; }
     BOOST_TEST(copy_ex_ok);
     BOOST_TEST_EQ(fs::file_size(d1 / "f2"), 7U);

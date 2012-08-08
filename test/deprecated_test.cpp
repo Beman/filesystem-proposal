@@ -259,9 +259,15 @@ int cpp_main(int /*argc*/, char* /*argv*/[])
 
 // symlink_option
 
-  BOOST_TEST(fs::directory_option::none == fs::symlink_option::none);
-  BOOST_TEST(fs::directory_option::follow_directory_symlink
+  BOOST_TEST(fs::directory_options::none == fs::symlink_option::none);
+  BOOST_TEST(fs::directory_options::follow_directory_symlink
     == fs::symlink_option::recurse);
+
+// copy_option
+
+  BOOST_TEST(fs::copy_options::none == fs::copy_option::none);
+  BOOST_TEST(fs::copy_options::overwrite_if_exists
+    == fs::copy_option::overwrite_if_exists);
 
   return ::boost::report_errors();
 }

@@ -388,16 +388,15 @@ $endif;    enum <a name="file_type" href="#Enum-file_type">file_type</a>
       uintmax_t available; // free space available to a non-privileged process
     };
 
-    enum class <a name="copy_option">copy_option</a>
+    enum class <a name="copy_option">copy_options</a>
     {
-      none
-      fail_if_exists = none,
+      none,
       overwrite_if_exists
     };
 
-    enum class <a name="symlink_option">directory_option</a>
+    enum class <a name="symlink_option">directory_options</a>
     {
-      none
+      none,
       follow_directory_symlink,
       skip_permission_denied
     };
@@ -422,8 +421,8 @@ $endif;
 
     void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to);
     void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;
-    void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_option</a> option);
-    void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_option</a> option,
+    void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> option);
+    void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> option,
                            system::error_code&amp; ec noexcept);
 
     void         <a href="#copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink);
@@ -2059,6 +2058,8 @@ directory_iterator&amp; increment(system::error_code&amp; ec)<code> noexcept</co
 
 </blockquote>
 <h3><a name="directory_iterator-non-member-functions"><code>directory_iterator</code> non-member functions</a></h3>
+<p>These functions enable use of <code>directory_iterator</code> with C++11 
+range-based for statements.</p>
 <pre>const directory_iterator&amp; begin(const directory_iterator&amp; iter) noexcept;</pre>
 <blockquote>
   <p><i>Returns: </i><code>iter</code>.</p>
@@ -2067,7 +2068,7 @@ directory_iterator&amp; increment(system::error_code&amp; ec)<code> noexcept</co
 <blockquote>
   <p><i>Returns: </i><code>directory_iterator()</code>.</p>
 </blockquote>
-<h2><a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
+<h2 dir="ltr"><a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
 [class.rec.dir.itr]</a></h2>
 <p>Objects of type <code>recursive_directory_iterator</code> provide standard library 
 compliant iteration over the contents of a directory, including recursion into 
@@ -2082,16 +2083,17 @@ its sub-directories.</p>
         recursive_directory_iterator() noexcept;
         recursive_directory_iterator(const recursive_directory_iterator&amp;) noexcept;
         explicit recursive_directory_iterator(const path&amp; p,
-          <a href="#symlink_option">symlink_option</a> opt = symlink_option::none);
+          <a href="#symlink_option">directory_options</a> options = directory_options::none);
         recursive_directory_iterator(const path&amp; p,
-          <a href="#symlink_option">symlink_option</a> opt, system::error_code&amp; ec) noexcept;
+          <a href="#symlink_option">directory_options</a> options, system::error_code&amp; ec) noexcept;
         recursive_directory_iterator(const path&amp; p, system::error_code&amp; ec) noexcept;
         recursive_directory_iterator(directory_iterator&amp;&amp;) = deleted;
        ~recursive_directory_iterator() noexcept = default;
 
         // observers
-        int level() const noexcept;
-        bool no_push<code>_pending</code>() const noexcept;
+        directory_options  options() const;
+        int                level() const;
+        bool               recursion<code>_pending</code>() const;
 
         // modifiers
         recursive_directory_iterator&amp; operator=(const directory_iterator&amp;) = default;
@@ -2101,33 +2103,15 @@ its sub-directories.</p>
         recursive_directory_iterator&amp; increment(system::error_code&amp; ec);
 
         void pop();
-        void no_push(bool value=true);
+        void disable_recursion_pending();
 
-        // other members as required by
-        //  C++ Std, Input iterators [input.iterators]
-
-      private:
-<i><b>        // actual data members will probably be stored in a shared object,
-        // or some similar mechanism, to achieve the required input iterator
-        // copy semantics
-</b></i>        int            m_level; <b><i>   // for exposition only</i></b>
-        bool           m_no_<code>push</code>;  <i><b>// for exposition only
-        </b></i><a href="#symlink_option">symlink_option</a> m_options;  <i><b>// for exposition only</b></i>
+        // ... other members as required for Input iterators [input.iterators]
       };
 
 $NAMESPACE_END;</pre>
 
 <p>The behavior of a <code>recursive_directory_iterator</code> is the same 
 as a <code>directory_iterator</code> unless otherwise specified.</p>
-<ul>
-  <li>Incrementing a <code>recursive_directory_iterator</code> pointing to a 
-  directory causes that directory itself to be iterated ovee, as specified by 
-  the <code>operator++</code> and <code>increment</code> functions.<br>
-&nbsp;</li>
-  <li>When a <code>recursive_directory_iterator</code> reaches the end of the directory currently being iterated 
-  over, or when <code>pop()</code> is called, <code>m_level</code> is 
-  decremented, and iteration of the parent directory continues.</li>
-</ul>
 <pre>recursive_directory_iterator() noexcept;</pre>
 <blockquote>
 
@@ -2135,54 +2119,71 @@ as a <code>directory_iterator</code> unless otherwise specified.</p>
 
 </blockquote>
 
-<pre>explicit recursive_directory_iterator(const path&amp; p, <a href="#symlink_option">symlink_option</a> opt = symlink_option::none);
-recursive_directory_iterator(const path&amp; p, <a href="#symlink_option">symlink_option</a> opt, system::error_code&amp; ec);
+<pre>explicit recursive_directory_iterator(const path&amp; p,
+  <a href="#symlink_option">directory_options</a> options = directory_options::none);
+recursive_directory_iterator(const path&amp; p, <a href="#symlink_option">directory_options</a> options, system::error_code&amp; ec);
 recursive_<code>directory_iterator(</code>const path&amp; p, system::error_code&amp; ec<code>);</code></pre>
 <blockquote>
 
 <p><i>Effects:</i>&nbsp; Constructs a iterator representing the first 
 entry in the directory <code>p</code> resolves to, if any; otherwise, the end iterator.</p>
 
-<p><i>Postcondition: </i>Unless the end iterator was constructed,<i> </i><code>level() == 0 &amp;&amp; no_push_pending() == false &amp;&amp; m_options == opt</code>. 
-For the signature without a <code>symlink_option</code> argument, <code>opt</code> is assumed to be <code>symlink_option::none</code>.</p>
+<p><i>Postcondition: </i><code>options() == options</code> for the signatures with a <code>
+directory_options</code> argument, otherwise <code>options() == 
+directory_options::none</code>.</p>
 
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 
 <p>[<i>Note:</i> To iterate over the current directory, use <code>recursive_directory_iterator(&quot;.&quot;)</code> rather than <code>recursive_directory_iterator(&quot;&quot;)</code>. <i>-- end note</i>]</p>
 
 <p>[<i>Note:</i> By default, <code>recursive_directory_iterator</code> does not 
-follow directory symlinks. To follow directory symlinks, specify <code>opt</code> as <code>symlink_option::recurse</code> <i>-- end note</i>]</p>
+follow directory symlinks. To follow directory symlinks, specify <code>options</code> as <code>
+directory_options::follow_directory_symlink</code> <i>-- end note</i>]</p>
 </blockquote>
-<pre>int level() const noexcept;</pre>
+<pre>directory_options options() const;</pre>
 <blockquote>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
-  <p><i>Returns:</i> <code>m_level</code>.</p>
+<p><i>Returns:</i> The value of the constructor <code>options</code> argument, 
+if present, otherwise <code>directory_options::none</code>.</p>
 </blockquote>
-<pre>bool <code>no_push_pending</code>() const noexcept;</pre>
+<pre>int level() const;</pre>
 <blockquote>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
-  <p><i>Returns:</i> <code>m_no_push</code>.</p>
+  <p><i>Returns:</i> The current depth of the directory tree being traversed. [<i>Note:</i> 
+  The initial directory is level 0, its immediate subdirectories are level 1, 
+  and so forth. <i>-- end note</i>]</p>
+</blockquote>
+<pre>bool <code>recursion_pending</code>() const;</pre>
+<blockquote>
+  <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
+  <p><i>Returns:</i> <code>true</code> iff <code>disable_recursion_pending()</code> 
+  has not been called subsequent to the prior construction or increment 
+  operation.</p>
 </blockquote>
 <pre><code>recursive_directory_iterator</code>&amp; <a name="recursive_directory_iterator-increment">operator++</a>();
 recursive_directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
 <blockquote>
 
+  <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
+
 <p><i>Effects:</i> As specified by the C++ Standard, 24.1.1 Input iterators [input.iterators], 
-except:</p>
+except that:</p>
 
 <ul>
-  <li>
+  <li dir="ltr">
 
-<p>if <code>!no_push_pending() &amp;&amp; is_directory(this-&gt;status()) 
-&amp;&amp; (!is_symlink(this-&gt;symlink_status()) || (m_options &amp; symlink_option::recurse) != 0)</code> then&nbsp; <code>m_level</code> is incremented and directory <code>(*this)-&gt;path()</code> is recursively iterated into.<br>
-&nbsp;</p>
+<p>If there are no more  entries at this level, then if <code>level()!= 0</code> 
+iteration over the parent directory resumes; otherwise <code>*this = recursive_directory_iterator()</code>.</p>
 
   </li>
-  <li>if there are no more directory entries at this level then <code>m_level</code> 
-is decremented and iteration of the parent directory resumes.</li>
-</ul>
+  <li>
 
-<p><i>Postcondition:</i> <code>no_push_pending() == false</code>.</p>
+<p>Otherwise if <code>recursion_pending() &amp;&amp; is_directory(this-&gt;status()) 
+&amp;&amp; (!is_symlink(this-&gt;symlink_status()) || (options() &amp; 
+directory_options::follow_directory_symlink) != 0)</code> then&nbsp;directory <code>(*this)-&gt;path()</code> is recursively iterated into.</p>
+
+  </li>
+</ul>
 
 <p><i>Returns:</i> <code>*this</code>.</p>
 
@@ -2193,20 +2194,22 @@ is decremented and iteration of the parent directory resumes.</li>
 <blockquote>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
   <p><i>Effects:</i> If <code>level() == 0</code>, set <code>*this</code> to <code>recursive_directory_iterator()</code>. 
-  Otherwise, <code>--m_level</code>, cease iteration of the directory currently being 
+  Otherwise, cease iteration of the directory currently being 
   iterated over, and continue iteration over the parent directory.</p>
 </blockquote>
-<pre>void no_push(bool value=true);</pre>
+<pre>void disable_recursion_pending();</pre>
 <blockquote>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
-<p><i>Postcondition:</i> <code>no_push_pending() == value</code>.</p>
-  <p>[<i>Note:</i> <code>no_push()</code> is used to prevent 
+<p dir="ltr"><i>Postcondition:</i> <code>recursion_pending() == false</code>.</p>
+  <p dir="ltr">[<i>Note:</i> <code>disable_recursion_pending</code><code>()</code> is used to prevent 
   unwanted recursion into a directory. <i>--end note</i>]</p>
 </blockquote>
 <h3><a name="recursive_directory_iterator-non-member-functions"><code>recursive_directory_iterator</code> non-member functions</a></h3>
+<p dir="ltr">These functions enable use of <code>recursive_directory_iterator</code> 
+with C++11 range-based for statements.</p>
 <pre>const recursive_directory_iterator&amp; begin(const recursive_directory_iterator&amp; iter) noexcept;</pre>
 <blockquote>
-  <p><i>Returns: </i><code>iter</code>.</p>
+  <p dir="ltr"><i>Returns: </i><code>iter</code>.</p>
 </blockquote>
 <pre>recursive_directory_iterator end(const recursive_directory_iterator&amp;) noexcept;</pre>
 <blockquote>
@@ -2279,7 +2282,7 @@ if(is_symlink(s))
 else if(is_directory(s))
   copy_directory(from, to<i>[</i><code>, ec</code><i>]</i>);
 else if(is_regular_file(s))
-  copy_file(from, to, copy_option::fail_if_exists<i>[</i><code>, ec</code><i>]</i>);
+  copy_file(from, to, copy_options::fail_if_exists<i>[</i><code>, ec</code><i>]</i>);
 else
 <i> Report error as specified in <a href="#Error-reporting">Error reporting</a>.</i></pre>
   </blockquote>
@@ -2297,16 +2300,16 @@ void copy_directory(const path&amp; from, const path&amp; to, system::error_code
 <pre>void copy_file(const path&amp; from, const path&amp; to);
 void copy_file(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <p><i>Effects: </i><code>copy_file(from, to, copy_option::fail_if_exists</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
+  <p><i>Effects: </i><code>copy_file(from, to, copy_options::fail_if_exists</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
   
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
 </blockquote>
-<pre>void <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_option</a> option);
-void <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_option</a> option,
+<pre>void <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options);
+void <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options,
                system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <p><i>Effects:</i> If <code>option == copy_option::</code><code>fail_if_exists &amp;&amp; exists(to)</code>, an error is reported. Otherwise, the contents and attributes of the file <code>from</code> resolves to are copied to the file <code>to</code> resolves to.</p>
+  <p><i>Effects:</i> If <code>options == copy_options::none &amp;&amp; exists(to)</code>, an error is reported. Otherwise, the contents and attributes of the file <code>from</code> resolves to are copied to the file <code>to</code> resolves to.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink);
