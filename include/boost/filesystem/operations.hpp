@@ -213,9 +213,13 @@ namespace boost
     boost::uintmax_t available; // <= free
   };
 
-  BOOST_SCOPED_ENUM_START(copy_option)
+  BOOST_SCOPED_ENUM_START(copy_options)
     {none, fail_if_exists = none, overwrite_if_exists};
   BOOST_SCOPED_ENUM_END
+
+# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+  typedef copy_options copy_option;
+# endif
 
 #ifdef BOOST_FILESYSTEM_USE_TIME_T
   typedef std::time_t file_time_type;
@@ -245,7 +249,7 @@ namespace boost
     void copy_directory(const path& from, const path& to, system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
     void copy_file(const path& from, const path& to,
-                    BOOST_SCOPED_ENUM(copy_option) option,  // See ticket #2925
+                    BOOST_SCOPED_ENUM(copy_options) option,  // See ticket #2925
                     system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
     void copy_symlink(const path& existing_symlink, const path& new_symlink, system::error_code* ec=0);
@@ -406,18 +410,18 @@ namespace boost
                                        {detail::copy_directory(from, to, &ec);}
   inline
   void copy_file(const path& from, const path& to,   // See ticket #2925
-                 BOOST_SCOPED_ENUM(copy_option) option)
+                 BOOST_SCOPED_ENUM(copy_options) option)
                                        {detail::copy_file(from, to, option);}
   inline
   void copy_file(const path& from, const path& to)
-                                       {detail::copy_file(from, to, copy_option::fail_if_exists);}
+                                       {detail::copy_file(from, to, copy_options::fail_if_exists);}
   inline
   void copy_file(const path& from, const path& to,   // See ticket #2925
-                 BOOST_SCOPED_ENUM(copy_option) option, system::error_code& ec) BOOST_NOEXCEPT
+                 BOOST_SCOPED_ENUM(copy_options) option, system::error_code& ec) BOOST_NOEXCEPT
                                        {detail::copy_file(from, to, option, &ec);}
   inline
   void copy_file(const path& from, const path& to, system::error_code& ec) BOOST_NOEXCEPT
-                                       {detail::copy_file(from, to, copy_option::fail_if_exists, &ec);}
+                                       {detail::copy_file(from, to, copy_options::fail_if_exists, &ec);}
   inline
   void copy_symlink(const path& existing_symlink, const path& new_symlink) {detail::copy_symlink(existing_symlink, new_symlink);}
 
@@ -729,11 +733,34 @@ namespace detail
 
   // see path::iterator: comment below
   BOOST_FILESYSTEM_DECL void directory_iterator_construct(directory_iterator& it,
-    const path& p, system::error_code* ec);
+    const path& p, system::error_code* ec, bool eof_on_permission_denied=false);
   BOOST_FILESYSTEM_DECL void directory_iterator_increment(directory_iterator& it,
     system::error_code* ec);
 
 }  // namespace detail
+
+//-----------------------------  directory_options  ------------------------------------//
+
+  BOOST_SCOPED_ENUM_START(directory_options)
+  {
+    none,
+    follow_directory_symlink,               // default: not set; skip directory symlink         
+    skip_permission_denied,                 // default: not set; treat as error
+
+#   ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+    no_recurse = none,                      // deprecated
+    recurse = follow_directory_symlink,     // deprecated
+#   endif
+
+    _detail_no_push = skip_permission_denied << 1  // internal use only
+  };
+  BOOST_SCOPED_ENUM_END
+
+  BOOST_BITMASK(BOOST_SCOPED_ENUM(directory_options))
+
+#ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+  typedef directory_options symlink_option;
+#endif
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
@@ -761,13 +788,23 @@ namespace detail
 
     // iterator_facade derived classes don't seem to like implementations in
     // separate translation unit dll's, so forward to detail functions
-    explicit directory_iterator(const path& p)
+    explicit directory_iterator(const path& p,
+      BOOST_SCOPED_ENUM(directory_options) opt = directory_options::none)
         : m_imp(new detail::dir_itr_imp)
-          { detail::directory_iterator_construct(*this, p, 0); }
+    {
+      detail::directory_iterator_construct(*this, p, 0,
+        (opt & directory_options::skip_permission_denied)
+          == directory_options::skip_permission_denied);
+    }
 
-    directory_iterator(const path& p, system::error_code& ec) BOOST_NOEXCEPT
+    directory_iterator(const path& p, system::error_code& ec,
+      BOOST_SCOPED_ENUM(directory_options) opt = directory_options::none) BOOST_NOEXCEPT
         : m_imp(new detail::dir_itr_imp)
-          { detail::directory_iterator_construct(*this, p, &ec); }
+    {
+      detail::directory_iterator_construct(*this, p, &ec,
+        (opt & directory_options::skip_permission_denied)
+          == directory_options::skip_permission_denied);
+    }
 
     directory_iterator& increment(system::error_code& ec) BOOST_NOEXCEPT
     { 
@@ -778,7 +815,7 @@ namespace detail
   private:
     friend struct detail::dir_itr_imp;
     friend BOOST_FILESYSTEM_DECL void detail::directory_iterator_construct(directory_iterator& it,
-      const path& p, system::error_code* ec);
+      const path& p, system::error_code* ec, bool eof_on_permission_denied);
     friend BOOST_FILESYSTEM_DECL void detail::directory_iterator_increment(directory_iterator& it,
       system::error_code* ec);
 
@@ -845,17 +882,6 @@ namespace filesystem
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
-  BOOST_SCOPED_ENUM_START(symlink_option)
-  {
-    none,
-    no_recurse = none,         // don't follow directory symlinks (default behavior)
-    recurse,                   // follow directory symlinks
-    _detail_no_push = recurse << 1  // internal use only
-  };
-  BOOST_SCOPED_ENUM_END
-
-  BOOST_BITMASK(BOOST_SCOPED_ENUM(symlink_option))
-
   namespace detail
   {
     struct recur_dir_itr_imp
@@ -863,9 +889,9 @@ namespace filesystem
       typedef directory_iterator element_type;
       std::stack< element_type, std::vector< element_type > > m_stack;
       int  m_level;
-      BOOST_SCOPED_ENUM(symlink_option) m_options;
+      BOOST_SCOPED_ENUM(directory_options) m_options;
 
-      recur_dir_itr_imp() : m_level(0), m_options(symlink_option::none) {}
+      recur_dir_itr_imp() : m_level(0), m_options(directory_options::none) {}
 
       void increment(system::error_code* ec);  // ec == 0 means throw on error
 
@@ -881,19 +907,21 @@ namespace filesystem
     void recur_dir_itr_imp::increment(system::error_code* ec)
     // ec == 0 means throw on error
     {
-      if ((m_options & symlink_option::_detail_no_push) == symlink_option::_detail_no_push)
-        m_options &= ~symlink_option::_detail_no_push;
+      if ((m_options & directory_options::_detail_no_push) == directory_options::_detail_no_push)
+        m_options &= ~directory_options::_detail_no_push;
 
       else
       {
         // Logic for following predicate was contributed by Daniel Aarno to handle cyclic
         // symlinks correctly and efficiently, fixing ticket #5652.
-        //   if (((m_options & symlink_option::recurse) == symlink_option::recurse
+        //   if (((m_options & directory_options::follow_directory_symlink)
+        //           == directory_options::follow_directory_symlink
         //         || !is_symlink(m_stack.top()->symlink_status()))
         //       && is_directory(m_stack.top()->status())) ...
         // The predicate code has since been rewritten to pass error_code arguments,
         // per ticket #5653.
-        bool or_pred = (m_options & symlink_option::recurse) == symlink_option::recurse
+        bool or_pred = (m_options & directory_options::follow_directory_symlink)
+                          == directory_options::follow_directory_symlink
                        || (ec == 0 ? !is_symlink(m_stack.top()->symlink_status())
                                    : !is_symlink(m_stack.top()->symlink_status(*ec)));
         if (ec != 0 && *ec)
@@ -906,10 +934,10 @@ namespace filesystem
         if (and_pred)
         {
           if (ec == 0)
-            m_stack.push(directory_iterator(m_stack.top()->path()));
+            m_stack.push(directory_iterator(m_stack.top()->path(), m_options));
           else
           {
-            m_stack.push(directory_iterator(m_stack.top()->path(), *ec));
+            m_stack.push(directory_iterator(m_stack.top()->path(), *ec, m_options));
             if (*ec)
               return;
           }
@@ -970,37 +998,38 @@ namespace filesystem
    ~recursive_directory_iterator() {}
 
     explicit recursive_directory_iterator(const path& dir_path,
-      BOOST_SCOPED_ENUM(symlink_option) opt = symlink_option::none)
+      BOOST_SCOPED_ENUM(directory_options) opt = directory_options::none)
       : m_imp(new detail::recur_dir_itr_imp)
     {
       m_imp->m_options = opt;
-      m_imp->m_stack.push(directory_iterator(dir_path));
+      m_imp->m_stack.push(directory_iterator(dir_path, opt));
       if (m_imp->m_stack.top() == directory_iterator())
         { m_imp.reset (); }
     }
 
     recursive_directory_iterator(const path& dir_path,
-      BOOST_SCOPED_ENUM(symlink_option) opt,
+      BOOST_SCOPED_ENUM(directory_options) opt,
       system::error_code & ec) BOOST_NOEXCEPT
     : m_imp(new detail::recur_dir_itr_imp)
     {
       m_imp->m_options = opt;
-      m_imp->m_stack.push(directory_iterator(dir_path, ec));
+      m_imp->m_stack.push(directory_iterator(dir_path, ec, opt));
       if (m_imp->m_stack.top() == directory_iterator())
         { m_imp.reset (); }
     }
 
     recursive_directory_iterator(const path& dir_path,
-      system::error_code & ec) BOOST_NOEXCEPT
+      system::error_code & ec,
+      BOOST_SCOPED_ENUM(directory_options) opt = directory_options::none)
     : m_imp(new detail::recur_dir_itr_imp)
     {
-      m_imp->m_options = symlink_option::none;
-      m_imp->m_stack.push(directory_iterator(dir_path, ec));
+      m_imp->m_options = opt;
+      m_imp->m_stack.push(directory_iterator(dir_path, ec, opt));
       if (m_imp->m_stack.top() == directory_iterator())
         { m_imp.reset (); }
     }
 
-    recursive_directory_iterator& increment(system::error_code& ec) BOOST_NOEXCEPT
+    recursive_directory_iterator& increment(system::error_code& ec)
     {
       BOOST_ASSERT_MSG(m_imp.get(),
         "increment() on end recursive_directory_iterator");
@@ -1010,6 +1039,11 @@ namespace filesystem
       return *this;
     }
 
+    BOOST_SCOPED_ENUM(directory_options) options() const
+    {
+      return m_imp->m_options & ~directory_options::_detail_no_push;
+    }
+
     int level() const
     { 
       BOOST_ASSERT_MSG(m_imp.get(),
@@ -1017,16 +1051,41 @@ namespace filesystem
       return m_imp->m_level;
     }
 
-    bool no_push_pending() const
+    bool recursion_pending() const
     {
       BOOST_ASSERT_MSG(m_imp.get(),
-        "is_no_push_requested() on end recursive_directory_iterator");
-      return (m_imp->m_options & symlink_option::_detail_no_push)
-        == symlink_option::_detail_no_push;
+        "recursion_pending() on end recursive_directory_iterator");
+      return (m_imp->m_options & directory_options::_detail_no_push)
+        != directory_options::_detail_no_push;
     }
+
+    void disable_recursion_pending()
+    {
+      BOOST_ASSERT_MSG(m_imp.get(),
+        "disable_recursion_pending() on end recursive_directory_iterator");
+      m_imp->m_options |= directory_options::_detail_no_push;
+    }
+
 
 #   ifndef BOOST_FILESYSTEM_NO_DEPRECATED
     bool no_push_request() const { return no_push_pending(); }
+    bool no_push_pending() const
+    {
+      BOOST_ASSERT_MSG(m_imp.get(),
+        "no_push_requested() on end recursive_directory_iterator");
+      return (m_imp->m_options & directory_options::_detail_no_push)
+        == directory_options::_detail_no_push;
+    }
+
+    void no_push(bool value=true)
+    {
+      BOOST_ASSERT_MSG(m_imp.get(),
+        "no_push() on end recursive_directory_iterator");
+      if (value)
+        m_imp->m_options |= directory_options::_detail_no_push;
+      else
+        m_imp->m_options &= ~directory_options::_detail_no_push;
+    }
 #   endif
 
     void pop()
@@ -1035,16 +1094,6 @@ namespace filesystem
         "pop() on end recursive_directory_iterator");
       m_imp->pop();
       if (m_imp->m_stack.empty()) m_imp.reset(); // done, so make end iterator
-    }
-
-    void no_push(bool value=true)
-    {
-      BOOST_ASSERT_MSG(m_imp.get(),
-        "no_push() on end recursive_directory_iterator");
-      if (value)
-        m_imp->m_options |= symlink_option::_detail_no_push;
-      else
-        m_imp->m_options &= ~symlink_option::_detail_no_push;
     }
 
     file_status status() const

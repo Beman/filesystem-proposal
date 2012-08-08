@@ -351,6 +351,7 @@ namespace
   bool remove_file_or_directory(const path& p, fs::file_type type, error_code* ec)
     // return true if file removed, false if not removed
   {
+    //std::cout << "remove " << p << std::endl;
     if (type == fs::file_not_found)
     {
       if (ec != 0) ec->clear();
@@ -865,7 +866,7 @@ namespace detail
     }
     else if(is_regular_file(s))
     {
-      copy_file(from, to, copy_option::fail_if_exists, *ec);
+      copy_file(from, to, copy_options::fail_if_exists, *ec);
     }
     else
     {
@@ -888,11 +889,11 @@ namespace detail
 
   BOOST_FILESYSTEM_DECL
   void copy_file(const path& from, const path& to,
-                  BOOST_SCOPED_ENUM(copy_option)option,
+                  BOOST_SCOPED_ENUM(copy_options)option,
                   error_code* ec)
   {
     error(!BOOST_COPY_FILE(from.c_str(), to.c_str(),
-      option == copy_option::fail_if_exists),
+      option == copy_options::fail_if_exists),
         from, to, ec, "boost::filesystem::copy_file");
   }
 
@@ -1524,7 +1525,7 @@ namespace detail
     // Since POSIX remove() is specified to work with either files or directories, in a
     // perfect world it could just be called. But some important real-world operating
     // systems (Windows, Mac OS X, for example) don't implement the POSIX spec. So
-    // remove_file_or_directory() is always called to kep it simple.
+    // remove_file_or_directory() is always called to keep it simple.
     return remove_file_or_directory(p, type, ec);
   }
 
@@ -2005,7 +2006,8 @@ namespace
 # else // BOOST_WINDOWS_API
 
   error_code dir_itr_first(void *& handle, const fs::path& dir,
-    wstring& target, fs::file_status & sf, fs::file_status & symlink_sf)
+    wstring& target, fs::file_status& sf, fs::file_status& symlink_sf,
+    bool eof_on_permission_denied)
   // Note: an empty root directory has no "." or ".." entries, so this
   // causes a ERROR_FILE_NOT_FOUND error which we do not considered an
   // error. It is treated as eof instead.
@@ -2022,10 +2024,12 @@ namespace
       == INVALID_HANDLE_VALUE)
     { 
       handle = 0;  // signal eof
-      return error_code( (::GetLastError() == ERROR_FILE_NOT_FOUND
+      DWORD le = ::GetLastError();
+      return error_code( (le == ERROR_FILE_NOT_FOUND
+                       || (eof_on_permission_denied && le == ERROR_ACCESS_DENIED)
                        // Windows Mobile returns ERROR_NO_MORE_FILES; see ticket #3551                                           
-                       || ::GetLastError() == ERROR_NO_MORE_FILES) 
-        ? 0 : ::GetLastError(), system_category() );
+                       || le == ERROR_NO_MORE_FILES) 
+        ? 0 : le, system_category() );
     }
     target = data.cFileName;
     if (data.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT)
@@ -2132,6 +2136,7 @@ namespace detail
     {
       ::FindClose(handle);
       handle = 0;
+      //std::cout << "close" << std::endl;
     }
     return ok;
 
@@ -2139,19 +2144,19 @@ namespace detail
   }
 
   void directory_iterator_construct(directory_iterator& it,
-    const path& p, system::error_code* ec)    
+    const path& p, system::error_code* ec, bool eof_on_permission_denied)    
   {
     if (error(p.empty(), not_found_error_code, p, ec,
               "boost::filesystem::directory_iterator::construct"))
       return;
-
+    //std::cout << "open " << p << std::endl;
     path::string_type filename;
     file_status file_stat, symlink_file_stat;
     error_code result = dir_itr_first(it.m_imp->handle,
 #     if defined(BOOST_POSIX_API)
       it.m_imp->buffer,
 #     endif
-      p.c_str(), filename, file_stat, symlink_file_stat);
+      p.c_str(), filename, file_stat, symlink_file_stat, eof_on_permission_denied);
 
     if (result)
     {

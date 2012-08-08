@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-02<!--webbot bot="Timestamp" endspan i-checksum="12490" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-08<!--webbot bot="Timestamp" endspan i-checksum="12502" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -75,7 +75,26 @@ Library Proposal (Revision 3). Changes include:</p>
   7).</li>
   <li>Replace use of <code>time_t</code> with <code>file_time_type</code>, a 
   typedef for <code>std::chrono::system_clock::time_point</code>, per LWG 
-  discussion in Kona. </li>
+  discussion in Kona.</li>
+  <li><code>recursive_directory_iterator</code> specifications are now given in 
+  terms of behavior only. Private &quot;for exposition only&quot; members have been 
+  removed.</li>
+  <li dir="ltr">
+  <p dir="ltr"><code>recursive_directory_iterator</code> functions <code>
+  no_push_pending()</code> and <code>no_push()</code> have been renamed <code>
+  recursion_pending()</code> and <code>disable_recursion_pending()</code>. 
+  Option constant name <code>recurse</code> has been renamed <code>
+  follow_directory_symlinks</code>.&nbsp; These are responses to a request from 
+  Ed Smith-Rowland to improve clarity by reducing negative logic.</li>
+  <li>
+  <p dir="ltr">A <code>recursive_directory_iterator</code> option <code>
+  skip_permission_denied</code> has been added to skip directories with 
+  permission denied, responding to several user requests.</li>
+  <li>
+  <p dir="ltr"><code>symlink_option</code> has been renamed <code>
+  directory_options</code>, since it has become more general and now covers both
+  <code>follow_directory_symlinks</code> and <code>skip_permission_denied</code> 
+  options.&nbsp; </li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
   <li>R-value reference move semantics.</li>
@@ -192,31 +211,11 @@ class would be the best place to experiment with this concept, not a path class.
   <ul>
     <li>Ion Todirel suggests &quot;Would be nice if path::append was variadic, to 
     improve usability&quot;.</li>
-    <li><code><a href="#Source">Source</a></code> is not specified as actually 
-    implemented. Expose <code>path_traits</code>?</li>
     <li><i>Effects</i> for <code>copy</code> and <code>copy_directory</code> 
     need to be reviewed, revised, tested, peer reviewed.</li>
     <li>Dinkumware/Microsoft report slightly different results for Decomposition 
     table. Rerun table. Check discrepancies.</li>
     <li>Review Nick Stoughton's email for suggestions, action items.</li>
-    <li>Ed Smith-Rowland:<br>
-    &gt; I found it less confusing to switch to positive logic for 
-    recursive_directory_iterator:<br>
-    &gt; bool no_push_pending() const noexcept;<br>
-    &gt; to say<br>
-    &gt; bool is_push_pending() const noexcept;<br>
-    &gt;<br>
-    &gt; and<br>
-    &gt; void no_push(bool value=true);<br>
-    &gt; to say<br>
-    &gt; void push_pending(bool value=false);<br>
-    &gt; or<br>
-    &gt; void set_push_pending(bool value=false);<br>
-    &gt; I found it less confusing and I think other parts of the library strive 
-    for this.</li>
-    <li>recursive_directory_iterator is specified in terms of private data 
-    members. Remove these (including the comment!) and specify in terms of 
-    behavior only.</li>
     <li>Ion Todirel: Would be nice to have a make_relative. Need to review 
     similar suggestions.</li>
   </ul>
