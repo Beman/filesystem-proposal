@@ -250,5 +250,18 @@ int cpp_main(int /*argc*/, char* /*argv*/[])
   // see the rationale in html docs for explanation why this works
   BOOST_TEST(fs::change_extension("", ".png").string() == ".png");
 
+// recursive_directory_iterator tests --------------------------------------//
+
+  fs::recursive_directory_iterator iter(".");
+  BOOST_TEST(iter.no_push_request() != iter.recursion_pending());
+  BOOST_TEST(iter.no_push_pending() != iter.recursion_pending());
+  iter.no_push();
+
+// symlink_option
+
+  BOOST_TEST(fs::directory_option::none == fs::symlink_option::none);
+  BOOST_TEST(fs::directory_option::follow_directory_symlink
+    == fs::symlink_option::recurse);
+
   return ::boost::report_errors();
 }

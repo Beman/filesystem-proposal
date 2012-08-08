@@ -264,7 +264,7 @@ namespace
   void dump_tree(const fs::path & root)
   {
     cout << "dumping tree rooted at " << root << endl;
-    for (fs::recursive_directory_iterator it (root, fs::symlink_option::recurse);
+    for (fs::recursive_directory_iterator it (root, fs::directory_option::follow_directory_symlink);
          it != fs::recursive_directory_iterator();
          ++it)
     {
@@ -615,8 +615,10 @@ namespace
   int walk_tree(bool recursive)
   {
     int d1f1_count = 0;
-    for (fs::recursive_directory_iterator it (dir,
-      recursive ? fs::symlink_option::recurse : fs::symlink_option::no_recurse);
+//    for (fs::recursive_directory_iterator it (dir, fs::directory_option::none);
+      for (fs::recursive_directory_iterator it (dir,
+      recursive ? fs::directory_option::follow_directory_symlink
+                : fs::directory_option::none);
          it != fs::recursive_directory_iterator();
          ++it)
     {
@@ -636,7 +638,7 @@ namespace
     //  test iterator increment with error_code argument
     boost::system::error_code ec;
     int d1f1_count = 0;
-    for (fs::recursive_directory_iterator it (dir, fs::symlink_option::no_recurse);
+    for (fs::recursive_directory_iterator it (dir);
          it != fs::recursive_directory_iterator();
          it.increment(ec))
     {
@@ -2036,12 +2038,18 @@ int cpp_main(int argc, char* argv[])
   if (cleanup)
   {
     cout << "post-test removal of " << dir << endl;
-    BOOST_TEST(fs::remove_all(dir) != 0);
+    boost::uintmax_t removed = fs::remove_all(dir);
+    cout << "  removed " << removed << " files, including directories" << endl;
+    BOOST_TEST(removed != 0);
     // above was added just to simplify testing, but it ended up detecting
-    // a bug (failure to close an internal search handle). 
-    cout << "post-test removal complete" << endl;
+    // a bug (failure to close an internal search handle).
+
+    // The following is failing itermittently with a permissions error. The error
+    // goes away if recursive_directory_iterator_tests() is not run, but directory
+    // search handles seem to be closed properly. Very perplexing. 8/8/2012.
     BOOST_TEST(!fs::exists(dir));
     BOOST_TEST(fs::remove_all(dir) == 0);
+    cout << "post-test removal complete" << endl;
   }
 
   cout << "returning from main()" << endl;

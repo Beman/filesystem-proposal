@@ -395,11 +395,11 @@ $endif;    enum <a name="file_type" href="#Enum-file_type">file_type</a>
       overwrite_if_exists
     };
 
-    enum class <a name="symlink_option">symlink_option</a>
+    enum class <a name="symlink_option">directory_option</a>
     {
       none
-      no_recurse = none,
-      recurse
+      follow_directory_symlink,
+      skip_permission_denied
     };
 $if $TARGET; == BOOST
     typedef std::time_t  file_time_type;
