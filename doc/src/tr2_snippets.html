@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-08<!--webbot bot="Timestamp" endspan i-checksum="12502" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-09<!--webbot bot="Timestamp" endspan i-checksum="12504" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -91,10 +91,12 @@ Library Proposal (Revision 3). Changes include:</p>
   skip_permission_denied</code> has been added to skip directories with 
   permission denied, responding to several user requests.</li>
   <li>
-  <p dir="ltr"><code>symlink_option</code> has been renamed <code>
+  <p><code>symlink_option</code> has been renamed <code>
   directory_options</code>, since it has become more general and now covers both
   <code>follow_directory_symlinks</code> and <code>skip_permission_denied</code> 
-  options.&nbsp; </li>
+  options.&nbsp;</li>
+  <li>
+  <p>Missing semantics provided for <code>copy_directory</code>. </li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
   <li>R-value reference move semantics.</li>
@@ -211,8 +213,6 @@ class would be the best place to experiment with this concept, not a path class.
   <ul>
     <li>Ion Todirel suggests &quot;Would be nice if path::append was variadic, to 
     improve usability&quot;.</li>
-    <li><i>Effects</i> for <code>copy</code> and <code>copy_directory</code> 
-    need to be reviewed, revised, tested, peer reviewed.</li>
     <li>Dinkumware/Microsoft report slightly different results for Decomposition 
     table. Rerun table. Check discrepancies.</li>
     <li>Review Nick Stoughton's email for suggestions, action items.</li>
@@ -261,8 +261,8 @@ users of this document and does not constitute an endorsement by ISO or IEC of
 these products.<p>$endid
 
 $id wording_suffix= </p>
-<p><span style="font-style: italic; background-color: #E0E0E0">End of new 
-Clause.</span></p>
+<p><span style="font-style: italic; background-color: #E0E0E0">End of Proposed 
+wording.</span></p>
 <hr>
 <h2><a name="Issues-List">Issues List</a></h2>
 <hr>

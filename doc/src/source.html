@@ -48,7 +48,7 @@ $include "../../../../doc/src/minimal.css"
 </head>
 
 <body>
-$snippet frontmatter "$SNIPPET_FILE;"
+<p dir="ltr">$snippet frontmatter "$SNIPPET_FILE;" </p>
 
 <h2><a name="TOC">Table of Contents</a></h2>
 
@@ -834,28 +834,28 @@ otherwise it shall be treated as a regular file path.</p>
   </table>
 </blockquote>
 <h4><code>path</code> type and encoding conversions [<a name="path.arg.convert">path.type.cvt</a>]</h4>
-<p dir="ltr">For member function arguments that take character sequences representing 
+<p>For member function arguments that take character sequences representing 
 paths and for member function returning strings, value type and encoding 
 conversion is performed if the value type of the argument or return differs from <code>
 path::value_type</code>. Encoding is determined based on the value type:</p>
 <blockquote>
   <ul>
     <li>
-<p dir="ltr"><code>char</code>: Operating system dependent narrow character path 
+<p><code>char</code>: Operating system dependent narrow character path 
 encoding. [<i>Note:</i> The intent is to preserve the current behavior of C and C++ 
 standard library functions that perform file operations using narrow character 
 strings to identify paths. Changing this behavior would be surprising and break 
 much existing code. <i>--end note</i>]</p>
     </li>
     <li>
-<p dir="ltr"><code>wchar_t</code>: Encoding of the implementation's native wide 
+<p><code>wchar_t</code>: Encoding of the implementation's native wide 
 character set.</p>
     </li>
     <li>
-<p dir="ltr"><code>char16_t</code>: UTF-16</p>
+<p><code>char16_t</code>: UTF-16</p>
     </li>
     <li>
-<p dir="ltr"><code>char32_t</code>: UTF-32</p>
+<p><code>char32_t</code>: UTF-32</p>
     </li>
   </ul>
 <blockquote>
@@ -997,7 +997,7 @@ path</code> modifiers</a> [path.modifiers]</h3><pre>void <a name="path-clear">cl
   <p><i>Effects: </i>For an operating system whereach <i>directory-separator</i> 
   is converted to <i>preferred-separator</i>.</p>
   <p><i>Returns:</i> <code>*this</code></p>
-<p dir="ltr">[<i>Example:</i> On an operating system that uses backslash as 
+<p>[<i>Example:</i> On an operating system that uses backslash as 
 its preferred-separator,&nbsp; <code>path(&quot;foo/bar&quot;).make_preferred()</code> 
 returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
 </blockquote>
@@ -1064,7 +1064,7 @@ return strings formatted according to the generic pathname format ([<a href="#pa
 The forward slash (<code>'/'</code>) character is used as the <i>
 directory-separator</i> character.</p>
 <blockquote>
-<p dir="ltr">[<i>Example:</i> On an operating system that uses backslash as 
+<p>[<i>Example:</i> On an operating system that uses backslash as 
 its preferred-separator,&nbsp; <code>path(&quot;foo\\bar&quot;).generic_string()</code> 
 returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
 </blockquote>
@@ -2068,7 +2068,7 @@ range-based for statements.</p>
 <blockquote>
   <p><i>Returns: </i><code>directory_iterator()</code>.</p>
 </blockquote>
-<h2 dir="ltr"><a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
+<h2><a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
 [class.rec.dir.itr]</a></h2>
 <p>Objects of type <code>recursive_directory_iterator</code> provide standard library 
 compliant iteration over the contents of a directory, including recursion into 
@@ -2170,7 +2170,7 @@ recursive_directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
 except that:</p>
 
 <ul>
-  <li dir="ltr">
+  <li>
 
 <p>If there are no more  entries at this level, then if <code>level()!= 0</code> 
 iteration over the parent directory resumes; otherwise <code>*this = recursive_directory_iterator()</code>.</p>
@@ -2200,16 +2200,16 @@ directory_options::follow_directory_symlink) != 0)</code> then&nbsp;directory <c
 <pre>void disable_recursion_pending();</pre>
 <blockquote>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
-<p dir="ltr"><i>Postcondition:</i> <code>recursion_pending() == false</code>.</p>
-  <p dir="ltr">[<i>Note:</i> <code>disable_recursion_pending</code><code>()</code> is used to prevent 
+<p><i>Postcondition:</i> <code>recursion_pending() == false</code>.</p>
+  <p>[<i>Note:</i> <code>disable_recursion_pending</code><code>()</code> is used to prevent 
   unwanted recursion into a directory. <i>--end note</i>]</p>
 </blockquote>
 <h3><a name="recursive_directory_iterator-non-member-functions"><code>recursive_directory_iterator</code> non-member functions</a></h3>
-<p dir="ltr">These functions enable use of <code>recursive_directory_iterator</code> 
+<p>These functions enable use of <code>recursive_directory_iterator</code> 
 with C++11 range-based for statements.</p>
 <pre>const recursive_directory_iterator&amp; begin(const recursive_directory_iterator&amp; iter) noexcept;</pre>
 <blockquote>
-  <p dir="ltr"><i>Returns: </i><code>iter</code>.</p>
+  <p><i>Returns: </i><code>iter</code>.</p>
 </blockquote>
 <pre>recursive_directory_iterator end(const recursive_directory_iterator&amp;) noexcept;</pre>
 <blockquote>
@@ -2266,8 +2266,8 @@ without a <code>base</code> argument, <code>base</code> is <code>current_path()<
   
   <p><i>Remarks:</i> <code>!exists(p)</code> is an error.</p>
   
-  <p>[<i>Note:</i> Canonical pathnames allow security checking of a path (eg. 
-  does this path live in /home/goodguy or /home/badguy?)&nbsp; -- end note]</p>
+  <p>[<i>Note:</i> Canonical pathnames allow security checking of a path (e.g. 
+  does this path live in /home/goodguy or /home/badguy?)&nbsp; <i>-- end note</i>]</p>
   
 </blockquote>
 <pre>void <a name="copy">copy</a>(const path&amp; from, const path&amp; to);
@@ -2289,14 +2289,42 @@ else
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
 </blockquote>
+
 <pre>void <a name="copy_directory">copy_directory</a>(const path&amp; from, const path&amp; to);
 void copy_directory(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <p><i>Effects: </i></p>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E0E0E0">
+    <tr>
+      <td width="100%">
+      <p><i>This function is poorly named; it should probably be an overload of
+      <code>create_directory</code> with an additional argument.</i></td>
+    </tr>
+  </table>
+  
+  <p><i>Effects: </i>Creates directory <code>to</code>, with 
+  attributes copied from directory <code>from</code>. The set of attributes 
+  copied is operating system dependent.</p>
+  
+<blockquote>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">
+      <p>[<i>Note:</i> For ISO 9945/POSIX based operating systems the 
+      attributes are those copied by native API <code>stat(from.c_str(), &amp;from_stat)</code> 
+      followed by <code>mkdir(to.c_str(),from_stat.st_mode)</code>.&nbsp; For 
+      Windows based operating systems the attributes are those copied by native 
+      API <code>CreateDirectoryExW(from.c_str(), to.c_str(), 0)</code>.&nbsp; <i>
+      --end note</i>]</td>
+    </tr>
+  </table>
+</blockquote>
   
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
-  
+
 </blockquote>
+
 <pre>void copy_file(const path&amp; from, const path&amp; to);
 void copy_file(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
