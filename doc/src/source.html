@@ -1615,7 +1615,7 @@ $WHAT;.</p>
   </tr>
 </table>
 <h2><a name="Enum-perms">Enum perms</a> [enum.perms]</h2>
-<p>This <code>enum</code> specifies bitmask constants uses to identify file 
+<p>This <code>enum</code> specifies bitmask constants used to identify file 
 permissions. <i><span style="background-color: #E0E0E0">ISO/</span><span style="background-color: #E0E0E0">IEC</span><span style="background-color: #E0E0E0"> 9945 
 (POSIX) specifies actual values, and those values have been adopted here because 
 they are very familiar and ingrained for many  users.</span></i></p>
@@ -3378,6 +3378,7 @@ ISO/IEC 9945 result and the bottom value is the Windows result. <br>
 <td><span style="background-color: #CCFFCC"><code>foo\bar</code><br><code>bar</code></span></td>
 </tr>
 </table>
+<p>$if $TARGET; == BOOST</p>
 <h2><a name="long-path-warning"></a>Warning: Long paths on Windows and the 
 extended-length <b>\\?\ </b>prefix</h2>
 <p>The Microsoft Windows &quot;Maximum Path Length Limitation&quot; specifies:</p>
@@ -3408,6 +3409,7 @@ Read the following cautions carefully!</p>
   then work on individual relative directories or files will not work properly 
   with extended-length prefix paths.</li>
 </ul>
+<p>$endif;</p>
 <h2><a name="Acknowledgements">Acknowledgements</a></h2>
 <p>This Filesystem Library is dedicated to my wife, Sonda, who provided the 
 support necessary to see both a trial implementation and the proposal itself 
