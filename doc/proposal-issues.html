@@ -1,0 +1,145 @@
+<html>
+
+<head>
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>New Page 1</title>
+</head>
+
+<body>
+
+<h2><a name="Issues-List">Issues List</a></h2>
+<hr>
+<h3>Issue 1: What is the appropriate namespace?&nbsp;&nbsp;&nbsp; Status: 
+Tentatively resolved</h3>
+<h4>Discussion</h4>
+<p>The N3335 proposal places the library in namespace <code>std::tr2::files</code>. 
+Rationale for a sub-namespace is that the library uses several names that don't 
+seem appropriate for namespace <code>tr2</code> since full standardization would 
+then put the names into <code>std</code>. The function names <code>remove</code> 
+and <code>rename</code> are of particular concern because these functions differ 
+in behavior from current standard library functions with those names. It also 
+doesn't seem desirable to preempt names like <code>equivalent</code> and <code>
+status</code>.</p>
+<h4>Resolution</h4>
+<p><i>Kona: Strong support for <code>filesystem</code> as the library's 
+namespace. Strong support for a technical specification namespace that alerts uses that 
+contents are likely to change if and when they later get moved into the 
+standard. </i></p>
+<p><i>No decision yet on a TR namespace; <code>tbs</code> being used as 
+a placeholder. Thus the full namespace is changed to <code>
+std::tbs::filesystem.</code></i></p>
+<hr>
+<h3>Issue 2: Excessive use of <code>const codecvt_type&amp;</code> arguments&nbsp;&nbsp;&nbsp; 
+Status: Closed</h3>
+<h4>Discussion</h4>
+<p>Users sometimes need to do path conversions that use something other than the 
+imbued codecvt facet. The need is particularly acute in multi-threaded 
+applications where changing the imbued facet would introduce a data race. That 
+said, providing an optional <code>const codecvt_type&amp;</code> argument for every 
+function where the need might possibly arise is excessive because its use is so 
+rare and it adds considerable interface clutter.</p>
+<h4>Resolution</h4>
+<p dir="ltr"><i>Kona:</i></p>
+<p dir="ltr"><i>Remove all existing class path <code>const codecvt_type&amp;</code> 
+arguments. </i></p>
+<p dir="ltr"><i>Beman to pursue separate encoding conversion functionality, per 
+Thursday N3336 &quot;Adapting standard library strings and IO to a Unicode World&quot; 
+discussion. See Kona wiki.</i></p>
+<p dir="ltr"><i>If a separate encoding conversion facility isn't possible, then 
+some form of minimal class path encoding conversion facility will be needed. 
+But..., the LWG would like to see use cases and clearer explanation of 
+motivation before deciding on specifics, and be very sure that there is no way 
+to achieve with existing std library functionality, albeit with some loss of 
+efficiency.</i></p>
+<hr>
+<h3>Issue 3: Possible &quot;implicit cast to native type&quot;?&nbsp;&nbsp;&nbsp;&nbsp; 
+Status: Open</h3>
+<h4>Discussion</h4>
+<p>In Bloomington there was discussion of &quot;implicit cast to implicit cast to 
+native OS type to inter operate with existing iostream library and native 
+functions instead of modifying fstream&quot;.</p>
+<h4>Proposed resolution</h4>
+<p><i>Kona: The Dinkumware/Microsoft implementation has added an implicit 
+conversion to the string type, eliminating any need to modify fstream. 
+(Discussion: might be safer to make the implicit conversion protected, then make 
+fstream classes friends).</i></p>
+<p><i>Action: Beman to investigate, test, as avoiding modification of existing 
+header and classes is much desired.</i></p>
+<hr>
+<h3>Issue 4: Given move semantics, it is best not to return const strings.&nbsp;&nbsp;&nbsp;&nbsp; 
+Status: Closed</h3>
+<h4>Discussion</h4>
+<p>The issue title pretty much says it all.</p>
+<h4>Resolution</h4>
+<p><i>Kona: Return plain strings. Remove the permission for implementations to 
+return const refs, since uses are not in performace critical code and subtle 
+portability bugs may occur.</i></p>
+<p><i>Action: Beman to apply to proposed wording.</i></p>
+<p><i>Version 3: Resolution applied.</i></p>
+<hr>
+<h3>Issue 5: Is there a way to handle characters that are illegal for particular 
+OS?&nbsp;&nbsp;&nbsp;&nbsp; Status: NAD</h3>
+<h4>Discussion</h4>
+<p>Question raised by Pablo in Bloomington.</p>
+<h4>Proposed resolution</h4>
+<p>Beman suggests NAD, Future. I've done some work on this, including looking at 
+systems like OpenVMS that have an escape mechanism to handle otherwise 
+unrepresentable characters. There was a comment to that effect in N3239. I 
+believe it should be deferred to some future release since (1) it is complex 
+enough that I'd like to see actual implementation and use experience (presumably 
+via Boost), and (2) I can't recall a user ever requesting such a feature.</p>
+<p><i>Kona: No consensus for change, since there doesn't appear to be any 
+compelling use case.</i></p>
+<hr>
+<h3>Issue 6: Could allocator support be added to class path?&nbsp;&nbsp;&nbsp;&nbsp; 
+Status: Open</h3>
+<h4>Discussion</h4>
+<p>Question raised by a committee member in private email.</p>
+<p><i>Kona: Much discussion.</i></p>
+<p><i>Action: Alisdair to write paper, based on a real implementation, so that 
+it is possible to assess the impact on interface, performance, etc.</i></p>
+<p><i>Post-Kona: Alisdair will defer paper until after TR. </i></p>
+<hr>
+<h3>Issue 7: How should class path inserter and extractor be specified?&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+Status: Resolved</h3>
+<h4>Discussion</h4>
+<p>Class <code>path</code> currently is specified to used the Boost detail <code>
+quoted</code> stream manipulator. A path object is inserted delimited by quotes, 
+and extracted accordingly, ensuring that paths containing spaces are 
+round-tripped correctly.&nbsp; Quotes in the path itself are escaped, and io 
+state is saved and restored.</p>
+<p>See
+<a href="http://www.boost.org/doc/libs/1_48_0/libs/io/doc/quoted_manip.html">
+http://www.boost.org/doc/libs/1_48_0/libs/io/doc/quoted_manip.html</a></p>
+<p>Since the standard can't specify behavior in terms of something in Boost, we 
+have to change the specification. Since the <code>quoted</code> stream 
+manipulator is a handy little component, the issue is raised as to whether it 
+should go in TR2.</p>
+<h4>Resolution</h4>
+<p><i>Kona: Specify the path inserter and extractor to have the desired 
+behavior without reference to how it is achieved. (If someone wants to propose a 
+quoted manipulator, that's a separate proposal for a different TR.)</i></p>
+<p><i>Action:&nbsp; Beman to apply to proposed wording.</i></p>
+<p><i>Version 3: Resolution applied.</i></p>
+<hr>
+<h3>Issue 8: Rename <code>rename</code>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+Status: New</h3>
+<h4>Discussion</h4>
+<p>There are minor problems with the name of the <code>rename()</code> function:</p>
+<ul>
+  <li>There is already a &quot;rename&quot; function, albeit in namespace std, and it has 
+  different semantics as regards error handling. Thus giving the function a 
+  different name might reduce the chance of user error.</li>
+  <li>The name &quot;move&quot; would&nbsp; better reflect the actual semantics, 
+  particularly for moves between directories., and this is the name used by some 
+  API's, console commands, and GUI file managers for that functionality.</li>
+</ul>
+<h4>Proposed resolution</h4>
+<p>Change the name of the <code>rename()</code> function to <code>move()</code>.</p>
+<hr>
+
+</body>
+
+</html>
