@@ -792,29 +792,12 @@ arguments are in the generic format and the generic format is not acceptable to
 the operating system as a native path, conversion to native format shall be 
 performed during the processing of the argument. </p>
 <blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">[<i>Note:</i> For ISO 9945/POSIX and Windows based operating 
-      systems, the generic format is acceptable as a native path so format 
-      conversion is not performed. <i>
--- end note</i>]</td>
-    </tr>
-  </table>
 <p>[<i>Note:</i> Some operating systems may have no unambiguous way to distinguish between native format and generic format arguments. 
 This is by design as it simplifies use for operating systems that do not require 
 disambiguation. An implementation for an operating system where disambiguation 
 is required is permitted 
 as an extension to distinguish between the formats. <i>
 -- end note</i>]</p>
-    <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-     bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-      <tr>
-        <td width="100%">[<i>Note:</i> For ISO 9945/POSIX and Windows based operating 
-        systems, there is no need to distinguish so no extension is required. <i>
--- end note</i>]</td>
-      </tr>
-    </table>
 </blockquote>
 
 <p>If the native format requires paths for regular files to be formatted 
@@ -826,10 +809,16 @@ otherwise it shall be treated as a regular file path.</p>
    bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
     <tr>
       <td width="100%">[<i>Note:</i> For ISO 9945/POSIX and Windows based operating 
-      systems, paths for regular files and paths for directories share the same 
+      systems,<ul>
+        <li>The generic format is acceptable as a native path so format 
+        conversion is not performed.</li>
+        <li>There is no need to distinguish between native format and generic 
+        format arguments so no extension is required.</li>
+        <li>Paths for regular files and paths for directories share the same 
       syntax so there is no special treatment for a path with a last element of
-      <i>directory-separator</i>. <i>
--- end note</i>]</td>
+      <i>directory-separator</i>.</li>
+      </ul>
+      <p>&nbsp;<i>-- end note</i>]</td>
     </tr>
   </table>
 </blockquote>
@@ -862,10 +851,12 @@ character set.</p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
    bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
     <tr>
-      <td width="100%">[<i>Note:</i> Narrow character path encoding:<ul>
-        <li>OS X : Always UTF-8.</li>
-        <li>Some ISO 9945/POSIX based systems: determined by <code>locale(&quot;&quot;)</code>;</li>
-        <li>Windows: Codepage of <code>CP_ACP</code> 
+      <td width="100%">[<i>Note:</i> Native narrow character path encoding 
+      varies considerably:<ul>
+        <li dir="ltr">
+        <p dir="ltr">MAC OS X operating system: Always UTF-8.</li>
+        <li>Some ISO 9945/POSIX based operating systems: determined by <code>locale(&quot;&quot;)</code>;</li>
+        <li>Windows based operating systems: Codepage of <code>CP_ACP</code> 
     if <code>AreFileApisANSI()</code>is true, otherwise codepage <code>CP_OEMCP</code>.</li>
       </ul>
       <p>&nbsp;<i>-- end note</i>]</td>
@@ -1619,12 +1610,6 @@ $WHAT;.</p>
 permissions. <i><span style="background-color: #E0E0E0">ISO/</span><span style="background-color: #E0E0E0">IEC</span><span style="background-color: #E0E0E0"> 9945 
 (POSIX) specifies actual values, and those values have been adopted here because 
 they are very familiar and ingrained for many  users.</span></i></p>
-<blockquote>
-<p><span style="background-color: #FFFF00">Windows: All permissions except write are currently ignored. There is only a 
-single write permission; setting write permission for owner, group, or others 
-sets write permission for all, and removing write permission for owner, group, 
-or others removes write permission for all. </span> </p>
-</blockquote>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td><b>Name</b></td>
@@ -1714,6 +1699,12 @@ or others removes write permission for all. </span> </p>
 </tr>
 
 </table>
+<p><i><span style="background-color: #E0E0E0">Windows: All permissions except 
+write are currently ignored. There is only a single write permission; setting 
+write permission for owner, group, or others sets write permission for all, and 
+removing write permission for owner, group, or others removes write permission 
+for all. The Cygwin users guide has extensive discussion of the problems 
+involved. Input from security experts is needed.</span></i></p>
 <h2><a name="file_status">Class file_status</a> [class.file_status]</h2>
 <pre>$NAMESPACE_BEGIN;
       class file_status
@@ -2880,6 +2871,8 @@ path unique_path(const path&amp; model, system::error_code&amp; ec);</pre>
 
 $snippet wording_suffix "$SNIPPET_FILE;"
 
+<p>$if $TARGET; == BOOST</p>
+
 <h2><a name="Path-decomposition-table">Path decomposition table</a></h2>
 <p>The table is generated by a program compiled with the Boost implementation.</p>
 <p>Shaded entries indicate cases where ISO/IEC 9945 (POSIX) and Windows implementations yield different results. The top value is the
@@ -3378,7 +3371,6 @@ ISO/IEC 9945 result and the bottom value is the Windows result. <br>
 <td><span style="background-color: #CCFFCC"><code>foo\bar</code><br><code>bar</code></span></td>
 </tr>
 </table>
-<p>$if $TARGET; == BOOST</p>
 <h2><a name="long-path-warning"></a>Warning: Long paths on Windows and the 
 extended-length <b>\\?\ </b>prefix</h2>
 <p>The Microsoft Windows &quot;Maximum Path Length Limitation&quot; specifies:</p>
@@ -3422,7 +3414,9 @@ Witt were particularly helpful in refining the library.</p>
 <p>The create_directories, extension, basename, and replace_extension functions 
 were developed by Vladimir Prus. The temp_directory_path function was 
 contributed by Jeff Flinn. David Svoboda suggested the canonical function and 
-provided psuedo-code.</p>
+provided psuedo-code. The Library Working Group requested the removal of 
+explicit codecvt arguments, leading to the separation of string interoperability 
+features into a separate library.</p>
 <p>Howard Hinnant and John Maddock reviewed a draft of the version 2 proposal, and 
 identified a number of mistakes or weaknesses, resulting in a more polished 
 final document.</p>
@@ -3437,6 +3431,11 @@ multiple string types. His idea became the basis for the version 3 path design.<
     Specification, Version 3. Available from each of the organizations involved 
     in its creation. For example, read online or download from <a href="http://www.unix.org/single_unix_specification/">www.unix.org/single_unix_specification/</a>.</font> The ISO JTC1/SC22/WG15 - 
     POSIX homepage is <a href="http://www.open-std.org/jtc1/sc22/WG15/">www.open-std.org/jtc1/sc22/WG15/</a></td>
+  </tr>
+  <tr>
+    <td width="16%" valign="top">[<a name="ISO-Drafting">ISO Drafting</a>]</td>
+    <td width="84%">ISO/IEC Directives, Part 2: Rules for the structure and 
+    drafting of International Standards. http://www.iso.org/iso/standards_development/processes_and_procedures/iso_iec_directives_and_iso_supplement.htm</td>
   </tr>
   <tr>
     <td width="16%" valign="top">[Abrahams]</td>

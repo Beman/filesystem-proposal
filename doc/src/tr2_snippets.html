@@ -15,7 +15,7 @@ $id frontmatter=
   <table border="0">
     <tr>
       <td>Document number:&nbsp;&nbsp; </td>
-      <td><span style="background-color: #FFFF99">D????=12-????</span></td>
+      <td><span style="background-color: #FFFF99">D3399=12-0089</span></td>
     </tr>
     <tr>
       <td>Date:</td>
@@ -44,13 +44,14 @@ Filesystem Library Proposal (Revision 3)</h1>
 
 <p>This paper proposes a filesystem library component suitable for a <i>C++ 
 Standard Library Technical Specification</i> or for the <i>C++ Standard Library</i>. 
-The proposed library is based on the Boost Filesystem Library (<a href="http://www.boost.org/libs/filesystem">www.boost.org/libs/filesystem</a>), 
+The proposed library is based on the 
+<a href="http://www.boost.org/libs/filesystem">Boost Filesystem Library</a>, 
 version 3. Proposed wording is provided. A
 <a href="#TODO">TODO</a> list identifies remaining work to be done.</p>
 
 
-<p>The proposal is a pure addition; no existing headers are modified. No 
-compiler support is required. C++11 features are used where appropriate. The 
+<p>The proposal is a pure addition; no existing standard library headers are modified. No 
+special compiler or runtime support is required, although C++11 features are used where appropriate. The 
 entire library is in a namespace within namespace <code>std</code>.</p>
 
 
@@ -64,12 +65,7 @@ Visual C++ 2012.</p>
 
 
 <p>The motivation and scope for a filesystem library were described in <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2006/n1975.html">
-N1975</a>, and are not repeated here. A minor scope reduction is that an 
-addition to the current C++ runtime library is no longer needed.</p>
-
-
-<p>Boost Filesystem Version 3  introduced a single path type that interoperates well with both <code>
-basic_string</code> and user defined string types.</p>
+N1975</a>, and are not repeated here.</p>
 
 
 <h2>Differences from Boost Filesystem</h2>
@@ -79,9 +75,9 @@ basic_string</code> and user defined string types.</p>
 (i.e. <code>char</code>) character strings with encodings other than the 
 operating system's native encoding. These facilities have been removed from the 
 Filesystem library proposal. Instead, proposal
-<span style="background-color: #FFFF99">N????</span>, String Interoperability 
-Library, provides general facilities that also handle the class <code>path</code> 
-use cases.</p>
+<span style="background-color: #FFFF99">N3398, String Interoperability Library</span>, 
+provides general facilities that also handle the class <code>path</code> use 
+cases.</p>
 
 
 <p>Otherwise, the proposal is virtually identical to the Boost library. Indeed, 
@@ -92,7 +88,7 @@ reference documentation.</p>
 <h2>Revision history</h2>
 
 
-<p><span style="background-color: #FFFF99">D????=12-???? </span>, Filesystem 
+<p><span style="background-color: #FFFF99">D3399</span>, Filesystem 
 Library Proposal (Revision 3). Changes include:</p>
 
 
@@ -102,7 +98,7 @@ Library Proposal (Revision 3). Changes include:</p>
     <li>Add section tags and section numbers, per LWG 
     discussion in Kona.</li>
   <li>Minimize use of trademarked names. Enclose uses in green highlighted boxes 
-  to facilitate discussion.</li>
+  to facilitate discussion. Apply footnote required by ISO/IEC directives.</li>
   <li>Introduce a definition for &quot;operating system dependent&quot;, and then use it 
   to replace &quot;implementation defined behavior&quot; wherever the operating 
   system's rules determine behavior.</li>
@@ -240,9 +236,17 @@ $id wording_prefix=
 
 <!-- generate-section-numbers=true -->
 
-<p><span style="font-style: italic; background-color: rgb(224, 224, 224);">
-Gray-shaded italic text is commentary on the proposal. It is not to be added to 
-the working paper.</span></p>
+<p>Gray-shaded italic text is commentary on the proposal. It is not to be added to 
+the working paper.</p>
+
+<p>Green shaded text in rectangular boxes calls attention to examples and notes 
+intended to illuminate differences in behavior between operating systems. 
+Trademarked names are used, as permitted by ISO/IEC Directives, Part2, section 
+6.6.3 Use of trade names and trademarks. It is the belief of the proposal author 
+that these examples and notes add considerable clarity, and should be retained.</p>
+
+<p><span style="font-style: italic; background-color: #E0E0E0">Start of proposed 
+wording:</span></p>
 <h1>Filesystem Library [filesystem]</h1>
 
 <p>This clause describes components that perform operations on file systems and 
@@ -258,18 +262,16 @@ currently valid International Standards.</p>
 <ul>
   <li>ISO/IEC 9945:2003, <i>Portable Operating System Interface (POSIX</i>®<i>), 
   part 1 (Base Definitions) and part 2 (System Interfaces)</i>, both as 
-  corrected by their respective 2004 Correction 1 documents.<p><i>
-  <span style="background-color: #E0E0E0">ISO/</span><span style="background-color: #E0E0E0">IEC</span><span style="background-color: #E0E0E0"> 9945:2003 is also IEEE&nbsp;Std&nbsp;1003.1-2001, and The Open Group Base 
-  Specifications, Issue 6, and is also known as The Single Unix®</span></i><font face="Times New Roman"><i><b><span style="background-color: #E0E0E0">
-  </span>
-  </b></i><span style="font-style: italic; background-color: #E0E0E0">Specification, Version 3. It is available from each of those 
-  organizations, and may be read online or downloaded from
-  <a href="http://www.unix.org/single_unix_specification/">
-  www.unix.org/single_unix_specification/</a></span></font></li>
+  corrected by their respective 2004 Correction 1 documents.</li>
 </ul>
 
-<p>This clause may mention commercially 
-available operating systems for purposes of exposition. This information is given for the convenience of 
+<p>This clause  mentions commercially 
+available operating systems for purposes of exposition.<sup> <a href="#footnote">
+[footnote]</a></sup><p><i><span style="background-color: #E0E0E0">This footnote 
+is required by ISO/IEC Directives, Part2, section 6.6.3 Use of trade names and 
+trademarks:</span></i><p><sup>[<a name="footnote">footnote</a>]</sup> POSIX® is 
+a registered trademark of The IEEE. MAC OS® is a registered trademark of Apple 
+Inc. Windows® is a registered trademark of Microsoft Corporation. This information is given for the convenience of 
 users of this document and does not constitute an endorsement by ISO or IEC of 
 these products.<p>$endid
 
