@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-09<!--webbot bot="Timestamp" endspan i-checksum="12504" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-10<!--webbot bot="Timestamp" endspan i-checksum="12487" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -70,6 +70,23 @@ addition to the current C++ runtime library is no longer needed.</p>
 
 <p>Boost Filesystem Version 3  introduced a single path type that interoperates well with both <code>
 basic_string</code> and user defined string types.</p>
+
+
+<h2>Differences from Boost Filesystem</h2>
+
+
+<p>In the Boost library, class <code>path</code> has facilities to handle narrow 
+(i.e. <code>char</code>) character strings with encodings other than the 
+operating system's native encoding. These facilities have been removed from the 
+Filesystem library proposal. Instead, proposal
+<span style="background-color: #FFFF99">N????</span>, String Interoperability 
+Library, provides general facilities that also handle the class <code>path</code> 
+use cases.</p>
+
+
+<p>Otherwise, the proposal is virtually identical to the Boost library. Indeed, 
+the proposed wording is generated from the same source as the Boost library's 
+reference documentation.</p>
 
 
 <h2>Revision history</h2>
