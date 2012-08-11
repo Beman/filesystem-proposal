@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-10<!--webbot bot="Timestamp" endspan i-checksum="12487" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-11<!--webbot bot="Timestamp" endspan i-checksum="12489" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -42,6 +42,20 @@ otherwise require further refinement.</span></p>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
+      <a href="#Introduction">Introduction</a><br>
+      <a href="#Library-background">Library background</a><br>
+      <a href="#Differences-Boost">Differences from Boost Filesystem</a><br>
+      <a href="#Revision-history">Revision history</a><br>
+      <a href="#TODO">TODO</a><br>
+      <a href="#TOC">Table of Contents</a><br>
+      <a href="#Proposed-Wording">Proposed Wording</a><br>
+      <a href="#Acknowledgements">Acknowledgements</a><br>
+      <a href="#References">References</a>
+
+
+<h2><a name="Introduction">Introduction</a></h2>
+
+
 <p>This paper proposes a filesystem library component suitable for a <i>C++ 
 Standard Library Technical Specification</i> or for the <i>C++ Standard Library</i>. 
 The proposed library is based on the 
@@ -55,7 +69,7 @@ special compiler or runtime support is required, although C++11 features are use
 entire library is in a namespace within namespace <code>std</code>.</p>
 
 
-<h2>Library background</h2>
+<h2><a name="Library-background">Library background</a></h2>
 
 
 <p>The Boost version of the library has been in widespread use for ten years. 
@@ -68,7 +82,7 @@ Visual C++ 2012.</p>
 N1975</a>, and are not repeated here.</p>
 
 
-<h2>Differences from Boost Filesystem</h2>
+<h2><a name="Differences-Boost">Differences from Boost Filesystem</a></h2>
 
 
 <p>In the Boost library, class <code>path</code> has facilities to handle narrow 
@@ -85,7 +99,7 @@ the proposed wording is generated from the same source as the Boost library's
 reference documentation.</p>
 
 
-<h2>Revision history</h2>
+<h2><a name="Revision-history">Revision history</a></h2>
 
 
 <p><span style="background-color: #FFFF99">D3399</span>, Filesystem 
@@ -114,15 +128,15 @@ Library Proposal (Revision 3). Changes include:</p>
   <li><code>recursive_directory_iterator</code> specifications are now given in 
   terms of behavior only. Private &quot;for exposition only&quot; members have been 
   removed.</li>
-  <li dir="ltr">
-  <p dir="ltr"><code>recursive_directory_iterator</code> functions <code>
+  <li>
+  <p><code>recursive_directory_iterator</code> functions <code>
   no_push_pending()</code> and <code>no_push()</code> have been renamed <code>
   recursion_pending()</code> and <code>disable_recursion_pending()</code>. 
   Option constant name <code>recurse</code> has been renamed <code>
   follow_directory_symlinks</code>.&nbsp; These are responses to a request from 
   Ed Smith-Rowland to improve clarity by reducing negative logic.</li>
   <li>
-  <p dir="ltr">A <code>recursive_directory_iterator</code> option <code>
+  <p>A <code>recursive_directory_iterator</code> option <code>
   skip_permission_denied</code> has been added to skip directories with 
   permission denied, responding to several user requests.</li>
   <li>
@@ -232,7 +246,127 @@ C++0x.</p>
   $endid
 
 $id wording_prefix=
-<h1>Proposed Wording</h1>
+
+<p>   <a href="#Filesystem Library">1  Filesystem Library </a><br>
+      <a href="#Definitions">1.1  Definitions </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#operating system dependent">1.1.1  operating system dependent behavior 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file">1.1.2  file </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file-system">1.1.3  file system </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#filename">1.1.4  filename </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path">1.1.5  path </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#Absolute-path">1.1.6  absolute path </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.7  relative path </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#canonical-path">1.1.8  canonical path </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.9  pathname </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.def.native">1.1.10  native pathname format </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#link">1.1.11  link </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#hard-link">1.1.12  hard link </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.13  symbolic link </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file-system-race">1.1.14  file system race </a><br>
+      <a href="#Conformance">1.2  Conformance </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.conform.9945">1.2.1  ISO/IEC 9945 conformance </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.conform.os">1.2.2  Operating system dependent behavior conformance </a><br>
+      <a href="#Header-filesystem-synopsis">1.3  Header <code>&lt;filesystem&gt;</code> synopsis 
+</a><br>
+      <a href="#Error-reporting">1.4  Error reporting </a><br>
+      <a href="#class-path">1.5  Class <code>path</code> </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path.generic">1.5.1  Generic pathname format </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-Conversions">1.5.2  <code>path</code> conversions </a><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-Conversions-to-native-format">1.5.2.1  <code>path</code> argument 
+format conversions </a><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path.arg.convert">1.5.2.2  <code>path</code> type and encoding conversions </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-Requirements">1.5.3  <code>path</code> Requirements </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-constructors">1.5.4    <code>
+path</code> constructors </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-assignments">1.5.5    <code>
+path</code> assignments </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-appends">1.5.6  <code><font size="4"> path</font></code> appends 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-concatenation">1.5.7  <code>path</code> concatenation </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-modifiers">1.5.8   <code>
+path</code> modifiers </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-native-format-observers">1.5.9   <code>path</code> native format observers 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-generic-format-observers">1.5.10   <code>path</code> generic format observers 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-compare">1.5.11   <code>path</code> compare </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-decomposition">1.5.12    <code>path</code> decomposition 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-query">1.5.13    <code>path</code> query </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-iterators">1.5.14    <code>
+path</code> iterators </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-non-member-functions">1.5.15    <code>path</code> non-member functions 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-non-member-operators">1.5.16   <code>path</code><a name="path-inserter-extractor"> inserter 
+  and extractor</a> </a><br>
+      <a href="#Class-filesystem_error">1.6  Class <code>filesystem_error</code> 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#filesystem_error-members">1.6.1    <code>filesystem_error</code> members 
+</a><br>
+      <a href="#Enum-file_type">1.7  Enum file_type </a><br>
+      <a href="#Enum-perms">1.8  Enum perms </a><br>
+      <a href="#file_status">1.9  Class file_status </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file_status-constructors">1.9.1  <code>file_status</code> constructors 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file_status-observers">1.9.2  <code>file_status</code> observers </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file_status-modifiers">1.9.3  <code>file_status</code> modifiers </a><br>
+      <a href="#Class-directory_entry">1.10  Class <code>directory_entry</code> </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#directory_entry-constructors">1.10.1    <code>directory_entry </code>constructors 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#directory_entry-modifiers">1.10.2    <code>directory_entry </code>modifiers 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#directory_entry-observers">1.10.3    <code>directory_entry</code> observers 
+</a><br>
+      <a href="#Class-directory_iterator">1.11  Class <code>directory_iterator</code> 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#directory_iterator-members">1.11.1  <code>directory_iterator</code> members 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#directory_iterator-non-member-functions">1.11.2  <code>directory_iterator</code> non-member functions</a><br>
+      <a href="#Class-recursive_directory_iterator">1.12  Class <code>recursive_directory_iterator</code> 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#recursive_directory_iterator-non-member-functions">1.12.1  <code>recursive_directory_iterator</code> non-member functions</a><br>
+      <a href="#Operational-functions">1.13  Operational functions </a><br>
+      
+<code>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#absolute">absolute</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#canonical">canonical</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy">copy</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy_directory">copy_directory</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy_file">copy_file</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy_symlink">copy_symlink</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#create_directories">create_directories</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#create_directory">create_directory</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#create_hard_link">create_hard_link</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#create_symlink">create_symlink</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#current_path">current_path</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#exists">exists</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#equivalent">equivalent</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#file_size">file_size</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#hard_link_count">hard_link_count</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#initial_path">initial_path</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#is_directory">s_directory</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#is_empty">is_empty</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#is_other">is_other</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#is_regular_file">is_regular_file</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#is_symlink">is_symlink</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#last_write_time">last_write_time</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#permissions">permissions</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#read_symlink">read_symlink</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#remove">remove</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#remove_all">remove_all</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#rename">rename</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#resize_file">resize_file</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#space">space</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#status">status</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#status_known">status_known</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#symlink_status">symlink_status</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#system_complete">system_complete</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#temp_directory_path">temp_directory_path</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#unique_path">unique_path</a>
+</code></p>
+      
+<h2><a name="Proposed-Wording">Proposed Wording</a></h2>
 
 <!-- generate-section-numbers=true -->
 
@@ -247,7 +381,7 @@ that these examples and notes add considerable clarity, and should be retained.<
 
 <p><span style="font-style: italic; background-color: #E0E0E0">Start of proposed 
 wording:</span></p>
-<h1>Filesystem Library [filesystem]</h1>
+<h1><a name="Filesystem Library">Filesystem Library</a> [filesystem]</h1>
 
 <p>This clause describes components that perform operations on file systems and 
 their components, such as paths, regular files, and directories.</p>

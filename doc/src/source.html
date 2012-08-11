@@ -48,172 +48,12 @@ $include "../../../../doc/src/minimal.css"
 </head>
 
 <body>
-<p dir="ltr">$snippet frontmatter "$SNIPPET_FILE;" </p>
+<p>$snippet frontmatter "$SNIPPET_FILE;" </p>
 
 <h2><a name="TOC">Table of Contents</a></h2>
 
-<table border="0" cellpadding="0" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%">
-  <tr>
-    <td width="33%" valign="top"><a href="#Introduction">Introduction</a><br>
-    <a href="#Definitions">Definitions</a><br>
-    <a href="#Conformance">Conformance</a><br>
-    <a href="#Header-filesystem-synopsis">
-    Header <code>&lt;$HEADER;&gt;</code> synopsis</a><br>
-    <a href="#Error-reporting">Error reporting</a><br>
-    <a href="#class-path">Class <code>path</code></a><br>
-&nbsp;&nbsp;&nbsp; <a href="#path-Conversions"><code>path</code> conversions</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#path-Conversions-to-native-format"><code>path</code> 
-    conversions to native format</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#path-Conversions-to-generic-format"><code>path</code> 
-    conversions to generic format</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#path-Encoding-conversions"><code>path</code> 
-    encoding conversions</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#path-Requirements"><code>path</code> requirements</a><br>
-    &nbsp;&nbsp;&nbsp; <a href="#path-constructors"><code>path</code> constructors</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#path-assignments"><code>path</code> assignments</a><br>
-    &nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-appends"><code>path</code> appends</a><br>
-    &nbsp;&nbsp; &nbsp;<a href="#path-concatenation"><code>path</code> concatenation</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-modifiers"><code>path</code> modifiers</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-native-format-observers"><code>path</code> native 
-    format observers</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-generic-format-observers"><code>path</code> generic 
-    format observers</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#path-compare"><code>path</code> compare</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#path-decomposition"><code>path</code> decomposition</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#path-query"><code>path</code> query</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-iterators"><code>path</code> iterators</a><br>
-$if $TARGET; == BOOST
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-deprecated-functions"><code>path</code> deprecated functions</a><br>
-$endif
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-non-member-functions"><code>path</code> non-member functions</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-inserter-extractor"><code>path</code> inserters and extractors</a><br>
- &nbsp;<a href="#Class-filesystem_error">Class <code>filesystem_error</code></a><br>
-&nbsp;&nbsp;&nbsp; <a href="#filesystem_error-members"><code>filesystem_error</code> 
-    constructors</a><br>
-&nbsp;&nbsp;&nbsp; <code>f</code><a href="#filesystem_error-path1"><code>ilesystem_error</code> path1</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#filesystem_error-path2"><code>filesystem_error</code> path2</a><br>
-&nbsp;&nbsp;&nbsp; <a href="#filesystem_error-what"><code>filesystem_error</code><code>
-    </code>what</a></td>
-    <td width="33%" valign="top">
-    <a href="#Enum-file_type">Enum <code>file_type</code></a><br>
-    <a href="#Enum-perms">Enum <code>perms</code></a><br>
-    <a href="#file_status">Class 
-    <code>file_status</code></a><br>
-&nbsp;&nbsp;&nbsp;
-    <a href="#file_status"> 
-    <code>file_status</code></a><a href="#file_status-constructors"> constructors</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<code><a href="#file_status-modifiers">file_status-modifiers</a></code><a href="#directory_entry-observers"> observers</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<code><a href="#file_status-observers">file_status-observers</a></code><a href="#directory_entry-modifiers"> modifiers</a><br>
-<a href="#Class-directory_entry">Class <code>directory_entry</code></a><br>
-&nbsp;&nbsp;&nbsp;
-<a href="#directory_entry-constructors"><code>directory_entry</code> constructors</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#directory_entry-observers"><code>directory_entry</code> observers</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;<a href="#directory_entry-modifiers"><code>directory_entry</code> modifiers</a><br>
-<a href="#Class-directory_iterator">Class  <code>directory_iterator</code></a><br>
-&nbsp;&nbsp;&nbsp; <a href="#directory_iterator-members"><code>directory_iterator</code> 
-    members</a><br>
-<a href="#Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code></a><br>
-    <a href="#Operational-functions">
-    Operational functions</a><br>
-    <code>&nbsp;&nbsp;&nbsp;&nbsp <a href="#absolute">absolute</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp; <a href="#canonical">canonical</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy">copy</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy_directory">copy_directory</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy_file">copy_file</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy_symlink">copy_symlink</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#create_directories">create_directories</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#create_directory">create_directory</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#create_hard_link">create_hard_link</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#create_symlink">create_symlink</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#current_path">current_path</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#exists">exists</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#equivalent">equivalent</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#file_size">file_size</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp; <a href="#hard_link_count">hard_link_count</a><br>
-    &nbsp;&nbsp;&nbsp;&nbsp; <a href="#initial_path">initial_path</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp  i<a href="#is_directory">s_directory</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#is_empty">is_empty</a></code></td>
-    <td width="34%" valign="top">
-    <code>&nbsp;&nbsp;&nbsp;&nbsp <a href="#is_other">is_other</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#is_regular_file">is_regular_file</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#is_symlink">is_symlink</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#last_write_time">last_write_time</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp; <a href="#permissions">permissions</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp; <a href="#read_symlink">read_symlink</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#remove">remove</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#remove_all">remove_all</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#rename">rename</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp; <a href="#resize_file">resize_file</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#space">space</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#status">status</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#status_known">status_known</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#symlink_status">symlink_status</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#system_complete">system_complete</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp <a href="#temp_directory_path">temp_directory_path</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp; </code> <code> <a href="#unique_path">unique_path</a></code><br>
-    <a href="#File-streams">File streams</a><br>
-<a href="#Path-decomposition-table">Path decomposition table</a><br>
-    <a href="#long-path-warning">Warning: Long paths on Windows and the 
-    extended-length <b>\\?\ </b>prefix</a><br>
-<a href="#Acknowledgements">Acknowledgements</a><br>
-<a href="#References">References</a><br>
-&nbsp;</td>
-  </tr>
-</table>
-
 $snippet wording_prefix "$SNIPPET_FILE;"
 
-<h2><a name="Conformance">Conformance</a> [fs.conformance]</h2>
-
-<h3>ISO/IEC 9945 conformance [fs.conform.9945]</h3>
-<p>Some behavior in this $WHAT; is specified by reference to ISO/IEC 9945. How such behavior is actually implemented is unspecified.</p>
-<blockquote>
-<p>[<i>Note:</i> This constitutes an &quot;as if&quot; rule for implementation of 
-operating system dependent behavior. In practice implementations will usually call native 
-operating system API's. <i>--end note</i>]</p>
-</blockquote>
-<p>Implementations are encouraged to provide such behavior 
- 
-as it is defined by ISO/IEC 9945. Implementations shall document any 
-behavior that differs from the behavior defined by ISO/IEC 9945. Implementations that do not support exact 
-ISO/IEC 9945 behavior are 
-encouraged to provide behavior as close to ISO/IEC 9945 behavior as is reasonable given the 
-limitations of actual operating systems and file systems. If an implementation cannot provide any 
-reasonable behavior, the implementation shall report an error in an 
-implementation-defined manner.</p>
-<blockquote>
-<p>[<i>Note:</i> Such errors might be reported by an #error directive, a <code>
-static_assert</code>, a <code>filesystem_error</code> exception, a special 
-return value, or some other manner. <i>--end note</i>]</p>
-</blockquote>
-<p>Implementations are not required to provide behavior that is not supported by 
-a particular file system.</p>
-<blockquote>
-<p>[<i>Example:</i> The <a href="http://en.wikipedia.org/wiki/FAT_filesystem">
-FAT file system</a> used by some memory cards, camera memory, and floppy discs 
-does not support hard links, symlinks, and many other features of more capable 
-file systems. Implementations are only required to support the FAT features 
-supported by the host operating system. <i>-- end example</i>]</p>
-</blockquote>
-<p>The behavior of functions described in this 
-reference 
-may differ from their specification in 
-the presence of <a href="#Race-condition">file system races</a>. No diagnostic is required.</p>
-<p>If the possibility of a file system race would make it unreliable for a program to 
-test for a precondition before calling a function described in this $WHAT;, <i>
-Requires</i> is not specified for the condition. Instead, the condition is 
-specified as a <i>Throws</i> condition.</p>
-<blockquote>
-<p>[<i>Note:</i> As a design practice, preconditions are not specified when it 
-is unreasonable for a program to detect them prior to calling the function. <i>
--- end note</i>]</p>
-</blockquote>
-<h3>Operating system dependent conformance [fs.conform.os]</h3>
-<p>Some behavior is specified in this $WHAT; as being 
-operating system dependent ([fs.def.osdep]). What operation system an 
-implementation is dependent upon is implementation defined.</p>
-<p>It is permissible for an implementation to be dependent upon an operating 
-system emulator rather than the actual operating system.</p>
 <h2><a name="Definitions">Definitions</a> [fs.definitions]</h2>
 <p>The following definitions  shall apply throughout this $WHAT;:</p>
 <h3><a name="operating system dependent">operating system dependent</a> behavior 
@@ -275,14 +115,14 @@ Paths <code>&quot;.&quot;</code> and <code>&quot;..&quot;</code> are relative pa
 <h3><a name="canonical-path">canonical path</a> [fs.def.cannonical-path]</h3>
 <p>An absolute path that has 
 no elements that are symbolic links, and no <code>&quot;.&quot;</code> or <code>&quot;..&quot;</code> elements.</p>
-<h3>pathname [fs.def.pathname]</h3>
+<h3>pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
 <p>A character string that represents 
 the name of a 
 path. Pathnames are formatted according to the generic pathname grammar or an 
 operating system dependent 
 native pathname format.</p>
 
-<h3>native pathname format [fs.def.native]</h3>
+<h3>native pathname format [<a name="fs.def.native">fs.def.native</a>]</h3>
 <p>The operating system dependent pathname format accepted by the host operating system.</p>
 <h3><a name="link">link</a> [fs.def.link]</h3>
 <p>A directory entry object that associates a 
@@ -310,6 +150,58 @@ If the file pointed to does not exist, the symbolic link is said to be a
 when multiple threads, processes, or computers interleave access and 
 modification of 
 the same object within a file system.</p>
+
+<h2><a name="Conformance">Conformance</a> [fs.conformance]</h2>
+
+<h3>ISO/IEC 9945 conformance [<a name="fs.conform.9945">fs.conform.9945</a>]</h3>
+<p>Some behavior in this $WHAT; is specified by reference to ISO/IEC 9945. How such behavior is actually implemented is unspecified.</p>
+<blockquote>
+<p>[<i>Note:</i> This constitutes an &quot;as if&quot; rule for implementation of 
+operating system dependent behavior. In practice implementations will usually call native 
+operating system API's. <i>--end note</i>]</p>
+</blockquote>
+<p>Implementations are encouraged to provide such behavior 
+ 
+as it is defined by ISO/IEC 9945. Implementations shall document any 
+behavior that differs from the behavior defined by ISO/IEC 9945. Implementations that do not support exact 
+ISO/IEC 9945 behavior are 
+encouraged to provide behavior as close to ISO/IEC 9945 behavior as is reasonable given the 
+limitations of actual operating systems and file systems. If an implementation cannot provide any 
+reasonable behavior, the implementation shall report an error in an 
+implementation-defined manner.</p>
+<blockquote>
+<p>[<i>Note:</i> Such errors might be reported by an #error directive, a <code>
+static_assert</code>, a <code>filesystem_error</code> exception, a special 
+return value, or some other manner. <i>--end note</i>]</p>
+</blockquote>
+<p>Implementations are not required to provide behavior that is not supported by 
+a particular file system.</p>
+<blockquote>
+<p>[<i>Example:</i> The <a href="http://en.wikipedia.org/wiki/FAT_filesystem">
+FAT file system</a> used by some memory cards, camera memory, and floppy discs 
+does not support hard links, symlinks, and many other features of more capable 
+file systems. Implementations are only required to support the FAT features 
+supported by the host operating system for a particular file system. <i>-- end example</i>]</p>
+</blockquote>
+<p>The behavior of functions described in this 
+reference 
+may differ from their specification in 
+the presence of <a href="#Race-condition">file system races</a>. No diagnostic is required.</p>
+<p>If the possibility of a file system race would make it unreliable for a program to 
+test for a precondition before calling a function described in this $WHAT;, <i>
+Requires</i> is not specified for the condition. Instead, the condition is 
+specified as a <i>Throws</i> condition.</p>
+<blockquote>
+<p>[<i>Note:</i> As a design practice, preconditions are not specified when it 
+is unreasonable for a program to detect them prior to calling the function. <i>
+-- end note</i>]</p>
+</blockquote>
+<h3>Operating system dependent behavior conformance [<a name="fs.conform.os">fs.conform.os</a>]</h3>
+<p>Some behavior is specified in this $WHAT; as being 
+operating system dependent ([fs.def.osdep]). What operation system an 
+implementation is dependent upon is implementation defined.</p>
+<p>It is permissible for an implementation to be dependent upon an operating 
+system emulator rather than the actual underlying operating system.</p>
 <h2><a name="Header-filesystem-synopsis">Header <code>&lt;$HEADER;&gt;</code> synopsis</a> 
 [filesystem.synopsis]</h2>
 <pre>$NAMESPACE_BEGIN;
@@ -853,8 +745,8 @@ character set.</p>
     <tr>
       <td width="100%">[<i>Note:</i> Native narrow character path encoding 
       varies considerably:<ul>
-        <li dir="ltr">
-        <p dir="ltr">MAC OS X operating system: Always UTF-8.</li>
+        <li>
+        <p>MAC OS X operating system: Always UTF-8.</li>
         <li>Some ISO 9945/POSIX based operating systems: determined by <code>locale(&quot;&quot;)</code>;</li>
         <li>Windows based operating systems: Codepage of <code>CP_ACP</code> 
     if <code>AreFileApisANSI()</code>is true, otherwise codepage <code>CP_OEMCP</code>.</li>
@@ -883,7 +775,7 @@ one of:</p>
 </ul>
 
 <h3> <a name="path-constructors"> <code>
-<font size="4">path</font></code> constructors</a> [path.construct]</h3>
+path</code> constructors</a> [path.construct]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path(Source const&amp; source$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
 <pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
@@ -894,7 +786,7 @@ one of:</p>
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
 </blockquote>
 <h3> <a name="path-assignments"> <code>
-<font size="4">path</font></code> assignments</a> [path.assign]</h3>
+path</code> assignments</a> [path.assign]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; operator=(Source const&amp; source);
 $if $TARGET; == BOOST  template &lt;class <a href="#Source">Source</a>&gt;
@@ -1020,7 +912,7 @@ returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
   <p><i>Complexity: </i>constant time.</p>
 </blockquote>
 
-<h3> <a name="path-native-format-observers"><code><font size="4">path</font></code> native format observers</a> 
+<h3> <a name="path-native-format-observers"><code>path</code> native format observers</a> 
 [path.native.obs]</h3>
 <p>The string returned by all native format observers is in the <a href="#native-pathname-format">native pathname format</a>.</p>
 <pre>const string_type&amp;  <a name="native">native</a>() const noexcept;</pre>
@@ -1047,7 +939,7 @@ u32wstring <a name="u32wstring">u32wstring</a>() const; </pre>
 function's return type, conversion is performed by <code>cvt</code>.</p>
 </blockquote>
 
-<h3> <a name="path-generic-format-observers"><code><font size="4">path</font></code> generic format observers</a> 
+<h3> <a name="path-generic-format-observers"><code>path</code> generic format observers</a> 
 [path.generic.obs]</h3>
 <p>Generic format observer functions 
  
@@ -1092,7 +984,7 @@ function's return type, conversion is performed by <code>cvt</code>.</p>
 <blockquote>
   <p><i>Returns:</i> <code>compare(path(s))</code>.</p>
 </blockquote>
-<h3> <a name="path-decomposition"> <code><font size="4">path</font></code> decomposition</a> 
+<h3> <a name="path-decomposition"> <code>path</code> decomposition</a> 
 [path.decompose]</h3>
 <p><span style="background-color: #E0E0E0"><i>See the <a href="#Path-decomposition-table">Path decomposition table</a> for examples 
 for values returned by decomposition functions. The <a href="tutorial.html#Using-path-decomposition">Tutorial</a> may also be 
@@ -1168,7 +1060,7 @@ for (; !p.extension().empty(); p = p.stem())
   that for a path <code>p</code>, <code>p.stem()+p.extension() == p</code>. <i>
   -- end note</i>]</p>
 </blockquote>
-<h3> <a name="path-query"> <code><font size="4">path</font></code> query</a> [path.query]</h3>
+<h3> <a name="path-query"> <code>path</code> query</a> [path.query]</h3>
 <pre>bool <a name="path-empty">empty</a>() const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_pathname.empty()</code>.</p>
@@ -1226,7 +1118,7 @@ operating systems.&nbsp; <i>--end example</i>]</td>
   <p><i>Returns:</i> <code>!is_absolute()</code>.</p>
 </blockquote>
 <h3> <a name="path-iterators"> <code>
-<font size="4">path</font></code> iterators</a> [path.itr]</h3>
+path</code> iterators</a> [path.itr]</h3>
 <p> Path iterators iterate over the elements of the stored pathname.</p>
 <p> A <code>path::iterator</code> is a constant iterator satisfying all 
 the requirements of a bidirectional iterator (C++ Std, 24.1.4 Bidirectional 
@@ -1303,7 +1195,7 @@ const string_type  external_directory_string() const { return native(); }</pre>
 
 $endif
 
-<h3> <a name="path-non-member-functions"> <code><font size="4">path</font></code> non-member functions</a> 
+<h3> <a name="path-non-member-functions"> <code>path</code> non-member functions</a> 
 [path.non-member]</h3>
 $if $TARGET; == BOOST
   <pre>bool lexicographical_compare(path::iterator first1, path::iterator last1,
@@ -1369,7 +1261,7 @@ $endif
 <blockquote>
   <p><i>Returns:</i> <code>path(lhs) /= rhs</code>.</p>
 </blockquote>
-<h3> <a name="path-non-member-operators"><code><font size="4">path</font></code></a><a name="path-inserter-extractor"> inserter 
+<h3> <a name="path-non-member-operators"><code>path</code></a><a name="path-inserter-extractor"> inserter 
   and extractor</a> [path.io]</h3>
 <p> The inserter and extractor delimit the string with double-quotes (<code>&quot;</code>) 
 so that paths with embedded spaces will round trip correctly. Ampersand (<code>&amp;</code>) 
