@@ -95,7 +95,7 @@ and <code>&quot;..&quot;</code>&nbsp; have special meaning. The follow character
 <p>A sequence of elements that identify 
 the location of a file within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
 root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
-A <a href="#Pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
+A <a href="#fs.def.pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
 
 <h3><a name="Absolute-path">absolute path</a> [fs.def.absolute-path]</h3>
 <p>A path that 
@@ -186,7 +186,7 @@ supported by the host operating system for a particular file system. <i>-- end e
 <p>The behavior of functions described in this 
 reference 
 may differ from their specification in 
-the presence of <a href="#Race-condition">file system races</a>. No diagnostic is required.</p>
+the presence of <a href="#file-system-race">file system races</a> ([fs.def.race]). No diagnostic is required.</p>
 <p>If the possibility of a file system race would make it unreliable for a program to 
 test for a precondition before calling a function described in this $WHAT;, <i>
 Requires</i> is not specified for the condition. Instead, the condition is 
@@ -463,8 +463,8 @@ errors are truly exceptional and indicate a serious failure. Throwing an
 <code>system::error_code&amp;</code> argument.</li>
 </ul>
 <h2><a name="class-path">Class <code>path</code> [class.path]</a></h2>
-<p>An object of class <code>path</code> represents a <a href="#Path">path</a>, 
-and contains a <a href="#Pathname">pathname</a> Such an object is concerned only with the lexical and syntactic aspects 
+<p>An object of class <code>path</code> represents a <a href="#class-path">path</a>, 
+and contains a <a href="#fs.def.pathname">pathname</a> Such an object is concerned only with the lexical and syntactic aspects 
 of a path. The path does not necessarily exist in external storage, and the 
 pathname is not necessarily valid for the current operating 
 system or for a particular file system.</p>
@@ -486,7 +486,7 @@ $endif;
         template &lt;class <a href="#Source">Source</a>&gt;
           path(Source const&amp; source$CODECVT_ARG2;$CODECVT_DEFAULT;);
 
-        template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+        template &lt;class InputIterator&gt;
           path(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
 
        ~path() noexcept = default;
@@ -501,7 +501,7 @@ $endif;
 $if $TARGET; == BOOST        template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; assign(Source const&amp; source$CODECVT_ARG2;)
 
-$endif;        template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+$endif;        template &lt;class InputIterator&gt;
           path&amp; assign(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
 
         // <a href="#path-appends">appends</a>
@@ -513,7 +513,7 @@ $endif;        template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
 $if $TARGET; == BOOST        template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; append(Source const&amp; source$CODECVT_ARG2;);
 
-$endif;        template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+$endif;        template &lt;class InputIterator&gt;
           path&amp; append(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
 
         // <a href="#path-concatenation">concatenation</a>
@@ -679,7 +679,7 @@ operating system.</p>
 format conversions</a> [path.fmt.cvt]</h4>
 <p>Member functions arguments that take character sequences representing paths 
 may use the generic pathname format ([<a href="#path.generic">path.generic</a>]) or 
-the <a href="#native-pathname-format">native pathname format</a>. Iff such 
+the <a href="#fs.def.native">native pathname format</a>. Iff such 
 arguments are in the generic format and the generic format is not acceptable to 
 the operating system as a native path, conversion to native format shall be 
 performed during the processing of the argument. </p>
@@ -758,14 +758,14 @@ character set.</p>
 
 </blockquote>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
-<p>Template parameters named <code><a name="InputIterator">InputIterator</a></code> are required meet the C++ standard library
+<p>Template parameters named <code>InputIterator</code> are required meet the C++ standard library
 <code>InputIterator</code> requirements. The value type is required to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
 <p>Template parameters named <code><a name="Source">Source</a></code> are required to be 
 one of:</p>
 <ul>
   <li>A <code>basic_string</code> with <code>charT</code> of <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li>An iterator meeting the <a name="InputIterator"><code>InputIterator</code></a> 
+  <li>An iterator meeting the <code>InputIterator</code> 
   requirements and pointing to a null terminated string. The value type is required 
   to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
   char32_t</code>.</li>
@@ -778,7 +778,7 @@ one of:</p>
 path</code> constructors</a> [path.construct]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path(Source const&amp; source$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
-<pre>template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+<pre>template &lt;class InputIterator&gt;
   path(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
@@ -791,7 +791,7 @@ path</code> assignments</a> [path.assign]</h3>
   path&amp; operator=(Source const&amp; source);
 $if $TARGET; == BOOST  template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; assign(Source const&amp; source$CODECVT_ARG2;);
-$endif;  template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+$endif;  template &lt;class InputIterator&gt;
   path&amp; assign(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
@@ -825,7 +825,7 @@ $endif;  template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
   path&amp; operator/=(Source const &amp; source);
 $if $TARGET; == BOOST  template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; append(Source const &amp; source$CODECVT_ARG2;);
-$endif;  template &lt;class <a href="#InputIterator">InputIterator</a>&gt;
+$endif;  template &lt;class InputIterator&gt;
   path&amp; append(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
 <blockquote>
   <p><i>Effects:</i></p>
@@ -914,7 +914,7 @@ returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
 
 <h3> <a name="path-native-format-observers"><code>path</code> native format observers</a> 
 [path.native.obs]</h3>
-<p>The string returned by all native format observers is in the <a href="#native-pathname-format">native pathname format</a>.</p>
+<p>The string returned by all native format observers is in the <a href="#fs.def.native">native pathname format</a>.</p>
 <pre>const string_type&amp;  <a name="native">native</a>() const noexcept;</pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>.</p>
@@ -986,9 +986,6 @@ function's return type, conversion is performed by <code>cvt</code>.</p>
 </blockquote>
 <h3> <a name="path-decomposition"> <code>path</code> decomposition</a> 
 [path.decompose]</h3>
-<p><span style="background-color: #E0E0E0"><i>See the <a href="#Path-decomposition-table">Path decomposition table</a> for examples 
-for values returned by decomposition functions. The <a href="tutorial.html#Using-path-decomposition">Tutorial</a> may also be 
-helpful.</i></span></p>
 <pre>path <a name="path-root_name">root_name</a>() const;</pre>
 <blockquote>
 <p><i>Returns:</i> <i>root-name,</i> if <code>pathname</code> includes <i>root-name</i>, otherwise <code>path()</code>. </p>
@@ -1222,7 +1219,6 @@ $endif
 <blockquote>
   <p><i>Returns:</i> A hash value for the path <code>p</code>. If
   for two paths, <code>p1 == p2</code> then <code>hash_value(p1) == hash_value(p2)</code>.</p>
-  <p>This allows paths to be used with <a href="../../functional/hash/index.html">Boost.Hash</a>.</p>
 </blockquote>
 <pre>bool operator&lt; (const path&amp; lhs, const path&amp; rhs);</pre>
 <blockquote>
@@ -1247,7 +1243,7 @@ $endif
   equivalence have different semantics.</p>
   <p>Equality is determined by the <code>path</code> non-member <code>operator==</code>, which considers the two path's lexical 
   representations only. Thus <code>path(&quot;foo&quot;) == &quot;bar&quot;</code> is never <code>true</code>.</p>
-  <p>Equivalence is determined by the <a href="#equivalent"><code>equivalent()</code></a> non-member function, which determines if two paths <a href="#Path">resolve</a> to the same file system entity. 
+  <p>Equivalence is determined by the <a href="#equivalent"><code>equivalent()</code></a> non-member function, which determines if two paths <a href="#class-path">resolve</a> to the same file system entity. 
   Thus <code>equivalent(&quot;foo&quot;, &quot;bar&quot;)</code> will be <code>true</code> when both paths resolve to the same file.</p>
   <p>Programmers wishing to determine if two paths are &quot;the same&quot; must decide if 
   &quot;the same&quot; means &quot;the same representation&quot; or &quot;resolve to the same actual 
@@ -1261,11 +1257,11 @@ $endif
 <blockquote>
   <p><i>Returns:</i> <code>path(lhs) /= rhs</code>.</p>
 </blockquote>
-<h3> <a name="path-non-member-operators"><code>path</code></a><a name="path-inserter-extractor"> inserter 
+<h3><code>path</code><a name="path-inserter-extractor"> inserter 
   and extractor</a> [path.io]</h3>
 <p> The inserter and extractor delimit the string with double-quotes (<code>&quot;</code>) 
 so that paths with embedded spaces will round trip correctly. Ampersand (<code>&amp;</code>) 
-is as an escape character, so the path can itself contain double quotes.</p>
+is used as an escape character, so the path can itself contain double quotes.</p>
 <pre>template &lt;class Char, class Traits&gt;
 std::basic_ostream&lt;Char, Traits&gt;&amp; operator&lt;&lt;(std::basic_ostream&lt;Char, Traits&gt;&amp; os,
                                              const path&amp; p)</pre>
@@ -1288,13 +1284,10 @@ std::basic_ostream&lt;Char, Traits&gt;&amp; operator&lt;&lt;(std::basic_ostream&
   <p><i>Returns:</i> <code>os</code></p>
 </blockquote>
 <pre>template &lt;class Char, class Traits&gt;
-inline std::basic_istream&lt;Char, Traits&gt;&amp; operator&gt;&gt;(std::basic_istream&lt;Char, Traits&gt;&amp; is,
-                                                    path&amp; p)
+inline std::basic_istream&lt;Char, Traits&gt;&amp;
+  operator&gt;&gt;(std::basic_istream&lt;Char, Traits&gt;&amp; is, path&amp; p)
 </pre>
 <blockquote>
-  <p><i>Effects:&nbsp; </i><code>&nbsp;std::basic_string&lt;Char&gt; str;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; is &gt;&gt; <a href="../../io/doc/quoted_manip.html">boost::io::quoted</a>(str, static_cast&lt;Char&gt;('&amp;'));<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; p = str;</code></p>
   <p><i>Effects:&nbsp; </i>Extract characters from os:</p>
   <ul>
     <li>If the first character that would be extracted is equal to double-quote, 
@@ -2104,7 +2097,7 @@ storage.</p>
 <p>Operational functions access a file by resolving an 
 object of class <code>path</code> to a particular file in a file hierarchy. The 
 path is resolved as if by the ISO/IEC 9945 <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap04.html#tag_04_11">Pathname Resolution</a> mechanism.</p>
-<p>[<i>Note: </i>Because hardware failures, network failures, <a href="#Race-condition">file system races</a>, and many 
+<p>[<i>Note: </i>Because hardware failures, network failures, <a href="#file-system-race">file system races</a>, and many 
 other kinds of errors occur frequently in file system operations, users should be aware 
 that any filesystem operational function, no matter how apparently innocuous, may encounter 
 an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end note</i>]</p>
@@ -2140,9 +2133,9 @@ path canonical(const path&amp; p, system::error_code&amp; ec) noexcept;
 path canonical(const path&amp; p, const path&amp; base, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
 <p><i>Overview:</i> Converts <code>p</code>, which must exist, to an absolute 
-path that has no symbolic link, <a href="#Dot">dot</a>, 
-or <a href="#Dot">dot-dot</a> elements. </p>
-<p><i>Returns:</i> A <a href="#Canonical-path">canonical path</a> that refers to 
+path that has no symbolic link, <code>&quot;.&quot;</code>, 
+or <code>&quot;..&quot;</code> elements. </p>
+<p><i>Returns:</i> A path that refers to 
 the same file system object as <code>absolute(p,base)</code>. For the overload 
 without a <code>base</code> argument, <code>base</code> is <code>current_path()</code>.</p>
   <p><i>Throws:</i>&nbsp; As specified in <a href="#Error-reporting">Error reporting</a>.</p>
@@ -2266,7 +2259,7 @@ void create_directory_symlink(const path&amp; to, const path&amp; new_symlink,
   Postcondition:</i> <code>new_symlink</code> resolves to a symbolic link file that 
   contains an unspecified representation of <code>to</code>.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
-  <p>[<i>Note:</i> Some operating systems, such as Windows, require symlink creation to 
+  <p>[<i>Note:</i> Some operating systems require symlink creation to 
   identify that the link is to a directory. Portable code should use <code>create_directory_symlink()</code> to create directory symlinks rather than <code>create_symlink()</code> <i>-- end note</i>]</p>
   <p>[<i>Note:</i> Some operating systems do not support symbolic links at all or support 
   them only for regular files. 
@@ -2358,9 +2351,9 @@ bool <a name="equivalent2">equivalent</a>(const path&amp; p1, const path&amp; p2
   file system entity if two candidate entities reside on the same device at the 
   same location. This is determined as if by the values of the ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">stat</a></code> structure<code>,</code> obtained as if by <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code> for the two paths, having equal <code>st_dev</code> values 
   and equal <code>st_ino</code> values.</p>
-  <p>[<i>Note:</i> ISO/IEC 9945 requires that <i>&quot;st_dev</i> must be unique within a Local Area Network&quot;. Conservative
-  ISO/IEC 9945 implementations may also wish to check for equal <code>st_size</code> and <code>st_mtime</code> values. <i>Windows</i> implementations may use <code>GetFileInformationByHandle()</code> as a surrogate for <code>stat()</code>, 
-  and consider &quot;same&quot; to be equal values for <code>dwVolumeSerialNumber</code>, <code>nFileIndexHigh</code>, <code>nFileIndexLow</code>, <code>nFileSizeHigh</code>, <code>nFileSizeLow</code>, <code>ftLastWriteTime.dwLowDateTime</code>, and <code>ftLastWriteTime.dwHighDateTime</code>. <i>-- end note</i>]</p>
+  <p><i><span style="background-color: #E0E0E0">[Note: ISO/IEC 9945 requires that &quot;st_dev must be unique within a Local Area Network&quot;. Conservative
+  ISO/IEC 9945 implementations may also wish to check for equal <code>st_size</code> and <code>st_mtime</code> values. Windows implementations may use <code>GetFileInformationByHandle()</code> as a surrogate for <code>stat()</code>, 
+  and consider &quot;same&quot; to be equal values for <code>dwVolumeSerialNumber</code>, <code>nFileIndexHigh</code>, <code>nFileIndexLow</code>, <code>nFileSizeHigh</code>, <code>nFileSizeLow</code>, <code>ftLastWriteTime.dwLowDateTime</code>, and <code>ftLastWriteTime.dwHighDateTime</code>. -- end note]</span></i></p>
   </blockquote>
   <p><i>Throws:</i> <code>filesystem_error</code> if <code>(!exists(s1) &amp;&amp; !exists(s2)) || (is_other(s1) &amp;&amp; is_other(s2))</code>, 
   otherwise as specified in <a href="#Error-reporting">Error reporting</a>.</p>
@@ -2554,7 +2547,8 @@ void <a name="rename2">rename</a>(const path&amp; old_p, const path&amp; new_p, 
   <p>[<i>Note:</i> If <code>old_p</code> and <code>new_p</code> resolve to the 
   same existing file, no action is taken. Otherwise, if <code>new_p</code> resolves to an 
   existing non-directory file, it is removed, while if <code>new_p</code> resolves to an 
-  existing directory, it is removed if empty on ISO/IEC 9945 but is an error on Windows. A symbolic link is itself renamed, rather than 
+  existing directory, it is removed if empty on ISO/IEC 9945 compliant operating 
+  systems but is an error on some other operating systems. A symbolic link is itself renamed, rather than 
   the file it resolves to being renamed. <i>-- end note</i>]</p>
   </blockquote>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
@@ -2616,17 +2610,23 @@ thrown.<i> -- end note</i>] </p>
     <ul>
       <li>If the specific error indicates that <code>p</code> cannot be resolved 
       because some element of the path does not exist, return <code>
-      file_status(file_not_found)</code>. [<i>Note:</i> ISO/IEC 9945 errors that 
-      indicate this are ENOENT or ENOTDIR. Windows equivalents 
-      include ERROR_FILE_NOT_FOUND, ERROR_PATH_NOT_FOUND, ERROR_INVALID_NAME, 
-      ERROR_INVALID_PARAMETER, ERROR_BAD_PATHNAME, and ERROR_BAD_NETPATH. <i>-- 
-      end note</i>]<br>
+      file_status(file_not_found)</code>.<span style="font-style: italic; background-color: #E0E0E0"> [</span><i><span style="background-color: #E0E0E0">Note: ISO/</span><span style="background-color: #E0E0E0">IEC</span><span style="background-color: #E0E0E0"> 9945 errors that 
+      indicate this are </span><span style="background-color: #E0E0E0">ENOENT</span><span style="background-color: #E0E0E0"> or 
+      </span><span style="background-color: #E0E0E0">ENOTDIR</span><span style="background-color: #E0E0E0">. Windows equivalents 
+      include </span><span style="background-color: #E0E0E0">ERROR_FILE_NOT_FOUND</span><span style="background-color: #E0E0E0">, 
+      </span><span style="background-color: #E0E0E0">ERROR_PATH_NOT_FOUND</span><span style="background-color: #E0E0E0">, 
+      </span><span style="background-color: #E0E0E0">ERROR_INVALID_NAME</span><span style="background-color: #E0E0E0">, 
+      </span><span style="background-color: #E0E0E0">ERROR_INVALID_PARAMETER</span><span style="background-color: #E0E0E0">, 
+      </span><span style="background-color: #E0E0E0">ERROR_BAD_PATHNAME</span><span style="background-color: #E0E0E0">, and 
+      </span><span style="background-color: #E0E0E0">ERROR_BAD_NETPATH</span><span style="background-color: #E0E0E0">. -- 
+      end note</span></i><span style="font-style: italic; background-color: #E0E0E0">]</span><br>
 &nbsp;</li>
       <li>Otherwise, if the specific error indicates that <code>p</code> can be resolved 
       but the attributes cannot be determined, return <code>
-      file_status(type_unknown)</code>. [<i>Note: </i>For example, Windows 
-      ERROR_SHARING_VIOLATION errors. For ISO/IEC 9945, the case never arises. <i>-- end 
-      note</i>]<br>
+      file_status(type_unknown)</code>. 
+      <span style="font-style: italic; background-color: #E0E0E0">[</span><i><span style="background-color: #E0E0E0">Note: For example, Windows 
+      </span><span style="background-color: #E0E0E0">ERROR_SHARING_VIOLATION</span><span style="background-color: #E0E0E0"> errors. For ISO/</span><span style="background-color: #E0E0E0">IEC</span><span style="background-color: #E0E0E0"> 9945, the case never arises. -- end 
+      note</span></i><span style="font-style: italic; background-color: #E0E0E0">]</span><br>
 &nbsp;</li>
       <li>Otherwise, return <code>
       file_status(status_error)</code>.</li>
@@ -2713,29 +2713,55 @@ path <a name="system_complete2">system_complete</a>(const path&amp; p, system::e
   <p><i>Returns:</i> The composed path.</p>
   <p><i>Postcondition:</i> For the returned path, <code>rp,</code> <code>rp.is_absolute()</code> is true.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
-  <p>[<i>Note:</i> For ISO/IEC 9945, <code>system_complete(p)</code> has the same semantics as <code>complete(p, current_path())</code>.</p>
-  <p><a name="windows_effects">For <i>Windows</i></a>, <code>system_complete(p)</code> has the 
-  same semantics as <code>complete(ph, current_path())</code> if <code>p.is_absolute() || !p.has_root_name()</code> or <code>p</code> and <code>base</code> have the same <code>root_name()</code>. 
-  Otherwise it acts like <code>complete(p, kinky)</code>, where <code>kinky</code> is the current directory for the <code>p.root_name()</code> drive. This will 
-  be the current directory of that drive the last time it was set, and thus may 
+  
+<blockquote>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">
+  
+  <p>[<i>Example:</i> For ISO 9945/POSIX based operating systems, <code>system_complete(p)</code>
+  has the same semantics as <code>complete(p, current_path())</code>.</p>
+  <p>For Windows based operating systems, <code>system_complete(p)</code> has the 
+  same semantics as <code>absolute(ph, current_path())</code> if <code>p.is_absolute() ||
+  !p.has_root_name()</code> or <code>p</code> and <code>base</code> have the same
+  <code>root_name()</code>. 
+  Otherwise it acts like <code>absolute(p, kinky)</code>, where <code>kinky</code> is
+  the current directory for the <code>p.root_name()</code> drive. This will 
+  be the current directory for that drive the last time it was set, and thus may 
   be <b>residue left over from a prior program</b> run by the command 
-  processor! Although these semantics are often useful, they are also very 
-  error-prone.</p>
-  <p>See <a href="#complete_note"><i>complete()</i> note</a> for usage suggestions. <i>-- end note</i>]</p>
+  processor! Although these semantics are useful, they are very 
+  error-prone. <i>-- end example</i>]</p>
+  
+      </td>
+    </tr>
+  </table>
+</blockquote>
+  
 </blockquote>
 <pre>path <a name="temp_directory_path">temp_directory_path</a>();
 path temp_directory_path(system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <p><i>Returns:</i> A directory path suitable for temporary files under the 
-  conventions of the operating system. The specifics of how this path is 
-  determined are implementation defined. An error shall be reported if<code> !exists(p) 
+  <p><i>Returns:</i> An operating system dependent directory path suitable for temporary files. An error shall be reported if<code> !exists(p) 
   || !is_directory(p)</code>, where <code>p</code> is the path to be returned.</p>
-  <p>ISO/IEC 9945: The path supplied by the first environment variable found in the 
-  list TMPDIR, TMP, TEMP, TEMPDIR. If none of these are found, <code>&quot;/tmp&quot;</code>.</p>
-  <p><i>Windows:</i> The path reported by the <i>Windows</i> <code>GetTempPath</code> API function.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
-  <p>[<i>Note: </i>The <code>temp_directory_path()</code> name was chosen to emphasize that the return is a 
-  path, not just a single directory name.&nbsp; <i>-- end note</i>]</p>
+  <p><i><span style="background-color: #E0E0E0">The <code>temp_directory_path()</code> 
+  name was chosen to emphasize that the return is a path, not just a single 
+  directory name.</span></i></p>
+<blockquote>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">
+  
+  <p>[<i>Example:</i> For ISO 9945/POSIX based operating systems, the path 
+  supplied by the first environment variable found in the list TMPDIR, TMP, TEMP, TEMPDIR. If none of these are found, <code>&quot;/tmp&quot;</code>.</p>
+  <p>For Windows based operating systems, the path reported by the <i>Windows</i> <code>GetTempPath</code> API function. <i>-- end example</i>]</p>
+  
+      </td>
+    </tr>
+  </table>
+</blockquote>
 </blockquote>
 <pre>path <a name="unique_path">unique_path</a>(const path&amp; model=&quot;%%%%-%%%%-%%%%-%%%%&quot;);
 path unique_path(const path&amp; model, system::error_code&amp; ec);</pre>
@@ -2746,8 +2772,7 @@ path unique_path(const path&amp; model, system::error_code&amp; ec);</pre>
   random hexadecimal digit. [<i>Note:</i> The more bits of randomness in the 
   generated path name, the less likelihood of prior existence or being guessed. 
   Each replacement hexadecimal digit in the model adds four bits of randomness. 
-  The default model thus provides 64 bits of randomness. This is sufficient for 
-  most applications. <i>--end note</i>]</p>
+  The default model thus provides 64 bits of randomness. <i>--end note</i>]</p>
   <p><i>Returns:</i> A path identical to <code>model</code>, except that each 
   occurrence of a percent sign character is replaced by a random hexadecimal 
   digit character in the range 0-9, a-f.</p>
