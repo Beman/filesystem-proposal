@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-12<!--webbot bot="Timestamp" endspan i-checksum="12491" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-13<!--webbot bot="Timestamp" endspan i-checksum="12493" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -33,12 +33,13 @@ $id frontmatter=
   </table>
 
 
-<p><span style="font-style: italic; background-color: #FFFF99">Material  high-lighted in yellow 
-in this draft is known to be incomplete, incorrect, or 
-otherwise require further refinement.</span></p>
+<p><span style="font-style: italic; background-color: #FFFF99">Material 
+high-lighted in yellow is specific to this draft and will be revised before it 
+appears in a mailing.</span></p>
 
 
-<h1><span style="background-color: #FFFF99">Draft</span><br>
+<h1><span style="background-color: #FFFF99">Draft,
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->13 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31323" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -47,7 +48,7 @@ Filesystem Library Proposal (Revision 3)</h1>
       <a href="#Differences-Boost">Differences from Boost Filesystem</a><br>
       <a href="#Revision-history">Revision history</a><br>
       <a href="#TODO">TODO</a><br>
-      <a href="#TOC">Table of Contents</a><br>
+      <a href="#TOC">Proposed Wording Table of Contents</a><br>
       <a href="#Proposed-Wording">Proposed Wording</a><br>
       <a href="#Acknowledgements">Acknowledgements</a><br>
       <a href="#References">References</a>
@@ -89,7 +90,8 @@ N1975</a>, and are not repeated here.</p>
 (i.e. <code>char</code>) character strings with encodings other than the 
 operating system's native encoding. These facilities have been removed from the 
 Filesystem library proposal. Instead, proposal
-<span style="background-color: #FFFF99">N3398, String Interoperability Library</span>, 
+<span style="background-color: #FFFF99">
+<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3398.html">N3398, String Interoperability Library</a></span>, 
 provides general facilities that also handle the class <code>path</code> use 
 cases.</p>
 
@@ -102,7 +104,8 @@ reference documentation.</p>
 <h2><a name="Revision-history">Revision history</a></h2>
 
 
-<p><span style="background-color: #FFFF99">D3399</span>, Filesystem 
+<p><span style="background-color: #FFFF99">
+<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3399.html">D3399=12-0089</a></span>, Filesystem 
 Library Proposal (Revision 3). Changes include:</p>
 
 
@@ -129,23 +132,23 @@ Library Proposal (Revision 3). Changes include:</p>
   terms of behavior only. Private &quot;for exposition only&quot; members have been 
   removed.</li>
   <li>
-  <p><code>recursive_directory_iterator</code> functions <code>
+  <code>recursive_directory_iterator</code> functions <code>
   no_push_pending()</code> and <code>no_push()</code> have been renamed <code>
   recursion_pending()</code> and <code>disable_recursion_pending()</code>. 
   Option constant name <code>recurse</code> has been renamed <code>
   follow_directory_symlinks</code>.&nbsp; These are responses to a request from 
   Ed Smith-Rowland to improve clarity by reducing negative logic.</li>
   <li>
-  <p>A <code>recursive_directory_iterator</code> option <code>
+  A <code>recursive_directory_iterator</code> option <code>
   skip_permission_denied</code> has been added to skip directories with 
   permission denied, responding to several user requests.</li>
   <li>
-  <p><code>symlink_option</code> has been renamed <code>
+  <code>symlink_option</code> has been renamed <code>
   directory_options</code>, since it has become more general and now covers both
   <code>follow_directory_symlinks</code> and <code>skip_permission_denied</code> 
   options.&nbsp;</li>
   <li>
-  <p>Missing semantics provided for <code>copy_directory</code>. </li>
+  Missing semantics provided for <code>copy_directory</code>. </li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
   <li>R-value reference move semantics.</li>
@@ -232,6 +235,8 @@ C++0x.</p>
 
   <h2><a name="TODO">TODO</a></h2>
   <ul>
+    <li>At Portland meeting, review trademarked names with Filesystem Study 
+    Group and project editor.</li>
     <li>Ion Todirel suggests &quot;Would be nice if path::append was variadic, to 
     improve usability&quot;.</li>
     <li>Ion Todirel: Would be nice to have a make_relative. Need to review 
@@ -241,9 +246,7 @@ C++0x.</p>
     <li>Review Nick Stoughton's email for suggestions, action items.</li>
   </ul>
   
-  $endid
-
-$id wording_prefix=
+<h2>Proposed Wording <a name="TOC">Table of Contents</a></h2>
 
 <p>   <a href="#Filesystem Library">1  Filesystem Library </a><br>
       <a href="#Definitions">1.1  Definitions </a><br>
@@ -373,8 +376,8 @@ the working paper.</p>
 
 <p>Green shaded text in rectangular boxes calls attention to examples and notes 
 intended to illuminate differences in behavior between operating systems. 
-Trademarked names are used, as permitted by ISO/IEC Directives, Part2, section 
-6.6.3 Use of trade names and trademarks. It is the belief of the proposal author 
+Trademarked names are used, as permitted by <a href="#ISO-Drafting">ISO/IEC Directives</a>, Part2, section 
+6.6.3 <i>Use of trade names and trademarks</i>. It is the belief of the proposal author 
 that these examples and notes add considerable clarity, and should be retained.</p>
 
 <p><span style="font-style: italic; background-color: #E0E0E0">Start of proposed 

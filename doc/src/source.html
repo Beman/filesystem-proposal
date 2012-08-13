@@ -48,11 +48,7 @@ $include "../../../../doc/src/minimal.css"
 </head>
 
 <body>
-<p>$snippet frontmatter "$SNIPPET_FILE;" </p>
-
-<h2><a name="TOC">Table of Contents</a></h2>
-
-$snippet wording_prefix "$SNIPPET_FILE;"
+<p>$snippet frontmatter "$SNIPPET_FILE;"</p>
 
 <h2><a name="Definitions">Definitions</a> [fs.definitions]</h2>
 <p>The following definitions  shall apply throughout this $WHAT;:</p>
@@ -154,11 +150,11 @@ the same object within a file system.</p>
 <h2><a name="Conformance">Conformance</a> [fs.conformance]</h2>
 
 <h3>ISO/IEC 9945 conformance [<a name="fs.conform.9945">fs.conform.9945</a>]</h3>
-<p>Some behavior in this $WHAT; is specified by reference to ISO/IEC 9945. How such behavior is actually implemented is unspecified.</p>
+<p>Some behavior  is specified by reference to ISO/IEC 9945. How such behavior is actually implemented is unspecified.</p>
 <blockquote>
-<p>[<i>Note:</i> This constitutes an &quot;as if&quot; rule for implementation of 
-operating system dependent behavior. In practice implementations will usually call native 
-operating system API's. <i>--end note</i>]</p>
+<p>[<i>Note:</i> This constitutes an &quot;as if&quot; rule allowing implementations 
+to call native 
+operating system or other API's. <i>--end note</i>]</p>
 </blockquote>
 <p>Implementations are encouraged to provide such behavior 
  
@@ -188,16 +184,15 @@ reference
 may differ from their specification in 
 the presence of <a href="#file-system-race">file system races</a> ([fs.def.race]). No diagnostic is required.</p>
 <p>If the possibility of a file system race would make it unreliable for a program to 
-test for a precondition before calling a function described in this $WHAT;, <i>
-Requires</i> is not specified for the condition. Instead, the condition is 
-specified as a <i>Throws</i> condition.</p>
+test for a precondition before calling a function described herein, <i>
+Requires</i> is not specified for the condition.</p>
 <blockquote>
 <p>[<i>Note:</i> As a design practice, preconditions are not specified when it 
 is unreasonable for a program to detect them prior to calling the function. <i>
 -- end note</i>]</p>
 </blockquote>
 <h3>Operating system dependent behavior conformance [<a name="fs.conform.os">fs.conform.os</a>]</h3>
-<p>Some behavior is specified in this $WHAT; as being 
+<p>Some behavior is specified as being 
 operating system dependent ([fs.def.osdep]). What operation system an 
 implementation is dependent upon is implementation defined.</p>
 <p>It is permissible for an implementation to be dependent upon an operating 
@@ -702,12 +697,13 @@ otherwise it shall be treated as a regular file path.</p>
     <tr>
       <td width="100%">[<i>Note:</i> For ISO 9945/POSIX and Windows based operating 
       systems,<ul>
-        <li>The generic format is acceptable as a native path so format 
+        <li>The generic format is acceptable as a native path so paragraph 1 
+        does not apply and format 
         conversion is not performed.</li>
         <li>There is no need to distinguish between native format and generic 
-        format arguments so no extension is required.</li>
+        format arguments so paragraph 1 does not apply and&nbsp; no extension is required.</li>
         <li>Paths for regular files and paths for directories share the same 
-      syntax so there is no special treatment for a path with a last element of
+      syntax so paragraph 1 does not apply and there is no special treatment for a path with a last element of
       <i>directory-separator</i>.</li>
       </ul>
       <p>&nbsp;<i>-- end note</i>]</td>
