@@ -8,7 +8,7 @@ To experiment (Windows):
   Export boost subversion repo, say to trunk-ex
   pushd trunk-ex
   delete boost/filesystem.hpp, boost/filesystem, libs/filesystem
-  git clone git://github.com/Beman/filesystem-proposal-mods.git libs/filesystem
+  git clone git://github.com/Beman/filesystem-proposal.git libs/filesystem
   pushd boost
   mklink filesystem.hpp ..\libs\filesystem\include\boost\filesystem.hpp
   mklink cxx11_char_types.hpp ..\libs\filesystem\include\boost\cxx11_char_types.hpp
