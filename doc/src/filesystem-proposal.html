@@ -280,21 +280,22 @@ C++0x.</p>
 
 <p>   <a href="#Filesystem Library">1  Filesystem Library </a><br>
       <a href="#Definitions">1.1  Definitions </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#operating system dependent">1.1.1  operating system dependent behavior 
-</a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#file">1.1.2  file </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#file-system">1.1.3  file system </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#filename">1.1.4  filename </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path">1.1.5  path </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#Absolute-path">1.1.6  absolute path </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.7  relative path </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#canonical-path">1.1.8  canonical path </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.9  pathname </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#fs.def.native">1.1.10  native pathname format </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#link">1.1.11  link </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#hard-link">1.1.12  hard link </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.13  symbolic link </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#file-system-race">1.1.14  file system race </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#Absolute-path">1.1.1 absolute path </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#canonical-path">1.1.2 canonical path </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#directory">1.1.3 directory </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#file">1.1.4 file </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#file-system">1.1.5 file system </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#file-system-race">1.1.6 file system race </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#filename">1.1.7 filename </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#hard-link">1.1.8 hard link </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#link">1.1.9 link </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#fs.def.native">1.1.10 native pathname format </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#operating system dependent">1.1.11 operating system dependent 
+behavior </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path">1.1.12 path </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.13 pathname </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.14 relative path </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.15 symbolic link </a><br>
       <a href="#Conformance">1.2  Conformance </a><br>
       &nbsp;&nbsp;&nbsp;<a href="#fs.conform.9945">1.2.1  ISO/IEC 9945 conformance </a><br>
       &nbsp;&nbsp;&nbsp;<a href="#fs.conform.os">1.2.2  Operating system dependent behavior conformance </a><br>
@@ -441,18 +442,34 @@ these products.<p></p>
 
 <h2>1.1  <a name="Definitions">Definitions</a> [fs.definitions]</h2>
 <p>The following definitions  shall apply throughout this Clause:</p>
-<h3>1.1.1  <a name="operating system dependent">operating system dependent</a> behavior 
-[fs.def.osdep]</h3>
-<p>Behavior  that is dependent upon the behavior 
-and characteristics of an operating system. See [fs.conform.os].</p>
-<h3>1.1.2  <a name="file">file</a> [fs.def.file]</h3>
-<p>An object that can be written to, or read from, or both. A file 
+
+<h3>1.1.1  <a name="Absolute-path">absolute path</a> [fs.def.absolute-path]</h3>
+<p>A path that 
+unambiguously 
+identifies the location of a file without reference to an additional starting 
+location. The elements of a path that determine if it is absolute are 
+operating system dependent.</p>
+
+<h3>1.1.2  <a name="canonical-path">canonical path</a> [fs.def.cannonical-path]</h3>
+<p>An absolute path that has 
+no elements that are symbolic links, and no <code>&quot;.&quot;</code> or <code>&quot;..&quot;</code> elements.</p>
+<h3>1.1.3  <a name="directory">directory</a> [fs.def.directory]</h3>
+<p>A file within a file system that acts as a container of information about 
+other files, possibly including other directory files.</p>
+<h3>1.1.4  <a name="file">file</a> [fs.def.file]</h3>
+<p>An object within a file system that holds user or system data. Files can be written to, or read from, or both. A file 
 has certain attributes, including type. File types include regular files 
 and directories. Other types of files, such as symbolic links, may be supported by the 
 implementation.</p>
-<h3>1.1.3  <a name="file-system">file system</a> [fs.def.filesystem]</h3>
+<h3>1.1.5  <a name="file-system">file system</a> [fs.def.filesystem]</h3>
 <p>A collection of files and certain of their attributes.</p>
-<h3>1.1.4  <a name="filename">filename</a> [fs.def.filename]</h3>
+<h3>1.1.6  <a name="file-system-race">file system race</a> [fs.def.race]</h3>
+<p>The condition that occurs 
+when multiple threads, processes, or computers interleave access and 
+modification of 
+the same object within a file system.</p>
+
+<h3>1.1.7  <a name="filename">filename</a> [fs.def.filename]</h3>
   <p>The name of a file. Filenames <code>
   &quot;.&quot;</code>&nbsp; 
 and <code>&quot;..&quot;</code>&nbsp; have special meaning. The follow characteristics of 
@@ -476,44 +493,7 @@ and <code>&quot;..&quot;</code>&nbsp; have special meaning. The follow character
   files, such as directories.</p>
   </li>
 </ul>
-<h3>1.1.5  <a name="path">path</a> [fs.def.path]</h3>
-<p>A sequence of elements that identify 
-the location of a file within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
-root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
-A <a href="#fs.def.pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
-
-<h3>1.1.6  <a name="Absolute-path">absolute path</a> [fs.def.absolute-path]</h3>
-<p>A path that 
-unambiguously 
-identifies the location of a file without reference to an additional starting 
-location. The elements of a path that determine if it is absolute are 
-operating system dependent.</p>
-
-<h3>1.1.7  <a name="Relative-path">relative path</a> [fs.def.relative-path]</h3>
-<p>A path that 
-is not absolute, and so only 
-unambiguously 
-identifies the location of a file when resolved relative to 
-an implied starting location. The elements of a path that determine if it is 
-relative are operating system dependent.&nbsp; [<i>Note:</i> 
-Paths <code>&quot;.&quot;</code> and <code>&quot;..&quot;</code> are relative paths. <i>--end note</i>]</p>
-<h3>1.1.8  <a name="canonical-path">canonical path</a> [fs.def.cannonical-path]</h3>
-<p>An absolute path that has 
-no elements that are symbolic links, and no <code>&quot;.&quot;</code> or <code>&quot;..&quot;</code> elements.</p>
-<h3>1.1.9  pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
-<p>A character string that represents 
-the name of a 
-path. Pathnames are formatted according to the generic pathname grammar or an 
-operating system dependent 
-native pathname format.</p>
-
-<h3>1.1.10  native pathname format [<a name="fs.def.native">fs.def.native</a>]</h3>
-<p>The operating system dependent pathname format accepted by the host operating system.</p>
-<h3>1.1.11  <a name="link">link</a> [fs.def.link]</h3>
-<p>A directory entry object that associates a 
-filename with a file. On some file systems, several directory entries can 
-associate names with the same file.</p>
-<h3>1.1.12  <a name="hard-link">hard link</a> [fs.def.hardlink]</h3>
+<h3>1.1.8  <a name="hard-link">hard link</a> [fs.def.hardlink]</h3>
 <p>A link to an existing file. Some 
 file systems support multiple hard links to a file. If the last hard link to a 
 file is removed, the file itself is removed.</p>
@@ -521,7 +501,39 @@ file is removed, the file itself is removed.</p>
 <p>[<i>Note:</i> A hard link can be thought of as a shared-ownership smart 
 pointer to a file.<i> -- end note</i>]<i> </i></p>
 </blockquote>
-<h3>1.1.13  <a name="symbolic-link">symbolic link</a> [fs.def.symlink]</h3>
+<h3>1.1.9  <a name="link">link</a> [fs.def.link]</h3>
+<p>A directory entry object that associates a 
+filename with a file. On some file systems, several directory entries can 
+associate names with the same file.</p>
+
+<h3>1.1.10  native pathname format [<a name="fs.def.native">fs.def.native</a>]</h3>
+<p>The operating system dependent pathname format accepted by the host operating system.</p>
+<h3>1.1.11  <a name="operating system dependent">operating system dependent</a> behavior 
+[fs.def.osdep]</h3>
+<p>Behavior  that is dependent upon the behavior 
+and characteristics of an operating system. See [fs.conform.os].</p>
+<h3>1.1.12  <a name="path">path</a> [fs.def.path]</h3>
+<p>A sequence of elements that identify 
+the location of a file within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
+root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
+A <a href="#fs.def.pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
+
+<h3>1.1.13  pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
+<p>A character string that represents 
+the name of a 
+path. Pathnames are formatted according to the generic pathname grammar or an 
+operating system dependent 
+native pathname format.</p>
+
+<h3>1.1.14  <a name="Relative-path">relative path</a> [fs.def.relative-path]</h3>
+<p>A path that 
+is not absolute, and so only 
+unambiguously 
+identifies the location of a file when resolved relative to 
+an implied starting location. The elements of a path that determine if it is 
+relative are operating system dependent.&nbsp; [<i>Note:</i> 
+Paths <code>&quot;.&quot;</code> and <code>&quot;..&quot;</code> are relative paths. <i>--end note</i>]</p>
+<h3>1.1.15  <a name="symbolic-link">symbolic link</a> [fs.def.symlink]</h3>
 <p>A type of file with the 
 property that when the file is encountered during pathname resolution, a string 
 stored by the file is used to modify the pathname resolution.</p>
@@ -530,11 +542,6 @@ stored by the file is used to modify the pathname resolution.</p>
 If the file pointed to does not exist, the symbolic link is said to be a 
 &quot;dangling&quot; symbolic link.<i> -- end note</i>]<i> </i></p>
 </blockquote>
-<h3>1.1.14  <a name="file-system-race">file system race</a> [fs.def.race]</h3>
-<p>The condition that occurs 
-when multiple threads, processes, or computers interleave access and 
-modification of 
-the same object within a file system.</p>
 
 <h2>1.2  <a name="Conformance">Conformance</a> [fs.conformance]</h2>
 
