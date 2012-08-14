@@ -599,7 +599,7 @@ system emulator rather than the actual underlying operating system.</p>
 
     class <a href="#class-path">path</a>;
     
-    void swap(path&amp; lhs, path&amp; rhs) noexcept;
+    void swap(path&amp; lhs, path&amp; rhs);
     size_t <a href="#hash_value">hash_value</a>(const path&amp; p) noexcept;
 
     bool operator==(const path&amp; lhs, const path&amp; rhs) noexcept;
@@ -694,7 +694,7 @@ system emulator rather than the actual underlying operating system.</p>
     void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, system::error_code&amp; ec) noexcept;
     void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> option);
     void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> option,
-                           system::error_code&amp; ec noexcept);
+                           system::error_code&amp; ec) noexcept;
 
     void         <a href="#copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink);
     void         <a href="#copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink,
@@ -754,7 +754,7 @@ system emulator rather than the actual underlying operating system.</p>
     bool         i<a href="#is_regular_file2">s_regular_file</a>(const path&amp; p);
     bool         i<a href="#is_regular_file2">s_regular_file</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
-    bool         <a href="#is_symlink">is_symlink</a>(file_status s noexcept);
+    bool         <a href="#is_symlink">is_symlink</a>(file_status s) noexcept;
     bool         <a href="#is_symlink2">is_symlink</a>(const path&amp; p);
     bool         <a href="#is_symlink2">is_symlink</a>(const path&amp; p, system::error_code&amp; ec) noexcept;
 
@@ -907,7 +907,7 @@ system or for a particular file system.</p>
           path&amp; concat(InputIterator begin, InputIterator end);
         
         // <a href="#path-modifiers">modifiers</a>
-        void  <a href="#path-clear">clear</a>();
+        void  <a href="#path-clear">clear</a>() noexcept;
         path&amp; <a href="#absolute">make_absolute</a>(const path&amp; base);
         path&amp; <a href="#path-make_preferred">make_preferred</a>();
         path&amp; <a href="#path-remove_filename">remove_filename</a>();
@@ -1237,7 +1237,7 @@ template &lt;class InputIterator&gt;
  <p><i>Returns: </i><code>*this</code></p>
  </blockquote>
 <h3>1.5.8  <a name="path-modifiers"> <code>
-path</code> modifiers</a> [path.modifiers]</h3><pre>void <a name="path-clear">clear</a>();</pre>
+path</code> modifiers</a> [path.modifiers]</h3><pre>void <a name="path-clear">clear</a>() noexcept;</pre>
 <blockquote>
 <p><i>Postcondition:</i> <code>this-&gt;empty()</code> is true.</p>
 </blockquote>
@@ -1272,7 +1272,7 @@ returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
   </ul>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
-<pre><code>void <a name="path-swap">swap</a>(path&amp; rhs) noexcept;</code></pre>
+<pre><code>void <a name="path-swap">swap</a>(path&amp; rhs);</code></pre>
 <blockquote>
   <p><i>Effects:</i> Swaps the contents of the two paths.</p>
   <p><i>Complexity: </i>constant time.</p>
@@ -1510,7 +1510,7 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
 </blockquote>
  <p><h3>1.5.15   <a name="path-non-member-functions"> <code>path</code> non-member functions</a> 
 [path.non-member]</h3>
-<pre>void swap( path&amp; lhs, path&amp; rhs )</pre>
+<pre>void swap( path&amp; lhs, path&amp; rhs );</pre>
 <blockquote>
   <p><i>Effects: </i><code>lhs.swap(rhs)</code>.</p>
 </blockquote>
@@ -2330,13 +2330,17 @@ directory_options::follow_directory_symlink</code> <i>-- end note</i>]</p>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
 <p><i>Returns:</i> The value of the constructor <code>options</code> argument, 
 if present, otherwise <code>directory_options::none</code>.</p>
+<p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre>int level() const;</pre>
 <blockquote>
+<p><span style="background-color: #E0E0E0"><i>In retrospect, maybe this should 
+have been called depth(). But no one has ever complained, IIRC.</i></span></p>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
   <p><i>Returns:</i> The current depth of the directory tree being traversed. [<i>Note:</i> 
   The initial directory is level 0, its immediate subdirectories are level 1, 
   and so forth. <i>-- end note</i>]</p>
+<p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre>bool <code>recursion_pending</code>() const;</pre>
 <blockquote>
@@ -2344,6 +2348,7 @@ if present, otherwise <code>directory_options::none</code>.</p>
   <p><i>Returns:</i> <code>true</code> iff <code>disable_recursion_pending()</code> 
   has not been called subsequent to the prior construction or increment 
   operation.</p>
+  <p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre><code>recursive_directory_iterator</code>&amp; <a name="recursive_directory_iterator-increment">operator++</a>();
 recursive_directory_iterator&amp; increment(system::error_code&amp; ec);</pre>
@@ -2627,7 +2632,7 @@ path <a name="current_path2">current_path</a>(system::error_code&amp; ec) noexce
   library functions, or by another thread.&nbsp; <i>-- end note</i>]</p>
 </blockquote>
 <pre>void current_path(const path&amp; p);
-void current_path(const path&amp; p, system::error_code&amp; ec noexcept);</pre>
+void current_path(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> Establishes the postcondition, as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/chdir.html">chdir()</a></code>.</p>
 <p><i>Postcondition:</i> <code>equivalent(p, current_path())</code>.</p>
