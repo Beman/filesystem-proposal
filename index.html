@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-13<!--webbot bot="Timestamp" endspan i-checksum="12493" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-14<!--webbot bot="Timestamp" endspan i-checksum="12495" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->13 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31323" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->14 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31325" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -290,12 +290,13 @@ C++0x.</p>
 &nbsp;&nbsp;&nbsp;<a href="#hard-link">1.1.8 hard link </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#link">1.1.9 link </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#fs.def.native">1.1.10 native pathname format </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#operating system dependent">1.1.11 operating system dependent 
+&nbsp;&nbsp;&nbsp;<a href="#NTCTS">1.1.11 NTCTS </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#operating system dependent">1.1.12 operating system dependent 
 behavior </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path">1.1.12 path </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.13 pathname </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.14 relative path </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.15 symbolic link </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path">1.1.13 path </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.14 pathname </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.15 relative path </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.16 symbolic link </a><br>
       <a href="#Conformance">1.2  Conformance </a><br>
       &nbsp;&nbsp;&nbsp;<a href="#fs.conform.9945">1.2.1  ISO/IEC 9945 conformance </a><br>
       &nbsp;&nbsp;&nbsp;<a href="#fs.conform.os">1.2.2  Operating system dependent behavior conformance </a><br>
@@ -508,24 +509,31 @@ associate names with the same file.</p>
 
 <h3>1.1.10  native pathname format [<a name="fs.def.native">fs.def.native</a>]</h3>
 <p>The operating system dependent pathname format accepted by the host operating system.</p>
-<h3>1.1.11  <a name="operating system dependent">operating system dependent</a> behavior 
+<h3>1.1.11  <a name="NTCTS">NTCTS</a> [fs.def.ntcts]</h3>
+<p>Acronym for &quot;null-terminated character-type sequence&quot;. Describes a sequence 
+of values of a given character type terminated by that type's null character. If 
+the character type is <code>charT</code>, the null character can be constructed 
+by <code>charT()</code>. <span style="background-color: #E0E0E0"><i>This is an 
+expansion of the definition in chapter 17; that definition is very hard to 
+parse. A request for clarification has been sent to the project editor.</i></span></p>
+<h3>1.1.12  <a name="operating system dependent">operating system dependent</a> behavior 
 [fs.def.osdep]</h3>
 <p>Behavior  that is dependent upon the behavior 
 and characteristics of an operating system. See [fs.conform.os].</p>
-<h3>1.1.12  <a name="path">path</a> [fs.def.path]</h3>
+<h3>1.1.13  <a name="path">path</a> [fs.def.path]</h3>
 <p>A sequence of elements that identify 
 the location of a file within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
 root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
 A <a href="#fs.def.pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
 
-<h3>1.1.13  pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
+<h3>1.1.14  pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
 <p>A character string that represents 
 the name of a 
 path. Pathnames are formatted according to the generic pathname grammar or an 
 operating system dependent 
 native pathname format.</p>
 
-<h3>1.1.14  <a name="Relative-path">relative path</a> [fs.def.relative-path]</h3>
+<h3>1.1.15  <a name="Relative-path">relative path</a> [fs.def.relative-path]</h3>
 <p>A path that 
 is not absolute, and so only 
 unambiguously 
@@ -533,7 +541,7 @@ identifies the location of a file when resolved relative to
 an implied starting location. The elements of a path that determine if it is 
 relative are operating system dependent.&nbsp; [<i>Note:</i> 
 Paths <code>&quot;.&quot;</code> and <code>&quot;..&quot;</code> are relative paths. <i>--end note</i>]</p>
-<h3>1.1.15  <a name="symbolic-link">symbolic link</a> [fs.def.symlink]</h3>
+<h3>1.1.16  <a name="symbolic-link">symbolic link</a> [fs.def.symlink]</h3>
 <p>A type of file with the 
 property that when the file is encountered during pathname resolution, a string 
 stored by the file is used to modify the pathname resolution.</p>
@@ -1128,21 +1136,27 @@ character set.</p>
 
 </blockquote>
 <h3>1.5.3  <a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
-<p>Template parameters named <code>InputIterator</code> are required meet the C++ standard library
-<code>InputIterator</code> requirements. The value type is required to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
+<p>Template parameters named <code>InputIterator</code> are required to meet the C++ standard library 
+input iterator requirements ([input.iterators]). The value type shall be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
 <p>Template parameters named <code><a name="Source">Source</a></code> are required to be 
 one of:</p>
 <ul>
-  <li>A <code>basic_string</code> with <code>charT</code> of <code>char</code>, <code>
+  <li>A <code>basic_string&lt;charT, traits&gt;</code> with <code>charT</code> of <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li>An iterator meeting the <code>InputIterator</code> 
-  requirements and pointing to a null terminated string. The value type is required 
-  to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
+  <li>A type meeting the input iterator requirements that iterators over a NTCTS. The value type 
+  shall be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
   char32_t</code>.</li>
-  <li>A null terminated C-array. The value type is required to be <code>char</code>, <code>
+  <li>A character array that after array-to-pointer conversion results in a 
+  pointer to a NTCTS. The value type shall be <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
   <li>A <code>directory_entry</code>.</li>
 </ul>
+
+<blockquote>
+  <p>[<i>Note:</i> See <a href="#path-Conversions">path conversions</a> ([path.cvt]) 
+  for how these value types and their encodings convert to <code>
+  path::value_type</code> and its encoding. <i>-- end note</i>]</p>
+</blockquote>
 
 <h3>1.5.4   <a name="path-constructors"> <code>
 path</code> constructors</a> [path.construct]</h3>
