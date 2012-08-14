@@ -301,7 +301,7 @@ $endif;    enum <a name="file_type" href="#Enum-file_type">file_type</a>
 $if $TARGET; == BOOST
     typedef std::time_t  file_time_type;
 $else
-    typedef boost::chrono::system_clock::time_point  file_time_type;
+    typedef chrono::time_point&lt;<b><i>unspecified-trivial-clock</i></b>&gt;  file_time_type;
 $endif;
     // <a href="#Operational-functions">operational functions</a>
 
@@ -427,6 +427,10 @@ $endif;
     path         <a href="#unique_path">unique_path</a>(const path&amp; model, system::error_code&amp; ec) noexcept;
 
 $NAMESPACE_END;</pre>
+$if $TARGET; != BOOST
+ <p><b><i><code>unspecified-trivial-clock</code></i></b> is an unspecified type 
+provided by the implementation that satisfies the TrivialClock requirements ([time.clock.req]).</p>
+$endif
 <h2><a name="Error-reporting">Error reporting</a> [fs.err.report]</h2>
 <p>Filesystem library functions often provide two overloads, one that 
 throws an exception to report file system errors, and another that sets an <code>error_code</code>.</p>
