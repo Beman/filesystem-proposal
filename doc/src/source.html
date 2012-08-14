@@ -16,6 +16,7 @@ $if $TARGET; == BOOST
   $def WHAT "reference documentation"
   $def SNIPPET_FILE "boost_snippets.html"
   $def HEADER "boost/filesystem.hpp"
+  $def STD "std::"
   $def NAMESPACE boost
   $def SUBNAMESPACE filesystem
   $def NAMESPACE_BEGIN "namespace boost
@@ -32,6 +33,7 @@ $else
   $def WHAT "Clause"
   $def SNIPPET_FILE "tr2_snippets.html"
   $def HEADER "filesystem"
+  $def STD ""
   $def NAMESPACE std
   $def SUBNAMESPACE filesystem
   $def NAMESPACE_BEGIN "namespace std { namespace tbd { namespace filesystem {
@@ -211,7 +213,7 @@ system emulator rather than the actual underlying operating system.</p>
 $if $TARGET; == BOOST    bool lexicographical_compare(path::iterator first1, path::iterator last1,
       path::iterator first2, path::iterator last2);
 $endif;    void swap(path&amp; lhs, path&amp; rhs) noexcept;
-    std::size_t <a href="#hash_value">hash_value</a>(const path&amp; p) noexcept;
+    $STD;size_t <a href="#hash_value">hash_value</a>(const path&amp; p) noexcept;
 
     bool operator==(const path&amp; lhs, const path&amp; rhs) noexcept;
     bool operator!=(const path&amp; lhs, const path&amp; rhs) noexcept;
@@ -222,10 +224,13 @@ $endif;    void swap(path&amp; lhs, path&amp; rhs) noexcept;
 
     path operator/ (const path&amp; lhs, const path&amp; rhs);
 
-    std::ostream&amp;  operator&lt;&lt;( std::ostream&amp; os, const path&amp; p );
-    std::wostream&amp; operator&lt;&lt;( std::wostream&amp; os, const path&amp; p );
-    std::istream&amp;  operator&gt;&gt;( std::istream&amp; is, path&amp; p );
-    std::wistream&amp; operator&gt;&gt;( std::wistream&amp; is, path&amp; p )
+    template &lt;class Char, class Traits&gt;
+    $STD;basic_ostream&lt;Char, Traits&gt;&amp;
+    operator&lt;&lt;($STD;basic_ostream&lt;Char, Traits&gt;&amp; os, const path&amp; p);
+
+    template &lt;class Char, class Traits&gt;
+    $STD;basic_istream&lt;Char, Traits&gt;&amp;
+    operator&gt;&gt;($STD;basic_istream&lt;Char, Traits&gt;&amp; is, path&amp; p);
 
     class <a href="#Class-filesystem_error">filesystem_error</a>;      
     class <a href="#Class-directory_entry">directory_entry</a>;
@@ -475,7 +480,7 @@ system or for a particular file system.</p>
       {
       public:
         typedef <b><i><a href="#value_type">see below</a></i></b>                                    value_type;
-        typedef std::basic_string&lt;value_type&gt;                string_type;
+        typedef $STD;basic_string&lt;value_type&gt;                string_type;
         constexpr value_type                                 preferred_separator;
 $if $TARGET; == BOOST        typedef std::codecvt&lt;wchar_t, char, std::mbstate_t&gt;  codecvt_type;
 $endif;
@@ -564,7 +569,7 @@ $endif;        template &lt;class InputIterator&gt;
 
         // <a href="#path-compare">compare</a>
         int  <a href="#path-compare">compare</a>(const path&amp; p) const noexcept;
-        int  <a href="#path-compare">compare</a>(const std::string&amp; s) const;
+        int  <a href="#path-compare">compare</a>(const $STD;string&amp; s) const;
         int  <a href="#path-compare">compare</a>(const value_type* s) const;
 
         // <a href="#path-decomposition">decomposition</a>
@@ -866,7 +871,7 @@ template &lt;class InputIterator&gt;
  and <code><i>effective-argument</i></code> is:</p>
  <ul><li><code>x.native()</code> if <code>x</code> is present and is <code>const path&amp;</code>, otherwise</li>
  <li><code>s</code>, where <code>s</code> is
-  <code>std::basic_string&lt;typename std::iterator_traits&lt;InputIterator&gt;::value_type&gt;<br>s(begin, end)</code>,
+  <code>$STD;basic_string&lt;typename $STD;iterator_traits&lt;InputIterator&gt;::value_type&gt;<br>s(begin, end)</code>,
    if <code>begin</code> and <code>end</code> arguments are present, otherwise</li>
  <li><code>x</code>.</li></ul><p>If the value type of <code><i>effective-argument</i></code> would not be <code>path::value_type</code>, the actual argument or argument range is first
    converted so that <code><i>effective-argument</i></code> has value type <code>path::value_type</code>.</li> </p>
@@ -978,7 +983,7 @@ function's return type, conversion is performed by <code>cvt</code>.</p>
   <p>Remark: The elements are determined as if by iteration over the half-open 
   range [<code>begin()</code>, <code>end()</code>) for <code>*this</code> and&nbsp; <code>p</code>.</p>
 </blockquote>
-<pre>int compare(const std::string&amp; s) const</pre>
+<pre>int compare(const $STD;string&amp; s) const</pre>
 <blockquote>
   <p><i>Returns:</i> <code>compare(path(s))</code>.</p>
 </blockquote>
@@ -1217,7 +1222,7 @@ $endif
 <blockquote>
   <p><i>Effects: </i><code>lhs.swap(rhs)</code>.</p>
 </blockquote>
-<pre>std::size_t <a name="hash_value">hash_value</a> (const path&amp; p);</pre>
+<pre>$STD;size_t <a name="hash_value">hash_value</a> (const path&amp; p);</pre>
 <blockquote>
   <p><i>Returns:</i> A hash value for the path <code>p</code>. If
   for two paths, <code>p1 == p2</code> then <code>hash_value(p1) == hash_value(p2)</code>.</p>
@@ -1261,53 +1266,58 @@ $endif
 </blockquote>
 <h3><code>path</code><a name="path-inserter-extractor"> inserter 
   and extractor</a> [path.io]</h3>
-<p> The inserter and extractor delimit the string with double-quotes (<code>&quot;</code>) 
-so that paths with embedded spaces will round trip correctly. Ampersand (<code>&amp;</code>) 
-is used as an escape character, so the path can itself contain double quotes.</p>
+<p> The inserter and, optionally, the extractor delimit the string with <code>
+'&quot;'</code> so that paths with embedded spaces will round trip correctly. An escape character, 
+<code>'&amp;'</code>, allows paths to contain <code>'&quot;'</code>. [<i>Note:</i> <code>
+'\\'</code> is not used as an escape character because it is used as a directory 
+separator by some operating systems and so would be very confusing and error 
+prone, particularly coupled with the C++ requirement to escape a backslash in 
+literals . <i>-- end note</i>]</p>
 <pre>template &lt;class Char, class Traits&gt;
-std::basic_ostream&lt;Char, Traits&gt;&amp; operator&lt;&lt;(std::basic_ostream&lt;Char, Traits&gt;&amp; os,
-                                             const path&amp; p)</pre>
+$STD;basic_ostream&lt;Char, Traits&gt;&amp;
+operator&lt;&lt;($STD;basic_ostream&lt;Char, Traits&gt;&amp; os, const path&amp; p);</pre>
 <blockquote>
-  <p><i>Effects: </i>Insert characters into <code>os</code>:</p>
+  <p><i>Effects: </i>Behaves as a formatted output function ([ostream.formatted.reqmts]). 
+  After a sentry object is constructed it inserts characters into <code>os</code>:</p>
   <ul>
     <li>
-  <p>A double-quote.</p>
+  <code>'&quot;'</code>, then</li>
+    <li>
+  Each character in <code>p.string&lt;$STD;basic_string&lt;Char, Traits&gt;&gt;()</code>. 
+  If the character to be inserted is <code>'&amp;'</code> or <code>'&quot;'</code>, first insert 
+  <code>'&amp;'</code> before it, then 
     </li>
     <li>
-  <p>Each character in <code>p.string&lt;std::basic_string&lt;Char&gt;&gt;()</code>. 
-  If the character to be inserted is equal to the escape character or a 
-  double-quote, as determined by <code>operator==</code>, first insert the 
-  escape character.</p>
-    </li>
-    <li>
-  <p>A double-quote.</p>
+  <code>'&quot;'</code>.
     </li>
   </ul>
   <p><i>Returns:</i> <code>os</code></p>
+  <p><i>Remarks:</i> Character equality is determined by <code>Traits::eq</code>.</p>
 </blockquote>
 <pre>template &lt;class Char, class Traits&gt;
-inline std::basic_istream&lt;Char, Traits&gt;&amp;
-  operator&gt;&gt;(std::basic_istream&lt;Char, Traits&gt;&amp; is, path&amp; p)
-</pre>
+$STD;basic_istream&lt;Char, Traits&gt;&amp;
+operator&gt;&gt;($STD;basic_istream&lt;Char, Traits&gt;&amp; is, path&amp; p);</pre>
 <blockquote>
-  <p><i>Effects:&nbsp; </i>Extract characters from os:</p>
+  <p><i>Effects:&nbsp; </i>Behaves as a formatted input function ([istream.formatted.reqmts]). 
+  After a sentry<br>
+  object is constructed, extracts characters from <code>is</code>:</p>
   <ul>
-    <li>If the first character that would be extracted is equal to double-quote, 
-    as determined by <code>operator==</code>, then:<ul>
-      <li>Discard the initial double-quote.</li>
+    <li>If the first character that would be extracted is <code>'&quot;'</code>, then:<ul>
+      <li>Discard the initial <code>'&quot;'</code>.</li>
       <li>Save the value and then turn off the <code>skipws</code> flag.</li>
       <li><code>p.clear()</code></li>
-      <li>Until an unescaped double-quote character is reached or <code>
+      <li>Until a <code>'&quot;'</code> character not preceded by <code>'&amp;'</code> is reached or <code>
       is.not_good()</code>, extract characters from <code>os</code> and append 
-      them to <code>p</code>, except that if an escape character is reached, 
+      them to <code>p</code>, except that if <code>'&amp;'</code> is reached, 
       ignore it and append the next character to <code>p</code>.</li>
-      <li>Discard the final double-quote character.</li>
+      <li>Discard the final <code>'&quot;'</code> character.</li>
       <li>Restore the <code>skipws</code> flag to its original value.</li>
     </ul>
     </li>
     <li>Otherwise, <code>os &gt;&gt; p</code>.</li>
   </ul>
   <p><i>Returns:</i> <code>is</code></p>
+  <p><i>Remarks:</i> Character equality is determined by <code>Traits::eq</code>.</p>
   </blockquote>
 <h2><a name="Class-filesystem_error">Class <code>filesystem_error</code> 
 [class.filesystem_error]</a></h2>
@@ -1317,11 +1327,11 @@ inline std::basic_istream&lt;Char, Traits&gt;&amp;
       public:
         filesystem_error();
         filesystem_error(const filesystem_error&amp;);
-        <a href="#filesystem_error-2-arg">filesystem_error</a>(const std::string&amp; what_arg,
+        <a href="#filesystem_error-2-arg">filesystem_error</a>(const $STD;string&amp; what_arg,
           system::error_code ec);
-        <a href="#filesystem_error-3-arg">filesystem_error</a>(const std::string&amp; what_arg,
+        <a href="#filesystem_error-3-arg">filesystem_error</a>(const $STD;string&amp; what_arg,
           const path&amp; p1, system::error_code ec);
-        <a href="#filesystem_error-4-arg">filesystem_error</a>(const std::string&amp; what_arg,
+        <a href="#filesystem_error-4-arg">filesystem_error</a>(const $STD;string&amp; what_arg,
           const path&amp; p1, const path&amp; p2, system::error_code ec);
 
         filesystem_error&amp; filesystem_error(const filesystem_error&amp;);
@@ -1340,7 +1350,7 @@ objects thrown as exceptions to report file system errors from functions describ
 $WHAT;.</p>
 <h3> <a name="filesystem_error-members"> <code>filesystem_error</code> members</a> 
 [filesystem_error.members]</h3>
-<pre><a name="filesystem_error-2-arg">filesystem_error</a>(const std::string&amp; what_arg, error_code ec);</pre>
+<pre><a name="filesystem_error-2-arg">filesystem_error</a>(const $STD;string&amp; what_arg, error_code ec);</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="46%">
@@ -1368,7 +1378,7 @@ $WHAT;.</p>
     </tr>
   </table>
 </blockquote>
-<pre><a name="filesystem_error-3-arg">filesystem_error</a>(const std::string&amp; what_arg, const path_type&amp; p1, error_code ec);</pre>
+<pre><a name="filesystem_error-3-arg">filesystem_error</a>(const $STD;string&amp; what_arg, const path_type&amp; p1, error_code ec);</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="46%">
@@ -1396,7 +1406,7 @@ $WHAT;.</p>
     </tr>
   </table>
 </blockquote>
-<pre><a name="filesystem_error-4-arg">filesystem_error</a>(const std::string&amp; what_arg, const path_type&amp; p1, const path_type&amp; p2, error_code ec);</pre>
+<pre><a name="filesystem_error-4-arg">filesystem_error</a>(const $STD;string&amp; what_arg, const path_type&amp; p1, const path_type&amp; p2, error_code ec);</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="46%">
