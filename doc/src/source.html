@@ -120,6 +120,13 @@ associate names with the same file.</p>
 
 <h3>native pathname format [<a name="fs.def.native">fs.def.native</a>]</h3>
 <p>The operating system dependent pathname format accepted by the host operating system.</p>
+<h3><a name="NTCTS">NTCTS</a> [fs.def.ntcts]</h3>
+<p>Acronym for &quot;null-terminated character-type sequence&quot;. Describes a sequence 
+of values of a given character type terminated by that type's null character. If 
+the character type is <code>charT</code>, the null character can be constructed 
+by <code>charT()</code>. <span style="background-color: #E0E0E0"><i>This is an 
+expansion of the definition in chapter 17; that definition is very hard to 
+parse. A request for clarification has been sent to the project editor.</i></span></p>
 <h3><a name="operating system dependent">operating system dependent</a> behavior 
 [fs.def.osdep]</h3>
 <p>Behavior  that is dependent upon the behavior 
@@ -769,21 +776,27 @@ character set.</p>
 
 </blockquote>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
-<p>Template parameters named <code>InputIterator</code> are required meet the C++ standard library
-<code>InputIterator</code> requirements. The value type is required to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
+<p>Template parameters named <code>InputIterator</code> are required to meet the C++ standard library 
+input iterator requirements ([input.iterators]). The value type shall be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
 <p>Template parameters named <code><a name="Source">Source</a></code> are required to be 
 one of:</p>
 <ul>
-  <li>A <code>basic_string</code> with <code>charT</code> of <code>char</code>, <code>
+  <li>A <code>basic_string&lt;charT, traits&gt;</code> with <code>charT</code> of <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
-  <li>An iterator meeting the <code>InputIterator</code> 
-  requirements and pointing to a null terminated string. The value type is required 
-  to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
+  <li>A type meeting the input iterator requirements that iterators over a NTCTS. The value type 
+  shall be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
   char32_t</code>.</li>
-  <li>A null terminated C-array. The value type is required to be <code>char</code>, <code>
+  <li>A character array that after array-to-pointer conversion results in a 
+  pointer to a NTCTS. The value type shall be <code>char</code>, <code>
   wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
   <li>A <code>directory_entry</code>.</li>
 </ul>
+
+<blockquote>
+  <p>[<i>Note:</i> See <a href="#path-Conversions">path conversions</a> ([path.cvt]) 
+  for how these value types and their encodings convert to <code>
+  path::value_type</code> and its encoding. <i>-- end note</i>]</p>
+</blockquote>
 
 <h3> <a name="path-constructors"> <code>
 path</code> constructors</a> [path.construct]</h3>
