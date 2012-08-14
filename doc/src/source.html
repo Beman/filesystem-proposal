@@ -499,7 +499,7 @@ $endif;
         template &lt;class InputIterator&gt;
           path(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
 
-       ~path() noexcept = default;
+       ~path() = default;
 
         // <a href="#path-assignments">assignments</a>
         path&amp; operator=(const path&amp;) = default;
@@ -1617,7 +1617,7 @@ involved. Input from security experts is needed.</span></i></p>
                              <a href="#Enum-perms">perms</a> prms = perms_not_known) noexcept;
         file_status(const file_status&amp;) noexcept = default;
         file_status(file_status&amp;&amp;) noexcept = default;
-       ~file_status() noexcept = default;
+       ~file_status() = default;
 
         file_status&amp; operator=(const file_status&amp;) noexcept = default;
         file_status&amp; operator=(file_status&amp;&amp;) noexcept = default;
@@ -1673,7 +1673,7 @@ and permissions of a file.</p>
         directory_entry(directory_entry&amp;&amp;) noexcept = default;
         explicit directory_entry(const path_type&amp; p, file_status st=file_status(),
           file_status symlink_st=file_status());
-       ~directory_entry() noexcept = default; 
+       ~directory_entry() = default; 
 
         // <a href="#directory_entry-modifiers">modifiers</a>
         directory_entry&amp; operator=(const directory_entry&amp;) = default;
@@ -1862,7 +1862,7 @@ compliant iteration over the contents of a directory. Also see class <code><a hr
         directory_iterator(const path&amp; p, system::error_code&amp; ec) noexcept;
         directory_iterator(const directory_iterator&amp;) noexcept;
         directory_iterator(directory_iterator&amp;&amp;) = deleted;
-       ~directory_iterator() noexcept = default;
+       ~directory_iterator() = default;
 
         directory_iterator&amp; operator=(const directory_iterator&amp;) = default;
         directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = deleted;
@@ -1980,7 +1980,7 @@ its sub-directories.</p>
           <a href="#symlink_option">directory_options</a> options, system::error_code&amp; ec) noexcept;
         recursive_directory_iterator(const path&amp; p, system::error_code&amp; ec) noexcept;
         recursive_directory_iterator(directory_iterator&amp;&amp;) = deleted;
-       ~recursive_directory_iterator() noexcept = default;
+       ~recursive_directory_iterator() = default;
 
         // observers
         directory_options  options() const;
