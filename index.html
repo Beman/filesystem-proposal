@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-14<!--webbot bot="Timestamp" endspan i-checksum="12495" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-15<!--webbot bot="Timestamp" endspan i-checksum="12497" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->14 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31325" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->15 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31327" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -1257,12 +1257,29 @@ path</code> modifiers</a> [path.modifiers]</h3><pre>void <a name="path-clear">cl
 </blockquote>
 <pre>path&amp; <a name="path-make_preferred">make_preferred</a>();</pre>
 <blockquote>
-  <p><i>Effects: </i>For an operating system whereach <i>directory-separator</i> 
+  <p><i>Effects: </i>Each <i>directory-separator</i> 
   is converted to <i>preferred-separator</i>.</p>
   <p><i>Returns:</i> <code>*this</code></p>
-<p>[<i>Example:</i> On an operating system that uses backslash as 
-its preferred-separator,&nbsp; <code>path(&quot;foo/bar&quot;).make_preferred()</code> 
-returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
+<p>[<i>Example:</i></p>
+  <blockquote>
+    <pre><code>path p(&quot;foo/bar&quot;);
+std::cout &lt;&lt; p &lt;&lt; '\n';
+</code>p.make_preferred();
+<code>std::cout &lt;&lt; p &lt;&lt; '\n';</code></pre>
+  </blockquote>
+  <p>On an operating system where <i>preferred-separator</i> is the same as <i>
+  directory-separator</i>, the output is:</p>
+  <blockquote>
+    <pre>&quot;foo/bar&quot;
+&quot;foo/bar&quot;</pre>
+  </blockquote>
+  <p>On an operating system where <i>preferred-separator</i> is a backslash, the 
+  output is:</p>
+  <blockquote>
+    <pre>&quot;foo/bar&quot;
+&quot;foo\bar&quot;</pre>
+  </blockquote>
+  <p> <i>-- end example</i>]</p>
 </blockquote>
 
 <pre>path&amp; <a name="path-remove_filename">remove_filename</a>();</pre>
