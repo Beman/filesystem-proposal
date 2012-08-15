@@ -607,7 +607,7 @@ system emulator rather than the actual underlying operating system.</p>
 
     class <a href="#class-path">path</a>;
     
-    void swap(path&amp; lhs, path&amp; rhs);
+    void swap(path&amp; lhs, path&amp; rhs) noexcept;
     size_t <a href="#hash_value">hash_value</a>(const path&amp; p) noexcept;
 
     bool operator==(const path&amp; lhs, const path&amp; rhs) noexcept;
@@ -920,7 +920,7 @@ system or for a particular file system.</p>
         path&amp; <a href="#path-make_preferred">make_preferred</a>();
         path&amp; <a href="#path-remove_filename">remove_filename</a>();
         path&amp; <a href="#path-replace_extension">replace_extension</a>(const path&amp; new_extension = path());
-        void  <a href="#path-swap">swap</a>(path&amp; rhs);
+        void  <a href="#path-swap">swap</a>(path&amp; rhs) noexcept;
 
         // <a href="#path-native-format-observers">native format observers</a>
         const string_type&amp;  <a href="#native">native</a>() const noexcept;  // native format, encoding
@@ -1303,10 +1303,17 @@ std::cout &lt;&lt; p &lt;&lt; '\n';
   </ul>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
-<pre><code>void <a name="path-swap">swap</a>(path&amp; rhs);</code></pre>
+<pre><code>void <a name="path-swap">swap</a>(path&amp; rhs)</code> noexcept<code>;</code></pre>
 <blockquote>
   <p><i>Effects:</i> Swaps the contents of the two paths.</p>
   <p><i>Complexity: </i>constant time.</p>
+  <p><span style="background-color: #E0E0E0"><i>See </i></span><i>
+  <span class="gI"><span style="background-color: #E0E0E0">
+  &nbsp;[c++std-filesystem-44] from </span></span>
+  <span email="daniel.kruegler@gmail.com" name="Daniel Krügler" class="gD">
+  <span style="background-color: #E0E0E0">Daniel Krügler </span></span>
+  <span class="gI"><span style="background-color: #E0E0E0">for <code>noexcept</code> 
+  rationale.</span></span></i></p>
 </blockquote>
 
 <h3>1.5.9   <a name="path-native-format-observers"><code>path</code> native format observers</a> 
