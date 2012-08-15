@@ -279,8 +279,8 @@ C++0x.</p>
 <h2>Proposed Wording <a name="TOC">Table of Contents</a></h2>
 
 <p>   <a href="#Filesystem Library">1  Filesystem Library </a><br>
-      <a href="#Definitions">1.1  Definitions </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#Absolute-path">1.1.1 absolute path </a><br>
+      <a href="#Definitions">1.1 Definitions </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#Absolute-path">1.1.1 absolute path </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#canonical-path">1.1.2 canonical path </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#directory">1.1.3 directory </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#file">1.1.4 file </a><br>
@@ -297,107 +297,72 @@ behavior </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.14 pathname </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.15 relative path </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.16 symbolic link </a><br>
-      <a href="#Conformance">1.2  Conformance </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#fs.conform.9945">1.2.1  ISO/IEC 9945 conformance </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#fs.conform.os">1.2.2  Operating system dependent behavior conformance </a><br>
-      <a href="#Header-filesystem-synopsis">1.3  Header <code>&lt;filesystem&gt;</code> synopsis 
+<a href="#Conformance">1.2 Conformance </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#fs.conform.9945">1.2.1 ISO/IEC 9945 conformance </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#fs.conform.os">1.2.2 Operating system dependent behavior 
+conformance </a><br>
+<a href="#fs.req">1.3 Requirements </a><br>
+<a href="#Header-filesystem-synopsis">1.4 Header <code>&lt;filesystem&gt;</code> 
+synopsis </a><br>
+<a href="#Error-reporting">1.5 Error reporting </a><br>
+<a href="#class-path">1.6 Class <code>path</code> </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path.generic">1.6.1 Generic pathname format </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-Conversions">1.6.2 <code>path</code> conversions </a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-Conversions-to-native-format">1.6.2.1 <code>path</code> 
+argument format conversions </a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path.arg.convert">1.6.2.2 <code>path</code> type and encoding 
+conversions </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-Requirements">1.6.3 <code>path</code> Requirements </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-constructors">1.6.4 <code>path</code> constructors </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-assignments">1.6.5 <code>path</code> assignments </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-appends">1.6.6 <code><font size="4">path</font></code> appends
 </a><br>
-      <a href="#Error-reporting">1.4  Error reporting </a><br>
-      <a href="#class-path">1.5  Class <code>path</code> </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path.generic">1.5.1  Generic pathname format </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-Conversions">1.5.2  <code>path</code> conversions </a><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-Conversions-to-native-format">1.5.2.1  <code>path</code> argument 
-format conversions </a><br>
-      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path.arg.convert">1.5.2.2  <code>path</code> type and encoding conversions </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-Requirements">1.5.3  <code>path</code> Requirements </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-constructors">1.5.4    <code>
-path</code> constructors </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-assignments">1.5.5    <code>
-path</code> assignments </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-appends">1.5.6  <code><font size="4"> path</font></code> appends 
+&nbsp;&nbsp;&nbsp;<a href="#path-concatenation">1.6.7 <code>path</code> concatenation </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-modifiers">1.6.8 <code>path</code> modifiers </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-native-format-observers">1.6.9 <code>path</code> native format 
+observers </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-generic-format-observers">1.6.10 <code>path</code> generic 
+format observers </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-compare">1.6.11 <code>path</code> compare </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-decomposition">1.6.12 <code>path</code> decomposition </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-query">1.6.13 <code>path</code> query </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-iterators">1.6.14 <code>path</code> iterators </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-non-member-functions">1.6.15 <code>path</code> non-member 
+functions </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path-inserter-extractor">1.6.16 <code>path</code> inserter and 
+extractor </a><br>
+<a href="#Class-filesystem_error">1.7 Class <code>filesystem_error</code> </a>
+<br>
+&nbsp;&nbsp;&nbsp;<a href="#filesystem_error-members">1.7.1 <code>filesystem_error</code> 
+members </a><br>
+<a href="#Enum-file_type">1.8 Enum file_type </a><br>
+<a href="#Enum-perms">1.9 Enum perms </a><br>
+<a href="#file_status">1.10 Class file_status </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#file_status-constructors">1.10.1 <code>file_status</code> 
+constructors </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#file_status-observers">1.10.2 <code>file_status</code> observers
 </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-concatenation">1.5.7  <code>path</code> concatenation </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-modifiers">1.5.8   <code>
-path</code> modifiers </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-native-format-observers">1.5.9   <code>path</code> native format observers 
+&nbsp;&nbsp;&nbsp;<a href="#file_status-modifiers">1.10.3 <code>file_status</code> modifiers
 </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-generic-format-observers">1.5.10   <code>path</code> generic format observers 
+<a href="#Class-directory_entry">1.11 Class <code>directory_entry</code> </a>
+<br>
+&nbsp;&nbsp;&nbsp;<a href="#directory_entry-constructors">1.11.1 <code>directory_entry </code>
+constructors </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#directory_entry-modifiers">1.11.2 <code>directory_entry </code>
+modifiers </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#directory_entry-observers">1.11.3 <code>directory_entry</code> 
+observers </a><br>
+<a href="#Class-directory_iterator">1.12 Class <code>directory_iterator</code>
 </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-compare">1.5.11   <code>path</code> compare </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-decomposition">1.5.12    <code>path</code> decomposition 
-</a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-query">1.5.13    <code>path</code> query </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-iterators">1.5.14    <code>
-path</code> iterators </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-non-member-functions">1.5.15    <code>path</code> non-member functions 
-</a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path-inserter-extractor">1.5.16   <code>path</code> inserter 
-  and extractor</a><br>
-      <a href="#Class-filesystem_error">1.6  Class <code>filesystem_error</code> 
-</a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#filesystem_error-members">1.6.1    <code>filesystem_error</code> members 
-</a><br>
-      <a href="#Enum-file_type">1.7  Enum file_type </a><br>
-      <a href="#Enum-perms">1.8  Enum perms </a><br>
-      <a href="#file_status">1.9  Class file_status </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#file_status-constructors">1.9.1  <code>file_status</code> constructors 
-</a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#file_status-observers">1.9.2  <code>file_status</code> observers </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#file_status-modifiers">1.9.3  <code>file_status</code> modifiers </a><br>
-      <a href="#Class-directory_entry">1.10  Class <code>directory_entry</code> </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#directory_entry-constructors">1.10.1    <code>directory_entry </code>constructors 
-</a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#directory_entry-modifiers">1.10.2    <code>directory_entry </code>modifiers 
-</a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#directory_entry-observers">1.10.3    <code>directory_entry</code> observers 
-</a><br>
-      <a href="#Class-directory_iterator">1.11  Class <code>directory_iterator</code> 
-</a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#directory_iterator-members">1.11.1  <code>directory_iterator</code> members 
-</a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#directory_iterator-non-member-functions">1.11.2  <code>directory_iterator</code> non-member functions</a><br>
-      <a href="#Class-recursive_directory_iterator">1.12  Class <code>recursive_directory_iterator</code> 
-</a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#recursive_directory_iterator-non-member-functions">1.12.1  <code>recursive_directory_iterator</code> non-member functions</a><br>
-      <a href="#Operational-functions">1.13  Operational functions </a><br>
-      
-<code>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#absolute">absolute</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#canonical">canonical</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy">copy</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy_directory">copy_directory</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy_file">copy_file</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#copy_symlink">copy_symlink</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#create_directories">create_directories</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#create_directory">create_directory</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#create_hard_link">create_hard_link</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#create_symlink">create_symlink</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#current_path">current_path</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#exists">exists</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#equivalent">equivalent</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#file_size">file_size</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#hard_link_count">hard_link_count</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#initial_path">initial_path</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#is_directory">s_directory</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#is_empty">is_empty</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#is_other">is_other</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#is_regular_file">is_regular_file</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#is_symlink">is_symlink</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#last_write_time">last_write_time</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#permissions">permissions</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#read_symlink">read_symlink</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#remove">remove</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#remove_all">remove_all</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#rename">rename</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#resize_file">resize_file</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#space">space</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#status">status</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#status_known">status_known</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#symlink_status">symlink_status</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#system_complete">system_complete</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#temp_directory_path">temp_directory_path</a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#unique_path">unique_path</a>
-</code></p>
+&nbsp;&nbsp;&nbsp;<a href="#directory_iterator-members">1.12.1 <code>directory_iterator</code> 
+members </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#directory_iterator-non-member-functions">1.12.2 <code>
+directory_iterator</code> non-member functions</a><br>
+<a href="#Class-recursive_directory_iterator">1.13 Class <code>
+recursive_directory_iterator</code> </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#recursive_directory_iterator-non-member-functions">1.13.1 <code>
+recursive_directory_iterator</code> non-member functions</a><br>
+</p>
       
 <h2><a name="Proposed-Wording">Proposed Wording</a></h2>
 
@@ -439,10 +404,10 @@ trademarks:</span></i><p><sup>[<a name="footnote">footnote</a>]</sup> POSIX® is
 a registered trademark of The IEEE. MAC OS® is a registered trademark of Apple 
 Inc. Windows® is a registered trademark of Microsoft Corporation. This information is given for the convenience of 
 users of this document and does not constitute an endorsement by ISO or IEC of 
-these products.<p></p>
+these products.<p><span style="background-color: #E0E0E0"><i>End of footnote.</i></span><p></p>
 
 <h2>1.1  <a name="Definitions">Definitions</a> [fs.definitions]</h2>
-<p>The following definitions  shall apply throughout this Clause:</p>
+<p>The following definitions  shall apply throughout this clause:</p>
 
 <h3>1.1.1  <a name="Absolute-path">absolute path</a> [fs.def.absolute-path]</h3>
 <p>A path that 
@@ -601,7 +566,31 @@ operating system dependent ([fs.def.osdep]). What operation system an
 implementation is dependent upon is implementation defined.</p>
 <p>It is permissible for an implementation to be dependent upon an operating 
 system emulator rather than the actual underlying operating system.</p>
-<h2>1.3  <a name="Header-filesystem-synopsis">Header <code>&lt;filesystem&gt;</code> synopsis</a> 
+<h2>1.3  Requirements [<a name="fs.req">fs.req</a>]</h2>
+<p>Throughout this clause, <code>char</code>, <code>wchar_t</code>,
+<code>char16_t</code>, and <code>char32_t</code> are collectively called <i>
+character types</i>.</p>
+
+<p>Template parameters named <code>charT</code> shall be one of the 
+character types.</p>
+
+<p>Template parameters named <code>InputIterator</code> shall meet the 
+C++ standard library input iterator requirements ([input.iterators]) and shall 
+have a value type that is one of the character types.</p>
+
+<blockquote>
+<p>[<i>Note:</i> Use of a character type implies an associated 
+encoding. Since <code>signed char</code> and <code>unsigned char</code> have no 
+implied encoding, they are not included as permitted types. <i>--end note</i>]</p>
+
+<p><span style="background-color: #E0E0E0"><i>To permit UDT types 
+would require providing a way to specify type and encoding conversion 
+mechanisms. That might be worth considering in the future if some form of a 
+String Interoperability proposal is accepted, but as it stands now would involve 
+exposing numerous implementation details so is not proposed here.</i></span></p>
+
+</blockquote>
+<h2>1.4  <a name="Header-filesystem-synopsis">Header <code>&lt;filesystem&gt;</code> synopsis</a> 
 [filesystem.synopsis]</h2>
 <pre>namespace std { namespace tbd { namespace filesystem {
 
@@ -619,13 +608,13 @@ system emulator rather than the actual underlying operating system.</p>
 
     path operator/ (const path&amp; lhs, const path&amp; rhs);
 
-    template &lt;class Char, class Traits&gt;
-    basic_ostream&lt;Char, Traits&gt;&amp;
-    operator&lt;&lt;(basic_ostream&lt;Char, Traits&gt;&amp; os, const path&amp; p);
+    template &lt;class charT, class traits&gt;
+    basic_ostream&lt;charT, traits&gt;&amp;
+    operator&lt;&lt;(basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp; p);
 
-    template &lt;class Char, class Traits&gt;
-    basic_istream&lt;Char, Traits&gt;&amp;
-    operator&gt;&gt;(basic_istream&lt;Char, Traits&gt;&amp; is, path&amp; p);
+    template &lt;class charT, class traits&gt;
+    basic_istream&lt;charT, traits&gt;&amp;
+    operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);
 
     class <a href="#Class-filesystem_error">filesystem_error</a>;      
     class <a href="#Class-directory_entry">directory_entry</a>;
@@ -811,7 +800,7 @@ system emulator rather than the actual underlying operating system.</p>
 
  <p><b><i><code>unspecified-trivial-clock</code></i></b> is an unspecified type 
 provided by the implementation that satisfies the TrivialClock requirements ([time.clock.req]).</p>
-<h2>1.4  <a name="Error-reporting">Error reporting</a> [fs.err.report]</h2>
+<h2>1.5  <a name="Error-reporting">Error reporting</a> [fs.err.report]</h2>
 <p>Filesystem library functions often provide two overloads, one that 
 throws an exception to report file system errors, and another that sets an <code>error_code</code>.</p>
 <blockquote>
@@ -852,7 +841,7 @@ errors are truly exceptional and indicate a serious failure. Throwing an
   is called on the
 <code>system::error_code&amp;</code> argument.</li>
 </ul>
-<h2>1.5  <a name="class-path">Class <code>path</code> [class.path]</a></h2>
+<h2>1.6  <a name="class-path">Class <code>path</code> [class.path]</a></h2>
 <p>An object of class <code>path</code> represents a <a href="#class-path">path</a>, 
 and contains a <a href="#fs.def.pathname">pathname</a> Such an object is concerned only with the lexical and syntactic aspects 
 of a path. The path does not necessarily exist in external storage, and the 
@@ -907,8 +896,8 @@ system or for a particular file system.</p>
         path&amp; operator+=(value_type x);
         template &lt;class Source&gt;
           path&amp; operator+=(Source const&amp; x);
-        template &lt;class CharT&gt;
-          path&amp; operator+=(CharT x);
+        template &lt;class charT&gt;
+          path&amp; operator+=(charT x);
         template &lt;class InputIterator&gt;
           path&amp; concat(InputIterator begin, InputIterator end);
         template &lt;class InputIterator&gt;
@@ -1000,7 +989,7 @@ operating systems, <code>value_type</code> is <code>wchar_t</code> and <code>
     </tr>
   </table>
 </blockquote>
-<h3>1.5.1  Generic pathname format [<a name="path.generic">path.generic</a>]</h3>
+<h3>1.6.1  Generic pathname format [<a name="path.generic">path.generic</a>]</h3>
 <p><i>pathname:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root-name 
 root-directory<sub>opt</sub> relative-path<sub>opt<br>
@@ -1051,8 +1040,8 @@ be the same as one <i>directory-separator</i> character.</p>
 parent 
 directory. Specific <i>filenames</i> may have special meanings for a particular 
 operating system.</p>
-<h3>1.5.2  <a name="path-Conversions"><code>path</code> conversions</a> [path.cvt]</h3>
-<h4>1.5.2.1  <a name="path-Conversions-to-native-format"><code>path</code> argument 
+<h3>1.6.2  <a name="path-Conversions"><code>path</code> conversions</a> [path.cvt]</h3>
+<h4>1.6.2.1  <a name="path-Conversions-to-native-format"><code>path</code> argument 
 format conversions</a> [path.fmt.cvt]</h4>
 <p>Member functions arguments that take character sequences representing paths 
 may use the generic pathname format ([<a href="#path.generic">path.generic</a>]) or 
@@ -1092,7 +1081,7 @@ otherwise it shall be treated as a regular file path.</p>
     </tr>
   </table>
 </blockquote>
-<h4>1.5.2.2  <code>path</code> type and encoding conversions [<a name="path.arg.convert">path.type.cvt</a>]</h4>
+<h4>1.6.2.2  <code>path</code> type and encoding conversions [<a name="path.arg.convert">path.type.cvt</a>]</h4>
 <p>For member function arguments that take character sequences representing 
 paths and for member function returning strings, value type and encoding 
 conversion is performed if the value type of the argument or return differs from <code>
@@ -1135,20 +1124,16 @@ character set.</p>
 </blockquote>
 
 </blockquote>
-<h3>1.5.3  <a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
-<p>Template parameters named <code>InputIterator</code> are required to meet the C++ standard library 
-input iterator requirements ([input.iterators]). The value type shall be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
-<p>Template parameters named <code><a name="Source">Source</a></code> are required to be 
+<h3>1.6.3  <a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
+<p>In addition to [fs.req], template parameters named <code><a name="Source">Source</a></code> 
+shall be 
 one of:</p>
 <ul>
-  <li>A <code>basic_string&lt;charT, traits&gt;</code> with <code>charT</code> of <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li>A <code>basic_string&lt;charT, traits&gt;</code>.</li>
   <li>A type meeting the input iterator requirements that iterators over a NTCTS. The value type 
-  shall be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
-  char32_t</code>.</li>
+  shall be a character type ([fs.req]).</li>
   <li>A character array that after array-to-pointer conversion results in a 
-  pointer to a NTCTS. The value type shall be <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  pointer to a NTCTS. The value type shall be a character type.</li>
   <li>A <code>directory_entry</code>.</li>
 </ul>
 
@@ -1158,7 +1143,7 @@ one of:</p>
   path::value_type</code> and its encoding. <i>-- end note</i>]</p>
 </blockquote>
 
-<h3>1.5.4   <a name="path-constructors"> <code>
+<h3>1.6.4   <a name="path-constructors"> <code>
 path</code> constructors</a> [path.construct]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path(Source const&amp; source);</pre>
@@ -1169,7 +1154,7 @@ path</code> constructors</a> [path.construct]</h3>
   or <code>source</code> in <code>pathname</code>, converting format and 
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
 </blockquote>
-<h3>1.5.5   <a name="path-assignments"> <code>
+<h3>1.6.5   <a name="path-assignments"> <code>
 path</code> assignments</a> [path.assign]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; operator=(Source const&amp; source);
@@ -1182,7 +1167,7 @@ path</code> assignments</a> [path.assign]</h3>
   <p>
   <i>Returns: </i><code>*this</code></p>
   </blockquote>
-<h3>1.5.6  <a name="path-appends"><code><font size="4"> path</font></code> appends</a> 
+<h3>1.6.6  <a name="path-appends"><code><font size="4"> path</font></code> appends</a> 
 [path.append]</h3>
   <p>The append operations use <code>
   operator/=</code> to denote their semantic effect of appending <i>
@@ -1226,15 +1211,15 @@ path</code> assignments</a> [path.assign]</h3>
   <p><i>Returns: </i><code>*this</code></p>
   </blockquote>
   
-<h3>1.5.7  <a name="path-concatenation"><code>path</code> concatenation</a> [path.concat]</h3>
+<h3>1.6.7  <a name="path-concatenation"><code>path</code> concatenation</a> [path.concat]</h3>
 <pre>path&amp; operator+=(const path&amp; x);
 path&amp; operator+=(const string_type&amp; x);
 path&amp; operator+=(const value_type* x);
 path&amp; operator+=(value_type x);
 template &lt;class Source&gt;
   path&amp; operator+=(Source const&amp; x);
-template &lt;class CharT&gt;
-  path&amp; operator+=(CharT x);
+template &lt;class charT&gt;
+  path&amp; operator+=(charT x);
 template &lt;class InputIterator&gt;
   path&amp; concat(InputIterator begin, InputIterator end);
 template &lt;class InputIterator&gt;
@@ -1250,7 +1235,7 @@ template &lt;class InputIterator&gt;
    converted so that <code><i>effective-argument</i></code> has value type <code>path::value_type</code>.</li> </p>
  <p><i>Returns: </i><code>*this</code></p>
  </blockquote>
-<h3>1.5.8  <a name="path-modifiers"> <code>
+<h3>1.6.8  <a name="path-modifiers"> <code>
 path</code> modifiers</a> [path.modifiers]</h3><pre>void <a name="path-clear">clear</a>() noexcept;</pre>
 <blockquote>
 <p><i>Postcondition:</i> <code>this-&gt;empty()</code> is true.</p>
@@ -1316,7 +1301,7 @@ std::cout &lt;&lt; p &lt;&lt; '\n';
   rationale.</span></span></i></p>
 </blockquote>
 
-<h3>1.5.9   <a name="path-native-format-observers"><code>path</code> native format observers</a> 
+<h3>1.6.9   <a name="path-native-format-observers"><code>path</code> native format observers</a> 
 [path.native.obs]</h3>
 <p>The string returned by all native format observers is in the <a href="#fs.def.native">native pathname format</a>.</p>
 <pre>const string_type&amp;  <a name="native">native</a>() const noexcept;</pre>
@@ -1343,7 +1328,7 @@ u32wstring <a name="u32wstring">u32wstring</a>() const; </pre>
 function's return type, conversion is performed by <code>cvt</code>.</p>
 </blockquote>
 
-<h3>1.5.10   <a name="path-generic-format-observers"><code>path</code> generic format observers</a> 
+<h3>1.6.10   <a name="path-generic-format-observers"><code>path</code> generic format observers</a> 
 [path.generic.obs]</h3>
 <p>Generic format observer functions 
  
@@ -1371,7 +1356,7 @@ u32wstring <a name="generic_u32wstring">generic_u32wstring</a>() const; </pre>
 function's return type, conversion is performed by <code>cvt</code>.</p>
 </blockquote>
 
-<h3>1.5.11   <a name="path-compare"><code>path</code> compare</a> [path.compare]</h3>
+<h3>1.6.11   <a name="path-compare"><code>path</code> compare</a> [path.compare]</h3>
 <pre>int compare(const path&amp; p) const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> A value less than 0 if the elements of <code>*this</code> are lexicographically less than the elements of <code>p</code>, otherwise a 
@@ -1388,7 +1373,7 @@ function's return type, conversion is performed by <code>cvt</code>.</p>
 <blockquote>
   <p><i>Returns:</i> <code>compare(path(s))</code>.</p>
 </blockquote>
-<h3>1.5.12   <a name="path-decomposition"> <code>path</code> decomposition</a> 
+<h3>1.6.12   <a name="path-decomposition"> <code>path</code> decomposition</a> 
 [path.decompose]</h3>
 <pre>path <a name="path-root_name">root_name</a>() const;</pre>
 <blockquote>
@@ -1461,7 +1446,7 @@ for (; !p.extension().empty(); p = p.stem())
   that for a path <code>p</code>, <code>p.stem()+p.extension() == p</code>. <i>
   -- end note</i>]</p>
 </blockquote>
-<h3>1.5.13   <a name="path-query"> <code>path</code> query</a> [path.query]</h3>
+<h3>1.6.13   <a name="path-query"> <code>path</code> query</a> [path.query]</h3>
 <pre>bool <a name="path-empty">empty</a>() const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_pathname.empty()</code>.</p>
@@ -1518,7 +1503,7 @@ operating systems.&nbsp; <i>--end example</i>]</td>
 <blockquote>
   <p><i>Returns:</i> <code>!is_absolute()</code>.</p>
 </blockquote>
-<h3>1.5.14   <a name="path-iterators"> <code>
+<h3>1.6.14   <a name="path-iterators"> <code>
 path</code> iterators</a> [path.itr]</h3>
 <p> Path iterators iterate over the elements of the stored pathname.</p>
 <p> A <code>path::iterator</code> is a constant iterator satisfying all 
@@ -1546,7 +1531,7 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
 <blockquote>
   <p><i>Returns:</i> The end iterator.</p>
 </blockquote>
- <p><h3>1.5.15   <a name="path-non-member-functions"> <code>path</code> non-member functions</a> 
+ <p><h3>1.6.15   <a name="path-non-member-functions"> <code>path</code> non-member functions</a> 
 [path.non-member]</h3>
 <pre>void swap( path&amp; lhs, path&amp; rhs );</pre>
 <blockquote>
@@ -1594,7 +1579,7 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
 <blockquote>
   <p><i>Returns:</i> <code>path(lhs) /= rhs</code>.</p>
 </blockquote>
-<h3>1.5.16  <code>path</code><a name="path-inserter-extractor"> inserter 
+<h3>1.6.16  <code>path</code><a name="path-inserter-extractor"> inserter 
   and extractor</a> [path.io]</h3>
 <p> The inserter and, optionally, the extractor delimit the string with <code>
 '&quot;'</code> so that paths with embedded spaces will round trip correctly. An escape character, 
@@ -1603,9 +1588,9 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
 separator by some operating systems and so would be very confusing and error 
 prone, particularly coupled with the C++ requirement to escape a backslash in 
 literals . <i>-- end note</i>]</p>
-<pre>template &lt;class Char, class Traits&gt;
-basic_ostream&lt;Char, Traits&gt;&amp;
-operator&lt;&lt;(basic_ostream&lt;Char, Traits&gt;&amp; os, const path&amp; p);</pre>
+<pre>template &lt;class charT, class traits&gt;
+basic_ostream&lt;charT, traits&gt;&amp;
+operator&lt;&lt;(basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp; p);</pre>
 <blockquote>
   <p><i>Effects: </i>Behaves as a formatted output function ([ostream.formatted.reqmts]). 
   After a sentry object is constructed it inserts characters into <code>os</code>:</p>
@@ -1613,7 +1598,7 @@ operator&lt;&lt;(basic_ostream&lt;Char, Traits&gt;&amp; os, const path&amp; p);<
     <li>
   <code>'&quot;'</code>, then</li>
     <li>
-  Each character in <code>p.string&lt;basic_string&lt;Char, Traits&gt;&gt;()</code>. 
+  Each character in <code>p.string&lt;basic_string&lt;charT, traits&gt;&gt;()</code>. 
   If the character to be inserted is <code>'&amp;'</code> or <code>'&quot;'</code>, first insert 
   <code>'&amp;'</code> before it, then 
     </li>
@@ -1622,11 +1607,11 @@ operator&lt;&lt;(basic_ostream&lt;Char, Traits&gt;&amp; os, const path&amp; p);<
     </li>
   </ul>
   <p><i>Returns:</i> <code>os</code></p>
-  <p><i>Remarks:</i> Character equality is determined by <code>Traits::eq</code>.</p>
+  <p><i>Remarks:</i> Character equality is determined by <code>traits::eq</code>.</p>
 </blockquote>
-<pre>template &lt;class Char, class Traits&gt;
-basic_istream&lt;Char, Traits&gt;&amp;
-operator&gt;&gt;(basic_istream&lt;Char, Traits&gt;&amp; is, path&amp; p);</pre>
+<pre>template &lt;class charT, class traits&gt;
+basic_istream&lt;charT, traits&gt;&amp;
+operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);</pre>
 <blockquote>
   <p><i>Effects:&nbsp; </i>Behaves as a formatted input function ([istream.formatted.reqmts]). 
   After a sentry<br>
@@ -1647,9 +1632,9 @@ operator&gt;&gt;(basic_istream&lt;Char, Traits&gt;&amp; is, path&amp; p);</pre>
     <li>Otherwise, <code>os &gt;&gt; p</code>.</li>
   </ul>
   <p><i>Returns:</i> <code>is</code></p>
-  <p><i>Remarks:</i> Character equality is determined by <code>Traits::eq</code>.</p>
+  <p><i>Remarks:</i> Character equality is determined by <code>traits::eq</code>.</p>
   </blockquote>
-<h2>1.6  <a name="Class-filesystem_error">Class <code>filesystem_error</code> 
+<h2>1.7  <a name="Class-filesystem_error">Class <code>filesystem_error</code> 
 [class.filesystem_error]</a></h2>
 <pre>namespace std { namespace tbd { namespace filesystem {
 
@@ -1678,8 +1663,8 @@ operator&gt;&gt;(basic_istream&lt;Char, Traits&gt;&amp; is, path&amp; p);</pre>
 } } }  // namespaces std::tbd::filesystem</pre>
 <p>The class template <code>filesystem_error</code> defines the type of 
 objects thrown as exceptions to report file system errors from functions described in this 
-Clause.</p>
-<h3>1.6.1   <a name="filesystem_error-members"> <code>filesystem_error</code> members</a> 
+clause.</p>
+<h3>1.7.1   <a name="filesystem_error-members"> <code>filesystem_error</code> members</a> 
 [filesystem_error.members]</h3>
 <pre><a name="filesystem_error-2-arg">filesystem_error</a>(const string&amp; what_arg, error_code ec);</pre>
 <blockquote>
@@ -1783,7 +1768,7 @@ Clause.</p>
   not empty, and <code>system_error::what()</code> strings in the returned 
   string.</p>
 </blockquote>
-<h2>1.7  <a name="Enum-file_type">Enum file_type</a> [enum.file_type]</h2>
+<h2>1.8  <a name="Enum-file_type">Enum file_type</a> [enum.file_type]</h2>
 <p>This enum specifies constants uses to identify file types.</p>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
@@ -1833,7 +1818,7 @@ Clause.</p>
     of the above cases.</td>
   </tr>
 </table>
-<h2>1.8  <a name="Enum-perms">Enum perms</a> [enum.perms]</h2>
+<h2>1.9  <a name="Enum-perms">Enum perms</a> [enum.perms]</h2>
 <p>This <code>enum</code> specifies bitmask constants used to identify file 
 permissions. <i><span style="background-color: #E0E0E0">ISO/</span><span style="background-color: #E0E0E0">IEC</span><span style="background-color: #E0E0E0"> 9945 
 (POSIX) specifies actual values, and those values have been adopted here because 
@@ -1933,7 +1918,7 @@ write permission for owner, group, or others sets write permission for all, and
 removing write permission for owner, group, or others removes write permission 
 for all. The Cygwin users guide has extensive discussion of the problems 
 involved. Input from security experts is needed.</span></i></p>
-<h2>1.9  <a name="file_status">Class file_status</a> [class.file_status]</h2>
+<h2>1.10  <a name="file_status">Class file_status</a> [class.file_status]</h2>
 <pre>namespace std { namespace tbd { namespace filesystem {
 
       class file_status
@@ -1961,7 +1946,7 @@ involved. Input from security experts is needed.</span></i></p>
 } } }  // namespaces std::tbd::filesystem</pre>
 <p>An object of type <code>file_status</code> stores information about the type 
 and permissions of a file.</p>
-<h3>1.9.1  <a name="file_status-constructors"><code>file_status</code> constructors</a> 
+<h3>1.10.1  <a name="file_status-constructors"><code>file_status</code> constructors</a> 
 [file_status.cons]</h3>
 <pre>explicit file_status() noexcept;</pre>
 <blockquote>
@@ -1971,7 +1956,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Postconditions:</i> <code>type() == ft</code>, <code>permissions() == prms</code>.</p>
 </blockquote>
-  <h3>1.9.2  <a name="file_status-observers"><code>file_status</code> observers</a> [file_status.obs]</h3>
+  <h3>1.10.2  <a name="file_status-observers"><code>file_status</code> observers</a> [file_status.obs]</h3>
 <pre><a href="#file_type">file_type</a> type() const noexcept;</pre>
 <blockquote>
   <p><i>Returns: </i>The value of <code>type()</code> specified by the <i>postconditions</i> of the most recent call to a constructor, operator=, or <code>type(file_type)</code> function.</p>
@@ -1980,7 +1965,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Returns: </i>The value of <code>permissions()</code> specified by the <i>postconditions</i> of the most recent call to a constructor, operator=, or <code>permissions(perms)</code> function.</p>
 </blockquote>
-<h3>1.9.3  <a name="file_status-modifiers"><code>file_status</code> modifiers</a> [file_status.mods]</h3>
+<h3>1.10.3  <a name="file_status-modifiers"><code>file_status</code> modifiers</a> [file_status.mods]</h3>
 <pre>void type(<a href="#file_type">file_type</a> ft) noexcept;</pre>
 <blockquote>
   <p><i>Postconditions:</i> <code>type() == ft</code>.</p>
@@ -1989,7 +1974,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Postconditions:</i> <code>permissions() == prms</code>.</p>
 </blockquote>
-<h2>1.10  <a name="Class-directory_entry">Class <code>directory_entry</code></a> [class.directory_entry]</h2>
+<h2>1.11  <a name="Class-directory_entry">Class <code>directory_entry</code></a> [class.directory_entry]</h2>
 <pre>namespace std { namespace tbd { namespace filesystem {
 
       class directory_entry
@@ -2041,7 +2026,7 @@ some operating systems provide status information as a byproduct of directory
 iteration. Caching such status information can result is significant time savings. Cached and 
 non-cached results may differ in the presence of file system races. <i>-- end note</i>]</p>
 </blockquote>
-<h3>1.10.1   <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a> 
+<h3>1.11.1   <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a> 
 [directory_entry.cons]</h3>
 <pre>explicit directory_entry(const path_type&amp; p, file_status st=file_status(),
                          file_status symlink_st=file_status());</pre>
@@ -2066,7 +2051,7 @@ non-cached results may differ in the presence of file system races. <i>-- end no
     </tr>
   </table>
 </blockquote>
-<h3>1.10.2   <a name="directory_entry-modifiers"> <code>directory_entry </code>modifiers</a> 
+<h3>1.11.2   <a name="directory_entry-modifiers"> <code>directory_entry </code>modifiers</a> 
 [directory_entry.mods]</h3>
 <pre>void assign(const path_type&amp; p, file_status st=file_status(),
             file_status symlink_st=file_status());</pre>
@@ -2114,7 +2099,7 @@ non-cached results may differ in the presence of file system races. <i>-- end no
     </tr>
   </table>
 </blockquote>
-<h3>1.10.3   <a name="directory_entry-observers"> <code>directory_entry</code> observers</a> 
+<h3>1.11.3   <a name="directory_entry-observers"> <code>directory_entry</code> observers</a> 
 [directory_entry.obs]</h3>
 <pre>const path&amp; path() const noexcept;</pre>
 <blockquote>
@@ -2177,7 +2162,7 @@ file_status  symlink_status(system::error_code&amp; ec) const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path &gt;= rhs.m_path</code>.</p>
 </blockquote>
-<h2>1.11  <a name="Class-directory_iterator">Class <code>directory_iterator</code> 
+<h2>1.12  <a name="Class-directory_iterator">Class <code>directory_iterator</code> 
 [class.directory_iterator]</a></h2>
 <p>Objects of type <code>directory_iterator</code> provide standard library 
 compliant iteration over the contents of a directory. Also see class <code><a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a></code>.</p>
@@ -2245,7 +2230,7 @@ unspecified whether or not subsequent incrementing of the iterator will ever
 result in an iterator whose value is the removed or added directory entry. See
 ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/readdir_r.html">readdir_r()</a></code>. <i>--end note</i>]</p>
 </blockquote>
-<h3>1.11.1  <a name="directory_iterator-members"><code>directory_iterator</code> members</a> 
+<h3>1.12.1  <a name="directory_iterator-members"><code>directory_iterator</code> members</a> 
 [directory_iterator.members]</h3>
 
 <p><code><a name="directory_iterator-default-ctor">directory_iterator</a>() 
@@ -2279,7 +2264,7 @@ directory_iterator&amp; increment(system::error_code&amp; ec)<code> noexcept</co
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 
 </blockquote>
-<h3>1.11.2  <a name="directory_iterator-non-member-functions"><code>directory_iterator</code> non-member functions</a></h3>
+<h3>1.12.2  <a name="directory_iterator-non-member-functions"><code>directory_iterator</code> non-member functions</a></h3>
 <p>These functions enable use of <code>directory_iterator</code> with C++11 
 range-based for statements.</p>
 <pre>const directory_iterator&amp; begin(const directory_iterator&amp; iter) noexcept;</pre>
@@ -2290,7 +2275,7 @@ range-based for statements.</p>
 <blockquote>
   <p><i>Returns: </i><code>directory_iterator()</code>.</p>
 </blockquote>
-<h2>1.12  <a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
+<h2>1.13  <a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
 [class.rec.dir.itr]</a></h2>
 <p>Objects of type <code>recursive_directory_iterator</code> provide standard library 
 compliant iteration over the contents of a directory, including recursion into 
@@ -2432,7 +2417,7 @@ directory_options::follow_directory_symlink) != 0)</code> then&nbsp;directory <c
   <p>[<i>Note:</i> <code>disable_recursion_pending</code><code>()</code> is used to prevent 
   unwanted recursion into a directory. <i>--end note</i>]</p>
 </blockquote>
-<h3>1.12.1  <a name="recursive_directory_iterator-non-member-functions"><code>recursive_directory_iterator</code> non-member functions</a></h3>
+<h3>1.13.1  <a name="recursive_directory_iterator-non-member-functions"><code>recursive_directory_iterator</code> non-member functions</a></h3>
 <p>These functions enable use of <code>recursive_directory_iterator</code> 
 with C++11 range-based for statements.</p>
 <pre>const recursive_directory_iterator&amp; begin(const recursive_directory_iterator&amp; iter) noexcept;</pre>
@@ -2443,7 +2428,7 @@ with C++11 range-based for statements.</p>
 <blockquote>
   <p><i>Returns: </i><code>recursive_directory_iterator()</code>.</p>
 </blockquote>
-<h2>1.13  <a name="Operational-functions">Operational functions</a> [fs.op.funcs]</h2>
+<h2>1.14  <a name="Operational-functions">Operational functions</a> [fs.op.funcs]</h2>
 <p>Operational functions query or modify files, including directories, in external 
 storage.</p>
 <p>Operational functions access a file by resolving an 

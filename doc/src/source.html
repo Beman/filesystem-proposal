@@ -30,7 +30,7 @@ $if $TARGET; == BOOST
   $def CODECVT_DEFAULT "=codecvt()" 
 $else
   Filesystem Proposal
-  $def WHAT "Clause"
+  $def WHAT "clause"
   $def SNIPPET_FILE "tr2_snippets.html"
   $def HEADER "filesystem"
   $def STD ""
@@ -212,6 +212,30 @@ operating system dependent ([fs.def.osdep]). What operation system an
 implementation is dependent upon is implementation defined.</p>
 <p>It is permissible for an implementation to be dependent upon an operating 
 system emulator rather than the actual underlying operating system.</p>
+<h2>Requirements [<a name="fs.req">fs.req</a>]</h2>
+<p>Throughout this $WHAT;, <code>char</code>, <code>wchar_t</code>,
+<code>char16_t</code>, and <code>char32_t</code> are collectively called <i>
+character types</i>.</p>
+
+<p>Template parameters named <code>charT</code> shall be one of the 
+character types.</p>
+
+<p>Template parameters named <code>InputIterator</code> shall meet the 
+C++ standard library input iterator requirements ([input.iterators]) and shall 
+have a value type that is one of the character types.</p>
+
+<blockquote>
+<p>[<i>Note:</i> Use of a character type implies an associated 
+encoding. Since <code>signed char</code> and <code>unsigned char</code> have no 
+implied encoding, they are not included as permitted types. <i>--end note</i>]</p>
+
+<p><span style="background-color: #E0E0E0"><i>To permit UDT types 
+would require providing a way to specify type and encoding conversion 
+mechanisms. That might be worth considering in the future if some form of a 
+String Interoperability proposal is accepted, but as it stands now would involve 
+exposing numerous implementation details so is not proposed here.</i></span></p>
+
+</blockquote>
 <h2><a name="Header-filesystem-synopsis">Header <code>&lt;$HEADER;&gt;</code> synopsis</a> 
 [filesystem.synopsis]</h2>
 <pre>$NAMESPACE_BEGIN;
@@ -231,13 +255,13 @@ $endif;    void swap(path&amp; lhs, path&amp; rhs) noexcept;
 
     path operator/ (const path&amp; lhs, const path&amp; rhs);
 
-    template &lt;class Char, class Traits&gt;
-    $STD;basic_ostream&lt;Char, Traits&gt;&amp;
-    operator&lt;&lt;($STD;basic_ostream&lt;Char, Traits&gt;&amp; os, const path&amp; p);
+    template &lt;class charT, class traits&gt;
+    $STD;basic_ostream&lt;charT, traits&gt;&amp;
+    operator&lt;&lt;($STD;basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp; p);
 
-    template &lt;class Char, class Traits&gt;
-    $STD;basic_istream&lt;Char, Traits&gt;&amp;
-    operator&gt;&gt;($STD;basic_istream&lt;Char, Traits&gt;&amp; is, path&amp; p);
+    template &lt;class charT, class traits&gt;
+    $STD;basic_istream&lt;charT, traits&gt;&amp;
+    operator&gt;&gt;($STD;basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);
 
     class <a href="#Class-filesystem_error">filesystem_error</a>;      
     class <a href="#Class-directory_entry">directory_entry</a>;
@@ -540,8 +564,8 @@ $endif;        template &lt;class InputIterator&gt;
         path&amp; operator+=(value_type x);
         template &lt;class Source&gt;
           path&amp; operator+=(Source const&amp; x);
-        template &lt;class CharT&gt;
-          path&amp; operator+=(CharT x);
+        template &lt;class charT&gt;
+          path&amp; operator+=(charT x);
 $if $TARGET; == BOOST        template &lt;class Source&gt;
           path&amp; concat(Source const&amp; x$CODECVT_ARG2;);
 $endif;        template &lt;class InputIterator&gt;
@@ -776,19 +800,15 @@ character set.</p>
 
 </blockquote>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
-<p>Template parameters named <code>InputIterator</code> are required to meet the C++ standard library 
-input iterator requirements ([input.iterators]). The value type shall be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</p>
-<p>Template parameters named <code><a name="Source">Source</a></code> are required to be 
+<p>In addition to [fs.req], template parameters named <code><a name="Source">Source</a></code> 
+shall be 
 one of:</p>
 <ul>
-  <li>A <code>basic_string&lt;charT, traits&gt;</code> with <code>charT</code> of <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li>A <code>basic_string&lt;charT, traits&gt;</code>.</li>
   <li>A type meeting the input iterator requirements that iterators over a NTCTS. The value type 
-  shall be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
-  char32_t</code>.</li>
+  shall be a character type ([fs.req]).</li>
   <li>A character array that after array-to-pointer conversion results in a 
-  pointer to a NTCTS. The value type shall be <code>char</code>, <code>
-  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  pointer to a NTCTS. The value type shall be a character type.</li>
   <li>A <code>directory_entry</code>.</li>
 </ul>
 
@@ -877,8 +897,8 @@ path&amp; operator+=(const value_type* x);
 path&amp; operator+=(value_type x);
 template &lt;class Source&gt;
   path&amp; operator+=(Source const&amp; x);
-template &lt;class CharT&gt;
-  path&amp; operator+=(CharT x);
+template &lt;class charT&gt;
+  path&amp; operator+=(charT x);
 template &lt;class InputIterator&gt;
   path&amp; concat(InputIterator begin, InputIterator end);
 template &lt;class InputIterator&gt;
@@ -1314,9 +1334,9 @@ $endif
 separator by some operating systems and so would be very confusing and error 
 prone, particularly coupled with the C++ requirement to escape a backslash in 
 literals . <i>-- end note</i>]</p>
-<pre>template &lt;class Char, class Traits&gt;
-$STD;basic_ostream&lt;Char, Traits&gt;&amp;
-operator&lt;&lt;($STD;basic_ostream&lt;Char, Traits&gt;&amp; os, const path&amp; p);</pre>
+<pre>template &lt;class charT, class traits&gt;
+$STD;basic_ostream&lt;charT, traits&gt;&amp;
+operator&lt;&lt;($STD;basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp; p);</pre>
 <blockquote>
   <p><i>Effects: </i>Behaves as a formatted output function ([ostream.formatted.reqmts]). 
   After a sentry object is constructed it inserts characters into <code>os</code>:</p>
@@ -1324,7 +1344,7 @@ operator&lt;&lt;($STD;basic_ostream&lt;Char, Traits&gt;&amp; os, const path&amp;
     <li>
   <code>'&quot;'</code>, then</li>
     <li>
-  Each character in <code>p.string&lt;$STD;basic_string&lt;Char, Traits&gt;&gt;()</code>. 
+  Each character in <code>p.string&lt;$STD;basic_string&lt;charT, traits&gt;&gt;()</code>. 
   If the character to be inserted is <code>'&amp;'</code> or <code>'&quot;'</code>, first insert 
   <code>'&amp;'</code> before it, then 
     </li>
@@ -1333,11 +1353,11 @@ operator&lt;&lt;($STD;basic_ostream&lt;Char, Traits&gt;&amp; os, const path&amp;
     </li>
   </ul>
   <p><i>Returns:</i> <code>os</code></p>
-  <p><i>Remarks:</i> Character equality is determined by <code>Traits::eq</code>.</p>
+  <p><i>Remarks:</i> Character equality is determined by <code>traits::eq</code>.</p>
 </blockquote>
-<pre>template &lt;class Char, class Traits&gt;
-$STD;basic_istream&lt;Char, Traits&gt;&amp;
-operator&gt;&gt;($STD;basic_istream&lt;Char, Traits&gt;&amp; is, path&amp; p);</pre>
+<pre>template &lt;class charT, class traits&gt;
+$STD;basic_istream&lt;charT, traits&gt;&amp;
+operator&gt;&gt;($STD;basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);</pre>
 <blockquote>
   <p><i>Effects:&nbsp; </i>Behaves as a formatted input function ([istream.formatted.reqmts]). 
   After a sentry<br>
@@ -1358,7 +1378,7 @@ operator&gt;&gt;($STD;basic_istream&lt;Char, Traits&gt;&amp; is, path&amp; p);</
     <li>Otherwise, <code>os &gt;&gt; p</code>.</li>
   </ul>
   <p><i>Returns:</i> <code>is</code></p>
-  <p><i>Remarks:</i> Character equality is determined by <code>Traits::eq</code>.</p>
+  <p><i>Remarks:</i> Character equality is determined by <code>traits::eq</code>.</p>
   </blockquote>
 <h2><a name="Class-filesystem_error">Class <code>filesystem_error</code> 
 [class.filesystem_error]</a></h2>
