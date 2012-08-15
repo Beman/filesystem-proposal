@@ -700,6 +700,11 @@ namespace
   {
     std::cout << "testing modifiers..." << std::endl;
 
+    path p("foo/bar");
+    std::cout << p << std::endl;  // outputs: "foo/bar"
+    p.make_preferred();
+    std::cout << p << std::endl;  // outputs: "foo\bar" on Windows, otherwise "foo/bar"
+
   }
 
   //  test_decompositions  -------------------------------------------------------------//
