@@ -497,6 +497,11 @@ namespace
     CHECK(p0.u32string() == (make_string<utf32, narrow, u32string>("abc")));
     CHECK(p0.u32string().size() == 3);
 
+    CHECK(p0.string() == p0.string<string>());
+    CHECK(p0.string() == (p0.basic_string<char,
+      std::char_traits<char>, std::allocator<char> >()));
+
+
 # ifdef BOOST_WINDOWS_API
 
     path p("abc\\def/ghi");

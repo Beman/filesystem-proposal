@@ -384,6 +384,18 @@ namespace filesystem
     template <class String>
     String string(const codecvt_type& cvt) const;
 
+    // Prototype the FSG requested templated string() function. The real thing will have
+    // defaulted traits and Allocator template parameters, and will be named string().
+    // Will have to enable_it current Boost version of string() template.
+    template <class charT, class traits, class Allocator >
+    std::basic_string<charT, traits, Allocator>
+      basic_string(const Allocator& a = Allocator()) const
+    {
+      return boost::interop::make_string<
+        boost::interop::select_codec<charT>::type, boost::interop::default_codec,
+        std::basic_string<charT, traits, Allocator> >(m_pathname);
+    }
+
     boost::u16string u16string() const
     { 
       return boost::interop::make_string<boost::interop::utf16,
