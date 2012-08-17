@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-15<!--webbot bot="Timestamp" endspan i-checksum="12497" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-17<!--webbot bot="Timestamp" endspan i-checksum="12501" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->15 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31327" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->17 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31331" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -178,7 +178,11 @@ Library Proposal (Revision 3). Changes include:</p>
   <code>follow_directory_symlinks</code> and <code>skip_permission_denied</code> 
   options.&nbsp;</li>
   <li>
-  Missing semantics provided for <code>copy_directory</code>. </li>
+  <p>Add missing semantics  for <code>copy_directory</code>.</li>
+  <li>
+  <p>Change template parameters for <code>path::string</code> and
+  <code>path::generic_string</code> to the same as <code>std::basic_string</code> 
+  in response to comments from the FSG.</li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
   <li>R-value reference move semantics.</li>
@@ -915,8 +919,10 @@ system or for a particular file system.</p>
         const string_type&amp;  <a href="#native">native</a>() const noexcept;  // native format, encoding
         const value_type*   <a href="#c_str">c_str</a>() const noexcept;   // native().c_str()
 
-        template &lt;class String&gt;
-          String  <a href="#string-template">string</a>() const;
+        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+                  class Allocator = allocator&lt;charT&gt; &gt;
+        basic_string&lt;charT, traits, Allocator&gt;
+          <a href="#string-template">string</a>(const Allocator&amp; a = Allocator()) const;
 
         string    <a href="#string">string</a>() const;
         wstring   <a href="#wstring">wstring</a>() const;
@@ -924,8 +930,10 @@ system or for a particular file system.</p>
         u32string <a href="#u32wstring">u32string</a>() const;
 
         // <a href="#path-generic-format-observers">generic format observers</a>
-        template &lt;class String&gt;
-          String  <a href="#generic_string-template">generic_string</a>() const;
+        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+                  class Allocator = allocator&lt;charT&gt; &gt;
+        basic_string&lt;charT, traits, Allocator&gt;
+          <a href="#generic_string-template">generic_string</a>(const Allocator&amp; a = Allocator()) const;
 
         string    <a href="#generic_string">generic_string</a>() const;
         wstring   <a href="#generic_wstring">generic_wstring</a>() const;
@@ -972,6 +980,7 @@ system or for a particular file system.</p>
       };
 
 } } }  // namespaces std::tbd::filesystem</pre>
+
 </blockquote>
 <p><code><a name="value_type">value_type</a></code> is a <code>typedef</code> for the 
 operating system dependent character type used  to represent pathnames.</p>
@@ -1312,11 +1321,17 @@ std::cout &lt;&lt; p &lt;&lt; '\n';
 <blockquote>
 <p><i>Returns:</i> <code>pathname.c_str()</code>.</p>
 </blockquote>
-<pre>template &lt;class String&gt;
-String <a name="string-template">string</a>() const;</pre>
+
+<pre>template &lt;class charT, class traits = char_traits&lt;charT&gt;,
+          class Allocator = allocator&lt;charT&gt; &gt;
+basic_string&lt;charT, traits, Allocator&gt;
+  <a name="string-template">string</a>(const Allocator& a = Allocator()) const;</pre>
+
+
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i> If <code>string_type</code> is a different type than <code>String</code>, conversion is performed by <code>cvt</code>.</p>
+<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
+conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>]).</p>
 </blockquote>
 <pre>string <a name="string">string</a>() const;
 wstring <a name="wstring">wstring</a>() const;
@@ -1324,8 +1339,8 @@ u16string <a name="u16string">u16string</a>() const;
 u32wstring <a name="u32wstring">u32wstring</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i> If <code>string_type</code> is a different type than 
-function's return type, conversion is performed by <code>cvt</code>.</p>
+<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
+conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 
 <h3>1.6.10   <a name="path-generic-format-observers"><code>path</code> generic format observers</a> 
@@ -1340,20 +1355,27 @@ directory-separator</i> character.</p>
 its preferred-separator,&nbsp; <code>path(&quot;foo\\bar&quot;).generic_string()</code> 
 returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
 </blockquote>
-<pre>template &lt;class String&gt;
-String <a name="generic_string-template">generic_string</a>() const;</pre>
+
+<pre>template &lt;class charT, class traits = char_traits&lt;charT&gt;,
+          class Allocator = allocator&lt;charT&gt; &gt;
+basic_string&lt;charT, traits, Allocator&gt;
+  <a name="generic_string-template">generic_string</a>(const Allocator& a = Allocator()) const;</pre>
+
 <blockquote>
-  <p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i> If <code>string_type</code> is a different type than <code>String</code>, conversion is performed by <code>cvt</code>.</p>
+  <p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
+  pathname format ([<a href="#path.generic">path.generic</a>]). </p>
+<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
+conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 <pre>string <a name="generic_string">generic_string</a>() const;
 wstring <a name="generic_wstring">generic_wstring</a>() const;
 u16string <a name="generic_u16string">generic_u16string</a>() const;
 u32wstring <a name="generic_u32wstring">generic_u32wstring</a>() const; </pre>
 <blockquote>
-<p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i>&nbsp; If <code>string_type</code> is a different type than 
-function's return type, conversion is performed by <code>cvt</code>.</p>
+<p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
+pathname format ([<a href="#path.generic">path.generic</a>]).</p>
+<p><i>Remarks:</i>&nbsp; If the return type is different from <code>string_type</code>, 
+conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 
 <h3>1.6.11   <a name="path-compare"><code>path</code> compare</a> [path.compare]</h3>
@@ -2695,10 +2717,8 @@ bool <a name="equivalent2">equivalent</a>(const path&amp; p1, const path&amp; p2
   <p><i>Throws:</i> <code>filesystem_error</code> if <code>(!exists(s1) &amp;&amp; !exists(s2)) || (is_other(s1) &amp;&amp; is_other(s2))</code>, 
   otherwise as specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
-<div>
 <pre>uintmax_t <a name="file_size">file_size</a>(const path&amp; p);
 uintmax_t <a name="file_size2">file_size</a>(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
-</div>
 <blockquote>
   <p><i>Returns:</i> If <code>exists(p) &amp;&amp; is_regular_file(p)</code>, the size 
   in bytes 
