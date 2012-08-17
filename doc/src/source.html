@@ -585,18 +585,26 @@ $endif;        template &lt;class InputIterator&gt;
         const string_type&amp;  <a href="#native">native</a>() const noexcept;  // native format, encoding
         const value_type*   <a href="#c_str">c_str</a>() const noexcept;   // native().c_str()
 
-        template &lt;class String&gt;
+$if $TARGET; == BOOST        template &lt;class String&gt;
           String  <a href="#string-template">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
-
+$else        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+                  class Allocator = allocator&lt;charT&gt; &gt;
+        basic_string&lt;charT, traits, Allocator&gt;
+          <a href="#string-template">string</a>(const Allocator&amp; a = Allocator()) const;
+$endif;
         string    <a href="#string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         wstring   <a href="#wstring">wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         u16string <a href="#u16string">u16string</a>() const;
         u32string <a href="#u32wstring">u32string</a>() const;
 
         // <a href="#path-generic-format-observers">generic format observers</a>
-        template &lt;class String&gt;
-          String  <a href="#generic_string-template">generic_string</a>() const;
-
+$if $TARGET; == BOOST        template &lt;class String&gt;
+          String  <a href="#generic_string-template">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+$else        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+                  class Allocator = allocator&lt;charT&gt; &gt;
+        basic_string&lt;charT, traits, Allocator&gt;
+          <a href="#generic_string-template">generic_string</a>(const Allocator&amp; a = Allocator()) const;
+$endif;
         string    <a href="#generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         wstring   <a href="#generic_wstring">generic_wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         u16string <a href="#generic_u16string">generic_u16string</a>() const;
@@ -647,6 +655,7 @@ $endif;      private:
       };
 
 $NAMESPACE_END;</pre>
+
 </blockquote>
 <p><code><a name="value_type">value_type</a></code> is a <code>typedef</code> for the 
 operating system dependent character type used  to represent pathnames.</p>
@@ -991,11 +1000,20 @@ std::cout &lt;&lt; p &lt;&lt; '\n';
 <blockquote>
 <p><i>Returns:</i> <code>pathname.c_str()</code>.</p>
 </blockquote>
+$if $TARGET; == BOOST
 <pre>template &lt;class String&gt;
-String <a name="string-template">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;</pre>
+String  <a name="string-template">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;</pre>
+$else
+<pre>template &lt;class charT, class traits = char_traits&lt;charT&gt;,
+          class Allocator = allocator&lt;charT&gt; &gt;
+basic_string&lt;charT, traits, Allocator&gt;
+  <a name="string-template">string</a>(const Allocator& a = Allocator()) const;</pre>
+$endif;
+
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i> If <code>string_type</code> is a different type than <code>String</code>, conversion is performed by <code>cvt</code>.</p>
+<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
+conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>]).</p>
 </blockquote>
 <pre>string <a name="string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 wstring <a name="wstring">wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
@@ -1003,8 +1021,8 @@ u16string <a name="u16string">u16string</a>() const;
 u32wstring <a name="u32wstring">u32wstring</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i> If <code>string_type</code> is a different type than 
-function's return type, conversion is performed by <code>cvt</code>.</p>
+<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
+conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 
 <h3> <a name="path-generic-format-observers"><code>path</code> generic format observers</a> 
@@ -1019,20 +1037,30 @@ directory-separator</i> character.</p>
 its preferred-separator,&nbsp; <code>path(&quot;foo\\bar&quot;).generic_string()</code> 
 returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
 </blockquote>
+$if $TARGET; == BOOST
 <pre>template &lt;class String&gt;
-String <a name="generic_string-template">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;</pre>
+String  <a name="generic_string-template">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;</pre>
+$else
+<pre>template &lt;class charT, class traits = char_traits&lt;charT&gt;,
+          class Allocator = allocator&lt;charT&gt; &gt;
+basic_string&lt;charT, traits, Allocator&gt;
+  <a name="generic_string-template">generic_string</a>(const Allocator& a = Allocator()) const;</pre>
+$endif;
 <blockquote>
-  <p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i> If <code>string_type</code> is a different type than <code>String</code>, conversion is performed by <code>cvt</code>.</p>
+  <p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
+  pathname format ([<a href="#path.generic">path.generic</a>]). </p>
+<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
+conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 <pre>string <a name="generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 wstring <a name="generic_wstring">generic_wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 u16string <a name="generic_u16string">generic_u16string</a>() const;
 u32wstring <a name="generic_u32wstring">generic_u32wstring</a>() const; </pre>
 <blockquote>
-<p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i>&nbsp; If <code>string_type</code> is a different type than 
-function's return type, conversion is performed by <code>cvt</code>.</p>
+<p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
+pathname format ([<a href="#path.generic">path.generic</a>]).</p>
+<p><i>Remarks:</i>&nbsp; If the return type is different from <code>string_type</code>, 
+conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 
 <h3> <a name="path-compare"><code>path</code> compare</a> [path.compare]</h3>
@@ -2436,10 +2464,8 @@ bool <a name="equivalent2">equivalent</a>(const path&amp; p1, const path&amp; p2
   <p><i>Throws:</i> <code>filesystem_error</code> if <code>(!exists(s1) &amp;&amp; !exists(s2)) || (is_other(s1) &amp;&amp; is_other(s2))</code>, 
   otherwise as specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
-<div>
 <pre>uintmax_t <a name="file_size">file_size</a>(const path&amp; p);
 uintmax_t <a name="file_size2">file_size</a>(const path&amp; p, system::error_code&amp; ec) noexcept;</pre>
-</div>
 <blockquote>
   <p><i>Returns:</i> If <code>exists(p) &amp;&amp; is_regular_file(p)</code>, the size 
   in bytes 
