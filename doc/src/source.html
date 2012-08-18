@@ -809,16 +809,18 @@ character set.</p>
 
 </blockquote>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
-<p>In addition to [fs.req], template parameters named <code><a name="Source">Source</a></code> 
-shall be 
-one of:</p>
+<p>In addition to the [fs.req] requirements, template parameters named <code><a name="Source">Source</a></code> 
+shall be one of:</p>
 <ul>
-  <li>A <code>basic_string&lt;charT, traits&gt;</code>.</li>
-  <li>A type meeting the input iterator requirements that iterators over a NTCTS. The value type 
-  shall be a character type ([fs.req]).</li>
+  <li>Type <code>basic_string&lt;charT, traits, Allocator&gt;</code>. The type <code>
+  charT</code> shall be a character type ([fs.req]).</li>
+  <li>A type meeting the input iterator requirements that iterates over a NTCTS. 
+  The value type shall be a character type.</li>
   <li>A character array that after array-to-pointer conversion results in a 
   pointer to a NTCTS. The value type shall be a character type.</li>
-  <li>A <code>directory_entry</code>.</li>
+  <li>Type <code>directory_entry</code>. [<i>Note:</i> An argument <code>s</code> 
+  of type <code>directory_entry</code> is equivalent to an argument of <code>
+  s.path()</code>. <i>--end note</i>]</li>
 </ul>
 
 <blockquote>
