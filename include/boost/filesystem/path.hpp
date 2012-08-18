@@ -392,7 +392,7 @@ namespace filesystem
       basic_string(const Allocator& a = Allocator()) const
     {
       return boost::interop::make_string<
-        boost::interop::select_codec<charT>::type, boost::interop::default_codec,
+        typename boost::interop::select_codec<charT>::type, boost::interop::default_codec,
         std::basic_string<charT, traits, Allocator> >(m_pathname);
     }
 
