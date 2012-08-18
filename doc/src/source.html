@@ -1940,7 +1940,8 @@ file_status  symlink_status(system::error_code&amp; ec) const noexcept;</pre>
 <p>Objects of type <code>directory_iterator</code> provide standard library 
 compliant iteration over the contents of a directory. Also see class <code><a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a></code>.</p>
 <pre>$NAMESPACE_BEGIN;
-      class directory_iterator
+      class directory_iterator :
+        public iterator&lt;input_iterator_tag, directory_entry&gt;
       {
       public:
         // <a href="#directory_iterator-members">member functions</a>
@@ -1962,15 +1963,8 @@ compliant iteration over the contents of a directory. Also see class <code><a hr
       };
 
 $NAMESPACE_END;</pre>
-<p> <code>directory_iterator</code> satisfies the requirements of an 
-input iterator (C++ Std, 24.2.1, Input iterators [input.iterators]).</p>
-<p>A <code>directory_iterator</code> reads successive elements from the directory for 
-which it was constructed, as if by calling ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/readdir_r.html">readdir_r()</a></code>. After a <code>directory_iterator</code> is constructed, and every time <code>operator++</code> is called, 
-it reads a directory element and stores information about it in a object of type <code><a href="#Class-directory_entry">directory_entry</a></code>. <code>operator++</code> is not equality preserving; that is, <code>i == j</code> does not imply that <code>++i == ++j</code>. </p>
-<blockquote>
-<p>[<i>Note:</i> The practical consequence of not preserving equality is that directory iterators 
-can only be used for single-pass algorithms. <i>--end note</i>]</p>
-</blockquote>
+<p> <code>directory_iterator</code> satisfies the requirements of an input 
+iterator ([input.iterators]).</p>
 <p>If the end of the directory elements is reached, the iterator shall become equal to 
 the end iterator value. The constructor <code>directory_iterator()</code> with no arguments always constructs an end iterator object, which 
 shall be the only valid iterator for the end condition. The result of <code>operator*</code> on an end iterator is not defined. For any other iterator value 
