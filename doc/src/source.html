@@ -595,7 +595,7 @@ $endif;
         string    <a href="#string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         wstring   <a href="#wstring">wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         u16string <a href="#u16string">u16string</a>() const;
-        u32string <a href="#u32wstring">u32string</a>() const;
+        u32string <a href="#u32string">u32string</a>() const;
 
         // <a href="#path-generic-format-observers">generic format observers</a>
 $if $TARGET; == BOOST        template &lt;class String&gt;
@@ -608,7 +608,7 @@ $endif;
         string    <a href="#generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         wstring   <a href="#generic_wstring">generic_wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         u16string <a href="#generic_u16string">generic_u16string</a>() const;
-        u32string <a href="#generic_u32wstring">generic_u32string</a>() const;
+        u32string <a href="#generic_u32string">generic_u32string</a>() const;
 
         // <a href="#path-compare">compare</a>
         int  <a href="#path-compare">compare</a>(const path&amp; p) const noexcept;
@@ -1020,7 +1020,7 @@ conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a
 <pre>string <a name="string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 wstring <a name="wstring">wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 u16string <a name="u16string">u16string</a>() const;
-u32wstring <a name="u32wstring">u32wstring</a>() const; </pre>
+u32string <a name="u32string">u32string</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
@@ -1057,7 +1057,7 @@ conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a
 <pre>string <a name="generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 wstring <a name="generic_wstring">generic_wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 u16string <a name="generic_u16string">generic_u16string</a>() const;
-u32wstring <a name="generic_u32wstring">generic_u32wstring</a>() const; </pre>
+u32string <a name="generic_u32string">generic_u32string</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
 pathname format ([<a href="#path.generic">path.generic</a>]).</p>
