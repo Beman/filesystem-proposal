@@ -1196,7 +1196,7 @@ namespace filesystem
   // all functions are inline to avoid issues with crossing dll boundaries
 
   public:
-    // compiler generates copy constructor and copy assignment
+    // compiler generates copy constructor, copy assignment, and destructor
 
     filesystem_error(
       const std::string & what_arg, system::error_code ec)
@@ -1235,8 +1235,6 @@ namespace filesystem
       }
       catch (...) { m_imp_ptr.reset(); }
     }
-
-    ~filesystem_error() throw() {}
 
     const path& path1() const
     {
