@@ -1665,24 +1665,15 @@ operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);</pre>
       class filesystem_error : public system_error
       {
       public:
-        filesystem_error();
-        filesystem_error(const filesystem_error&amp;);
-        <a href="#filesystem_error-2-arg">filesystem_error</a>(const string&amp; what_arg,
-          system::error_code ec);
+        <a href="#filesystem_error-2-arg">filesystem_error</a>(const string&amp; what_arg, error_code ec);
         <a href="#filesystem_error-3-arg">filesystem_error</a>(const string&amp; what_arg,
-          const path&amp; p1, system::error_code ec);
+          const path&amp; p1, error_code ec);
         <a href="#filesystem_error-4-arg">filesystem_error</a>(const string&amp; what_arg,
-          const path&amp; p1, const path&amp; p2, system::error_code ec);
-
-        filesystem_error&amp; filesystem_error(const filesystem_error&amp;);
-       ~filesystem_error();
-
-        filesystem_error&amp; operator=(const filesystem_error&amp;);
+          const path&amp; p1, const path&amp; p2, error_code ec);
 
         const path&amp; <a href="#filesystem_error-path1">path1</a>() const;
         const path&amp; <a href="#filesystem_error-path2">path2</a>() const;
-
-        const char * <a href="#filesystem_error-what">what</a>() const;
+        const char* <a href="#filesystem_error-what">what</a>() const;
       };
 } } }  // namespaces std::tbd::filesystem</pre>
 <p>The class template <code>filesystem_error</code> defines the type of 
@@ -1702,7 +1693,7 @@ clause.</p>
       <td width="18%" bgcolor="#FFFFFF"><code>
       runtime_error::what()</code></td>
       <td width="82%" bgcolor="#FFFFFF">
-      <code><i>what_arg</i>.c_str()</code></td>
+      <code>what_arg.c_str()</code></td>
     </tr>
     <tr>
       <td width="18%"><code>code()</code></td>
@@ -1730,7 +1721,7 @@ clause.</p>
       <td width="18%" valign="top"><code>
       runtime_error::what()</code></td>
       <td width="82%">
-      <code><i>what_arg</i>.c_str()</code></td>
+      <code>what_arg.c_str()</code></td>
     </tr>
     <tr>
       <td width="18%" valign="top"><code>code()</code></td>
@@ -1759,7 +1750,7 @@ clause.</p>
       runtime_error::what()</code></td>
       <td width="82%">
       <u>
-      <code><i>w</i></code></u><code><i>hat_arg</i>.c_str()</code></td>
+      <code>w</code></u><code>hat_arg.c_str()</code></td>
     </tr>
     <tr>
       <td width="18%"><code>code()</code></td>
