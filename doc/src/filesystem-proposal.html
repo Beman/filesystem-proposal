@@ -556,7 +556,7 @@ file systems. Implementations are only required to support the FAT features
 supported by the host operating system for a particular file system. <i>-- end example</i>]</p>
 </blockquote>
 <p>The behavior of functions described in this 
-reference 
+clause 
 may differ from their specification in 
 the presence of <a href="#file-system-race">file system races</a> ([fs.def.race]). No diagnostic is required.</p>
 <p>If the possibility of a file system race would make it unreliable for a program to 
@@ -685,8 +685,8 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     path         <a href="#absolute">absolute</a>(const path&amp; p, const path&amp; base=current_path());
 
     path         <a href="#canonical">canonical</a>(const path&amp; p, const path&amp; base = current_path());
-    path         <a href="#canonical">canonical</a>(const path&amp; p, error_code&amp; ec) noexcept;
-    path         <a href="#canonical">canonical</a>(const path&amp; p, const path&amp; base, error_code&amp; ec) noexcept;
+    path         <a href="#canonical">canonical</a>(const path&amp; p, error_code&amp; ec);
+    path         <a href="#canonical">canonical</a>(const path&amp; p, const path&amp; base, error_code&amp; ec);
 
     void         <a href="#copy">copy</a>(const path&amp; from, const path&amp; to);
     void         <a href="#copy">copy</a>(const path&amp; from, const path&amp; to, error_code&amp; ec) noexcept;
@@ -723,7 +723,7 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
                                 error_code&amp; ec) noexcept;
 
     path         <a href="#current_path">current_path</a>();
-    path         <a href="#current_path">current_path</a>(error_code&amp; ec) noexcept;
+    path         <a href="#current_path">current_path</a>(error_code&amp; ec);
     void         <a href="#current_path">current_path</a>(const path&amp; p);
     void         <a href="#current_path">current_path</a>(const path&amp; p, error_code&amp; ec) noexcept;
 
@@ -769,7 +769,7 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
                                  error_code&amp; ec) noexcept;
 
     path         <a href="#read_symlink">read_symlink</a>(const path&amp; p);
-    path         <a href="#read_symlink">read_symlink</a>(const path&amp; p, error_code&amp; ec) noexcept;
+    path         <a href="#read_symlink">read_symlink</a>(const path&amp; p, error_code&amp; ec);
 
     bool         <a href="#remove">remove</a>(const path&amp; p);
     bool         <a href="#remove">remove</a>(const path&amp; p, error_code&amp; ec) noexcept;
@@ -795,13 +795,13 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     <a href="#file_status">file_status</a>  <a href="#symlink_status">symlink_status</a>(const path&amp; p, error_code&amp; ec) noexcept;
 
     path         <a href="#system_complete">system_complete</a>(const path&amp; p);
-    path         <a href="#system_complete">system_complete</a>(const path&amp; p, error_code&amp; ec) noexcept;
+    path         <a href="#system_complete">system_complete</a>(const path&amp; p, error_code&amp; ec);
 
     path         <a href="#temp_directory_path">temp_directory_path</a>();
-    path         <a href="#temp_directory_path">temp_directory_path</a>(error_code&amp; ec) noexcept;
+    path         <a href="#temp_directory_path">temp_directory_path</a>(error_code&amp; ec);
 
     path         <a href="#unique_path">unique_path</a>(const path&amp; model=&quot;%%%%-%%%%-%%%%-%%%%&quot;);
-    path         <a href="#unique_path">unique_path</a>(const path&amp; model, error_code&amp; ec) noexcept;
+    path         <a href="#unique_path">unique_path</a>(const path&amp; model, error_code&amp; ec);
 
 } } }  // namespaces std::tbd::filesystem</pre>
 
@@ -1674,9 +1674,9 @@ operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);</pre>
         <a href="#filesystem_error-4-arg">filesystem_error</a>(const string&amp; what_arg,
           const path&amp; p1, const path&amp; p2, error_code ec);
 
-        const path&amp; <a href="#filesystem_error-path1">path1</a>() const;
-        const path&amp; <a href="#filesystem_error-path2">path2</a>() const;
-        const char* <a href="#filesystem_error-what">what</a>() const;
+        const path&amp; <a href="#filesystem_error-path1">path1</a>() const noexcept;
+        const path&amp; <a href="#filesystem_error-path2">path2</a>() const noexcept;
+        const char* <a href="#filesystem_error-what">what</a>() const noexcept;
       };
 } } }  // namespaces std::tbd::filesystem</pre>
 <p>The class template <code>filesystem_error</code> defines the type of 
@@ -1769,17 +1769,17 @@ clause.</p>
     </tr>
   </table>
 </blockquote>
-<pre>const path&amp; <a name="filesystem_error-path1">path1</a>() const;</pre>
+<pre>const path&amp; <a name="filesystem_error-path1">path1</a>() const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> Reference to copy of <code>p1</code> stored by the 
   constructor, or, if none, an empty path.</p>
 </blockquote>
-<pre>const path&amp; <a name="filesystem_error-path2">path2</a>() const;</pre>
+<pre>const path&amp; <a name="filesystem_error-path2">path2</a>() const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> Reference to copy of <code>p2</code> stored by the 
   constructor, or, if none, an empty path.</p>
 </blockquote>
-<pre>const char* <a name="filesystem_error-what">what</a>() const;</pre>
+<pre>const char* <a name="filesystem_error-what">what</a>() const noexcept;</pre>
 <blockquote>
   <p><i>Returns: </i>A string containing <code>runtime_error::what()</code>. The exact format is unspecified. 
   Implementations are encouraged but not required to include <code>path1.native_string()</code>if not empty, <code>path2.native_string()</code>if 
@@ -2478,8 +2478,8 @@ an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end not
   memory allocation fails.</p>
 </blockquote>
 <pre>path <a name="canonical">canonical</a>(const path&amp; p, const path&amp; base = current_path());
-path canonical(const path&amp; p, error_code&amp; ec) noexcept;
-path canonical(const path&amp; p, const path&amp; base, error_code&amp; ec) noexcept;</pre>
+path canonical(const path&amp; p, error_code&amp; ec);
+path canonical(const path&amp; p, const path&amp; base, error_code&amp; ec);</pre>
 <blockquote>
 <p><i>Overview:</i> Converts <code>p</code>, which must exist, to an absolute 
 path that has no symbolic link, <code>&quot;.&quot;</code>, 
@@ -2658,7 +2658,7 @@ void <a name="create_symlink2">create_symlink</a>(const path&amp; to, const path
   memory cards and flash drives, for example. <i>-- end note</i>]</p>
   </blockquote>
 <pre>path <a name="current_path">current_path</a>();
-path <a name="current_path2">current_path</a>(error_code&amp; ec) noexcept;</pre>
+path <a name="current_path2">current_path</a>(error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Returns:</i> The current working directory path, as if by ISO/IEC  
   9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/getcwd.html">getcwd()</a></code>. <code>is_absolute()</code> is true for the returned path. 
@@ -2869,7 +2869,7 @@ void permissions(const path&amp; p, <a href="#symlink_perms">perms</a> prms, err
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>path <a name="read_symlink">read_symlink</a>(const path&amp; p);
-path read_symlink(const path&amp; p, error_code&amp; ec) noexcept;</pre>
+path read_symlink(const path&amp; p, error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Returns:</i>&nbsp; If <code>p</code> resolves to a symbolic 
   link, a <code>path</code> object containing the contents of that symbolic 
@@ -3080,7 +3080,7 @@ file_status <a name="symlink_status2">symlink_status</a>(const path&amp; p, erro
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>path <a name="system_complete">system_complete</a>(const path&amp; p);
-path <a name="system_complete2">system_complete</a>(const path&amp; p, error_code&amp; ec) noexcept;</pre>
+path <a name="system_complete2">system_complete</a>(const path&amp; p, error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Effects:</i> Composes an absolute path from <code>p</code>, using the 
   same rules used by the operating system to resolve a path passed as the 
@@ -3116,7 +3116,7 @@ path <a name="system_complete2">system_complete</a>(const path&amp; p, error_cod
   
 </blockquote>
 <pre>path <a name="temp_directory_path">temp_directory_path</a>();
-path temp_directory_path(error_code&amp; ec) noexcept;</pre>
+path temp_directory_path(error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Returns:</i> An operating system dependent directory path suitable for temporary files. An error shall be reported if<code> !exists(p) 
   || !is_directory(p)</code>, where <code>p</code> is the path to be returned. 

@@ -376,7 +376,7 @@ namespace boost
   path canonical(const path& p, const path& base=current_path())
                                        {return detail::canonical(p, base);}
   inline
-  path canonical(const path& p, system::error_code& ec) BOOST_NOEXCEPT
+  path canonical(const path& p, system::error_code& ec)
                                        {return detail::canonical(p, current_path(), &ec);}
   inline
   path canonical(const path& p, const path& base, system::error_code& ec)
@@ -499,13 +499,13 @@ namespace boost
   path initial_path()                  {return detail::initial_path();}
 
   inline
-  path initial_path(system::error_code& ec) BOOST_NOEXCEPT
+  path initial_path(system::error_code& ec)
                                        {return detail::initial_path(&ec);}
 
   template <class Path>
   path initial_path() {return initial_path();}
   template <class Path>
-  path initial_path(system::error_code& ec) BOOST_NOEXCEPT
+  path initial_path(system::error_code& ec)
                                        {return detail::initial_path(&ec);}
 
   inline
@@ -596,19 +596,19 @@ namespace boost
   path system_complete(const path& p)  {return detail::system_complete(p);}
 
   inline
-  path system_complete(const path& p, system::error_code& ec) BOOST_NOEXCEPT
+  path system_complete(const path& p, system::error_code& ec)
                                        {return detail::system_complete(p, &ec);}
   inline
   path temp_directory_path()           {return detail::temp_directory_path();}
 
   inline
-  path temp_directory_path(system::error_code& ec) BOOST_NOEXCEPT 
+  path temp_directory_path(system::error_code& ec) 
                                        {return detail::temp_directory_path(&ec);}
   inline
   path unique_path(const path& p="%%%%-%%%%-%%%%-%%%%")
                                        { return detail::unique_path(p); }
   inline
-  path unique_path(const path& p, system::error_code& ec) BOOST_NOEXCEPT
+  path unique_path(const path& p, system::error_code& ec)
                                        { return detail::unique_path(p, &ec); }
 
 //--------------------------------------------------------------------------------------//
@@ -1236,18 +1236,18 @@ namespace filesystem
       catch (...) { m_imp_ptr.reset(); }
     }
 
-    const path& path1() const
+    const path& path1() const BOOST_NOEXCEPT
     {
       static const path empty_path;
       return m_imp_ptr.get() ? m_imp_ptr->m_path1 : empty_path ;
     }
-    const path& path2() const
+    const path& path2() const BOOST_NOEXCEPT
     {
       static const path empty_path;
       return m_imp_ptr.get() ? m_imp_ptr->m_path2 : empty_path ;
     }
 
-    const char* what() const throw()
+    const char* what() const BOOST_NOEXCEPT
     {
       if (!m_imp_ptr.get())
         return system::system_error::what();
