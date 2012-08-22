@@ -354,7 +354,8 @@ namespace
     //std::cout << "remove " << p << std::endl;
     if (type == fs::file_not_found)
     {
-      if (ec != 0) ec->clear();
+      if (ec != 0)
+        ec->clear();
       return false;
     }
 
@@ -387,12 +388,16 @@ namespace
       {
         fs::file_type tmp_type = query_file_type(itr->path(), ec);
         if (ec != 0 && *ec)
-          return count;
+          return static_cast<boost::uintmax_t>(-1);
         count += remove_all_aux(itr->path(), tmp_type, ec);
+        if (ec != 0 && *ec)
+          return static_cast<boost::uintmax_t>(-1);
       }
     }
     remove_file_or_directory(p, type, ec);
-    return count;
+    return (ec != 0 && *ec)
+      ? static_cast<boost::uintmax_t>(-1)
+      : count;
   }
 
 #ifdef BOOST_POSIX_API
@@ -679,15 +684,6 @@ namespace
       ::GetModuleHandle(TEXT("kernel32.dll")), "CreateSymbolicLinkW"));
 
 #endif
-
-//#ifdef BOOST_WINDOWS_API
-//
-//
-//  inline bool get_free_disk_space(const std::wstring& ph,
-//    PULARGE_INTEGER avail, PULARGE_INTEGER total, PULARGE_INTEGER free)
-//    { return ::GetDiskFreeSpaceExW(ph.c_str(), avail, total, free)!= 0; }
-//
-//#endif
 
 } // unnamed namespace
 
@@ -1084,11 +1080,13 @@ namespace detail
 
 #   else
     DWORD sz;
-    if ((sz = ::GetCurrentDirectoryW(0, NULL))== 0)sz = 1;
+    if ((sz = ::GetCurrentDirectoryW(0, NULL))== 0)
+      sz = 1;
     boost::scoped_array<path::value_type> buf(new path::value_type[sz]);
-    error(::GetCurrentDirectoryW(sz, buf.get())== 0, ec,
-      "boost::filesystem::current_path");
-    return path(buf.get());
+    return error(::GetCurrentDirectoryW(sz, buf.get()) == 0, ec,
+      "boost::filesystem::current_path")
+      ? path()
+      : path(buf.get());
 #   endif
   }
 
@@ -1237,7 +1235,7 @@ namespace detail
     struct stat path_stat;
     return error(::stat(p.c_str(), &path_stat)!= 0,
                   p, ec, "boost::filesystem::hard_link_count")
-           ? 0
+           ? static_cast<boost::uintmax_t>(-1)
            : static_cast<boost::uintmax_t>(path_stat.st_nlink);
 
 #   else // Windows
@@ -1254,7 +1252,7 @@ namespace detail
       && !error(::GetFileInformationByHandle(h.handle, &info)== 0,
                  p, ec, "boost::filesystem::hard_link_count")
            ? info.nNumberOfLinks
-           : 0;
+           : static_cast<boost::uintmax_t>(-1);
 #   endif
   }
 
@@ -1264,7 +1262,8 @@ namespace detail
       static path init_path;
       if (init_path.empty())
         init_path = current_path(ec);
-      else if (ec != 0) ec->clear();
+      else if (ec != 0)
+        ec->clear();
       return init_path;
   }
 
@@ -1536,10 +1535,10 @@ namespace detail
     file_type type = query_file_type(p, &tmp_ec);
     if (error(type == status_error, tmp_ec, p, ec,
       "boost::filesystem::remove_all"))
-      return 0;
+      return static_cast<boost::uintmax_t>(-1);
 
     return (type != status_error && type != file_not_found) // exists
-      ? remove_all_aux(p, type, ec)
+      ? remove_all_aux(p, type, ec)  // will be static_cast<boost::uintmax_t>(-1) if error
       : 0;
   }
 
@@ -1595,7 +1594,7 @@ namespace detail
 
     else
     {
-      info.capacity = info.free = info.available = 0;
+      info.capacity = info.free = info.available = static_cast<boost::uintmax_t>(-1);
     }
     return info;
   }
@@ -1764,7 +1763,7 @@ namespace detail
       {
         errno = ENOTDIR;
         error(true, p, ec, "boost::filesystem::temp_directory_path");
-        return p;
+        return path();
       }
         
       return p;

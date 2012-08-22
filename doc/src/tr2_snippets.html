@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-20<!--webbot bot="Timestamp" endspan i-checksum="12488" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-22<!--webbot bot="Timestamp" endspan i-checksum="12492" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -39,7 +39,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->20 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31318" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31322" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -128,6 +128,9 @@ Library Proposal (Revision 3). Changes include:</p>
   <li>Replace use of <code>time_t</code> with <code>file_time_type</code>, a 
   typedef for <code>std::chrono::system_clock::time_point</code>, per LWG 
   discussion in Kona.</li>
+  <li>More consistent semantics and descriptions for return values from 
+  operational functions with <code>error_code&amp;</code> arguments that encounter 
+  an error. </li>
   <li><code>recursive_directory_iterator</code> specifications are now given in 
   terms of behavior only. Private &quot;for exposition only&quot; members have been 
   removed.</li>

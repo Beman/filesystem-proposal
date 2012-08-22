@@ -2232,7 +2232,8 @@ path that has no symbolic link, <code>&quot;.&quot;</code>,
 or <code>&quot;..&quot;</code> elements. </p>
 <p><i>Returns:</i> A path that refers to 
 the same file system object as <code>absolute(p,base)</code>. For the overload 
-without a <code>base</code> argument, <code>base</code> is <code>current_path()</code>.</p>
+without a <code>base</code> argument, <code>base</code> is <code>current_path()</code>. 
+Signatures with argument <code>ec</code> return <code>path()</code> if an error occurs.</p>
   <p><i>Throws:</i>&nbsp; As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
   <p><i>Remarks:</i> <code>!exists(p)</code> is an error.</p>
@@ -2328,7 +2329,8 @@ bool <a name="create_directories2">create_directories</a>(const path&amp; p, $SY
   exist.</p>
   <p><i>Postcondition:</i> <code>is_directory(p)</code></p>
   <p><i>Returns:</i> <code>true</code> if a new directory was created, otherwise <code>
-  false</code>.</p>
+  false</code>. The signature with argument <code>ec</code> returns false if an 
+  error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   <p><i>Complexity:</i> <i>O(n+1)</i> where <i>n</i> is the number of elements 
   of <code>p</code> that do not exist.</p>
@@ -2342,7 +2344,8 @@ bool <a name="create_directory2">create_directory</a>(const path&amp; p, $SYSTEM
   failure because <code>p</code> resolves to an existing directory shall not be 
   treated as an error. </p>
   <p><i>Postcondition:</i> <code>is_directory(p)</code></p>
-  <p><i>Returns:</i> <code>true</code> if a new directory was created, otherwise <code>false</code>.</p>
+  <p><i>Returns:</i> <code>true</code> if a new directory was created, otherwise <code>false</code>. 
+  The signature with argument <code>ec</code> returns false if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="create_directory_symlink">create_directory_symlink</a>(const path&amp; to, const path&amp; new_symlink);
@@ -2404,7 +2407,9 @@ void <a name="create_symlink2">create_symlink</a>(const path&amp; to, const path
 path <a name="current_path2">current_path</a>($SYSTEM;error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> The current working directory path, as if by ISO/IEC  
-  9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/getcwd.html">getcwd()</a></code>. <code>is_absolute()</code> is true for the returned path.</p>
+  9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/getcwd.html">getcwd()</a></code>. <code>is_absolute()</code> is true for the returned path. 
+  The signature with argument <code>ec</code> returns <code>path()</code> if an 
+  error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   <p>[<i>Note: </i>The <code>current_path()</code> name was chosen to emphasize that the return is a 
   path, not just a single directory name.</p>
@@ -2472,7 +2477,9 @@ uintmax_t <a name="file_size2">file_size</a>(const path&amp; p, $SYSTEM;error_co
 uintmax_t hard_link_count(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</pre>
 <blockquote>
 
-  <p><i>Returns:</i> The number of hard links for <code>p</code>.</p>
+  <p><i>Returns:</i> The number of hard links for <code>p</code>. The signature 
+  with argument <code>ec</code> returns <code>static_cast&lt;uintmax_t&gt;(-1)</code> 
+  if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 
 </blockquote>
@@ -2480,7 +2487,9 @@ uintmax_t hard_link_count(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcep
 <pre>const path&amp; <a name="initial_path">initial_path</a>();
 const path&amp; <a name="initial_path2">initial_path</a>(<code>$SYSTEM;error_code&amp; ec</code>) noexcept;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>current_path()</code> as of the first call to <code>initial_path()</code>.</p>
+  <p><i>Returns:</i> <code>current_path()</code> as of the first call to <code>initial_path()</code>. 
+  The signature with argument <code>ec</code> returns <code>path()</code> if an 
+  error occurs.</p>
   <p>[<i>Note:</i> <code>initial_path()</code> is not thread safe, and may return an undesirable result 
   if called subsequent to a change to the current directory. These problems can 
   be avoided by calling <code>initial_path()</code> immediately on entry to 
@@ -2495,7 +2504,8 @@ const path&amp; <a name="initial_path2">initial_path</a>(<code>$SYSTEM;error_cod
 bool <a name="is_directory3">is_directory</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_directory(status(p))</code> or <code>is_directory(status(p, ec))</code>, 
-  respectively.</p>
+  respectively. The signature with argument <code>ec</code> returns <code>false</code> 
+  if an error occurs.</p>
 <p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
 nothing.</p>
 </blockquote>
@@ -2506,10 +2516,14 @@ bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, $SYSTEM;error_code&
   <p><i>Returns:</i> <code>is_directory(s)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ? directory_iterator(p) == directory_iterator()<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : file_size(p) == 0;</code></p>
+  <blockquote>
+  <p>The signature with argument <code>ec</code> returns <code>false</code> if 
+  an error occurs.</p>
+  </blockquote>
 </blockquote>
 <pre>bool <code><a name="is_regular_file">is_regular_file</a></code>(file_status s) noexcept;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>s.type() == regular_file</code></p>
+  <p><i>Returns:</i> <code>s.type() == regular_file</code>.</p>
 </blockquote>
 <pre><code>bool <a name="is_regular_file2">is_regular_file</a>(const path&amp; p);</code></pre>
 <blockquote>
@@ -2520,7 +2534,8 @@ bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, $SYSTEM;error_code&
 <blockquote>
   <p><i>Effects:</i> Sets <code>ec</code> as if by <code>status(p, ec)</code>. [<i>Note:</i> <code>status_error</code>, <code>file_not_found</code> and <code>type_unknown</code> cases set <code>ec</code> to error values. To distinguish between cases, call the <code>status</code> function directly. <i>-- end 
   note</i>] </p>
-  <p><i>Returns:</i> <code>is_regular_file(status(p, ec))</code>.</p>
+  <p><i>Returns:</i> <code>is_regular_file(status(p, ec))</code>. Returns <code>
+  false</code> if an error occurs.</p>
 </blockquote>
 <pre>bool <a name="is_other">is_other</a>(file_status s) noexcept;</pre>
 <blockquote>
@@ -2530,9 +2545,9 @@ bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, $SYSTEM;error_code&
 bool <a name="is_other3">is_other</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_other(status(p))</code> or <code>is_other(status(p, ec))</code>, 
-  respectively.</p>
-  <p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
-  nothing.</p>
+  respectively. The signature with argument <code>ec</code> returns <code>false</code> 
+  if an error occurs.</p>
+  <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>bool <a name="is_symlink">is_symlink</a>(file_status s) noexcept;</pre>
 <blockquote>
@@ -2542,16 +2557,18 @@ bool <a name="is_other3">is_other</a>(const path&amp; p, $SYSTEM;error_code&amp;
 bool <a name="is_symlink3">is_symlink</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_symlink(symlink_status(p))</code> or <code>is_symlink(symlink_status(p, ec))</code>, 
-  respectively.</p>
-  <p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
-  nothing.</p>
+  respectively. The signature with argument <code>ec</code> returns <code>false</code> 
+  if an error occurs.</p>
+  <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>file_time_type <a name="last_write_time">last_write_time</a>(const path&amp; p);
 file_time_type <a name="last_write_time2">last_write_time</a>(const path&amp; p<code>, $SYSTEM;error_code&amp; ec</code>) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> The time of last data modification of <code>p</code>, determined as if by the 
   value of the ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">stat</a></code> structure member <code>st_mtime</code>&nbsp; obtained 
-  as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>.</p>
+  as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>. 
+  The signature with argument <code>ec</code> returns <code>static_cast&lt;file_type_type&gt;(-1)</code> 
+  if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="last_write_time3">last_write_time</a>(const path&amp; p, file_time_type new_time);
@@ -2602,7 +2619,8 @@ path read_symlink(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i>&nbsp; If <code>p</code> resolves to a symbolic 
   link, a <code>path</code> object containing the contents of that symbolic 
-  link. Otherwise an empty <code>path</code> object.</p>
+  link. Otherwise <code>path()</code>. The signature with argument <code>ec</code> 
+  returns <code>path()</code> if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>. [<i>Note:</i> It is an error if <code>p</code> does not 
   resolve to a symbolic link. <i>-- end note</i>]</p>
 </blockquote>
@@ -2618,7 +2636,8 @@ bool <a name="remove2">remove</a>(const path&amp; p, $SYSTEM;error_code&amp; ec)
   </blockquote>
   <p><i>Postcondition:</i> <code>!exists(symlink_status(p))</code>.</p>
   <p><i>Returns:</i>&nbsp; <code>false</code> if p did not exist in the first 
-  place, otherwise <code>true</code>.</p>
+  place, otherwise <code>true</code>. The signature with argument <code>ec</code> 
+  returns <code>false</code> if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>uintmax_t <a name="remove_all">remove_all</a>(const path&amp; p);
@@ -2632,7 +2651,9 @@ uintmax_t <a name="remove_all2">remove_all</a>(const path&amp; p, $SYSTEM;error_
   resolves to being removed. <i>-- end note</i>]</p>
   </blockquote>
   <p><i>Postcondition:</i> <code>!exists(p)</code></p>
-  <p><i>Returns:</i> The number of files removed.</p>
+  <p><i>Returns:</i> The number of files removed. The signature with argument
+  <code>ec</code> returns <code>static_cast&lt;uintmax_t&gt;(-1)</code> if an error 
+  occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="rename">rename</a>(const path&amp; old_p, const path&amp; new_p);
@@ -2668,7 +2689,9 @@ space_info <a name="space2">space</a>(const path&amp; p, $SYSTEM;error_code&amp;
    and <code>f_bavail</code> members by its <code>f_frsize</code> member,
    and assigning the results to the <code>capacity</code>, <code>free</code>, 
   and <code>available</code> members respectively. Any members for which the 
-  value cannot be determined shall be set to -1.</p>
+  value cannot be determined shall be set to <code>static_cast&lt;uintmax_t&gt;(-1)</code>. 
+  For the signature with argument <code>ec</code>, all members are set to <code>
+  static_cast&lt;uintmax_t&gt;(-1)</code> if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre><a href="#file_status">file_status</a> <a name="status">status</a>(const path&amp; p);</pre>
@@ -2796,10 +2819,11 @@ file_status <a name="symlink_status2">symlink_status</a>(const path&amp; p, $SYS
 </blockquote>
 <blockquote>
       <p><i>Returns:</i> Same as <a href="#status">status()</a>, above, except 
-      that if the attributes indicate a symbolic link, as if by ISO/IEC 9945 <a class="external" href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">S_ISLNK()</a>, return <code>file_status(symlink_file)</code>.</p>
+      that if the attributes indicate a symbolic link, as if by ISO/IEC 9945 <a class="external" href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">S_ISLNK()</a>, return <code>file_status(symlink_file)</code>. 
+      The signature with argument <code>ec</code> returns <code>
+      file_status(status_error)</code> if an error occurs.</p>
       <p><i>Remarks:</i> Pathname resolution terminates if <code>p</code> names a symbolic link.</p>
-  <p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
-  nothing.</p>
+  <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>path <a name="system_complete">system_complete</a>(const path&amp; p);
 path <a name="system_complete2">system_complete</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</pre>
@@ -2807,7 +2831,8 @@ path <a name="system_complete2">system_complete</a>(const path&amp; p, $SYSTEM;e
   <p><i>Effects:</i> Composes an absolute path from <code>p</code>, using the 
   same rules used by the operating system to resolve a path passed as the 
   filename argument to standard library open functions.</p>
-  <p><i>Returns:</i> The composed path.</p>
+  <p><i>Returns:</i> The composed path. The signature with argument <code>ec</code> 
+  returns <code>path()</code> if an error occurs.</p>
   <p><i>Postcondition:</i> For the returned path, <code>rp,</code> <code>rp.is_absolute()</code> is true.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
@@ -2840,7 +2865,9 @@ path <a name="system_complete2">system_complete</a>(const path&amp; p, $SYSTEM;e
 path temp_directory_path($SYSTEM;error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> An operating system dependent directory path suitable for temporary files. An error shall be reported if<code> !exists(p) 
-  || !is_directory(p)</code>, where <code>p</code> is the path to be returned.</p>
+  || !is_directory(p)</code>, where <code>p</code> is the path to be returned. 
+  The signature with argument <code>ec</code> returns <code>path()</code> if an 
+  error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   <p><i><span style="background-color: #E0E0E0">The <code>temp_directory_path()</code> 
   name was chosen to emphasize that the return is a path, not just a single 
@@ -2872,7 +2899,8 @@ path unique_path(const path&amp; model, $SYSTEM;error_code&amp; ec);</pre>
   The default model thus provides 64 bits of randomness. <i>--end note</i>]</p>
   <p><i>Returns:</i> A path identical to <code>model</code>, except that each 
   occurrence of a percent sign character is replaced by a random hexadecimal 
-  digit character in the range 0-9, a-f.</p>
+  digit character in the range 0-9, a-f. The signature with argument <code>ec</code> 
+  returns <code>path()</code> if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   <p><i>Remarks:</i> Implementations are encouraged to obtain the required 
   randomness via a <a href="http://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator">cryptographically secure pseudo-random number generator</a>, such as one 
