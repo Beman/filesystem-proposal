@@ -1311,7 +1311,7 @@ $if $TARGET; == BOOST
   <p>[<i>Note:</i> A <code>path</code> aware <code>lexicographical_compare</code> algorithm is provided for historical reasons. <i>--end note</i>]</p>
 </blockquote>
 $endif
-<pre>void swap( path&amp; lhs, path&amp; rhs );</pre>
+<pre>void swap( path&amp; lhs, path&amp; rhs ) noexcept;</pre>
 <blockquote>
   <p><i>Effects: </i><code>lhs.swap(rhs)</code>.</p>
 </blockquote>
@@ -1941,12 +1941,12 @@ compliant iteration over the contents of a directory. Also see class <code><a hr
         directory_iterator() noexcept;
         explicit directory_iterator(const path&amp; p);
         directory_iterator(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
-        directory_iterator(const directory_iterator&amp;) noexcept;
-        directory_iterator(directory_iterator&amp;&amp;) = deleted;
+        directory_iterator(const directory_iterator&amp;) = default;
+        directory_iterator(directory_iterator&amp;&amp;) = default;
        ~directory_iterator() = default;
 
         directory_iterator&amp; operator=(const directory_iterator&amp;) = default;
-        directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = deleted;
+        directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = default;
 
         directory_iterator&amp; operator++();
         directory_iterator&amp; increment($SYSTEM;error_code&amp; ec) noexcept;
@@ -2047,13 +2047,13 @@ its sub-directories.</p>
 
         // constructors and destructor
         recursive_directory_iterator() noexcept;
-        recursive_directory_iterator(const recursive_directory_iterator&amp;) noexcept;
+        recursive_directory_iterator(const recursive_directory_iterator&amp;) = default;
         explicit recursive_directory_iterator(const path&amp; p,
           <a href="#symlink_option">directory_options</a> options = directory_options::none);
         recursive_directory_iterator(const path&amp; p,
           <a href="#symlink_option">directory_options</a> options, $SYSTEM;error_code&amp; ec) noexcept;
         recursive_directory_iterator(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
-        recursive_directory_iterator(directory_iterator&amp;&amp;) = deleted;
+        recursive_directory_iterator(directory_iterator&amp;&amp;) = default;
        ~recursive_directory_iterator() = default;
 
         // observers
@@ -2063,7 +2063,7 @@ its sub-directories.</p>
 
         // modifiers
         recursive_directory_iterator&amp; operator=(const directory_iterator&amp;) = default;
-        recursive_directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = deleted;
+        recursive_directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = default;
 
         recursive_directory_iterator&amp; operator++();
         recursive_directory_iterator&amp; increment($SYSTEM;error_code&amp; ec);
