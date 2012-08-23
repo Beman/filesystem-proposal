@@ -156,6 +156,13 @@ Library Proposal (Revision 3). Changes include:</p>
   <p>Change template parameters for <code>path::string</code> and
   <code>path::generic_string</code> to the same as <code>std::basic_string</code> 
   in response to comments from the FSG.</li>
+  <li>
+  <p>Remove <code>initial_path()</code> operational function. The functionality 
+  as currently specified is trivial for a user to duplicate using <code>
+  current_path()</code>. The original spec for <code>initial_path()</code> 
+  required support from the runtime library. That doesn't appear to be 
+  practical, and without it the motivation for the function is too weak for 
+  standardization.</li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
   <li>R-value reference move semantics.</li>

@@ -164,6 +164,8 @@ namespace
     fs::initial_path<fs::path>();
     fs::initial_path<fs::wpath>();
 
+    p = fs::initial_path();
+
     p.file_string();
     p.directory_string();
   }

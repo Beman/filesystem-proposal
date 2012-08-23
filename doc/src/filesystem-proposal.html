@@ -186,6 +186,13 @@ Library Proposal (Revision 3). Changes include:</p>
   <p>Change template parameters for <code>path::string</code> and
   <code>path::generic_string</code> to the same as <code>std::basic_string</code> 
   in response to comments from the FSG.</li>
+  <li>
+  <p>Remove <code>initial_path()</code> operational function. The functionality 
+  as currently specified is trivial for a user to duplicate using <code>
+  current_path()</code>. The original spec for <code>initial_path()</code> 
+  required support from the runtime library. That doesn't appear to be 
+  practical, and without it the motivation for the function is too weak for 
+  standardization.</li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
   <li>R-value reference move semantics.</li>
@@ -739,9 +746,6 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
 
     uintmax_t    <a href="#hard_link_count">hard_link_count</a>(const path&amp; p);
     uintmax_t    <a href="#hard_link_count">hard_link_count</a>(const path&amp; p, error_code&amp; ec) noexcept;
-
-    const path&amp;  <a href="#initial_path">initial_path</a>();
-    const path&amp;  <a href="#initial_path">initial_path</a>(<code>error_code&amp; ec</code>) noexcept;
 
     bool         <a href="#is_directory">is_directory</a>(file_status s) noexcept;
     bool         <a href="#is_directory2">is_directory</a>(const path&amp; p);
@@ -2738,18 +2742,6 @@ uintmax_t hard_link_count(const path&amp; p, error_code&amp; ec) noexcept;</pre>
 
 </blockquote>
 
-<pre>const path&amp; <a name="initial_path">initial_path</a>();
-const path&amp; <a name="initial_path2">initial_path</a>(<code>error_code&amp; ec</code>) noexcept;</pre>
-<blockquote>
-  <p><i>Returns:</i> <code>current_path()</code> as of the first call to <code>initial_path()</code>. 
-  The signature with argument <code>ec</code> returns <code>path()</code> if an 
-  error occurs.</p>
-  <p>[<i>Note:</i> <code>initial_path()</code> is not thread safe, and may return an undesirable result 
-  if called subsequent to a change to the current directory. These problems can 
-  be avoided by calling <code>initial_path()</code> immediately on entry to 
-  main().&nbsp; <i>--end note</i>]</p>
-  <p><i>Throws:</i> For the first call, as specified in <a href="#Error-reporting">Error reporting</a>. Subsequent calls throw nothing.</p>
-</blockquote>
 <pre>bool <code><a name="is_directory">is_directory</a></code>(file_status s) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>s.type() == directory_file</code></p>

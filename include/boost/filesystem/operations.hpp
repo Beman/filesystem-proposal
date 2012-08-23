@@ -495,18 +495,21 @@ namespace boost
   inline
   boost::uintmax_t hard_link_count(const path& p, system::error_code& ec) BOOST_NOEXCEPT
                                        {return detail::hard_link_count(p, &ec);}
+
+# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
   inline
   path initial_path()                  {return detail::initial_path();}
 
   inline
   path initial_path(system::error_code& ec)
                                        {return detail::initial_path(&ec);}
-
   template <class Path>
-  path initial_path() {return initial_path();}
+  path initial_path()                  {return initial_path();}
+
   template <class Path>
   path initial_path(system::error_code& ec)
                                        {return detail::initial_path(&ec);}
+#endif
 
   inline
   file_time_type last_write_time(const path& p)
