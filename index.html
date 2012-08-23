@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-22<!--webbot bot="Timestamp" endspan i-checksum="12492" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-23<!--webbot bot="Timestamp" endspan i-checksum="12494" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->22 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31322" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->23 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31324" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -1560,7 +1560,7 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
 </blockquote>
  <p><h3>1.6.15   <a name="path-non-member-functions"> <code>path</code> non-member functions</a> 
 [path.non-member]</h3>
-<pre>void swap( path&amp; lhs, path&amp; rhs );</pre>
+<pre>void swap( path&amp; lhs, path&amp; rhs ) noexcept;</pre>
 <blockquote>
   <p><i>Effects: </i><code>lhs.swap(rhs)</code>.</p>
 </blockquote>
@@ -2194,12 +2194,12 @@ compliant iteration over the contents of a directory. Also see class <code><a hr
         directory_iterator() noexcept;
         explicit directory_iterator(const path&amp; p);
         directory_iterator(const path&amp; p, error_code&amp; ec) noexcept;
-        directory_iterator(const directory_iterator&amp;) noexcept;
-        directory_iterator(directory_iterator&amp;&amp;) = deleted;
+        directory_iterator(const directory_iterator&amp;) = default;
+        directory_iterator(directory_iterator&amp;&amp;) = default;
        ~directory_iterator() = default;
 
         directory_iterator&amp; operator=(const directory_iterator&amp;) = default;
-        directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = deleted;
+        directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = default;
 
         directory_iterator&amp; operator++();
         directory_iterator&amp; increment(error_code&amp; ec) noexcept;
@@ -2301,13 +2301,13 @@ its sub-directories.</p>
 
         // constructors and destructor
         recursive_directory_iterator() noexcept;
-        recursive_directory_iterator(const recursive_directory_iterator&amp;) noexcept;
+        recursive_directory_iterator(const recursive_directory_iterator&amp;) = default;
         explicit recursive_directory_iterator(const path&amp; p,
           <a href="#symlink_option">directory_options</a> options = directory_options::none);
         recursive_directory_iterator(const path&amp; p,
           <a href="#symlink_option">directory_options</a> options, error_code&amp; ec) noexcept;
         recursive_directory_iterator(const path&amp; p, error_code&amp; ec) noexcept;
-        recursive_directory_iterator(directory_iterator&amp;&amp;) = deleted;
+        recursive_directory_iterator(directory_iterator&amp;&amp;) = default;
        ~recursive_directory_iterator() = default;
 
         // observers
@@ -2317,7 +2317,7 @@ its sub-directories.</p>
 
         // modifiers
         recursive_directory_iterator&amp; operator=(const directory_iterator&amp;) = default;
-        recursive_directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = deleted;
+        recursive_directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = default;
 
         recursive_directory_iterator&amp; operator++();
         recursive_directory_iterator&amp; increment(error_code&amp; ec);
