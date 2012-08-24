@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-23<!--webbot bot="Timestamp" endspan i-checksum="12494" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-24<!--webbot bot="Timestamp" endspan i-checksum="12496" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->23 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31324" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->24 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31326" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -3135,15 +3135,15 @@ path temp_directory_path(error_code&amp; ec);</pre>
 <pre>path <a name="unique_path">unique_path</a>(const path&amp; model=&quot;%%%%-%%%%-%%%%-%%%%&quot;);
 path unique_path(const path&amp; model, error_code&amp; ec);</pre>
 <blockquote>
-  <p>The <code>unique_path</code> function generates a path name suitable for 
-  creating temporary files, including directories. The name is based 
+  <p>The <code>unique_path</code> function generates a name suitable for temporary files, including directories. The name is based 
   on a model that uses the percent sign character to specify replacement by a 
-  random hexadecimal digit. [<i>Note:</i> The more bits of randomness in the 
-  generated path name, the less likelihood of prior existence or being guessed. 
+  random hexadecimal digit.</p>
+  <p>[<i>Note:</i> The more bits of randomness in the 
+  generated name, the less likelihood of prior existence or being guessed. 
   Each replacement hexadecimal digit in the model adds four bits of randomness. 
   The default model thus provides 64 bits of randomness. <i>--end note</i>]</p>
   <p><i>Returns:</i> A path identical to <code>model</code>, except that each 
-  occurrence of a percent sign character is replaced by a random hexadecimal 
+  occurrence of the percent sign character is replaced by a random hexadecimal 
   digit character in the range 0-9, a-f. The signature with argument <code>ec</code> 
   returns <code>path()</code> if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
@@ -3151,6 +3151,13 @@ path unique_path(const path&amp; model, error_code&amp; ec);</pre>
   randomness via a <a href="http://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator">cryptographically secure pseudo-random number generator</a>, such as one 
   provided by the operating system. [<i>Note</i>: Such generators may block 
   until sufficient entropy develops. <i>--end note</i>]</p>
+  <p>[<i>Example</i>:</p>
+  <blockquote>
+    <pre>cout &lt;&lt; unique_path(&quot;test-%%%%%%%%%%%.txt&quot;) &lt;&lt; endl;</pre>
+  </blockquote>
+  <p>Typical output would be <code>&quot;test-0db7f2bf57a.txt&quot;</code>. Because 11 
+  hexadecimal output characters are specified, 44 bits of randomness are 
+  supplied.&nbsp; <i>-- end example</i>] </p>
 </blockquote>
 <hr>
 
