@@ -113,6 +113,10 @@ namespace
     CHECK(!is_regular_file("/"));
     CHECK(!boost::filesystem::is_empty("/"));
     CHECK(!is_other("/"));
+    CHECK(!is_block_file("/"));
+    CHECK(!is_character_file("/"));
+    CHECK(!is_fifo("/"));
+    CHECK(!is_socket("/"));
   }
 
   //  directory_iterator_test  -----------------------------------------------//

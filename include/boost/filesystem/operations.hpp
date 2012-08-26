@@ -196,6 +196,14 @@ namespace boost
   inline bool is_other(file_status f) BOOST_NOEXCEPT
                                           { return exists(f) && !is_regular_file(f)
                                                 && !is_directory(f) && !is_symlink(f); }
+   inline bool is_block_file(file_status f) BOOST_NOEXCEPT
+                                          { return f.type() == block_file; }
+   inline bool is_character_file(file_status f) BOOST_NOEXCEPT
+                                          { return f.type() == character_file; }
+   inline bool is_fifo(file_status f) BOOST_NOEXCEPT
+                                          { return f.type() == fifo_file; }
+   inline bool is_socket(file_status f) BOOST_NOEXCEPT
+                                          { return f.type() == socket_file; }
 
 # ifndef BOOST_FILESYSTEM_NO_DEPRECATED
   inline bool is_regular(file_status f)   { return f.type() == regular_file; }
@@ -343,6 +351,26 @@ namespace boost
   inline 
   bool is_symlink(const path& p, system::error_code& ec)
                                        {return is_symlink(detail::symlink_status(p, &ec));}
+  inline 
+  bool is_block_file(const path& p)    {return is_block_file(detail::status(p));}
+  inline 
+  bool is_block_file(const path& p, system::error_code& ec)
+                                       {return is_block_file(detail::status(p, &ec));}
+  inline 
+  bool is_character_file(const path& p){return is_character_file(detail::status(p));}
+  inline 
+  bool is_character_file(const path& p, system::error_code& ec)
+                                       {return is_character_file(detail::status(p, &ec));}
+  inline 
+  bool is_fifo(const path& p)          {return is_fifo(detail::status(p));}
+  inline 
+  bool is_fifo(const path& p, system::error_code& ec)
+                                       {return is_fifo(detail::status(p, &ec));}
+  inline 
+  bool is_socket(const path& p)        {return is_socket(detail::status(p));}
+  inline 
+  bool is_socket(const path& p, system::error_code& ec)
+                                       {return is_socket(detail::status(p, &ec));}
 # ifndef BOOST_FILESYSTEM_NO_DEPRECATED
   inline
   bool is_regular(const path& p)       {return is_regular(detail::status(p));}

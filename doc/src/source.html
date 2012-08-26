@@ -397,12 +397,24 @@ $endif;
     uintmax_t    <a href="#hard_link_count">hard_link_count</a>(const path&amp; p);
     uintmax_t    <a href="#hard_link_count">hard_link_count</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
 
-    bool         <a href="#is_directory">is_directory</a>(file_status s) noexcept;
+    bool         <a href="#is_block_file">is_block_file</a>(file_status s) noexcept;
+    bool         <a href="#is_block_file">is_block_file</a>(const path&amp; p,);
+    bool         <a href="#is_block_file">is_block_file</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
+
+    bool         <a href="#is_character_file">is_character_file</a>(file_status s) noexcept;
+    bool         <a href="#is_character_file">is_character_file</a>(const path&amp; p,);
+    bool         <a href="#is_character_file">is_character_file</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
+
+    bool         <a href="#is_block_file">is_directory</a>(file_status s) noexcept;
     bool         <a href="#is_directory2">is_directory</a>(const path&amp; p);
     bool         <a href="#is_directory2">is_directory</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
 
     bool         <a href="#is_empty">is_empty</a>(const path&amp; p);
     bool         <a href="#is_empty">is_empty</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
+
+    bool         <a href="#is_fifo">is_fifo</a>(file_status s) noexcept;
+    bool         <a href="#is_fifo">is_fifo</a>(const path&amp; p,);
+    bool         <a href="#is_fifo">is_fifo</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
 
     bool         <a href="#is_other">is_other</a>(file_status s) noexcept;
     bool         <a href="#is_other2">is_other</a>(const path&amp; p,);
@@ -411,6 +423,10 @@ $endif;
     bool         <a href="#is_regular_file">is_regular_file</a>(file_status s) noexcept; 
     bool         i<a href="#is_regular_file2">s_regular_file</a>(const path&amp; p);
     bool         i<a href="#is_regular_file2">s_regular_file</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
+
+    bool         <a href="#is_socket">is_socket</a>(file_status s) noexcept;
+    bool         <a href="#is_socket">is_socket</a>(const path&amp; p,);
+    bool         <a href="#is_socket">is_socket</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
 
     bool         <a href="#is_symlink">is_symlink</a>(file_status s) noexcept;
     bool         <a href="#is_symlink2">is_symlink</a>(const path&amp; p);
@@ -2516,6 +2532,33 @@ uintmax_t hard_link_count(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcep
 
 </blockquote>
 
+<pre>bool <code><a name="is_block_file">is_block_file</a></code>(file_status s) noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>s.type() == block_file</code></p>
+</blockquote>
+<pre><code>bool <a name="is_directory2">is_block_file</a>(const path&amp; p);
+bool <a name="is_directory3">is_</a><a name="is_directory2">block_file</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
+<blockquote>
+  <p><i>Returns:</i> <code>is_block_file(status(p))</code> or <code>
+  is_block_file(status(p, ec))</code>, respectively. The signature with argument <code>
+  ec</code> returns <code>false</code> if an error occurs.</p>
+<p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+</blockquote>
+
+<pre>bool <code><a name="is_character_file">is_character_file</a></code>(file_status s) noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>s.type() == character_file</code></p>
+</blockquote>
+<pre><code>bool <a name="is_directory">is_character_file</a>(const path&amp; p);
+bool <a name="is_directory">is_character_file</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
+<blockquote>
+  <p><i>Returns:</i> <code><a name="is_directory">is_character_file</a>(status(p))</code> 
+  or <code><a name="is_directory">is_character_file</a>(status(p, ec))</code>, 
+  respectively. The signature with argument <code>ec</code> returns <code>false</code> 
+  if an error occurs.</p>
+<p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+</blockquote>
+
 <pre>bool <code><a name="is_directory">is_directory</a></code>(file_status s) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>s.type() == directory_file</code></p>
@@ -2523,11 +2566,10 @@ uintmax_t hard_link_count(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcep
 <pre><code>bool <a name="is_directory2">is_directory</a>(const path&amp; p);
 bool <a name="is_directory3">is_directory</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
 <blockquote>
-  <p><i>Returns:</i> <code>is_directory(status(p))</code> or <code>is_directory(status(p, ec))</code>, 
-  respectively. The signature with argument <code>ec</code> returns <code>false</code> 
-  if an error occurs.</p>
-<p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
-nothing.</p>
+  <p><i>Returns:</i> <code>is_directory(status(p))</code> or <code>
+  is_directory(status(p, ec))</code>, respectively. The signature with argument <code>
+  ec</code> returns <code>false</code> if an error occurs.</p>
+<p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre><code>bool <a name="is_empty">is_empty</a>(const path&amp; p);
 bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, $SYSTEM;error_code&amp; ec)</code> noexcept<code>;</code></pre>
@@ -2540,6 +2582,31 @@ bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, $SYSTEM;error_code&
   <p>The signature with argument <code>ec</code> returns <code>false</code> if 
   an error occurs.</p>
   </blockquote>
+</blockquote>
+
+<pre>bool <code><a name="is_fifo">is_fifo</a></code>(file_status s) noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>s.type() == fifo_file</code></p>
+</blockquote>
+<pre><code>bool is_fifo(const path&amp; p);
+bool is_fifo(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
+<blockquote>
+  <p><i>Returns:</i> <code>is_fifo(status(p))</code> or <code>is_fifo(status(p, 
+  ec))</code>, respectively. The signature with argument <code>ec</code> returns <code>
+  false</code> if an error occurs.</p>
+<p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+</blockquote>
+<pre>bool <a name="is_other">is_other</a>(file_status s) noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>return exists(s) &amp;&amp; !is_regular_file(s) &amp;&amp; !is_directory(s) &amp;&amp; !is_symlink(s)</code></p>
+</blockquote>
+<pre><code>bool <a name="is_other2">is_other</a>(const path&amp; p);
+bool <a name="is_other3">is_other</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
+<blockquote>
+  <p><i>Returns:</i> <code>is_other(status(p))</code> or <code>is_other(status(p, ec))</code>, 
+  respectively. The signature with argument <code>ec</code> returns <code>false</code> 
+  if an error occurs.</p>
+  <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>bool <code><a name="is_regular_file">is_regular_file</a></code>(file_status s) noexcept;</pre>
 <blockquote>
@@ -2557,17 +2624,18 @@ bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, $SYSTEM;error_code&
   <p><i>Returns:</i> <code>is_regular_file(status(p, ec))</code>. Returns <code>
   false</code> if an error occurs.</p>
 </blockquote>
-<pre>bool <a name="is_other">is_other</a>(file_status s) noexcept;</pre>
+
+<pre>bool <code><a name="is_socket">is_socket</a></code>(file_status s) noexcept;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>return exists(s) &amp;&amp; !is_regular_file(s) &amp;&amp; !is_directory(s) &amp;&amp; !is_symlink(s)</code></p>
+  <p><i>Returns:</i> <code>s.type() == socket_file</code></p>
 </blockquote>
-<pre><code>bool <a name="is_other2">is_other</a>(const path&amp; p);
-bool <a name="is_other3">is_other</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
+<pre><code>bool is_socket(const path&amp; p);
+bool is_socket(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
 <blockquote>
-  <p><i>Returns:</i> <code>is_other(status(p))</code> or <code>is_other(status(p, ec))</code>, 
-  respectively. The signature with argument <code>ec</code> returns <code>false</code> 
-  if an error occurs.</p>
-  <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+  <p><i>Returns:</i> <code>is_socket(status(p))</code> or <code>
+  is_socket(status(p, ec))</code>, respectively. The signature with argument <code>
+  ec</code> returns <code>false</code> if an error occurs.</p>
+<p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>bool <a name="is_symlink">is_symlink</a>(file_status s) noexcept;</pre>
 <blockquote>
