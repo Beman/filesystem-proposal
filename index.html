@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-24<!--webbot bot="Timestamp" endspan i-checksum="12496" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-26<!--webbot bot="Timestamp" endspan i-checksum="12500" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->24 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31326" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->26 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31330" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -320,7 +320,7 @@ conformance </a><br>
 synopsis </a><br>
 <a href="#Error-reporting">1.5 Error reporting </a><br>
 <a href="#class-path">1.6 Class <code>path</code> </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path.generic">1.6.1 Generic pathname format </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path.generic">1.6.1 Generic pathname format grammar </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#path-Conversions">1.6.2 <code>path</code> conversions </a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-Conversions-to-native-format">1.6.2.1 <code>path</code> 
 argument format conversions </a><br>
@@ -376,6 +376,7 @@ directory_iterator</code> non-member functions</a><br>
 recursive_directory_iterator</code> </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#recursive_directory_iterator-non-member-functions">1.13.1 <code>
 recursive_directory_iterator</code> non-member functions</a><br>
+<a href="#Operational-functions">1.14 Operational functions </a><br>
 </p>
       
 <h2><a name="Proposed-Wording">Proposed Wording</a></h2>
@@ -508,7 +509,8 @@ A <a href="#fs.def.pathname">pathname</a> is the concrete representation of a pa
 <h3>1.1.14  pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
 <p>A character string that represents 
 the name of a 
-path. Pathnames are formatted according to the generic pathname grammar or an 
+path. Pathnames are formatted according to the generic pathname format grammar 
+([<a href="#path.generic">path.generic</a>]) or an 
 operating system dependent 
 native pathname format.</p>
 
@@ -747,12 +749,24 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     uintmax_t    <a href="#hard_link_count">hard_link_count</a>(const path&amp; p);
     uintmax_t    <a href="#hard_link_count">hard_link_count</a>(const path&amp; p, error_code&amp; ec) noexcept;
 
-    bool         <a href="#is_directory">is_directory</a>(file_status s) noexcept;
+    bool         <a href="#is_block_file">is_block_file</a>(file_status s) noexcept;
+    bool         <a href="#is_block_file">is_block_file</a>(const path&amp; p,);
+    bool         <a href="#is_block_file">is_block_file</a>(const path&amp; p, error_code&amp; ec) noexcept;
+
+    bool         <a href="#is_character_file">is_character_file</a>(file_status s) noexcept;
+    bool         <a href="#is_character_file">is_character_file</a>(const path&amp; p,);
+    bool         <a href="#is_character_file">is_character_file</a>(const path&amp; p, error_code&amp; ec) noexcept;
+
+    bool         <a href="#is_block_file">is_directory</a>(file_status s) noexcept;
     bool         <a href="#is_directory2">is_directory</a>(const path&amp; p);
     bool         <a href="#is_directory2">is_directory</a>(const path&amp; p, error_code&amp; ec) noexcept;
 
     bool         <a href="#is_empty">is_empty</a>(const path&amp; p);
     bool         <a href="#is_empty">is_empty</a>(const path&amp; p, error_code&amp; ec) noexcept;
+
+    bool         <a href="#is_fifo">is_fifo</a>(file_status s) noexcept;
+    bool         <a href="#is_fifo">is_fifo</a>(const path&amp; p,);
+    bool         <a href="#is_fifo">is_fifo</a>(const path&amp; p, error_code&amp; ec) noexcept;
 
     bool         <a href="#is_other">is_other</a>(file_status s) noexcept;
     bool         <a href="#is_other2">is_other</a>(const path&amp; p,);
@@ -761,6 +775,10 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     bool         <a href="#is_regular_file">is_regular_file</a>(file_status s) noexcept; 
     bool         i<a href="#is_regular_file2">s_regular_file</a>(const path&amp; p);
     bool         i<a href="#is_regular_file2">s_regular_file</a>(const path&amp; p, error_code&amp; ec) noexcept;
+
+    bool         <a href="#is_socket">is_socket</a>(file_status s) noexcept;
+    bool         <a href="#is_socket">is_socket</a>(const path&amp; p,);
+    bool         <a href="#is_socket">is_socket</a>(const path&amp; p, error_code&amp; ec) noexcept;
 
     bool         <a href="#is_symlink">is_symlink</a>(file_status s) noexcept;
     bool         <a href="#is_symlink2">is_symlink</a>(const path&amp; p);
@@ -866,7 +884,7 @@ system or for a particular file system.</p>
       public:
         typedef <b><i><a href="#value_type">see below</a></i></b>                                    value_type;
         typedef basic_string&lt;value_type&gt;                string_type;
-        constexpr value_type                                 preferred_separator;
+        static constexpr value_type = <b><i><a href="#value_type">see below</a>              </i></b>preferred_separator;
 
         // <a href="#path-constructors">constructors</a> and destructor
         path() = default;
@@ -991,7 +1009,7 @@ system or for a particular file system.</p>
 <p><code><a name="value_type">value_type</a></code> is a <code>typedef</code> for the 
 operating system dependent character type used  to represent pathnames.</p>
 <p>The value of <a name="preferred_separator"><code>preferred_separator</code></a> 
-is the operating system dependent <i>preferred_separator</i> character ([path.generic]).</p>
+is the operating system dependent <i>preferred-separator</i> character ([path.generic]).</p>
 <blockquote>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
    bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
@@ -1004,7 +1022,7 @@ operating systems, <code>value_type</code> is <code>wchar_t</code> and <code>
     </tr>
   </table>
 </blockquote>
-<h3>1.6.1  Generic pathname format [<a name="path.generic">path.generic</a>]</h3>
+<h3>1.6.1  Generic pathname format grammar [<a name="path.generic">path.generic</a>]</h3>
 <p><i>pathname:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root-name 
 root-directory<sub>opt</sub> relative-path<sub>opt<br>
@@ -1024,42 +1042,77 @@ specifier - a <i>root-name</i> identifying a specific device such as a disc driv
 </blockquote>
 <p><i>root-directory:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-directory-separator</i></p>
-<p><i>relative-path:<br>
+directory-separator<br>
+<br>
+relative-path:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 filename<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
 directory-separator<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
-directory-separator filename</i></p>
-<p><i>filename:<br>
+directory-separator filename<br>
+<br>
+filename:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>&quot;.&quot;</code><i><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>
-&quot;..&quot;</code></p>
-<p><i>preferred-separator:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>An 
-operating system dependent directory separator character. May be a synonym for <i> <code>&quot;/&quot;</code>.</i></p>
-<p><i>directory-separator:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>&quot;/&quot;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;/&quot;</code> directory-separator<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dot<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dot-dot<br>
+<br>
+name:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>A 
+sequence of characters other than <i>directory-separator</i> characters.</p>
+<blockquote>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">[<i>Note:</i> Operating systems often place restrictions 
+      on the characters that may be used in a <i>filename</i>. For wide 
+      portability, users may wish to limit <i>filename</i> characters to the ISO 
+      9945/POSIX Portable Filename Character Set: <br>
+      <br>
+      <tt>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br>
+      a b c d e f g h i j k l m n o p q r s t u v w x y z<br>
+      0 1 2 3 4 5 6 7 8 9 . _ -<br>
+      <br>
+      </tt> <i>--end note</i>]</td>
+    </tr>
+  </table>
+</blockquote>
+<p><i>dot:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The 
+filename consisting solely of a single period (.) character.<br>
+<br>
+<i>dot-dot:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The 
+filename consisting solely of two period (..) characters.<br>
+<br>
+<i>directory-separator:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; slash<code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code>slash directory-separator<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 preferred-separator<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-preferred-separator directory-separator</i></p>
+preferred-separator directory-separator<br>
+<br>
+preferred-separator:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>An 
+operating system dependent directory separator character. May be a synonym for
+<i>slash</i>.<br>
+<br>
+<i>slash:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The slash (/) 
+character. </p>
 <p>Multiple successive <i>directory-separator</i> characters are considered to 
 be the same as one <i>directory-separator</i> character.</p>
-<p>The <i>filename</i>
-<code>&quot;.&quot;</code> is considered to be a reference to the current directory. The
-<i>filename</i> <code>&quot;..&quot;</code> is considered to be a reference to the 
+<p>The filename <i>dot</i> is treated as a reference to the current directory. The filename <i>
+dot-dot</i> is treated as a reference to the 
 parent 
-directory. Specific <i>filenames</i> may have special meanings for a particular 
+directory. Specific filenames may have special meanings for a particular 
 operating system.</p>
 <h3>1.6.2  <a name="path-Conversions"><code>path</code> conversions</a> [path.cvt]</h3>
 <h4>1.6.2.1  <a name="path-Conversions-to-native-format"><code>path</code> argument 
 format conversions</a> [path.fmt.cvt]</h4>
 <p>Member functions arguments that take character sequences representing paths 
-may use the generic pathname format ([<a href="#path.generic">path.generic</a>]) or 
+may use the generic pathname format grammar ([<a href="#path.generic">path.generic</a>]) or 
 the <a href="#fs.def.native">native pathname format</a>. Iff such 
 arguments are in the generic format and the generic format is not acceptable to 
 the operating system as a native path, conversion to native format shall be 
@@ -2741,6 +2794,33 @@ uintmax_t hard_link_count(const path&amp; p, error_code&amp; ec) noexcept;</pre>
 
 </blockquote>
 
+<pre>bool <code><a name="is_block_file">is_block_file</a></code>(file_status s) noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>s.type() == block_file</code></p>
+</blockquote>
+<pre><code>bool <a name="is_directory2">is_block_file</a>(const path&amp; p);
+bool <a name="is_directory3">is_</a><a name="is_directory2">block_file</a>(const path&amp; p, error_code&amp; ec) noexcept;</code></pre>
+<blockquote>
+  <p><i>Returns:</i> <code>is_block_file(status(p))</code> or <code>
+  is_block_file(status(p, ec))</code>, respectively. The signature with argument <code>
+  ec</code> returns <code>false</code> if an error occurs.</p>
+<p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+</blockquote>
+
+<pre>bool <code><a name="is_character_file">is_character_file</a></code>(file_status s) noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>s.type() == character_file</code></p>
+</blockquote>
+<pre><code>bool <a name="is_directory">is_character_file</a>(const path&amp; p);
+bool <a name="is_directory">is_character_file</a>(const path&amp; p, error_code&amp; ec) noexcept;</code></pre>
+<blockquote>
+  <p><i>Returns:</i> <code><a name="is_directory">is_character_file</a>(status(p))</code> 
+  or <code><a name="is_directory">is_character_file</a>(status(p, ec))</code>, 
+  respectively. The signature with argument <code>ec</code> returns <code>false</code> 
+  if an error occurs.</p>
+<p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+</blockquote>
+
 <pre>bool <code><a name="is_directory">is_directory</a></code>(file_status s) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>s.type() == directory_file</code></p>
@@ -2748,11 +2828,10 @@ uintmax_t hard_link_count(const path&amp; p, error_code&amp; ec) noexcept;</pre>
 <pre><code>bool <a name="is_directory2">is_directory</a>(const path&amp; p);
 bool <a name="is_directory3">is_directory</a>(const path&amp; p, error_code&amp; ec) noexcept;</code></pre>
 <blockquote>
-  <p><i>Returns:</i> <code>is_directory(status(p))</code> or <code>is_directory(status(p, ec))</code>, 
-  respectively. The signature with argument <code>ec</code> returns <code>false</code> 
-  if an error occurs.</p>
-<p><i>Throws:</i> <code>filesystem_error</code>; overload with <code>error_code&amp;</code> throws 
-nothing.</p>
+  <p><i>Returns:</i> <code>is_directory(status(p))</code> or <code>
+  is_directory(status(p, ec))</code>, respectively. The signature with argument <code>
+  ec</code> returns <code>false</code> if an error occurs.</p>
+<p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre><code>bool <a name="is_empty">is_empty</a>(const path&amp; p);
 bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, error_code&amp; ec)</code> noexcept<code>;</code></pre>
@@ -2765,6 +2844,31 @@ bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, error_code&amp; ec)
   <p>The signature with argument <code>ec</code> returns <code>false</code> if 
   an error occurs.</p>
   </blockquote>
+</blockquote>
+
+<pre>bool <code><a name="is_fifo">is_fifo</a></code>(file_status s) noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>s.type() == fifo_file</code></p>
+</blockquote>
+<pre><code>bool is_fifo(const path&amp; p);
+bool is_fifo(const path&amp; p, error_code&amp; ec) noexcept;</code></pre>
+<blockquote>
+  <p><i>Returns:</i> <code>is_fifo(status(p))</code> or <code>is_fifo(status(p, 
+  ec))</code>, respectively. The signature with argument <code>ec</code> returns <code>
+  false</code> if an error occurs.</p>
+<p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+</blockquote>
+<pre>bool <a name="is_other">is_other</a>(file_status s) noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> <code>return exists(s) &amp;&amp; !is_regular_file(s) &amp;&amp; !is_directory(s) &amp;&amp; !is_symlink(s)</code></p>
+</blockquote>
+<pre><code>bool <a name="is_other2">is_other</a>(const path&amp; p);
+bool <a name="is_other3">is_other</a>(const path&amp; p, error_code&amp; ec) noexcept;</code></pre>
+<blockquote>
+  <p><i>Returns:</i> <code>is_other(status(p))</code> or <code>is_other(status(p, ec))</code>, 
+  respectively. The signature with argument <code>ec</code> returns <code>false</code> 
+  if an error occurs.</p>
+  <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>bool <code><a name="is_regular_file">is_regular_file</a></code>(file_status s) noexcept;</pre>
 <blockquote>
@@ -2782,17 +2886,18 @@ bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, error_code&amp; ec)
   <p><i>Returns:</i> <code>is_regular_file(status(p, ec))</code>. Returns <code>
   false</code> if an error occurs.</p>
 </blockquote>
-<pre>bool <a name="is_other">is_other</a>(file_status s) noexcept;</pre>
+
+<pre>bool <code><a name="is_socket">is_socket</a></code>(file_status s) noexcept;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>return exists(s) &amp;&amp; !is_regular_file(s) &amp;&amp; !is_directory(s) &amp;&amp; !is_symlink(s)</code></p>
+  <p><i>Returns:</i> <code>s.type() == socket_file</code></p>
 </blockquote>
-<pre><code>bool <a name="is_other2">is_other</a>(const path&amp; p);
-bool <a name="is_other3">is_other</a>(const path&amp; p, error_code&amp; ec) noexcept;</code></pre>
+<pre><code>bool is_socket(const path&amp; p);
+bool is_socket(const path&amp; p, error_code&amp; ec) noexcept;</code></pre>
 <blockquote>
-  <p><i>Returns:</i> <code>is_other(status(p))</code> or <code>is_other(status(p, ec))</code>, 
-  respectively. The signature with argument <code>ec</code> returns <code>false</code> 
-  if an error occurs.</p>
-  <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+  <p><i>Returns:</i> <code>is_socket(status(p))</code> or <code>
+  is_socket(status(p, ec))</code>, respectively. The signature with argument <code>
+  ec</code> returns <code>false</code> if an error occurs.</p>
+<p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>bool <a name="is_symlink">is_symlink</a>(file_status s) noexcept;</pre>
 <blockquote>
