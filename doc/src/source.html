@@ -142,7 +142,8 @@ A <a href="#fs.def.pathname">pathname</a> is the concrete representation of a pa
 <h3>pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
 <p>A character string that represents 
 the name of a 
-path. Pathnames are formatted according to the generic pathname grammar or an 
+path. Pathnames are formatted according to the generic pathname format grammar 
+([<a href="#path.generic">path.generic</a>]) or an 
 operating system dependent 
 native pathname format.</p>
 
@@ -515,7 +516,7 @@ system or for a particular file system.</p>
       public:
         typedef <b><i><a href="#value_type">see below</a></i></b>                                    value_type;
         typedef $STD;basic_string&lt;value_type&gt;                string_type;
-        constexpr value_type                                 preferred_separator;
+        static constexpr value_type = <b><i><a href="#value_type">see below</a>              </i></b>preferred_separator;
 $if $TARGET; == BOOST        typedef std::codecvt&lt;wchar_t, char, std::mbstate_t&gt;  codecvt_type;
 $endif;
         // <a href="#path-constructors">constructors</a> and destructor
@@ -658,7 +659,7 @@ $NAMESPACE_END;</pre>
 <p><code><a name="value_type">value_type</a></code> is a <code>typedef</code> for the 
 operating system dependent character type used  to represent pathnames.</p>
 <p>The value of <a name="preferred_separator"><code>preferred_separator</code></a> 
-is the operating system dependent <i>preferred_separator</i> character ([path.generic]).</p>
+is the operating system dependent <i>preferred-separator</i> character ([path.generic]).</p>
 <blockquote>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
    bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
@@ -671,7 +672,7 @@ operating systems, <code>value_type</code> is <code>wchar_t</code> and <code>
     </tr>
   </table>
 </blockquote>
-<h3>Generic pathname format [<a name="path.generic">path.generic</a>]</h3>
+<h3>Generic pathname format grammar [<a name="path.generic">path.generic</a>]</h3>
 <p><i>pathname:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; root-name 
 root-directory<sub>opt</sub> relative-path<sub>opt<br>
@@ -691,42 +692,77 @@ specifier - a <i>root-name</i> identifying a specific device such as a disc driv
 </blockquote>
 <p><i>root-directory:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-directory-separator</i></p>
-<p><i>relative-path:<br>
+directory-separator<br>
+<br>
+relative-path:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 filename<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
 directory-separator<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; relative-path 
-directory-separator filename</i></p>
-<p><i>filename:<br>
+directory-separator filename<br>
+<br>
+filename:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; name<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>&quot;.&quot;</code><i><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i><code>
-&quot;..&quot;</code></p>
-<p><i>preferred-separator:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>An 
-operating system dependent directory separator character. May be a synonym for <i> <code>&quot;/&quot;</code>.</i></p>
-<p><i>directory-separator:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <code>&quot;/&quot;<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &quot;/&quot;</code> directory-separator<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dot<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; dot-dot<br>
+<br>
+name:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>A 
+sequence of characters other than <i>directory-separator</i> characters.</p>
+<blockquote>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">[<i>Note:</i> Operating systems often place restrictions 
+      on the characters that may be used in a <i>filename</i>. For wide 
+      portability, users may wish to limit <i>filename</i> characters to the ISO 
+      9945/POSIX Portable Filename Character Set: <br>
+      <br>
+      <tt>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br>
+      a b c d e f g h i j k l m n o p q r s t u v w x y z<br>
+      0 1 2 3 4 5 6 7 8 9 . _ -<br>
+      <br>
+      </tt> <i>--end note</i>]</td>
+    </tr>
+  </table>
+</blockquote>
+<p><i>dot:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The 
+filename consisting solely of a single period (.) character.<br>
+<br>
+<i>dot-dot:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The 
+filename consisting solely of two period (..) characters.<br>
+<br>
+<i>directory-separator:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; slash<code><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </code>slash directory-separator<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 preferred-separator<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-preferred-separator directory-separator</i></p>
+preferred-separator directory-separator<br>
+<br>
+preferred-separator:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>An 
+operating system dependent directory separator character. May be a synonym for
+<i>slash</i>.<br>
+<br>
+<i>slash:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The slash (/) 
+character. </p>
 <p>Multiple successive <i>directory-separator</i> characters are considered to 
 be the same as one <i>directory-separator</i> character.</p>
-<p>The <i>filename</i>
-<code>&quot;.&quot;</code> is considered to be a reference to the current directory. The
-<i>filename</i> <code>&quot;..&quot;</code> is considered to be a reference to the 
+<p>The filename <i>dot</i> is treated as a reference to the current directory. The filename <i>
+dot-dot</i> is treated as a reference to the 
 parent 
-directory. Specific <i>filenames</i> may have special meanings for a particular 
+directory. Specific filenames may have special meanings for a particular 
 operating system.</p>
 <h3><a name="path-Conversions"><code>path</code> conversions</a> [path.cvt]</h3>
 <h4><a name="path-Conversions-to-native-format"><code>path</code> argument 
 format conversions</a> [path.fmt.cvt]</h4>
 <p>Member functions arguments that take character sequences representing paths 
-may use the generic pathname format ([<a href="#path.generic">path.generic</a>]) or 
+may use the generic pathname format grammar ([<a href="#path.generic">path.generic</a>]) or 
 the <a href="#fs.def.native">native pathname format</a>. Iff such 
 arguments are in the generic format and the generic format is not acceptable to 
 the operating system as a native path, conversion to native format shall be 
