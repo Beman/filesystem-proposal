@@ -530,10 +530,11 @@ system or for a particular file system.</p>
       class path
       {
       public:
-        typedef <b><i><a href="#value_type">see below</a></i></b>                                    value_type;
-        typedef $STD;basic_string&lt;value_type&gt;                string_type;
-        static constexpr value_type = <b><i><a href="#value_type">see below</a>              </i></b>preferred_separator;
-$if $TARGET; == BOOST        typedef std::codecvt&lt;wchar_t, char, std::mbstate_t&gt;  codecvt_type;
+        typedef <b><i><a href="#value_type">see below</a></i></b>                      value_type;
+        typedef $STD;basic_string&lt;value_type&gt;       string_type;
+        static constexpr value_type            preferred_separator = <b><i><a href="#value_type">see below</a></i></b>;
+$if $TARGET; == BOOST        typedef std::codecvt&lt;wchar_t, char, std::mbstate_t&gt;
+                                               codecvt_type;
 $endif;
         // <a href="#path-constructors">constructors</a> and destructor
         path() = default;
