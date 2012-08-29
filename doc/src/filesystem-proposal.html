@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-27<!--webbot bot="Timestamp" endspan i-checksum="12502" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-29<!--webbot bot="Timestamp" endspan i-checksum="12506" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->27 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31332" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->29 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31336" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -1664,10 +1664,10 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
 </blockquote>
 <h3>1.6.16  <code>path</code><a name="path-inserter-extractor"> inserter 
   and extractor</a> [path.io]</h3>
-<p> The inserter and, optionally, the extractor delimit the string with <code>
-'&quot;'</code> so that paths with embedded spaces will round trip correctly. An escape character, 
-<code>'&amp;'</code>, allows paths to contain <code>'&quot;'</code>. [<i>Note:</i> <code>
-'\\'</code> is not used as an escape character because it is used as a directory 
+<p> The inserter and, optionally, the extractor delimit the string with 
+double-quote (&quot;) characters so that paths with embedded spaces will round trip correctly. An escape character, 
+ampersand (&amp;), allows paths to contain double-quotes. [<i>Note:</i> backslash 
+(\)is not used as an escape character because it is used as a directory 
 separator by some operating systems and so would be very confusing and error 
 prone, particularly coupled with the C++ requirement to escape a backslash in 
 literals . <i>-- end note</i>]</p>
@@ -1679,14 +1679,14 @@ operator&lt;&lt;(basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp; p);
   After a sentry object is constructed it inserts characters into <code>os</code>:</p>
   <ul>
     <li>
-  <code>'&quot;'</code>, then</li>
+  A double-quote (&quot;) then</li>
     <li>
   Each character in <code>p.string&lt;basic_string&lt;charT, traits&gt;&gt;()</code>. 
-  If the character to be inserted is <code>'&amp;'</code> or <code>'&quot;'</code>, first insert 
-  <code>'&amp;'</code> before it, then 
+  If the character to be inserted is an ampersand (&amp;) or double-quote , insert 
+  an ampersand before it, then 
     </li>
     <li>
-  <code>'&quot;'</code>.
+  A double-quote.
     </li>
   </ul>
   <p><i>Returns:</i> <code>os</code></p>
@@ -1700,20 +1700,36 @@ operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);</pre>
   After a sentry<br>
   object is constructed, extracts characters from <code>is</code>:</p>
   <ul>
-    <li>If the first character that would be extracted is <code>'&quot;'</code>, then:<ul>
-      <li>Discard the initial <code>'&quot;'</code>.</li>
+    <li>If the first character extracted is a double-quote (&quot;) then:<ul>
+      <li>Discard the initial double-quote.</li>
       <li>Save the value and then turn off the <code>skipws</code> flag.</li>
       <li><code>p.clear()</code></li>
-      <li>Until a <code>'&quot;'</code> character not preceded by <code>'&amp;'</code> is reached or <code>
-      is.not_good()</code>, extract characters from <code>os</code> and append 
-      them to <code>p</code>, except that if <code>'&amp;'</code> is reached, 
+      <li>Until a double-quote character not preceded by an ampersand (&amp;) is reached or <code>
+      is.not_good()</code>, extract characters from <code>is</code> and append 
+      them to <code>p</code>, except that if ampersand is reached, 
       ignore it and append the next character to <code>p</code>.</li>
-      <li>Discard the final <code>'&quot;'</code> character.</li>
+      <li>Discard the final double-quote character.</li>
       <li>Restore the <code>skipws</code> flag to its original value.</li>
     </ul>
     </li>
-    <li>Otherwise, <code>os &gt;&gt; p</code>.</li>
+    <li>Otherwise, extract characters from <code>is</code> and append 
+      them to <code>p</code>. Characters are extracted and appended until any of 
+    the following occurs:<ul>
+    <li><code>n</code> characters are stored, where <code>n</code> is <code>
+    is.width()</code> if <code>is.width()</code> is greater than zero, otherwise
+    <code>p.pathname.max_size()</code>;</li>
+    <li>end-of-file occurs on the input sequence;</li>
+    <li>
+    <p><code>isspace(c,is.getloc())</code> is true for the next 
+    available input character <code>c</code>.</li>
   </ul>
+    </li>
+  </ul>
+  <p>After the last character (if any) is extracted, <code>is.width(0)</code> 
+  is called and the sentry object is destroyed.</p>
+  <p>If the function extracts no characters, it calls <code>
+  is.setstate(ios::failbit)</code>, which may throw <code>ios_base::failure</code> 
+  ([iostate.flags]).</p>
   <p><i>Returns:</i> <code>is</code></p>
   <p><i>Remarks:</i> Character equality is determined by <code>traits::eq</code>.</p>
   </blockquote>
