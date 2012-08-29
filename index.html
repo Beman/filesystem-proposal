@@ -1698,12 +1698,11 @@ operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);</pre>
 <blockquote>
   <p><i>Effects:&nbsp; </i>Behaves as a formatted input function ([istream.formatted.reqmts]). 
   After a sentry<br>
-  object is constructed, extracts characters from <code>is</code>:</p>
+  object is constructed, calls <code>p.clear()</code>, and then extracts characters from <code>is</code>:</p>
   <ul>
     <li>If the first character extracted is a double-quote (&quot;) then:<ul>
       <li>Discard the initial double-quote.</li>
       <li>Save the value and then turn off the <code>skipws</code> flag.</li>
-      <li><code>p.clear()</code></li>
       <li>Until a double-quote character not preceded by an ampersand (&amp;) is reached or <code>
       is.not_good()</code>, extract characters from <code>is</code> and append 
       them to <code>p</code>, except that if ampersand is reached, 
