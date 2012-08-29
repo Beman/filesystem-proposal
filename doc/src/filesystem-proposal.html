@@ -852,7 +852,13 @@ errors are truly exceptional and indicate a serious failure. Throwing an
   implementation to an operating system or other underlying API results in an 
   error that prevents the function from meeting its specifications, an exception 
   of type
-<code>filesystem_error</code> is thrown.<br>
+<code>filesystem_error</code> shall be thrown. For functions with a single path 
+  argument, that argument shall be passed to the
+<code>filesystem_error</code> constructor with a single path argument.&nbsp; For 
+  functions with two path arguments, the first of these arguments shall be 
+  passed to the
+<code>filesystem_error</code> constructor as the <code>path1</code> argument, 
+  and the second shall be passed as the <code>path2</code> argument.<br>
 &nbsp;</li>
   <li>Failure to allocate storage is reported by throwing an exception as described in the C++ standard, 
   17.6.4.10 [res.on.exception.handling].<br>
@@ -1718,8 +1724,7 @@ operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);</pre>
     is.width()</code> if <code>is.width()</code> is greater than zero, otherwise
     <code>p.pathname.max_size()</code>;</li>
     <li>end-of-file occurs on the input sequence;</li>
-    <li>
-    <p><code>isspace(c,is.getloc())</code> is true for the next 
+    <li><code>isspace(c,is.getloc())</code> is true for the next 
     available input character <code>c</code>.</li>
   </ul>
     </li>
@@ -1755,6 +1760,8 @@ objects thrown as exceptions to report file system errors from functions describ
 clause.</p>
 <h3>1.7.1   <a name="filesystem_error-members"> <code>filesystem_error</code> members</a> 
 [filesystem_error.members]</h3>
+<p> Constructors are provided that store zero, one, or two paths associated with 
+an error.</p>
 <pre><a name="filesystem_error-2-arg">filesystem_error</a>(const string&amp; what_arg, error_code ec);</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
@@ -2859,6 +2866,8 @@ bool <a name="is_empty2">is_empty</a></a>(const path&amp; p, error_code&amp; ec)
   <p>The signature with argument <code>ec</code> returns <code>false</code> if 
   an error occurs.</p>
   </blockquote>
+
+<p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 
 <pre>bool <code><a name="is_fifo">is_fifo</a></code>(file_status s) noexcept;</pre>
