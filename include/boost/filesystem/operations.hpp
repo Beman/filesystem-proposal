@@ -919,10 +919,10 @@ namespace filesystem
     {
       typedef directory_iterator element_type;
       std::stack< element_type, std::vector< element_type > > m_stack;
-      int  m_level;
+      int  m_depth;
       BOOST_SCOPED_ENUM(directory_options) m_options;
 
-      recur_dir_itr_imp() : m_level(0), m_options(directory_options::none) {}
+      recur_dir_itr_imp() : m_depth(0), m_options(directory_options::none) {}
 
       void increment(system::error_code* ec);  // ec == 0 means throw on error
 
@@ -974,7 +974,7 @@ namespace filesystem
           }
           if (m_stack.top() != directory_iterator())
           {
-            ++m_level;
+            ++m_depth;
             return;
           }
           m_stack.pop();
@@ -984,20 +984,20 @@ namespace filesystem
       while (!m_stack.empty() && ++m_stack.top() == directory_iterator())
       {
         m_stack.pop();
-        --m_level;
+        --m_depth;
       }
     }
 
     inline
     void recur_dir_itr_imp::pop()
     {
-      BOOST_ASSERT_MSG(m_level > 0,
-        "pop() on recursive_directory_iterator with level < 1");
+      BOOST_ASSERT_MSG(m_depth > 0,
+        "pop() on recursive_directory_iterator with depth < 1");
 
       do
       {
         m_stack.pop();
-        --m_level;
+        --m_depth;
       }
       while (!m_stack.empty() && ++m_stack.top() == directory_iterator());
     }
@@ -1075,11 +1075,11 @@ namespace filesystem
       return m_imp->m_options & ~directory_options::_detail_no_push;
     }
 
-    int level() const
+    int depth() const
     { 
       BOOST_ASSERT_MSG(m_imp.get(),
-        "level() on end recursive_directory_iterator");
-      return m_imp->m_level;
+        "depth() on end recursive_directory_iterator");
+      return m_imp->m_depth;
     }
 
     bool recursion_pending() const
@@ -1099,6 +1099,7 @@ namespace filesystem
 
 
 #   ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+    int level() const {return depth();}
     bool no_push_request() const { return no_push_pending(); }
     bool no_push_pending() const
     {

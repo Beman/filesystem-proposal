@@ -2127,7 +2127,7 @@ its sub-directories.</p>
 
         // observers
         directory_options  options() const;
-        int                level() const;
+        int                depth() const;
         bool               recursion<code>_pending</code>() const;
 
         // modifiers
@@ -2182,13 +2182,11 @@ directory_options::follow_directory_symlink</code> <i>-- end note</i>]</p>
 if present, otherwise <code>directory_options::none</code>.</p>
 <p><i>Throws:</i> Nothing.</p>
 </blockquote>
-<pre>int level() const;</pre>
+<pre>int depth() const;</pre>
 <blockquote>
-<p><span style="background-color: #E0E0E0"><i>In retrospect, maybe this should 
-have been called depth(). But no one has ever complained, IIRC.</i></span></p>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
   <p><i>Returns:</i> The current depth of the directory tree being traversed. [<i>Note:</i> 
-  The initial directory is level 0, its immediate subdirectories are level 1, 
+  The initial directory is depth 0, its immediate subdirectories are depth 1, 
   and so forth. <i>-- end note</i>]</p>
 <p><i>Throws:</i> Nothing.</p>
 </blockquote>
@@ -2212,7 +2210,7 @@ except that:</p>
 <ul>
   <li>
 
-<p>If there are no more  entries at this level, then if <code>level()!= 0</code> 
+<p>If there are no more  entries at this depth, then if <code>depth()!= 0</code> 
 iteration over the parent directory resumes; otherwise <code>*this = recursive_directory_iterator()</code>.</p>
 
   </li>
@@ -2233,7 +2231,7 @@ directory_options::follow_directory_symlink) != 0)</code> then&nbsp;directory <c
 <pre>void pop();</pre>
 <blockquote>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
-  <p><i>Effects:</i> If <code>level() == 0</code>, set <code>*this</code> to <code>recursive_directory_iterator()</code>. 
+  <p><i>Effects:</i> If <code>depth() == 0</code>, set <code>*this</code> to <code>recursive_directory_iterator()</code>. 
   Otherwise, cease iteration of the directory currently being 
   iterated over, and continue iteration over the parent directory.</p>
 </blockquote>

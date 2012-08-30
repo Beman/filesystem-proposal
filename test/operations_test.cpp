@@ -269,7 +269,7 @@ namespace
          it != fs::recursive_directory_iterator();
          ++it)
     {
-      for (int i = 0; i <= it.level(); ++i)
+      for (int i = 0; i <= it.depth(); ++i)
         cout << "  ";
 
       cout << it->path();
