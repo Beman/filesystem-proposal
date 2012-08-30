@@ -476,7 +476,8 @@ $endif;
 $NAMESPACE_END;</pre>
 $if $TARGET; != BOOST
  <p><b><i><code>unspecified-trivial-clock</code></i></b> is an unspecified type 
-provided by the implementation that satisfies the TrivialClock requirements ([time.clock.req]).</p>
+provided by the implementation that satisfies the TrivialClock requirements ([time.clock.req]) 
+ and that is capable of representing and measuring file time values.</p>
 $endif
 <h2><a name="Error-reporting">Error reporting</a> [fs.err.report]</h2>
 <p>Filesystem library functions often provide two overloads, one that 
