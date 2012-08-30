@@ -195,6 +195,8 @@ Library Proposal (Revision 3). Changes include:</p>
   of the library has come up with a clever way to make class <code>path</code> 
   work with the existing <code>&lt;fstream&gt;</code> classes constructors and open 
   functions.</li>
+  <li>Remove directory_entry as a Source in [path.req]. It was Boost specific 
+  and is inappropriate for the standard library.</li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
   <li>R-value reference move semantics.</li>
@@ -1214,9 +1216,6 @@ shall be one of:</p>
   The value type shall be a character type.</li>
   <li>A character array that after array-to-pointer conversion results in a 
   pointer to a NTCTS. The value type shall be a character type.</li>
-  <li>Type <code>directory_entry</code>. [<i>Note:</i> An argument <code>s</code> 
-  of type <code>directory_entry</code> is equivalent to an argument of <code>
-  s.path()</code>. <i>--end note</i>]</li>
 </ul>
 
 <blockquote>
