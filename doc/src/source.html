@@ -66,9 +66,10 @@ operating system dependent.</p>
 
 <h3><a name="canonical-path">canonical path</a> [fs.def.cannonical-path]</h3>
 <p>An absolute path that has 
-no elements that are symbolic links, and no <code>&quot;.&quot;</code> or <code>&quot;..&quot;</code> elements.</p>
+no elements that are symbolic links, and no dot or dot-dot elements ([<a href="#path.generic">path.generic</a>]).</p>
 <h3><a name="directory">directory</a> [fs.def.directory]</h3>
-<p>A file within a file system that acts as a container of information about 
+<p>A file within a file system that acts as a container of directory entries 
+that contain information about 
 other files, possibly including other directory files.</p>
 <h3><a name="file">file</a> [fs.def.file]</h3>
 <p>An object within a file system that holds user or system data. Files can be written to, or read from, or both. A file 
@@ -84,9 +85,8 @@ modification of
 the same object within a file system.</p>
 
 <h3><a name="filename">filename</a> [fs.def.filename]</h3>
-  <p>The name of a file. Filenames <code>
-  &quot;.&quot;</code>&nbsp; 
-and <code>&quot;..&quot;</code>&nbsp; have special meaning. The follow characteristics of 
+  <p>The name of a file. Filenames dot&nbsp; 
+and dot-dot&nbsp; have special meaning. The following characteristics of 
   filenames are operating system dependent:</p>
 <ul>
   <li>
@@ -94,10 +94,10 @@ and <code>&quot;..&quot;</code>&nbsp; have special meaning. The follow character
     in filenames. <i>--end example</i>].</p>
   </li>
   <li>
-  <p>Specific filenames that are not permitted.</p>
+  <p>Filenames that are not permitted.</p>
   </li>
   <li>
-  <p>Additional filenames that have special meaning.</p>
+  <p>Filenames that have special meaning.</p>
   </li>
   <li>
   <p>Case awareness and sensitivity during path resolution.</p>
@@ -108,7 +108,7 @@ and <code>&quot;..&quot;</code>&nbsp; have special meaning. The follow character
   </li>
 </ul>
 <h3><a name="hard-link">hard link</a> [fs.def.hardlink]</h3>
-<p>A link to an existing file. Some 
+<p>A link ([fs.def.link]) to an existing file. Some 
 file systems support multiple hard links to a file. If the last hard link to a 
 file is removed, the file itself is removed.</p>
 <blockquote>
@@ -117,12 +117,12 @@ pointer to a file.<i> -- end note</i>]<i> </i></p>
 </blockquote>
 <h3><a name="link">link</a> [fs.def.link]</h3>
 <p>A directory entry object that associates a 
-filename with a file. On some file systems, several directory entries can 
-associate names with the same file.</p>
+filename with a file. A link is either a hard link ([fs.def.hardlink]) or a 
+symbolic link ([fs.def.symlink]).</p>
 
 <h3>native pathname format [<a name="fs.def.native">fs.def.native</a>]</h3>
 <p>The operating system dependent pathname format accepted by the host operating system.</p>
-<h3><a name="NTCTS">NTCTS</a> [fs.def.ntcts]</h3>
+<h3><a name="NTCTS">NTCTS</a> [<a name="fs.def.ntcts">fs.def.ntcts</a>]</h3>
 <p>Acronym for &quot;null-terminated character-type sequence&quot;. Describes a sequence 
 of values of a given character type terminated by that type's null character. If 
 the character type is <code>charT</code>, the null character can be constructed 
@@ -133,11 +133,17 @@ parse. A request for clarification has been sent to the project editor.</i></spa
 [fs.def.osdep]</h3>
 <p>Behavior  that is dependent upon the behavior 
 and characteristics of an operating system. See [fs.conform.os].</p>
+<h3>parent directory [<a name="fs.def.parent">fs.def.parent</a>]</h3>
+<p>When discussing a given directory, the directory that both contains a 
+directory entry for the given directory and is represented by the pathname 
+dot-dot in the given directory.</p>
+<p>When discussing other types of files, a directory containing a directory 
+entry for the file under discussion.</p>
+<p>This concept does not apply to dot and dot-dot.</p>
 <h3><a name="path">path</a> [fs.def.path]</h3>
 <p>A sequence of elements that identify 
 the location of a file within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
-root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
-A <a href="#fs.def.pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
+root-directory<sub>opt</sub></i>, and an optional sequence of filenames.</p>
 
 <h3>pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
 <p>A character string that represents 
@@ -146,6 +152,14 @@ path. Pathnames are formatted according to the generic pathname format grammar
 ([<a href="#path.generic">path.generic</a>]) or an 
 operating system dependent 
 native pathname format.</p>
+
+<h3>pathname resolution [<a name="fs.def.pathres">fs.def.pathres</a>]</h3>
+
+<p>Pathname resolution is the operating system dependent mechanism for resolving 
+a pathname to a particular file in a file hierarchy. There may be multiple 
+pathnames that resolve to the same file.&nbsp; [<i>Example:</i> The ISO/IEC 9945 
+POSIX standard specifies the mechanism in section 4.11, Pathname resolution. <i>
+--end example]</i></p>
 
 <h3><a name="Relative-path">relative path</a> [fs.def.relative-path]</h3>
 <p>A path that 
@@ -156,11 +170,11 @@ an implied starting location. The elements of a path that determine if it is
 relative are operating system dependent.&nbsp; [<i>Note:</i> 
 Paths <code>&quot;.&quot;</code> and <code>&quot;..&quot;</code> are relative paths. <i>--end note</i>]</p>
 <h3><a name="symbolic-link">symbolic link</a> [fs.def.symlink]</h3>
-<p>A type of file with the 
+<p>A link ([fs.def.link]) with the 
 property that when the file is encountered during pathname resolution, a string 
 stored by the file is used to modify the pathname resolution.</p>
 <blockquote>
-<p>[<i>Note:</i> A symbolic link can be thought of as a raw pointer to a file. 
+<p>[<i>Note:</i> Symbolic links are often called symlinks. A symbolic link can be thought of as a raw pointer to a file. 
 If the file pointed to does not exist, the symbolic link is said to be a 
 &quot;dangling&quot; symbolic link.<i> -- end note</i>]<i> </i></p>
 </blockquote>
@@ -194,8 +208,8 @@ a particular file system.</p>
 <p>[<i>Example:</i> The <a href="http://en.wikipedia.org/wiki/FAT_filesystem">
 FAT file system</a> used by some memory cards, camera memory, and floppy discs 
 does not support hard links, symlinks, and many other features of more capable 
-file systems. Implementations are only required to support the FAT features 
-supported by the host operating system for a particular file system. <i>-- end example</i>]</p>
+file systems, so implementations are not required to support those features 
+on the FAT file system. <i>-- end example</i>]</p>
 </blockquote>
 <p>The behavior of functions described in this 
 $WHAT; 
@@ -203,7 +217,7 @@ may differ from their specification in
 the presence of <a href="#file-system-race">file system races</a> ([fs.def.race]). No diagnostic is required.</p>
 <p>If the possibility of a file system race would make it unreliable for a program to 
 test for a precondition before calling a function described herein, <i>
-Requires</i> is not specified for the condition.</p>
+Requires</i> is not specified for the function.</p>
 <blockquote>
 <p>[<i>Note:</i> As a design practice, preconditions are not specified when it 
 is unreasonable for a program to detect them prior to calling the function. <i>
@@ -211,7 +225,7 @@ is unreasonable for a program to detect them prior to calling the function. <i>
 </blockquote>
 <h3>Operating system dependent behavior conformance [<a name="fs.conform.os">fs.conform.os</a>]</h3>
 <p>Some behavior is specified as being 
-operating system dependent ([fs.def.osdep]). What operation system an 
+operating system dependent ([fs.def.osdep]). The operating system an 
 implementation is dependent upon is implementation defined.</p>
 <p>It is permissible for an implementation to be dependent upon an operating 
 system emulator rather than the actual underlying operating system.</p>
@@ -1364,7 +1378,7 @@ $if $TARGET; == BOOST
   <p>[<i>Note:</i> A <code>path</code> aware <code>lexicographical_compare</code> algorithm is provided for historical reasons. <i>--end note</i>]</p>
 </blockquote>
 $endif
-<pre>void swap( path&amp; lhs, path&amp; rhs ) noexcept;</pre>
+<pre>void swap(path&amp; lhs, path&amp; rhs) noexcept;</pre>
 <blockquote>
   <p><i>Effects: </i><code>lhs.swap(rhs)</code>.</p>
 </blockquote>
@@ -1945,9 +1959,9 @@ file_status status($SYSTEM;error_code&amp; ec) const noexcept;</pre>
 <blockquote>
 <p><i>Effects:</i> As if,</p>
   <blockquote>
-    <pre>if ( !status_known( m_status ) )
+    <pre>if (!status_known(m_status))
 {
-  if ( status_known(m_symlink_status) &amp;&amp; !is_symlink(m_symlink_status) )
+  if (status_known(m_symlink_status) &amp;&amp; !is_symlink(m_symlink_status))
     { m_status = m_symlink_status; }
   else { m_status = status(m_path<i>[, ec]</i>); }
 }</pre>
@@ -1963,7 +1977,7 @@ file_status  symlink_status($SYSTEM;error_code&amp; ec) const noexcept;</pre>
 <p>
   <i>Effects:</i> As if,</p>
   <blockquote>
-    <pre>if ( !status_known( m_symlink_status ) )
+    <pre>if (!status_known(m_symlink_status))
 {
   m_symlink_status = symlink_status(m_path<i>[, ec]</i>);
 }</pre>
@@ -2256,9 +2270,6 @@ with C++11 range-based for statements.</p>
 <h2><a name="Operational-functions">Operational functions</a> [fs.op.funcs]</h2>
 <p>Operational functions query or modify files, including directories, in external 
 storage.</p>
-<p>Operational functions access a file by resolving an 
-object of class <code>path</code> to a particular file in a file hierarchy. The 
-path is resolved as if by the ISO/IEC 9945 <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap04.html#tag_04_11">Pathname Resolution</a> mechanism.</p>
 <p>[<i>Note: </i>Because hardware failures, network failures, <a href="#file-system-race">file system races</a>, and many 
 other kinds of errors occur frequently in file system operations, users should be aware 
 that any filesystem operational function, no matter how apparently innocuous, may encounter 
@@ -2473,11 +2484,15 @@ void <a name="create_symlink2">create_symlink</a>(const path&amp; to, const path
 <pre>path <a name="current_path">current_path</a>();
 path <a name="current_path2">current_path</a>($SYSTEM;error_code&amp; ec);</pre>
 <blockquote>
-  <p><i>Returns:</i> The current working directory path, as if by ISO/IEC  
-  9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/getcwd.html">getcwd()</a></code>. <code>is_absolute()</code> is true for the returned path. 
+  <p><i>Returns:</i> The absolute path of the current working directory, 
+  obtained as if by ISO/IEC  
+  9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/getcwd.html">getcwd()</a></code>. 
   The signature with argument <code>ec</code> returns <code>path()</code> if an 
   error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+  <p><i>Remarks: </i>The current working directory is the directory, associated 
+  with the process, that is used as the starting location in pathname resolution 
+  for relative paths.</p>
   <p>[<i>Note: </i>The <code>current_path()</code> name was chosen to emphasize that the return is a 
   path, not just a single directory name.</p>
   <p>The current path as returned by many operating systems is a dangerous 
