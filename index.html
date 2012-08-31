@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-30<!--webbot bot="Timestamp" endspan i-checksum="12489" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-31<!--webbot bot="Timestamp" endspan i-checksum="12491" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->30 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31319" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->31 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31321" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -195,8 +195,10 @@ Library Proposal (Revision 3). Changes include:</p>
   of the library has come up with a clever way to make class <code>path</code> 
   work with the existing <code>&lt;fstream&gt;</code> classes constructors and open 
   functions.</li>
-  <li>Remove directory_entry as a Source in [path.req]. It was Boost specific 
-  and is inappropriate for the standard library.</li>
+  <li>Remove <code>directory_entry</code> as a <code>Source</code> in [path.req]. 
+  It was Boost specific and is inappropriate for the standard library.</li>
+  <li>Change name of <code>recursive_directory_iterator::level()</code> to <code>
+  depth()</code>.</li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
   <li>R-value reference move semantics.</li>
@@ -204,7 +206,7 @@ Library Proposal (Revision 3). Changes include:</p>
   <li><code>constexpr</code>.</li>
   <li>Range-based for statement support.</li>
   <li>New character types.</li>
-  <li>Replace replace explicit codecvt manipulation with a reference to <code>&lt;cuchar&gt;</code> 
+  <li>Replace explicit codecvt manipulation with a reference to <code>&lt;cuchar&gt;</code> 
   conversion facilities.</li>
 </ul>
 
@@ -300,8 +302,8 @@ C++0x.</p>
   
 <h2>Proposed Wording <a name="TOC">Table of Contents</a></h2>
 
-<p>   <a href="#Filesystem Library">1  Filesystem Library </a><br>
-      <a href="#Definitions">1.1 Definitions </a><br>
+<p>   <a href="#Filesystem Library">1 Filesystem Library </a><br>
+<a href="#Definitions">1.1 Definitions </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#Absolute-path">1.1.1 absolute path </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#canonical-path">1.1.2 canonical path </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#directory">1.1.3 directory </a><br>
@@ -315,10 +317,12 @@ C++0x.</p>
 &nbsp;&nbsp;&nbsp;<a href="#NTCTS">1.1.11 NTCTS </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#operating system dependent">1.1.12 operating system dependent 
 behavior </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path">1.1.13 path </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.14 pathname </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.15 relative path </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.16 symbolic link </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#fs.def.parent">1.1.13 parent directory </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path">1.1.14 path </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.15 pathname </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#fs.def.pathres">1.1.16 pathname resolution </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.17 relative path </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.18 symbolic link </a><br>
 <a href="#Conformance">1.2 Conformance </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#fs.conform.9945">1.2.1 ISO/IEC 9945 conformance </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#fs.conform.os">1.2.2 Operating system dependent behavior 
@@ -379,12 +383,15 @@ observers </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#directory_iterator-members">1.12.1 <code>directory_iterator</code> 
 members </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#directory_iterator-non-member-functions">1.12.2 <code>
-directory_iterator</code> non-member functions</a><br>
+directory_iterator</code> non-member functions </a><br>
 <a href="#Class-recursive_directory_iterator">1.13 Class <code>
 recursive_directory_iterator</code> </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#recursive_directory_iterator-non-member-functions">1.13.1 <code>
-recursive_directory_iterator</code> non-member functions</a><br>
+&nbsp;&nbsp;&nbsp;<a href="#directory_iterator-members">1.13.1 <code>
+recursive_directory_iterator</code> members </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#rec.dir.itr.nonmembers">1.13.2 <code>recursive_directory_iterator</code> 
+non-member functions </a><br>
 <a href="#Operational-functions">1.14 Operational functions </a><br>
+<br>
 </p>
       
 <h2><a name="Proposed-Wording">Proposed Wording</a></h2>
@@ -406,7 +413,7 @@ wording:</span></p>
 <p>This clause describes components that perform operations on file systems and 
 their components, such as paths, regular files, and directories.</p>
 
-<p>ISO/IEC 9945 contains provisions which, through reference in this 
+<p>ISO/IEC 9945 contains provisions which, through referenced in this 
 text, constitute provisions of this clause. At the time of 
 publication, the editions indicated were valid. All standards are subject to 
 revision, and parties to agreements based on this clause are 
@@ -441,9 +448,10 @@ operating system dependent.</p>
 
 <h3>1.1.2  <a name="canonical-path">canonical path</a> [fs.def.cannonical-path]</h3>
 <p>An absolute path that has 
-no elements that are symbolic links, and no <code>&quot;.&quot;</code> or <code>&quot;..&quot;</code> elements.</p>
+no elements that are symbolic links, and no dot or dot-dot elements ([<a href="#path.generic">path.generic</a>]).</p>
 <h3>1.1.3  <a name="directory">directory</a> [fs.def.directory]</h3>
-<p>A file within a file system that acts as a container of information about 
+<p>A file within a file system that acts as a container of directory entries 
+that contain information about 
 other files, possibly including other directory files.</p>
 <h3>1.1.4  <a name="file">file</a> [fs.def.file]</h3>
 <p>An object within a file system that holds user or system data. Files can be written to, or read from, or both. A file 
@@ -459,9 +467,8 @@ modification of
 the same object within a file system.</p>
 
 <h3>1.1.7  <a name="filename">filename</a> [fs.def.filename]</h3>
-  <p>The name of a file. Filenames <code>
-  &quot;.&quot;</code>&nbsp; 
-and <code>&quot;..&quot;</code>&nbsp; have special meaning. The follow characteristics of 
+  <p>The name of a file. Filenames dot&nbsp; 
+and dot-dot&nbsp; have special meaning. The following characteristics of 
   filenames are operating system dependent:</p>
 <ul>
   <li>
@@ -469,10 +476,10 @@ and <code>&quot;..&quot;</code>&nbsp; have special meaning. The follow character
     in filenames. <i>--end example</i>].</p>
   </li>
   <li>
-  <p>Specific filenames that are not permitted.</p>
+  <p>Filenames that are not permitted.</p>
   </li>
   <li>
-  <p>Additional filenames that have special meaning.</p>
+  <p>Filenames that have special meaning.</p>
   </li>
   <li>
   <p>Case awareness and sensitivity during path resolution.</p>
@@ -483,7 +490,7 @@ and <code>&quot;..&quot;</code>&nbsp; have special meaning. The follow character
   </li>
 </ul>
 <h3>1.1.8  <a name="hard-link">hard link</a> [fs.def.hardlink]</h3>
-<p>A link to an existing file. Some 
+<p>A link ([fs.def.link]) to an existing file. Some 
 file systems support multiple hard links to a file. If the last hard link to a 
 file is removed, the file itself is removed.</p>
 <blockquote>
@@ -492,12 +499,12 @@ pointer to a file.<i> -- end note</i>]<i> </i></p>
 </blockquote>
 <h3>1.1.9  <a name="link">link</a> [fs.def.link]</h3>
 <p>A directory entry object that associates a 
-filename with a file. On some file systems, several directory entries can 
-associate names with the same file.</p>
+filename with a file. A link is either a hard link ([fs.def.hardlink]) or a 
+symbolic link ([fs.def.symlink]).</p>
 
 <h3>1.1.10  native pathname format [<a name="fs.def.native">fs.def.native</a>]</h3>
 <p>The operating system dependent pathname format accepted by the host operating system.</p>
-<h3>1.1.11  <a name="NTCTS">NTCTS</a> [fs.def.ntcts]</h3>
+<h3>1.1.11  <a name="NTCTS">NTCTS</a> [<a name="fs.def.ntcts">fs.def.ntcts</a>]</h3>
 <p>Acronym for &quot;null-terminated character-type sequence&quot;. Describes a sequence 
 of values of a given character type terminated by that type's null character. If 
 the character type is <code>charT</code>, the null character can be constructed 
@@ -508,13 +515,19 @@ parse. A request for clarification has been sent to the project editor.</i></spa
 [fs.def.osdep]</h3>
 <p>Behavior  that is dependent upon the behavior 
 and characteristics of an operating system. See [fs.conform.os].</p>
-<h3>1.1.13  <a name="path">path</a> [fs.def.path]</h3>
+<h3>1.1.13  parent directory [<a name="fs.def.parent">fs.def.parent</a>]</h3>
+<p>When discussing a given directory, the directory that both contains a 
+directory entry for the given directory and is represented by the pathname 
+dot-dot in the given directory.</p>
+<p>When discussing other types of files, a directory containing a directory 
+entry for the file under discussion.</p>
+<p>This concept does not apply to dot and dot-dot.</p>
+<h3>1.1.14  <a name="path">path</a> [fs.def.path]</h3>
 <p>A sequence of elements that identify 
 the location of a file within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
-root-directory<sub>opt</sub></i>, and an optional sequence of filenames. [<i>Note:</i> 
-A <a href="#fs.def.pathname">pathname</a> is the concrete representation of a path. <i>--end note</i>]</p>
+root-directory<sub>opt</sub></i>, and an optional sequence of filenames.</p>
 
-<h3>1.1.14  pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
+<h3>1.1.15  pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
 <p>A character string that represents 
 the name of a 
 path. Pathnames are formatted according to the generic pathname format grammar 
@@ -522,7 +535,15 @@ path. Pathnames are formatted according to the generic pathname format grammar
 operating system dependent 
 native pathname format.</p>
 
-<h3>1.1.15  <a name="Relative-path">relative path</a> [fs.def.relative-path]</h3>
+<h3>1.1.16  pathname resolution [<a name="fs.def.pathres">fs.def.pathres</a>]</h3>
+
+<p>Pathname resolution is the operating system dependent mechanism for resolving 
+a pathname to a particular file in a file hierarchy. There may be multiple 
+pathnames that resolve to the same file.&nbsp; [<i>Example:</i> The ISO/IEC 9945 
+POSIX standard specifies the mechanism in section 4.11, Pathname resolution. <i>
+--end example]</i></p>
+
+<h3>1.1.17  <a name="Relative-path">relative path</a> [fs.def.relative-path]</h3>
 <p>A path that 
 is not absolute, and so only 
 unambiguously 
@@ -530,12 +551,12 @@ identifies the location of a file when resolved relative to
 an implied starting location. The elements of a path that determine if it is 
 relative are operating system dependent.&nbsp; [<i>Note:</i> 
 Paths <code>&quot;.&quot;</code> and <code>&quot;..&quot;</code> are relative paths. <i>--end note</i>]</p>
-<h3>1.1.16  <a name="symbolic-link">symbolic link</a> [fs.def.symlink]</h3>
-<p>A type of file with the 
+<h3>1.1.18  <a name="symbolic-link">symbolic link</a> [fs.def.symlink]</h3>
+<p>A link ([fs.def.link]) with the 
 property that when the file is encountered during pathname resolution, a string 
 stored by the file is used to modify the pathname resolution.</p>
 <blockquote>
-<p>[<i>Note:</i> A symbolic link can be thought of as a raw pointer to a file. 
+<p>[<i>Note:</i> Symbolic links are often called symlinks. A symbolic link can be thought of as a raw pointer to a file. 
 If the file pointed to does not exist, the symbolic link is said to be a 
 &quot;dangling&quot; symbolic link.<i> -- end note</i>]<i> </i></p>
 </blockquote>
@@ -569,8 +590,8 @@ a particular file system.</p>
 <p>[<i>Example:</i> The <a href="http://en.wikipedia.org/wiki/FAT_filesystem">
 FAT file system</a> used by some memory cards, camera memory, and floppy discs 
 does not support hard links, symlinks, and many other features of more capable 
-file systems. Implementations are only required to support the FAT features 
-supported by the host operating system for a particular file system. <i>-- end example</i>]</p>
+file systems, so implementations are not required to support those features 
+on the FAT file system. <i>-- end example</i>]</p>
 </blockquote>
 <p>The behavior of functions described in this 
 clause 
@@ -578,7 +599,7 @@ may differ from their specification in
 the presence of <a href="#file-system-race">file system races</a> ([fs.def.race]). No diagnostic is required.</p>
 <p>If the possibility of a file system race would make it unreliable for a program to 
 test for a precondition before calling a function described herein, <i>
-Requires</i> is not specified for the condition.</p>
+Requires</i> is not specified for the function.</p>
 <blockquote>
 <p>[<i>Note:</i> As a design practice, preconditions are not specified when it 
 is unreasonable for a program to detect them prior to calling the function. <i>
@@ -586,7 +607,7 @@ is unreasonable for a program to detect them prior to calling the function. <i>
 </blockquote>
 <h3>1.2.2  Operating system dependent behavior conformance [<a name="fs.conform.os">fs.conform.os</a>]</h3>
 <p>Some behavior is specified as being 
-operating system dependent ([fs.def.osdep]). What operation system an 
+operating system dependent ([fs.def.osdep]). The operating system an 
 implementation is dependent upon is implementation defined.</p>
 <p>It is permissible for an implementation to be dependent upon an operating 
 system emulator rather than the actual underlying operating system.</p>
@@ -836,7 +857,8 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
 } } }  // namespaces std::tbd::filesystem</pre>
 
  <p><b><i><code>unspecified-trivial-clock</code></i></b> is an unspecified type 
-provided by the implementation that satisfies the TrivialClock requirements ([time.clock.req]).</p>
+provided by the implementation that satisfies the TrivialClock requirements ([time.clock.req]) 
+ and that is capable of representing and measuring file time values.</p>
 <h2>1.5  <a name="Error-reporting">Error reporting</a> [fs.err.report]</h2>
 <p>Filesystem library functions often provide two overloads, one that 
 throws an exception to report file system errors, and another that sets an <code>error_code</code>.</p>
@@ -1627,7 +1649,7 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
 </blockquote>
  <p><h3>1.6.15   <a name="path-non-member-functions"> <code>path</code> non-member functions</a> 
 [path.non-member]</h3>
-<pre>void swap( path&amp; lhs, path&amp; rhs ) noexcept;</pre>
+<pre>void swap(path&amp; lhs, path&amp; rhs) noexcept;</pre>
 <blockquote>
   <p><i>Effects: </i><code>lhs.swap(rhs)</code>.</p>
 </blockquote>
@@ -2124,7 +2146,7 @@ a <code>file_status</code> object for non-symbolic link status, and a <code>file
 <blockquote>
 <p>[<i>Note:</i> Because <code>status()</code>on a pathname may be a relatively expensive operation, 
 some operating systems provide status information as a byproduct of directory 
-iteration. Caching such status information can result is significant time savings. Cached and 
+iteration. Caching such status information can result in significant time savings. Cached and 
 non-cached results may differ in the presence of file system races. <i>-- end note</i>]</p>
 </blockquote>
 <h3>1.11.1   <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a> 
@@ -2211,9 +2233,9 @@ file_status status(error_code&amp; ec) const noexcept;</pre>
 <blockquote>
 <p><i>Effects:</i> As if,</p>
   <blockquote>
-    <pre>if ( !status_known( m_status ) )
+    <pre>if (!status_known(m_status))
 {
-  if ( status_known(m_symlink_status) &amp;&amp; !is_symlink(m_symlink_status) )
+  if (status_known(m_symlink_status) &amp;&amp; !is_symlink(m_symlink_status))
     { m_status = m_symlink_status; }
   else { m_status = status(m_path<i>[, ec]</i>); }
 }</pre>
@@ -2229,7 +2251,7 @@ file_status  symlink_status(error_code&amp; ec) const noexcept;</pre>
 <p>
   <i>Effects:</i> As if,</p>
   <blockquote>
-    <pre>if ( !status_known( m_symlink_status ) )
+    <pre>if (!status_known(m_symlink_status))
 {
   m_symlink_status = symlink_status(m_path<i>[, ec]</i>);
 }</pre>
@@ -2265,8 +2287,11 @@ file_status  symlink_status(error_code&amp; ec) const noexcept;</pre>
 </blockquote>
 <h2>1.12  <a name="Class-directory_iterator">Class <code>directory_iterator</code> 
 [class.directory_iterator]</a></h2>
-<p>Objects of type <code>directory_iterator</code> provide standard library 
-compliant iteration over the contents of a directory. Also see class <code><a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a></code>.</p>
+<p>An object of type <code>directory_iterator</code> provides an iterator for a 
+sequence of <code>directory_entry</code> elements representing the files in a 
+directory.&nbsp; 
+[<i>Note:</i> For iteration into sub-directories,&nbsp; see class <code><a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a></code> 
+([class.rec.dir.itr]). <i>--end note</i>]</p>
 <pre>namespace std { namespace tbd { namespace filesystem {
 
       class directory_iterator :
@@ -2284,8 +2309,10 @@ compliant iteration over the contents of a directory. Also see class <code><a hr
         directory_iterator&amp; operator=(const directory_iterator&amp;) = default;
         directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = default;
 
-        directory_iterator&amp; operator++();
-        directory_iterator&amp; increment(error_code&amp; ec) noexcept;
+        const directory_entry&amp; operator*() const;
+        const directory_entry* operator-&gt;() const;
+        directory_iterator&amp;    operator++();
+        directory_iterator&amp;    increment(error_code&amp; ec) noexcept;
 
         // other members as required by
         //  C++ Std, 24.1.1 Input iterators [input.iterators]
@@ -2294,12 +2321,15 @@ compliant iteration over the contents of a directory. Also see class <code><a hr
 } } }  // namespaces std::tbd::filesystem</pre>
 <p> <code>directory_iterator</code> satisfies the requirements of an input 
 iterator ([input.iterators]).</p>
-<p>If the end of the directory elements is reached, the iterator shall become equal to 
-the end iterator value. The constructor <code>directory_iterator()</code> with no arguments always constructs an end iterator object, which 
-shall be the only valid iterator for the end condition. The result of <code>operator*</code> on an end iterator is not defined. For any other iterator value 
+<p>If an iterator of type <code>directory_iterator</code> is advanced past the 
+last directory element, that iterator shall become equal to the end iterator 
+value. The <code>directory_iterator</code> default constructor&nbsp;shall 
+create an iterator equal to the end iterator value, and this shall be the only 
+valid iterator for the end condition. </p>
+<p>The result of <code>operator*</code> on an end iterator is undefined behavior. For any other iterator value 
 a <code>const directory_entry&amp;</code> is returned. The result of <code>operator-&gt;</code> on an end iterator is 
 undefined behavior. For any other iterator value a <code>const directory_entry*</code> is 
-returned. </p>
+returned.</p>
 <p>Two end iterators are always equal. An end iterator shall not be equal to a non-end 
 iterator.</p>
 <blockquote>
@@ -2309,7 +2339,7 @@ Standard Library's istream_iterator wording.</span></i></p>
 <p>The result of calling the <code>path()</code> member of the <code>directory_entry</code> object obtained by dereferencing a <code>directory_iterator</code> is a reference to a <code>path</code> object composed of the directory argument from which the iterator was 
 constructed with filename of the directory entry appended as if by <code>operator/=</code>. </p>
 <p>Directory iteration shall not yield directory entries for the current (<i>dot</i>) 
-and parent (<i>dot dot</i>) directories.</p>
+and parent (<i>dot-dot</i>) directories.</p>
 <p>The order of directory entries obtained by dereferencing successive 
 increments of a <code>directory_iterator</code> is unspecified.</p>
 <blockquote>
@@ -2321,8 +2351,8 @@ walking directory trees for purposes of removing and renaming entries may wish
 to avoid following symbolic links.</p>
 <p>If a file  is removed from or added to a directory after the 
 construction of a <code>directory_iterator</code> for the directory, it is 
-unspecified whether or not subsequent incrementing of the iterator will ever 
-result in an iterator whose value is the removed or added directory entry. See
+unspecified whether or not subsequently incrementing the iterator will ever 
+result in an iterator referencing the removed or added directory entry. See
 ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/readdir_r.html">readdir_r()</a></code>. <i>--end note</i>]</p>
 </blockquote>
 <h3>1.12.1  <a name="directory_iterator-members"><code>directory_iterator</code> members</a> 
@@ -2341,8 +2371,9 @@ noexcept;</code></p>
 directory_iterator(</code>const path&amp; p, error_code&amp; ec<code>) noexcept;</code></pre>
 <blockquote>
 
-<p><i>Effects:</i> Constructs a iterator representing the first 
-entry in the directory <code>p</code> resolves to, if any; otherwise, the end iterator.</p>
+<p><i>Effects:</i> For the directory that <code>p</code> resolves to, constructs an 
+iterator for the first element in a sequence of <code>directory_entry</code> 
+elements representing the files in the directory, if any; otherwise the end iterator.</p>
 
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 
@@ -2359,7 +2390,8 @@ directory_iterator&amp; increment(error_code&amp; ec)<code> noexcept</code>;</pr
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 
 </blockquote>
-<h3>1.12.2  <a name="directory_iterator-non-member-functions"><code>directory_iterator</code> non-member functions</a></h3>
+<h3>1.12.2  <a name="directory_iterator-non-member-functions"><code>directory_iterator</code> non-member functions</a> 
+[directory_iterator.nonmembers]</h3>
 <p>These functions enable use of <code>directory_iterator</code> with C++11 
 range-based for statements.</p>
 <pre>const directory_iterator&amp; begin(const directory_iterator&amp; iter) noexcept;</pre>
@@ -2372,9 +2404,9 @@ range-based for statements.</p>
 </blockquote>
 <h2>1.13  <a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
 [class.rec.dir.itr]</a></h2>
-<p>Objects of type <code>recursive_directory_iterator</code> provide standard library 
-compliant iteration over the contents of a directory, including recursion into 
-its sub-directories.</p>
+<p>An object of type <code>recursive_directory_iterator</code> provides an iterator for 
+a sequence of <code>directory_entry</code> elements representing the files in a 
+directory and its sub-directories.</p>
 <pre>namespace std { namespace tbd { namespace filesystem {
 
       class recursive_directory_iterator :
@@ -2395,7 +2427,7 @@ its sub-directories.</p>
 
         // observers
         directory_options  options() const;
-        int                level() const;
+        int                depth() const;
         bool               recursion<code>_pending</code>() const;
 
         // modifiers
@@ -2415,6 +2447,9 @@ its sub-directories.</p>
 
 <p>The behavior of a <code>recursive_directory_iterator</code> is the same 
 as a <code>directory_iterator</code> unless otherwise specified.</p>
+<h3>1.13.1  <code>recursive_<a name="directory_iterator-members">directory_iterator</a></code> members 
+[<a name="rec.dir.itr.members">rec.dir.itr.members</a>]</h3>
+
 <pre>recursive_directory_iterator() noexcept;</pre>
 <blockquote>
 
@@ -2450,13 +2485,11 @@ directory_options::follow_directory_symlink</code> <i>-- end note</i>]</p>
 if present, otherwise <code>directory_options::none</code>.</p>
 <p><i>Throws:</i> Nothing.</p>
 </blockquote>
-<pre>int level() const;</pre>
+<pre>int depth() const;</pre>
 <blockquote>
-<p><span style="background-color: #E0E0E0"><i>In retrospect, maybe this should 
-have been called depth(). But no one has ever complained, IIRC.</i></span></p>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
   <p><i>Returns:</i> The current depth of the directory tree being traversed. [<i>Note:</i> 
-  The initial directory is level 0, its immediate subdirectories are level 1, 
+  The initial directory is depth 0, its immediate subdirectories are depth 1, 
   and so forth. <i>-- end note</i>]</p>
 <p><i>Throws:</i> Nothing.</p>
 </blockquote>
@@ -2480,7 +2513,7 @@ except that:</p>
 <ul>
   <li>
 
-<p>If there are no more  entries at this level, then if <code>level()!= 0</code> 
+<p>If there are no more  entries at this depth, then if <code>depth()!= 0</code> 
 iteration over the parent directory resumes; otherwise <code>*this = recursive_directory_iterator()</code>.</p>
 
   </li>
@@ -2501,7 +2534,7 @@ directory_options::follow_directory_symlink) != 0)</code> then&nbsp;directory <c
 <pre>void pop();</pre>
 <blockquote>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
-  <p><i>Effects:</i> If <code>level() == 0</code>, set <code>*this</code> to <code>recursive_directory_iterator()</code>. 
+  <p><i>Effects:</i> If <code>depth() == 0</code>, set <code>*this</code> to <code>recursive_directory_iterator()</code>. 
   Otherwise, cease iteration of the directory currently being 
   iterated over, and continue iteration over the parent directory.</p>
 </blockquote>
@@ -2512,7 +2545,8 @@ directory_options::follow_directory_symlink) != 0)</code> then&nbsp;directory <c
   <p>[<i>Note:</i> <code>disable_recursion_pending</code><code>()</code> is used to prevent 
   unwanted recursion into a directory. <i>--end note</i>]</p>
 </blockquote>
-<h3>1.13.1  <a name="recursive_directory_iterator-non-member-functions"><code>recursive_directory_iterator</code> non-member functions</a></h3>
+<h3>1.13.2  <code>recursive_directory_iterator</code> non-member functions 
+[<a name="rec.dir.itr.nonmembers">rec.dir.itr.nonmembers</a>]</h3>
 <p>These functions enable use of <code>recursive_directory_iterator</code> 
 with C++11 range-based for statements.</p>
 <pre>const recursive_directory_iterator&amp; begin(const recursive_directory_iterator&amp; iter) noexcept;</pre>
@@ -2526,9 +2560,6 @@ with C++11 range-based for statements.</p>
 <h2>1.14  <a name="Operational-functions">Operational functions</a> [fs.op.funcs]</h2>
 <p>Operational functions query or modify files, including directories, in external 
 storage.</p>
-<p>Operational functions access a file by resolving an 
-object of class <code>path</code> to a particular file in a file hierarchy. The 
-path is resolved as if by the ISO/IEC 9945 <a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap04.html#tag_04_11">Pathname Resolution</a> mechanism.</p>
 <p>[<i>Note: </i>Because hardware failures, network failures, <a href="#file-system-race">file system races</a>, and many 
 other kinds of errors occur frequently in file system operations, users should be aware 
 that any filesystem operational function, no matter how apparently innocuous, may encounter 
@@ -2743,11 +2774,15 @@ void <a name="create_symlink2">create_symlink</a>(const path&amp; to, const path
 <pre>path <a name="current_path">current_path</a>();
 path <a name="current_path2">current_path</a>(error_code&amp; ec);</pre>
 <blockquote>
-  <p><i>Returns:</i> The current working directory path, as if by ISO/IEC  
-  9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/getcwd.html">getcwd()</a></code>. <code>is_absolute()</code> is true for the returned path. 
+  <p><i>Returns:</i> The absolute path of the current working directory, 
+  obtained as if by ISO/IEC  
+  9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/getcwd.html">getcwd()</a></code>. 
   The signature with argument <code>ec</code> returns <code>path()</code> if an 
   error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+  <p><i>Remarks: </i>The current working directory is the directory, associated 
+  with the process, that is used as the starting location in pathname resolution 
+  for relative paths.</p>
   <p>[<i>Note: </i>The <code>current_path()</code> name was chosen to emphasize that the return is a 
   path, not just a single directory name.</p>
   <p>The current path as returned by many operating systems is a dangerous 
