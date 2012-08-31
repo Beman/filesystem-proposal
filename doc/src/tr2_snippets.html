@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-30<!--webbot bot="Timestamp" endspan i-checksum="12489" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-31<!--webbot bot="Timestamp" endspan i-checksum="12491" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -39,7 +39,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->30 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31319" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->31 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31321" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -272,8 +272,8 @@ C++0x.</p>
   
 <h2>Proposed Wording <a name="TOC">Table of Contents</a></h2>
 
-<p>   <a href="#Filesystem Library">1  Filesystem Library </a><br>
-      <a href="#Definitions">1.1 Definitions </a><br>
+<p>   <a href="#Filesystem Library">1 Filesystem Library </a><br>
+<a href="#Definitions">1.1 Definitions </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#Absolute-path">1.1.1 absolute path </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#canonical-path">1.1.2 canonical path </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#directory">1.1.3 directory </a><br>
@@ -287,10 +287,12 @@ C++0x.</p>
 &nbsp;&nbsp;&nbsp;<a href="#NTCTS">1.1.11 NTCTS </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#operating system dependent">1.1.12 operating system dependent 
 behavior </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path">1.1.13 path </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.14 pathname </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.15 relative path </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.16 symbolic link </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#fs.def.parent">1.1.13 parent directory </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#path">1.1.14 path </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.15 pathname </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#fs.def.pathres">1.1.16 pathname resolution </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.17 relative path </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.18 symbolic link </a><br>
 <a href="#Conformance">1.2 Conformance </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#fs.conform.9945">1.2.1 ISO/IEC 9945 conformance </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#fs.conform.os">1.2.2 Operating system dependent behavior 
@@ -351,12 +353,15 @@ observers </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#directory_iterator-members">1.12.1 <code>directory_iterator</code> 
 members </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#directory_iterator-non-member-functions">1.12.2 <code>
-directory_iterator</code> non-member functions</a><br>
+directory_iterator</code> non-member functions </a><br>
 <a href="#Class-recursive_directory_iterator">1.13 Class <code>
 recursive_directory_iterator</code> </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#recursive_directory_iterator-non-member-functions">1.13.1 <code>
-recursive_directory_iterator</code> non-member functions</a><br>
+&nbsp;&nbsp;&nbsp;<a href="#directory_iterator-members">1.13.1 <code>
+recursive_directory_iterator</code> members </a><br>
+&nbsp;&nbsp;&nbsp;<a href="#rec.dir.itr.nonmembers">1.13.2 <code>recursive_directory_iterator</code> 
+non-member functions </a><br>
 <a href="#Operational-functions">1.14 Operational functions </a><br>
+<br>
 </p>
       
 <h2><a name="Proposed-Wording">Proposed Wording</a></h2>

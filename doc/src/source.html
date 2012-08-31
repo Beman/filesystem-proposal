@@ -1872,7 +1872,7 @@ a <code>file_status</code> object for non-symbolic link status, and a <code>file
 <blockquote>
 <p>[<i>Note:</i> Because <code>status()</code>on a pathname may be a relatively expensive operation, 
 some operating systems provide status information as a byproduct of directory 
-iteration. Caching such status information can result is significant time savings. Cached and 
+iteration. Caching such status information can result in significant time savings. Cached and 
 non-cached results may differ in the presence of file system races. <i>-- end note</i>]</p>
 </blockquote>
 <h3> <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a> 
@@ -2013,8 +2013,11 @@ file_status  symlink_status($SYSTEM;error_code&amp; ec) const noexcept;</pre>
 </blockquote>
 <h2><a name="Class-directory_iterator">Class <code>directory_iterator</code> 
 [class.directory_iterator]</a></h2>
-<p>Objects of type <code>directory_iterator</code> provide standard library 
-compliant iteration over the contents of a directory. Also see class <code><a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a></code>.</p>
+<p>An object of type <code>directory_iterator</code> provides an iterator for a 
+sequence of <code>directory_entry</code> elements representing the files in a 
+directory.&nbsp; 
+[<i>Note:</i> For iteration into sub-directories,&nbsp; see class <code><a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a></code> 
+([class.rec.dir.itr]). <i>--end note</i>]</p>
 <pre>$NAMESPACE_BEGIN;
       class directory_iterator :
         public iterator&lt;input_iterator_tag, directory_entry&gt;
@@ -2031,8 +2034,10 @@ compliant iteration over the contents of a directory. Also see class <code><a hr
         directory_iterator&amp; operator=(const directory_iterator&amp;) = default;
         directory_iterator&amp; operator=(directory_iterator&amp;&amp;) = default;
 
-        directory_iterator&amp; operator++();
-        directory_iterator&amp; increment($SYSTEM;error_code&amp; ec) noexcept;
+        const directory_entry&amp; operator*() const;
+        const directory_entry* operator-&gt;() const;
+        directory_iterator&amp;    operator++();
+        directory_iterator&amp;    increment($SYSTEM;error_code&amp; ec) noexcept;
 
         // other members as required by
         //  C++ Std, 24.1.1 Input iterators [input.iterators]
@@ -2041,12 +2046,15 @@ compliant iteration over the contents of a directory. Also see class <code><a hr
 $NAMESPACE_END;</pre>
 <p> <code>directory_iterator</code> satisfies the requirements of an input 
 iterator ([input.iterators]).</p>
-<p>If the end of the directory elements is reached, the iterator shall become equal to 
-the end iterator value. The constructor <code>directory_iterator()</code> with no arguments always constructs an end iterator object, which 
-shall be the only valid iterator for the end condition. The result of <code>operator*</code> on an end iterator is not defined. For any other iterator value 
+<p>If an iterator of type <code>directory_iterator</code> is advanced past the 
+last directory element, that iterator shall become equal to the end iterator 
+value. The <code>directory_iterator</code> default constructor&nbsp;shall 
+create an iterator equal to the end iterator value, and this shall be the only 
+valid iterator for the end condition. </p>
+<p>The result of <code>operator*</code> on an end iterator is undefined behavior. For any other iterator value 
 a <code>const directory_entry&amp;</code> is returned. The result of <code>operator-&gt;</code> on an end iterator is 
 undefined behavior. For any other iterator value a <code>const directory_entry*</code> is 
-returned. </p>
+returned.</p>
 <p>Two end iterators are always equal. An end iterator shall not be equal to a non-end 
 iterator.</p>
 <blockquote>
@@ -2056,7 +2064,7 @@ Standard Library's istream_iterator wording.</span></i></p>
 <p>The result of calling the <code>path()</code> member of the <code>directory_entry</code> object obtained by dereferencing a <code>directory_iterator</code> is a reference to a <code>path</code> object composed of the directory argument from which the iterator was 
 constructed with filename of the directory entry appended as if by <code>operator/=</code>. </p>
 <p>Directory iteration shall not yield directory entries for the current (<i>dot</i>) 
-and parent (<i>dot dot</i>) directories.</p>
+and parent (<i>dot-dot</i>) directories.</p>
 <p>The order of directory entries obtained by dereferencing successive 
 increments of a <code>directory_iterator</code> is unspecified.</p>
 <blockquote>
@@ -2068,8 +2076,8 @@ walking directory trees for purposes of removing and renaming entries may wish
 to avoid following symbolic links.</p>
 <p>If a file  is removed from or added to a directory after the 
 construction of a <code>directory_iterator</code> for the directory, it is 
-unspecified whether or not subsequent incrementing of the iterator will ever 
-result in an iterator whose value is the removed or added directory entry. See
+unspecified whether or not subsequently incrementing the iterator will ever 
+result in an iterator referencing the removed or added directory entry. See
 ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/readdir_r.html">readdir_r()</a></code>. <i>--end note</i>]</p>
 </blockquote>
 <h3><a name="directory_iterator-members"><code>directory_iterator</code> members</a> 
@@ -2088,8 +2096,9 @@ noexcept;</code></p>
 directory_iterator(</code>const path&amp; p, $SYSTEM;error_code&amp; ec<code>) noexcept;</code></pre>
 <blockquote>
 
-<p><i>Effects:</i> Constructs a iterator representing the first 
-entry in the directory <code>p</code> resolves to, if any; otherwise, the end iterator.</p>
+<p><i>Effects:</i> For the directory that <code>p</code> resolves to, constructs an 
+iterator for the first element in a sequence of <code>directory_entry</code> 
+elements representing the files in the directory, if any; otherwise the end iterator.</p>
 
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 
@@ -2106,7 +2115,8 @@ directory_iterator&amp; increment($SYSTEM;error_code&amp; ec)<code> noexcept</co
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 
 </blockquote>
-<h3><a name="directory_iterator-non-member-functions"><code>directory_iterator</code> non-member functions</a></h3>
+<h3><a name="directory_iterator-non-member-functions"><code>directory_iterator</code> non-member functions</a> 
+[directory_iterator.nonmembers]</h3>
 <p>These functions enable use of <code>directory_iterator</code> with C++11 
 range-based for statements.</p>
 <pre>const directory_iterator&amp; begin(const directory_iterator&amp; iter) noexcept;</pre>
@@ -2119,9 +2129,9 @@ range-based for statements.</p>
 </blockquote>
 <h2><a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
 [class.rec.dir.itr]</a></h2>
-<p>Objects of type <code>recursive_directory_iterator</code> provide standard library 
-compliant iteration over the contents of a directory, including recursion into 
-its sub-directories.</p>
+<p>An object of type <code>recursive_directory_iterator</code> provides an iterator for 
+a sequence of <code>directory_entry</code> elements representing the files in a 
+directory and its sub-directories.</p>
 <pre>$NAMESPACE_BEGIN;
       class recursive_directory_iterator :
         public iterator&lt;input_iterator_tag, directory_entry&gt;
@@ -2161,6 +2171,9 @@ $NAMESPACE_END;</pre>
 
 <p>The behavior of a <code>recursive_directory_iterator</code> is the same 
 as a <code>directory_iterator</code> unless otherwise specified.</p>
+<h3><code>recursive_<a name="directory_iterator-members">directory_iterator</a></code> members 
+[<a name="rec.dir.itr.members">rec.dir.itr.members</a>]</h3>
+
 <pre>recursive_directory_iterator() noexcept;</pre>
 <blockquote>
 
@@ -2256,7 +2269,8 @@ directory_options::follow_directory_symlink) != 0)</code> then&nbsp;directory <c
   <p>[<i>Note:</i> <code>disable_recursion_pending</code><code>()</code> is used to prevent 
   unwanted recursion into a directory. <i>--end note</i>]</p>
 </blockquote>
-<h3><a name="recursive_directory_iterator-non-member-functions"><code>recursive_directory_iterator</code> non-member functions</a></h3>
+<h3><code>recursive_directory_iterator</code> non-member functions 
+[<a name="rec.dir.itr.nonmembers">rec.dir.itr.nonmembers</a>]</h3>
 <p>These functions enable use of <code>recursive_directory_iterator</code> 
 with C++11 range-based for statements.</p>
 <pre>const recursive_directory_iterator&amp; begin(const recursive_directory_iterator&amp; iter) noexcept;</pre>
