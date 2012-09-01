@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-31<!--webbot bot="Timestamp" endspan i-checksum="12491" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-01<!--webbot bot="Timestamp" endspan i-checksum="12552" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->31 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31321" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->01 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39617" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -506,8 +506,8 @@ symbolic link ([fs.def.symlink]).</p>
 <p>The operating system dependent pathname format accepted by the host operating system.</p>
 <h3>1.1.11  <a name="NTCTS">NTCTS</a> [<a name="fs.def.ntcts">fs.def.ntcts</a>]</h3>
 <p>Acronym for &quot;null-terminated character-type sequence&quot;. Describes a sequence 
-of values of a given character type terminated by that type's null character. If 
-the character type is <code>charT</code>, the null character can be constructed 
+of values of a given encoded character type terminated by that type's null character. If 
+the encoded character type is <code>charT</code>, the null character can be constructed 
 by <code>charT()</code>. <span style="background-color: #E0E0E0"><i>This is an 
 expansion of the definition in chapter 17; that definition is very hard to 
 parse. A request for clarification has been sent to the project editor.</i></span></p>
@@ -614,17 +614,17 @@ system emulator rather than the actual underlying operating system.</p>
 <h2>1.3  Requirements [<a name="fs.req">fs.req</a>]</h2>
 <p>Throughout this clause, <code>char</code>, <code>wchar_t</code>,
 <code>char16_t</code>, and <code>char32_t</code> are collectively called <i>
-character types</i>.</p>
+encoded character types</i>.</p>
 
 <p>Template parameters named <code>charT</code> shall be one of the 
-character types.</p>
+encoded character types.</p>
 
 <p>Template parameters named <code>InputIterator</code> shall meet the 
 C++ standard library input iterator requirements ([input.iterators]) and shall 
-have a value type that is one of the character types.</p>
+have a value type that is one of the encoded character types.</p>
 
 <blockquote>
-<p>[<i>Note:</i> Use of a character type implies an associated 
+<p>[<i>Note:</i> Use of an encoded character type implies an associated 
 encoding. Since <code>signed char</code> and <code>unsigned char</code> have no 
 implied encoding, they are not included as permitted types. <i>--end note</i>]</p>
 
@@ -1043,7 +1043,7 @@ system or for a particular file system.</p>
 
 </blockquote>
 <p><code><a name="value_type">value_type</a></code> is a <code>typedef</code> for the 
-operating system dependent character type used  to represent pathnames.</p>
+operating system dependent encoded character type used  to represent pathnames.</p>
 <p>The value of <a name="preferred_separator"><code>preferred_separator</code></a> 
 is the operating system dependent <i>preferred-separator</i> character ([path.generic]).</p>
 <blockquote>
@@ -1233,11 +1233,11 @@ character set.</p>
 shall be one of:</p>
 <ul>
   <li>Type <code>basic_string&lt;charT, traits, Allocator&gt;</code>. The type <code>
-  charT</code> shall be a character type ([fs.req]).</li>
+  charT</code> shall be an encoded character type ([fs.req]).</li>
   <li>A type meeting the input iterator requirements that iterates over a NTCTS. 
-  The value type shall be a character type.</li>
+  The value type shall be an encoded character type.</li>
   <li>A character array that after array-to-pointer conversion results in a 
-  pointer to a NTCTS. The value type shall be a character type.</li>
+  pointer to a NTCTS. The value type shall be an encoded character type.</li>
 </ul>
 
 <blockquote>
