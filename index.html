@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-08-31<!--webbot bot="Timestamp" endspan i-checksum="12491" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-03<!--webbot bot="Timestamp" endspan i-checksum="12556" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->31 August 2012<!--webbot bot="Timestamp" endspan i-checksum="31321" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->03 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39621" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -506,8 +506,8 @@ symbolic link ([fs.def.symlink]).</p>
 <p>The operating system dependent pathname format accepted by the host operating system.</p>
 <h3>1.1.11  <a name="NTCTS">NTCTS</a> [<a name="fs.def.ntcts">fs.def.ntcts</a>]</h3>
 <p>Acronym for &quot;null-terminated character-type sequence&quot;. Describes a sequence 
-of values of a given character type terminated by that type's null character. If 
-the character type is <code>charT</code>, the null character can be constructed 
+of values of a given encoded character type terminated by that type's null character. If 
+the encoded character type is <code>charT</code>, the null character can be constructed 
 by <code>charT()</code>. <span style="background-color: #E0E0E0"><i>This is an 
 expansion of the definition in chapter 17; that definition is very hard to 
 parse. A request for clarification has been sent to the project editor.</i></span></p>
@@ -614,17 +614,17 @@ system emulator rather than the actual underlying operating system.</p>
 <h2>1.3  Requirements [<a name="fs.req">fs.req</a>]</h2>
 <p>Throughout this clause, <code>char</code>, <code>wchar_t</code>,
 <code>char16_t</code>, and <code>char32_t</code> are collectively called <i>
-character types</i>.</p>
+encoded character types</i>.</p>
 
 <p>Template parameters named <code>charT</code> shall be one of the 
-character types.</p>
+encoded character types.</p>
 
 <p>Template parameters named <code>InputIterator</code> shall meet the 
 C++ standard library input iterator requirements ([input.iterators]) and shall 
-have a value type that is one of the character types.</p>
+have a value type that is one of the encoded character types.</p>
 
 <blockquote>
-<p>[<i>Note:</i> Use of a character type implies an associated 
+<p>[<i>Note:</i> Use of an encoded character type implies an associated 
 encoding. Since <code>signed char</code> and <code>unsigned char</code> have no 
 implied encoding, they are not included as permitted types. <i>--end note</i>]</p>
 
@@ -1043,7 +1043,7 @@ system or for a particular file system.</p>
 
 </blockquote>
 <p><code><a name="value_type">value_type</a></code> is a <code>typedef</code> for the 
-operating system dependent character type used  to represent pathnames.</p>
+operating system dependent encoded character type used  to represent pathnames.</p>
 <p>The value of <a name="preferred_separator"><code>preferred_separator</code></a> 
 is the operating system dependent <i>preferred-separator</i> character ([path.generic]).</p>
 <blockquote>
@@ -1233,11 +1233,11 @@ character set.</p>
 shall be one of:</p>
 <ul>
   <li>Type <code>basic_string&lt;charT, traits, Allocator&gt;</code>. The type <code>
-  charT</code> shall be a character type ([fs.req]).</li>
+  charT</code> shall be an encoded character type ([fs.req]).</li>
   <li>A type meeting the input iterator requirements that iterates over a NTCTS. 
-  The value type shall be a character type.</li>
+  The value type shall be an encoded character type.</li>
   <li>A character array that after array-to-pointer conversion results in a 
-  pointer to a NTCTS. The value type shall be a character type.</li>
+  pointer to a NTCTS. The value type shall be an encoded character type.</li>
 </ul>
 
 <blockquote>
@@ -1697,72 +1697,31 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
 </blockquote>
 <h3>1.6.16  <code>path</code><a name="path-inserter-extractor"> inserter 
   and extractor</a> [path.io]</h3>
-<p> The inserter and, optionally, the extractor delimit the string with 
-double-quote (&quot;) characters so that paths with embedded spaces will round trip correctly. An escape character, 
-ampersand (&amp;), allows paths to contain double-quotes. [<i>Note:</i> backslash 
-(\)is not used as an escape character because it is used as a directory 
-separator by some operating systems and so would be very confusing and error 
-prone, particularly coupled with the C++ requirement to escape a backslash in 
-literals . <i>-- end note</i>]</p>
 <pre>template &lt;class charT, class traits&gt;
 basic_ostream&lt;charT, traits&gt;&amp;
 operator&lt;&lt;(basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp; p);</pre>
 <blockquote>
-  <p><i>Effects: </i>Behaves as a formatted output function ([ostream.formatted.reqmts]). 
-  After a sentry object is constructed it inserts characters into <code>os</code>:</p>
-  <ul>
-    <li>
-  A double-quote (&quot;) then</li>
-    <li>
-  Each character in <code>p.string&lt;basic_string&lt;charT, traits&gt;&gt;()</code>. 
-  If the character to be inserted is an ampersand (&amp;) or double-quote , insert 
-  an ampersand before it, then 
-    </li>
-    <li>
-  A double-quote.
-    </li>
-  </ul>
+  <p><i>Effects:</i> <code>os &lt;&lt; p.string&lt;charT, traits&gt;()</code>.</p>
+  <p>[<i>Note:</i> Pathnames containing spaces require special handling by the 
+  user to avoid truncation when read by the extractor. <i>--end note</i>]</p>
+  <p><span style="background-color: #E0E0E0"><i>The Boost inserter outputs 
+  quoted strings, which are recognized as such by the extractor. There was 
+  sentiment within the Filesystem Study Group that supplying a quoted and/or 
+  escaped string manipulator as a string extension was a better solution than a 
+  path specific feature. </i></span></p>
   <p><i>Returns:</i> <code>os</code></p>
-  <p><i>Remarks:</i> Character equality is determined by <code>traits::eq</code>.</p>
-</blockquote>
+  </blockquote>
 <pre>template &lt;class charT, class traits&gt;
 basic_istream&lt;charT, traits&gt;&amp;
 operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);</pre>
 <blockquote>
-  <p><i>Effects:&nbsp; </i>Behaves as a formatted input function ([istream.formatted.reqmts]). 
-  After a sentry<br>
-  object is constructed, calls <code>p.clear()</code>, and then extracts characters from <code>is</code>:</p>
-  <ul>
-    <li>If the first character extracted is a double-quote (&quot;) then:<ul>
-      <li>Discard the initial double-quote.</li>
-      <li>Save the value and then turn off the <code>skipws</code> flag.</li>
-      <li>Until a double-quote character not preceded by an ampersand (&amp;) is reached or <code>
-      is.not_good()</code>, extract characters from <code>is</code> and append 
-      them to <code>p</code>, except that if ampersand is reached, 
-      ignore it and append the next character to <code>p</code>.</li>
-      <li>Discard the final double-quote character.</li>
-      <li>Restore the <code>skipws</code> flag to its original value.</li>
-    </ul>
-    </li>
-    <li>Otherwise, extract characters from <code>is</code> and append 
-      them to <code>p</code>. Characters are extracted and appended until any of 
-    the following occurs:<ul>
-    <li><code>n</code> characters are stored, where <code>n</code> is <code>
-    is.width()</code> if <code>is.width()</code> is greater than zero, otherwise
-    <code>p.pathname.max_size()</code>;</li>
-    <li>end-of-file occurs on the input sequence;</li>
-    <li><code>isspace(c,is.getloc())</code> is true for the next 
-    available input character <code>c</code>.</li>
-  </ul>
-    </li>
-  </ul>
-  <p>After the last character (if any) is extracted, <code>is.width(0)</code> 
-  is called and the sentry object is destroyed.</p>
-  <p>If the function extracts no characters, it calls <code>
-  is.setstate(ios::failbit)</code>, which may throw <code>ios_base::failure</code> 
-  ([iostate.flags]).</p>
+  <p><i>Effects:&nbsp; </i></p>
+  <blockquote>
+    <pre>basic_string&lt;charT, traits&gt; tmp;
+is &gt;&gt; tmp;
+p = tmp;</pre>
+  </blockquote>
   <p><i>Returns:</i> <code>is</code></p>
-  <p><i>Remarks:</i> Character equality is determined by <code>traits::eq</code>.</p>
   </blockquote>
 <h2>1.7  <a name="Class-filesystem_error">Class <code>filesystem_error</code> 
 [class.filesystem_error]</a></h2>
@@ -2566,7 +2525,7 @@ that any filesystem operational function, no matter how apparently innocuous, ma
 an error.&nbsp;See <a href="#Error-reporting">Error reporting</a>. <i>-- end note</i>]</p>
 <pre>path <a name="absolute">absolute</a>(const path&amp; p, const path&amp; base=current_path());</pre>
   <blockquote>
-  <p><i>Returns:</i> A <a href="#Absolute-path">absolute path</a> composed according to the 
+  <p><i>Returns:</i> An <a href="#Absolute-path">absolute path</a> composed according to the 
   following table</p>
   <table border="1" cellpadding="5" cellspacing="0" bordercolor="#111111" style="border-collapse: collapse">
     <tr>
@@ -2981,7 +2940,7 @@ file_time_type <a name="last_write_time2">last_write_time</a>(const path&amp; p<
   <p><i>Returns:</i> The time of last data modification of <code>p</code>, determined as if by the 
   value of the ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/sys/stat.h.html">stat</a></code> structure member <code>st_mtime</code>&nbsp; obtained 
   as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>. 
-  The signature with argument <code>ec</code> returns <code>static_cast&lt;file_type_type&gt;(-1)</code> 
+  The signature with argument <code>ec</code> returns <code>static_cast&lt;file_time_type&gt;(-1)</code> 
   if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
