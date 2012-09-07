@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-03<!--webbot bot="Timestamp" endspan i-checksum="12556" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-07<!--webbot bot="Timestamp" endspan i-checksum="12564" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->03 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39621" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->07 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39629" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -199,11 +199,15 @@ Library Proposal (Revision 3). Changes include:</p>
   It was Boost specific and is inappropriate for the standard library.</li>
   <li>Change name of <code>recursive_directory_iterator::level()</code> to <code>
   depth()</code>.</li>
+  <li>Change <code>enum file_type</code> to <code>enum class file_type</code>, 
+  simplify constant names, supply explicit values for constant names; per FSG 
+  discussions.</li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
   <li>R-value reference move semantics.</li>
   <li><code>noexcept</code>.</li>
   <li><code>constexpr</code>.</li>
+  <li>Scoped enums.</li>
   <li>Range-based for statement support.</li>
   <li>New character types.</li>
   <li>Replace explicit codecvt manipulation with a reference to <code>&lt;cuchar&gt;</code> 
@@ -361,7 +365,7 @@ extractor </a><br>
 <br>
 &nbsp;&nbsp;&nbsp;<a href="#filesystem_error-members">1.7.1 <code>filesystem_error</code> 
 members </a><br>
-<a href="#Enum-file_type">1.8 Enum file_type </a><br>
+<a href="#Enum-file_type">1.8 Enum class <code>file_type</code> </a><br>
 <a href="#Enum-perms">1.9 Enum perms </a><br>
 <a href="#file_status">1.10 Class file_status </a><br>
 &nbsp;&nbsp;&nbsp;<a href="#file_status-constructors">1.10.1 <code>file_status</code> 
@@ -676,10 +680,10 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     const recursive_directory_iterator&amp; <a href="#recursive_directory_iterator-non-member-functions">begin</a>(const recursive_directory_iterator&amp; iter) noexcept;
     recursive_directory_iterator <a href="#recursive_directory_iterator-non-member-functions">end</a>(const recursive_directory_iterator&amp;) noexcept;
 
-    enum <a name="file_type" href="#Enum-file_type">file_type</a>
+    enum class <a name="file_type" href="#Enum-file_type">file_type</a>
     {
-      status_error, file_not_found, regular_file, directory_file,
-      symlink_file, block_file, character_file, fifo_file, socket_file,
+      none, file_not_found, regular, directory,
+      symlink, block, character, fifo, socket,
       type_unknown
     };
 
@@ -1850,54 +1854,68 @@ an error.</p>
   not empty, and <code>system_error::what()</code> strings in the returned 
   string.</p>
 </blockquote>
-<h2>1.8  <a name="Enum-file_type">Enum file_type</a> [enum.file_type]</h2>
-<p>This enum specifies constants uses to identify file types.</p>
+<h2>1.8  <a name="Enum-file_type">Enum class file_type</a> [enum.file_type]</h2>
+<p>This enum class specifies constants used to identify file types.</p>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td><b>Constant Name</b></td>
+    <td><b>Value</b></td>
     <td><b>Meaning</b></td>
   </tr>
   <tr>
-    <td><code>status_error</code></td>
-    <td>An error occurred while trying to obtain the status of the file. The 
-    file simply not being found is <b><u>not</u></b> considered a status error. </td>
+    <td><code>none</code></td>
+    <td align="center"><code>0</code></td>
+    <td>The type of the file has not been determined or an error occurred while 
+    trying to determine the type. </td>
   </tr>
   <tr>
-    <td><code>file_not_found</code></td>
-    <td>The file could not be found</td>
+    <td><code>not_found</code></td>
+    <td align="center"><code>0x80</code></td>
+    <td>Pseudo-type indicating the file was not found. [<i>Note:</i> The file 
+    not being found is not considered an error while trying to determine the 
+    type of a file. <i>--end note</i>]</td>
   </tr>
   <tr>
-    <td><code>regular_file</code></td>
+    <td><code>regular</code></td>
+    <td align="center"><code>1</code></td>
     <td>Regular file</td>
   </tr>
   <tr>
-    <td><code>directory_file</code></td>
+    <td><code>directory</code></td>
+    <td align="center"><code>2</code></td>
     <td>Directory file</td>
   </tr>
   <tr>
-    <td><code>symlink_file</code></td>
+    <td><code>symlink</code></td>
+    <td align="center"><code>3</code></td>
     <td>Symbolic link file</td>
   </tr>
   <tr>
-    <td><code>block_file</code></td>
+    <td><code>block</code></td>
+    <td align="center"><code>4</code></td>
     <td>Block special file</td>
   </tr>
   <tr>
-    <td><code>character_file</code></td>
+    <td><code>character</code></td>
+    <td align="center"><code>5</code></td>
     <td>Character special file</td>
   </tr>
   <tr>
-    <td><code>fifo_file</code></td>
+    <td><code>fifo</code></td>
+    <td align="center"><code>6</code></td>
     <td>FIFO or pipe file</td>
   </tr>
   <tr>
-    <td><code>socket_file</code></td>
+    <td><code>socket</code></td>
+    <td align="center"><code>7</code></td>
     <td>Socket file</td>
   </tr>
   <tr>
-    <td><code>type_unknown</code></td>
-    <td>The file exists, but it is of a system specific type not covered by any 
-    of the above cases.</td>
+    <td><code>unknown</code></td>
+    <td align="center"><code>8</code></td>
+    <td>The file does exist, but is of an operating system dependent type not 
+    covered by any of the other cases or the process does not have permission to 
+    query the file type</td>
   </tr>
 </table>
 <h2>1.9  <a name="Enum-perms">Enum perms</a> [enum.perms]</h2>
