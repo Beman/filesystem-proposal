@@ -247,17 +247,17 @@ namespace
 
   std::ostream& operator<<(std::ostream& os, const fs::file_status& s)
   {
-    if (s.type() == fs::status_error)        { os << "status_error"; }
-    else if (s.type() == fs::file_not_found) { os << "file_not_found"; }
-    else if (s.type() == fs::regular_file)   { os << "regular_file"; }
-    else if (s.type() == fs::directory_file) { os << "directory_file"; }
-    else if (s.type() == fs::symlink_file)   { os << "symlink_file"; }
-    else if (s.type() == fs::block_file)     { os << "block_file"; }
-    else if (s.type() == fs::character_file) { os << "character_file"; }
-    else if (s.type() == fs::fifo_file)      { os << "fifo_file"; }
-    else if (s.type() == fs::socket_file)    { os << "socket_file"; }
-    else if (s.type() == fs::reparse_file)   { os << "reparse_file"; }
-    else if (s.type() == fs::type_unknown)   { os << "type_unknown"; }
+    if (s.type() == fs::file_type::none)        { os << "file_type::none"; }
+    else if (s.type() == fs::file_type::not_found) { os << "file_type::not_found"; }
+    else if (s.type() == fs::file_type::regular)   { os << "file_type::regular"; }
+    else if (s.type() == fs::file_type::directory) { os << "file_type::directory"; }
+    else if (s.type() == fs::file_type::symlink)   { os << "file_type::symlink"; }
+    else if (s.type() == fs::file_type::block)     { os << "file_type::block"; }
+    else if (s.type() == fs::file_type::character) { os << "file_type::character"; }
+    else if (s.type() == fs::file_type::fifo)      { os << "file_type::fifo"; }
+    else if (s.type() == fs::file_type::socket)    { os << "file_type::socket"; }
+    else if (s.type() == fs::file_type::reparse_point)   { os << "file_type::reparse_point"; }
+    else if (s.type() == fs::file_type::unknown)   { os << "file_type::unknown"; }
     else                                     { os << "_detail_directory_symlink"; }
     return os;
   }
@@ -701,7 +701,7 @@ namespace
       }
       else if (it->path().filename() == "dangling_symlink")
       {
-        BOOST_TEST(it->status().type() == fs::file_not_found);
+        BOOST_TEST(it->status().type() == fs::file_type::not_found);
         BOOST_TEST(fs::is_symlink(it->symlink_status()));
       }
       else if (it->path().filename() == "d1_symlink")
@@ -711,7 +711,7 @@ namespace
       }
       else if (it->path().filename() == "dangling_directory_symlink")
       {
-        BOOST_TEST(it->status().type() == fs::file_not_found);
+        BOOST_TEST(it->status().type() == fs::file_type::not_found);
         BOOST_TEST(fs::is_symlink(it->symlink_status()));
       }
       //else
@@ -1167,7 +1167,7 @@ namespace
 
     fs::file_status s = fs::status(p);
     BOOST_TEST(!fs::exists(s));
-    BOOST_TEST_EQ(s.type(), fs::file_not_found);
+    BOOST_TEST_EQ(s.type(), fs::file_type::not_found);
     BOOST_TEST(fs::type_present(s));
     BOOST_TEST(!fs::is_regular_file(s));
     BOOST_TEST(!fs::is_directory(s));
@@ -1201,7 +1201,7 @@ namespace
     BOOST_TEST(ec.category() == system_category()); 
 
     BOOST_TEST(!fs::exists(s));
-    BOOST_TEST_EQ(s.type(), fs::file_not_found);
+    BOOST_TEST_EQ(s.type(), fs::file_type::not_found);
     BOOST_TEST(fs::type_present(s));
     BOOST_TEST(!fs::is_regular_file(s));
     BOOST_TEST(!fs::is_directory(s));
@@ -1517,23 +1517,23 @@ namespace
     fs::create_symlink(sym_f1, symsym_f1);
 
     //  verify all cases detected as symlinks
-    BOOST_TEST_EQ(fs::symlink_status(dangling_sym, ec).type(), fs::symlink_file);
-    BOOST_TEST_EQ(fs::symlink_status(dangling_directory_sym, ec).type(), fs::symlink_file);
-    BOOST_TEST_EQ(fs::symlink_status(sym_d1, ec).type(), fs::symlink_file);
-    BOOST_TEST_EQ(fs::symlink_status(symsym_d1, ec).type(), fs::symlink_file);
-    BOOST_TEST_EQ(fs::symlink_status(sym_f1, ec).type(), fs::symlink_file);
-    BOOST_TEST_EQ(fs::symlink_status(symsym_f1, ec).type(), fs::symlink_file);
+    BOOST_TEST_EQ(fs::symlink_status(dangling_sym, ec).type(), fs::file_type::symlink);
+    BOOST_TEST_EQ(fs::symlink_status(dangling_directory_sym, ec).type(), fs::file_type::symlink);
+    BOOST_TEST_EQ(fs::symlink_status(sym_d1, ec).type(), fs::file_type::symlink);
+    BOOST_TEST_EQ(fs::symlink_status(symsym_d1, ec).type(), fs::file_type::symlink);
+    BOOST_TEST_EQ(fs::symlink_status(sym_f1, ec).type(), fs::file_type::symlink);
+    BOOST_TEST_EQ(fs::symlink_status(symsym_f1, ec).type(), fs::file_type::symlink);
 
     //  verify all cases resolve to the (possibly recursive) symlink target
-    BOOST_TEST_EQ(fs::status(dangling_sym, ec).type(), fs::file_not_found);
-    BOOST_TEST_EQ(fs::status(dangling_directory_sym, ec).type(), fs::file_not_found);
+    BOOST_TEST_EQ(fs::status(dangling_sym, ec).type(), fs::file_type::not_found);
+    BOOST_TEST_EQ(fs::status(dangling_directory_sym, ec).type(), fs::file_type::not_found);
 
-    BOOST_TEST_EQ(fs::status(sym_d1, ec).type(), fs::directory_file);
-    BOOST_TEST_EQ(fs::status(sym_d1 / "d1f1", ec).type(), fs::regular_file);
-    BOOST_TEST_EQ(fs::status(symsym_d1, ec).type(), fs::directory_file);
-    BOOST_TEST_EQ(fs::status(symsym_d1 / "d1f1", ec).type(), fs::regular_file);
-    BOOST_TEST_EQ(fs::status(sym_f1, ec).type(), fs::regular_file);
-    BOOST_TEST_EQ(fs::status(symsym_f1, ec).type(), fs::regular_file);
+    BOOST_TEST_EQ(fs::status(sym_d1, ec).type(), fs::file_type::directory);
+    BOOST_TEST_EQ(fs::status(sym_d1 / "d1f1", ec).type(), fs::file_type::regular);
+    BOOST_TEST_EQ(fs::status(symsym_d1, ec).type(), fs::file_type::directory);
+    BOOST_TEST_EQ(fs::status(symsym_d1 / "d1f1", ec).type(), fs::file_type::regular);
+    BOOST_TEST_EQ(fs::status(sym_f1, ec).type(), fs::file_type::regular);
+    BOOST_TEST_EQ(fs::status(symsym_f1, ec).type(), fs::file_type::regular);
 
 #ifdef BOOST_WINDOWS_API
 

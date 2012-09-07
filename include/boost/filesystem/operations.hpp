@@ -60,27 +60,41 @@ namespace boost
 //                                     file_type                                        //
 //--------------------------------------------------------------------------------------//
 
-  enum file_type
+  BOOST_SCOPED_ENUM_DECLARE_BEGIN(file_type)
   { 
-    status_error,
-#   ifndef BOOST_FILESYSTEM_NO_DEPRECATED
-    status_unknown = status_error,
-#   endif
-    file_not_found,
-    regular_file,
-    directory_file,
+    none = 0,
+    not_found = 0x80,
+    unknown = 1,  // file does exist, but is not one of the other types or the process
+                  // does not have permission to query the file type
+    regular = 2,
+    directory = 3,
     // the following may not apply to some operating systems or file systems
-    symlink_file,
-    block_file,
-    character_file,
-    fifo_file,
-    socket_file,
-    reparse_file,  // Windows: FILE_ATTRIBUTE_REPARSE_POINT that is not a symlink
-    type_unknown,  // file does exist, but isn't one of the above types or
-                   // we don't have strong enough permission to find its type
+    symlink = 4,
+    block = 5,
+    character = 6,
+    fifo = 7,
+    socket = 8,
+    reparse_point = 9,  // Windows: FILE_ATTRIBUTE_REPARSE_POINT that is not a symlink
 
-    _detail_directory_symlink  // internal use only; never exposed to users
-  };
+    _detail_directory_symlink,  // internal use only; never exposed to users
+
+#   ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+    status_error = none,
+    status_unknown = none,
+    file_not_found = not_found,
+    regular_file = regular,
+    directory_file = directory,
+    // the following may not apply to some operating systems or file systems
+    symlink_file = symlink,
+    block_file = block,
+    character_file = character,
+    fifo_file = fifo,
+    socket_file = socket,
+    reparse_file = reparse_point,
+    type_unknown = unknown
+#   endif
+ }
+  BOOST_SCOPED_ENUM_DECLARE_END(file_type)
 
 //--------------------------------------------------------------------------------------//
 //                                       perms                                          //
@@ -148,9 +162,9 @@ namespace boost
   {
   public:
     file_status()
-               BOOST_NOEXCEPT : m_value(status_error), m_perms(perms_not_known) {}
-    explicit file_status(file_type v, perms prms = perms_not_known)
-               BOOST_NOEXCEPT : m_value(v), m_perms(prms) {}
+               BOOST_NOEXCEPT : m_type(file_type::none), m_perms(perms_not_known) {}
+    explicit file_status(file_type tp, perms prms = perms_not_known)
+               BOOST_NOEXCEPT : m_type(tp), m_perms(prms) {}
 #ifndef BOOST_NO_CXX11_DEFAULTED_FUNCTIONS
     // Until compilers catch up, destructor and move construct/assign are not defaulted
     file_status(const file_status&) = default;
@@ -159,11 +173,11 @@ namespace boost
    ~file_status() {}
 
     // observers
-    file_type  type() const BOOST_NOEXCEPT        { return m_value; }
+    BOOST_SCOPED_ENUM(file_type)  type() const BOOST_NOEXCEPT { return m_type; }
     perms      permissions() const BOOST_NOEXCEPT { return m_perms; } 
 
     // modifiers
-    void       type(file_type v) BOOST_NOEXCEPT   { m_value = v; }
+    void       type(file_type v) BOOST_NOEXCEPT   { m_type = v; }
     void       permissions(perms prms) BOOST_NOEXCEPT
                                                   { m_perms = prms; }
 
@@ -174,39 +188,39 @@ namespace boost
                                                   { return !(*this == rhs); }
 
   private:
-    file_type   m_value;
+    BOOST_SCOPED_ENUM(file_type)   m_type;
     enum perms  m_perms;
   };
 
   inline bool type_present(file_status f) BOOST_NOEXCEPT 
-                                          { return f.type() != status_error; }
+                                          { return f.type() != file_type::none; }
   inline bool permissions_present(file_status f) BOOST_NOEXCEPT 
                                           {return f.permissions() != perms_not_known;}
   inline bool status_known(file_status f) BOOST_NOEXCEPT 
                                           { return type_present(f) && permissions_present(f); }
   inline bool exists(file_status f) BOOST_NOEXCEPT       
-                                          { return f.type() != status_error
-                                                && f.type() != file_not_found; }
+                                          { return f.type() != file_type::none
+                                                && f.type() != file_type::not_found; }
   inline bool is_regular_file(file_status f) BOOST_NOEXCEPT
-                                          { return f.type() == regular_file; }
+                                          { return f.type() == file_type::regular; }
   inline bool is_directory(file_status f) BOOST_NOEXCEPT
-                                          { return f.type() == directory_file; }
+                                          { return f.type() == file_type::directory; }
   inline bool is_symlink(file_status f) BOOST_NOEXCEPT
-                                          { return f.type() == symlink_file; }
+                                          { return f.type() == file_type::symlink; }
   inline bool is_other(file_status f) BOOST_NOEXCEPT
                                           { return exists(f) && !is_regular_file(f)
                                                 && !is_directory(f) && !is_symlink(f); }
    inline bool is_block_file(file_status f) BOOST_NOEXCEPT
-                                          { return f.type() == block_file; }
+                                          { return f.type() == file_type::block; }
    inline bool is_character_file(file_status f) BOOST_NOEXCEPT
-                                          { return f.type() == character_file; }
+                                          { return f.type() == file_type::character; }
    inline bool is_fifo(file_status f) BOOST_NOEXCEPT
-                                          { return f.type() == fifo_file; }
+                                          { return f.type() == file_type::fifo; }
    inline bool is_socket(file_status f) BOOST_NOEXCEPT
-                                          { return f.type() == socket_file; }
+                                          { return f.type() == file_type::socket; }
 
 # ifndef BOOST_FILESYSTEM_NO_DEPRECATED
-  inline bool is_regular(file_status f)   { return f.type() == regular_file; }
+  inline bool is_regular(file_status f)   { return f.type() == file_type::regular; }
 # endif
 
 //--------------------------------------------------------------------------------------//

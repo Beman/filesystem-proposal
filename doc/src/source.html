@@ -307,10 +307,10 @@ $if $TARGET; == BOOST
     recursive_directory_iterator range_begin(const recursive_directory_iterator&amp; iter) noexcept;
     recursive_directory_iterator range_end(const recursive_directory_iterator&amp;) noexcept;
 
-$endif;    enum <a name="file_type" href="#Enum-file_type">file_type</a>
+$endif;    enum class <a name="file_type" href="#Enum-file_type">file_type</a>
     {
-      status_error, file_not_found, regular_file, directory_file,
-      symlink_file, block_file, character_file, fifo_file, socket_file,
+      none, file_not_found, regular, directory,
+      symlink, block, character, fifo, socket,
       type_unknown
     };
 
@@ -1382,28 +1382,28 @@ $endif
 <blockquote>
   <p><i>Effects: </i><code>lhs.swap(rhs)</code>.</p>
 </blockquote>
-<pre>$STD;size_t <a name="hash_value">hash_value</a> (const path&amp; p);</pre>
+<pre>$STD;size_t <a name="hash_value">hash_value</a> (const path&amp; p) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> A hash value for the path <code>p</code>. If
   for two paths, <code>p1 == p2</code> then <code>hash_value(p1) == hash_value(p2)</code>.</p>
 </blockquote>
-<pre>bool operator&lt; (const path&amp; lhs, const path&amp; rhs);</pre>
+<pre>bool operator&lt; (const path&amp; lhs, const path&amp; rhs) noexcept;</pre>
 <blockquote>
-  <p><i>Returns:</i> <code>return lhs.compare(rhs.begin) &lt; 0</code>.</p>
+  <p><i>Returns:</i> <code>return lhs.compare(rhs) &lt; 0</code>.</p>
 </blockquote>
-<pre>bool operator&lt;=(const path&amp; lhs, const path&amp; rhs);</pre>
+<pre>bool operator&lt;=(const path&amp; lhs, const path&amp; rhs) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>!(rhs &lt; lhs)</code>.</p>
 </blockquote>
-<pre>bool operator&gt; (const path&amp; lhs, const path&amp; rhs);</pre>
+<pre>bool operator&gt; (const path&amp; lhs, const path&amp; rhs) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>rhs &lt; lhs</code>.</p>
 </blockquote>
-<pre>bool operator&gt;=(const path&amp; lhs, const path&amp; rhs);</pre>
+<pre>bool operator&gt;=(const path&amp; lhs, const path&amp; rhs) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>!(lhs &lt; rhs)</code>.</p>
 </blockquote>
-<pre>bool operator==(const path&amp; lhs, const path&amp; rhs);</pre>
+<pre>bool operator==(const path&amp; lhs, const path&amp; rhs) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>!(lhs &lt; rhs) &amp;&amp; !(rhs &lt; lhs)</code>.</p>
   <p>[<i>Note:</i> <a name="Path-equality">Path equality</a> and path 
@@ -1416,7 +1416,7 @@ $endif
   &quot;the same&quot; means &quot;the same representation&quot; or &quot;resolve to the same actual 
   file&quot;, and choose the appropriate function accordingly. <i>-- end note</i>]</p>
 </blockquote>
-<pre>bool operator!=(const path&amp; lhs, const path&amp; rhs);</pre>
+<pre>bool operator!=(const path&amp; lhs, const path&amp; rhs) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>!(lhs == rhs)</code>.</p>
 </blockquote>
@@ -1578,54 +1578,68 @@ an error.</p>
   not empty, and <code>system_error::what()</code> strings in the returned 
   string.</p>
 </blockquote>
-<h2><a name="Enum-file_type">Enum file_type</a> [enum.file_type]</h2>
-<p>This enum specifies constants uses to identify file types.</p>
+<h2><a name="Enum-file_type">Enum class file_type</a> [enum.file_type]</h2>
+<p>This enum class specifies constants used to identify file types.</p>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td><b>Constant Name</b></td>
+    <td><b>Value</b></td>
     <td><b>Meaning</b></td>
   </tr>
   <tr>
-    <td><code>status_error</code></td>
-    <td>An error occurred while trying to obtain the status of the file. The 
-    file simply not being found is <b><u>not</u></b> considered a status error. </td>
+    <td><code>none</code></td>
+    <td align="center"><code>0</code></td>
+    <td>The type of the file has not been determined or an error occurred while 
+    trying to determine the type. </td>
   </tr>
   <tr>
-    <td><code>file_not_found</code></td>
-    <td>The file could not be found</td>
+    <td><code>not_found</code></td>
+    <td align="center"><code>0x80</code></td>
+    <td>Pseudo-type indicating the file was not found. [<i>Note:</i> The file 
+    not being found is not considered an error while trying to determine the 
+    type of a file. <i>--end note</i>]</td>
   </tr>
   <tr>
-    <td><code>regular_file</code></td>
+    <td><code>regular</code></td>
+    <td align="center"><code>1</code></td>
     <td>Regular file</td>
   </tr>
   <tr>
-    <td><code>directory_file</code></td>
+    <td><code>directory</code></td>
+    <td align="center"><code>2</code></td>
     <td>Directory file</td>
   </tr>
   <tr>
-    <td><code>symlink_file</code></td>
+    <td><code>symlink</code></td>
+    <td align="center"><code>3</code></td>
     <td>Symbolic link file</td>
   </tr>
   <tr>
-    <td><code>block_file</code></td>
+    <td><code>block</code></td>
+    <td align="center"><code>4</code></td>
     <td>Block special file</td>
   </tr>
   <tr>
-    <td><code>character_file</code></td>
+    <td><code>character</code></td>
+    <td align="center"><code>5</code></td>
     <td>Character special file</td>
   </tr>
   <tr>
-    <td><code>fifo_file</code></td>
+    <td><code>fifo</code></td>
+    <td align="center"><code>6</code></td>
     <td>FIFO or pipe file</td>
   </tr>
   <tr>
-    <td><code>socket_file</code></td>
+    <td><code>socket</code></td>
+    <td align="center"><code>7</code></td>
     <td>Socket file</td>
   </tr>
   <tr>
-    <td><code>type_unknown</code></td>
-    <td>The file exists, but it is of a system specific type not covered by any 
-    of the above cases.</td>
+    <td><code>unknown</code></td>
+    <td align="center"><code>8</code></td>
+    <td>The file does exist, but is of an operating system dependent type not 
+    covered by any of the other cases or the process does not have permission to 
+    query the file type</td>
   </tr>
 </table>
 <h2><a name="Enum-perms">Enum perms</a> [enum.perms]</h2>

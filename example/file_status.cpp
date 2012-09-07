@@ -47,7 +47,7 @@ namespace
       "type_unknown"
     };
 
-  const char* file_type_c_str(enum file_type t)
+  const char* file_type_c_str(BOOST_SCOPED_ENUM(file_type) t)
   {
     return file_type_tab[t];
   }
