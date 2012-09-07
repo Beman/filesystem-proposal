@@ -63,7 +63,7 @@ namespace boost
   BOOST_SCOPED_ENUM_DECLARE_BEGIN(file_type)
   { 
     none = 0,
-    not_found = 0x80,
+    not_found = -1,
     unknown = 1,  // file does exist, but is not one of the other types or the process
                   // does not have permission to query the file type
     regular = 2,
