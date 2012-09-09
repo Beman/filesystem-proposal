@@ -1,0 +1,175 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Language" content="en-us">
+<meta name="GENERATOR" content="Microsoft FrontPage 5.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<title>New Page 1</title>
+</head>
+
+<body>
+
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td>&nbsp;</td>
+    <td><code><b>is_regular_file(to)</b></code></td>
+    <td><b><code>is_directory(to)</code></b></td>
+    <td><b><code>!exists(to)</code></b></td>
+  </tr>
+  <tr>
+    <td><code><b>is_regular_file(from)</b></code></td>
+    <td><code>copy_file(from, to, options)</code></td>
+    <td><code>copy_file(from,<br>
+&nbsp; to/from.filename(),<br>
+&nbsp; options;)</code></td>
+    <td valign="top"><code>copy_file(from, to, options)</code></td>
+  </tr>
+  <tr>
+    <td><b><code>is_directory(from)</code></b></td>
+    <td valign="top">Error</td>
+    <td><code>for (directory_entry&amp; x : directory_iterator(from))<br>
+    {<br>
+&nbsp; if (is_directory(x.status())<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; if (options == recursive)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create_directory(to/from.filename());<br>
+&nbsp; }<br>
+&nbsp; else<br>
+&nbsp;&nbsp; copy_file(x.path(), to, options);<br>
+    }</code></td>
+    <td valign="top"><code>create_directory(to)<br>
+    copy(from, to, options)</code><br>
+&nbsp;</td>
+  </tr>
+  </table>
+<p><i>Error conditions:</i> <code>!exists(from),<b> </b></code><code>
+equivalent(from, to), !(is_regular_file(from) || is_directory(from)), exists(to) 
+&amp;&amp; !(is_regular_file(to) || is_directory(to))</code></p>
+
+<h2>copy_options</h2>
+
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td colspan="3">
+    <p align="center"><b>Options controlling <code>copy_file</code> effects when 
+    target file already exists</b></td>
+  </tr>
+  <tr>
+    <td><b>Constant</b></td>
+    <td><b>Value</b></td>
+    <td><b>Meaning</b></td>
+  </tr>
+  <tr>
+    <td><code>none</code></td>
+    <td align="center"><code>0</code></td>
+    <td>(Default) Error; file already exists.</td>
+  </tr>
+  <tr>
+    <td><code>skip</code></td>
+    <td align="center"><code>1</code></td>
+    <td>Do not overwrite existing file, do not report an error.</td>
+  </tr>
+  <tr>
+    <td><code>overwrite</code></td>
+    <td align="center"><code>2</code></td>
+    <td>Overwrite the existing file.</td>
+  </tr>
+  <tr>
+    <td><code>update</code></td>
+    <td align="center"><code>3</code></td>
+    <td>Overwrite the existing file if it is older than the replacement file.</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td colspan="3">
+    <p align="center"><b>Options controlling <code>copy</code> effects for 
+    sub-directories</b></td>
+  </tr>
+  <tr>
+    <td><b>Constant</b></td>
+    <td><b>Value</b></td>
+    <td><b>Meaning</b></td>
+  </tr>
+  <tr>
+    <td><code>none</code></td>
+    <td align="center"><code>0</code></td>
+    <td>(Default) Do not copy sub-directories.</td>
+  </tr>
+  <tr>
+    <td><code>recursive</code></td>
+    <td align="center"><code>0x04</code></td>
+    <td>Recursively copy sub-directories and their contents.</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td colspan="3">
+    <p align="center"><b>Options controlling <code>copy</code> effects for 
+    symbolic links</b></td>
+  </tr>
+  <tr>
+    <td><b>Constant</b></td>
+    <td><b>Value</b></td>
+    <td><b>Meaning</b></td>
+  </tr>
+  <tr>
+    <td><code>none</code></td>
+    <td>
+    <p align="center"><code>0</code></td>
+    <td>(Default) Follow non-dangling symbolic links for regular files.</td>
+  </tr>
+  <tr>
+    <td><code>do_not_follow_symlinks</code></td>
+    <td>
+    <p align="center"><code>0x08</code></td>
+    <td>Do not follow symbolic links. Copy symbolic links as symbolic links 
+    rather than copying the files that they point to.</td>
+  </tr>
+</table>
+
+<p>&nbsp;</p>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td colspan="3">
+    <p align="center"><b>Options controlling <code>copy</code> effects choosing 
+    the form of copying</b></td>
+  </tr>
+  <tr>
+    <td><b>Constant</b></td>
+    <td><b>Value</b></td>
+    <td><b>Meaning</b></td>
+  </tr>
+  <tr>
+    <td><code>none</code></td>
+    <td>
+    <p align="center"><code>0</code></td>
+    <td>(Default) Copy content.</td>
+  </tr>
+  <tr>
+    <td><code>structure_only</code></td>
+    <td><code>0x11</code></td>
+    <td>Copy directory structure only, do not copy files.</td>
+  </tr>
+  <tr>
+    <td><code>make_symlinks</code></td>
+    <td><code>0x12</code></td>
+    <td>Make symbolic links instead of copies of non-directories. All source 
+    file names must be absolute unless the<br>
+    destination files are in the current directory.</td>
+  </tr>
+  <tr>
+    <td><code>make_hard_links</code></td>
+    <td><code>0x13</code></td>
+    <td>Make hard links instead of copies of non-directories.</td>
+  </tr>
+</table>
+
+</body>
+
+</html>
