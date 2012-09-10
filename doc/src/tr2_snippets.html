@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-07<!--webbot bot="Timestamp" endspan i-checksum="12564" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-10<!--webbot bot="Timestamp" endspan i-checksum="12551" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -39,7 +39,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->07 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39629" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->10 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39616" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -169,8 +169,13 @@ Library Proposal (Revision 3). Changes include:</p>
   It was Boost specific and is inappropriate for the standard library.</li>
   <li>Change name of <code>recursive_directory_iterator::level()</code> to <code>
   depth()</code>.</li>
-  <li>Change <code>enum file_type</code> to <code>enum class file_type</code>, 
+  <li dir="ltr">
+  <p dir="ltr">Change <code>enum file_type</code> to <code>enum class file_type</code>, 
   simplify constant names, supply explicit values for constant names; per FSG 
+  discussions.</li>
+  <li>
+  <p dir="ltr">Change name of <code>copy_directory</code> function to <code>
+  create_directory</code> to more clearly reflect semantics; per FSG 
   discussions.</li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
