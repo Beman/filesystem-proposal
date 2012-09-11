@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-07<!--webbot bot="Timestamp" endspan i-checksum="12564" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-10<!--webbot bot="Timestamp" endspan i-checksum="12551" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->07 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39629" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->10 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39616" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -199,8 +199,13 @@ Library Proposal (Revision 3). Changes include:</p>
   It was Boost specific and is inappropriate for the standard library.</li>
   <li>Change name of <code>recursive_directory_iterator::level()</code> to <code>
   depth()</code>.</li>
-  <li>Change <code>enum file_type</code> to <code>enum class file_type</code>, 
+  <li>
+  <p>Change <code>enum file_type</code> to <code>enum class file_type</code>, 
   simplify constant names, supply explicit values for constant names; per FSG 
+  discussions.</li>
+  <li>
+  <p>Change name of <code>copy_directory</code> function to <code>
+  create_directory</code> to more clearly reflect semantics; per FSG 
   discussions.</li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
@@ -702,11 +707,7 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
       uintmax_t available; // free space available to a non-privileged process
     };
 
-    enum class <a name="copy_option">copy_options</a>
-    {
-      none,
-      overwrite_if_exists
-    };
+    enum class <a name="copy_option" href="#enum.copy_options">copy_options</a>;  // [<a href="#enum.copy_options">enum.copy_options</a>]
 
     enum class <a name="symlink_option">directory_options</a>
     {
@@ -728,9 +729,6 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     void         <a href="#copy">copy</a>(const path&amp; from, const path&amp; to);
     void         <a href="#copy">copy</a>(const path&amp; from, const path&amp; to, error_code&amp; ec) noexcept;
 
-    void         <a href="#create_directory">copy_directory</a>(const path&amp; from, const path&amp; to);
-    void         <a href="#create_directory">copy_directory</a>(const path&amp; from, const path&amp; to, error_code&amp; ec) noexcept;
-
     void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to);
     void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, error_code&amp; ec) noexcept;
     void         <a href="#copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> option);
@@ -746,6 +744,9 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
 
     bool         <a href="#create_directory">create_directory</a>(const path&amp; p);
     bool         <a href="#create_directory">create_directory</a>(const path&amp; p, error_code&amp; ec) noexcept;
+
+    void         <a href="#create_directory2">create_directory</a>(const path&amp; p, const path&amp; attributes);
+    void         <a href="#create_directory2">create_directory</a>(const path&amp; p, const path&amp; attributes, error_code&amp; ec) noexcept;
 
     void         <a href="#create_directory_symlink">create_directory_symlink</a>(const path&amp; to, const path&amp; new_symlink);
     void         <a href="#create_directory_symlink">create_directory_symlink</a>(const path&amp; to, const path&amp; new_symlink,
@@ -1913,8 +1914,128 @@ an error.</p>
     query the file type</td>
   </tr>
 </table>
-<h2>1.9  <a name="Enum-perms">Enum perms</a> [enum.perms]</h2>
-<p>This <code>enum</code> specifies bitmask constants used to identify file 
+<h2>1.9  Enum class copy_options [<a name="enum.copy_options">enum.copy_options</a>]</h2>
+<p>This enumeration specifies bitmask constants used to control the semantics of 
+copy operations.&nbsp; The constants are specified in options groups. Constant
+<code>none</code> is shown in each option group for purposes of exposition; 
+implementations shall provide a single definition.&nbsp; [<i>Note:</i> Users 
+should employ only a single constant from each options group. <i>-- end note</i>]</p>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td colspan="3">
+    <p align="center"><b>Option group controlling <code>copy_file</code> effects 
+    when the target file already exists</b></td>
+  </tr>
+  <tr>
+    <td><b>Constant</b></td>
+    <td><b>Value</b></td>
+    <td><b>Meaning</b></td>
+  </tr>
+  <tr>
+    <td><code>none</code></td>
+    <td align="center"><code>0</code></td>
+    <td>(Default) Error; file already exists.</td>
+  </tr>
+  <tr>
+    <td><code>skip</code></td>
+    <td align="center"><code>1</code></td>
+    <td>Do not overwrite existing file, do not report an error.</td>
+  </tr>
+  <tr>
+    <td><code>overwrite</code></td>
+    <td align="center"><code>2</code></td>
+    <td>Overwrite the existing file.</td>
+  </tr>
+  <tr>
+    <td><code>update</code></td>
+    <td align="center"><code>3</code></td>
+    <td>Overwrite the existing file if it is older than the replacement file.</td>
+  </tr>
+  <tr>
+    <td colspan="3">
+    <p align="center"><b>Option group controlling <code>copy</code> effects for 
+    sub-directories</b></td>
+  </tr>
+  <tr>
+    <td><b>Constant</b></td>
+    <td><b>Value</b></td>
+    <td><b>Meaning</b></td>
+  </tr>
+  <tr>
+    <td><code>none</code></td>
+    <td align="center"><code>0</code></td>
+    <td>(Default) Do not copy sub-directories.</td>
+  </tr>
+  <tr>
+    <td><code>recursive</code></td>
+    <td align="center"><code>4</code></td>
+    <td>Recursively copy sub-directories and their contents.</td>
+  </tr>
+  <tr>
+    <td colspan="3" bgcolor="#FFD0D0">
+    <p align="center"><b>Option group controlling <code>copy</code> effects for 
+    symbolic links</b></td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFD0D0"><b>Constant</b></td>
+    <td bgcolor="#FFD0D0"><b>Value</b></td>
+    <td bgcolor="#FFD0D0"><b>Meaning</b></td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFD0D0"><code>none</code></td>
+    <td bgcolor="#FFD0D0">
+    <p align="center"><code>0</code></td>
+    <td bgcolor="#FFD0D0">(Default) Follow non-dangling symbolic links for 
+    regular files.</td>
+  </tr>
+  <tr>
+    <td bgcolor="#FFD0D0"><code>copy_symlinks</code></td>
+    <td bgcolor="#FFD0D0">
+    <p align="center"><code>8</code></td>
+    <td bgcolor="#FFD0D0">Do not follow non-dangling symbolic links for regular 
+    files. Copy symbolic links as symbolic links rather than copying the files 
+    that they point to.</td>
+  </tr>
+  <tr>
+    <td colspan="3">
+    <p align="center"><b>Option group controlling <code>copy</code> effects 
+    choosing the form of copying</b></td>
+  </tr>
+  <tr>
+    <td><b>Constant</b></td>
+    <td><b>Value</b></td>
+    <td><b>Meaning</b></td>
+  </tr>
+  <tr>
+    <td><code>none</code></td>
+    <td>
+    <p align="center"><code>0</code></td>
+    <td>(Default) Copy content.</td>
+  </tr>
+  <tr>
+    <td><code>structure_only</code></td>
+    <td>
+    <p align="center"><code>16</code></td>
+    <td>Copy directory structure only, do not copy files.</td>
+  </tr>
+  <tr>
+    <td><code>make_symlinks</code></td>
+    <td>
+    <p align="center"><code>17</code></td>
+    <td>Make symbolic links instead of copies of regular files. All source file 
+    names must be absolute unless the<br>
+    destination files are in the current directory.</td>
+  </tr>
+  <tr>
+    <td><code>make_hard_links</code></td>
+    <td>
+    <p align="center"><code>18</code></td>
+    <td>Make hard links instead of copies of regular files.</td>
+  </tr>
+</table>
+<p>&nbsp;</p>
+<h2>1.10  <a name="Enum-perms">Enum perms</a> [enum.perms]</h2>
+<p>This enumeration specifies bitmask constants used to identify file 
 permissions. <i><span style="background-color: #E0E0E0">ISO/</span><span style="background-color: #E0E0E0">IEC</span><span style="background-color: #E0E0E0"> 9945 
 (POSIX) specifies actual values, and those values have been adopted here because 
 they are very familiar and ingrained for many  users.</span></i></p>
@@ -2014,7 +2135,7 @@ write permission for owner, group, or others sets write permission for all, and
 removing write permission for owner, group, or others removes write permission 
 for all. The Cygwin users guide has extensive discussion of the problems 
 involved. Input from security experts is needed.</span></i></p>
-<h2>1.10  <a name="file_status">Class file_status</a> [class.file_status]</h2>
+<h2>1.11  <a name="file_status">Class file_status</a> [class.file_status]</h2>
 <pre>namespace std { namespace tbd { namespace filesystem {
 
       class file_status
@@ -2042,7 +2163,7 @@ involved. Input from security experts is needed.</span></i></p>
 } } }  // namespaces std::tbd::filesystem</pre>
 <p>An object of type <code>file_status</code> stores information about the type 
 and permissions of a file.</p>
-<h3>1.10.1  <a name="file_status-constructors"><code>file_status</code> constructors</a> 
+<h3>1.11.1  <a name="file_status-constructors"><code>file_status</code> constructors</a> 
 [file_status.cons]</h3>
 <pre>explicit file_status() noexcept;</pre>
 <blockquote>
@@ -2052,7 +2173,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Postconditions:</i> <code>type() == ft</code>, <code>permissions() == prms</code>.</p>
 </blockquote>
-  <h3>1.10.2  <a name="file_status-observers"><code>file_status</code> observers</a> [file_status.obs]</h3>
+  <h3>1.11.2  <a name="file_status-observers"><code>file_status</code> observers</a> [file_status.obs]</h3>
 <pre><a href="#file_type">file_type</a> type() const noexcept;</pre>
 <blockquote>
   <p><i>Returns: </i>The value of <code>type()</code> specified by the <i>postconditions</i> of the most recent call to a constructor, operator=, or <code>type(file_type)</code> function.</p>
@@ -2061,7 +2182,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Returns: </i>The value of <code>permissions()</code> specified by the <i>postconditions</i> of the most recent call to a constructor, operator=, or <code>permissions(perms)</code> function.</p>
 </blockquote>
-<h3>1.10.3  <a name="file_status-modifiers"><code>file_status</code> modifiers</a> [file_status.mods]</h3>
+<h3>1.11.3  <a name="file_status-modifiers"><code>file_status</code> modifiers</a> [file_status.mods]</h3>
 <pre>void type(<a href="#file_type">file_type</a> ft) noexcept;</pre>
 <blockquote>
   <p><i>Postconditions:</i> <code>type() == ft</code>.</p>
@@ -2070,7 +2191,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Postconditions:</i> <code>permissions() == prms</code>.</p>
 </blockquote>
-<h2>1.11  <a name="Class-directory_entry">Class <code>directory_entry</code></a> [class.directory_entry]</h2>
+<h2>1.12  <a name="Class-directory_entry">Class <code>directory_entry</code></a> [class.directory_entry]</h2>
 <pre>namespace std { namespace tbd { namespace filesystem {
 
       class directory_entry
@@ -2122,7 +2243,7 @@ some operating systems provide status information as a byproduct of directory
 iteration. Caching such status information can result in significant time savings. Cached and 
 non-cached results may differ in the presence of file system races. <i>-- end note</i>]</p>
 </blockquote>
-<h3>1.11.1   <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a> 
+<h3>1.12.1   <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a> 
 [directory_entry.cons]</h3>
 <pre>explicit directory_entry(const path_type&amp; p, file_status st=file_status(),
                          file_status symlink_st=file_status());</pre>
@@ -2147,7 +2268,7 @@ non-cached results may differ in the presence of file system races. <i>-- end no
     </tr>
   </table>
 </blockquote>
-<h3>1.11.2   <a name="directory_entry-modifiers"> <code>directory_entry </code>modifiers</a> 
+<h3>1.12.2   <a name="directory_entry-modifiers"> <code>directory_entry </code>modifiers</a> 
 [directory_entry.mods]</h3>
 <pre>void assign(const path_type&amp; p, file_status st=file_status(),
             file_status symlink_st=file_status());</pre>
@@ -2195,7 +2316,7 @@ non-cached results may differ in the presence of file system races. <i>-- end no
     </tr>
   </table>
 </blockquote>
-<h3>1.11.3   <a name="directory_entry-observers"> <code>directory_entry</code> observers</a> 
+<h3>1.12.3   <a name="directory_entry-observers"> <code>directory_entry</code> observers</a> 
 [directory_entry.obs]</h3>
 <pre>const path&amp; path() const noexcept;</pre>
 <blockquote>
@@ -2258,7 +2379,7 @@ file_status  symlink_status(error_code&amp; ec) const noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path &gt;= rhs.m_path</code>.</p>
 </blockquote>
-<h2>1.12  <a name="Class-directory_iterator">Class <code>directory_iterator</code> 
+<h2>1.13  <a name="Class-directory_iterator">Class <code>directory_iterator</code> 
 [class.directory_iterator]</a></h2>
 <p>An object of type <code>directory_iterator</code> provides an iterator for a 
 sequence of <code>directory_entry</code> elements representing the files in a 
@@ -2328,7 +2449,7 @@ unspecified whether or not subsequently incrementing the iterator will ever
 result in an iterator referencing the removed or added directory entry. See
 ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/readdir_r.html">readdir_r()</a></code>. <i>--end note</i>]</p>
 </blockquote>
-<h3>1.12.1  <a name="directory_iterator-members"><code>directory_iterator</code> members</a> 
+<h3>1.13.1  <a name="directory_iterator-members"><code>directory_iterator</code> members</a> 
 [directory_iterator.members]</h3>
 
 <p><code><a name="directory_iterator-default-ctor">directory_iterator</a>() 
@@ -2363,7 +2484,7 @@ directory_iterator&amp; increment(error_code&amp; ec)<code> noexcept</code>;</pr
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 
 </blockquote>
-<h3>1.12.2  <a name="directory_iterator-non-member-functions"><code>directory_iterator</code> non-member functions</a> 
+<h3>1.13.2  <a name="directory_iterator-non-member-functions"><code>directory_iterator</code> non-member functions</a> 
 [directory_iterator.nonmembers]</h3>
 <p>These functions enable use of <code>directory_iterator</code> with C++11 
 range-based for statements.</p>
@@ -2375,7 +2496,7 @@ range-based for statements.</p>
 <blockquote>
   <p><i>Returns: </i><code>directory_iterator()</code>.</p>
 </blockquote>
-<h2>1.13  <a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
+<h2>1.14  <a name="Class-recursive_directory_iterator">Class <code>recursive_directory_iterator</code> 
 [class.rec.dir.itr]</a></h2>
 <p>An object of type <code>recursive_directory_iterator</code> provides an iterator for 
 a sequence of <code>directory_entry</code> elements representing the files in a 
@@ -2420,7 +2541,7 @@ directory and its sub-directories.</p>
 
 <p>The behavior of a <code>recursive_directory_iterator</code> is the same 
 as a <code>directory_iterator</code> unless otherwise specified.</p>
-<h3>1.13.1  <code>recursive_<a name="directory_iterator-members">directory_iterator</a></code> members 
+<h3>1.14.1  <code>recursive_<a name="directory_iterator-members">directory_iterator</a></code> members 
 [<a name="rec.dir.itr.members">rec.dir.itr.members</a>]</h3>
 
 <pre>recursive_directory_iterator() noexcept;</pre>
@@ -2518,7 +2639,7 @@ directory_options::follow_directory_symlink) != 0)</code> then&nbsp;directory <c
   <p>[<i>Note:</i> <code>disable_recursion_pending</code><code>()</code> is used to prevent 
   unwanted recursion into a directory. <i>--end note</i>]</p>
 </blockquote>
-<h3>1.13.2  <code>recursive_directory_iterator</code> non-member functions 
+<h3>1.14.2  <code>recursive_directory_iterator</code> non-member functions 
 [<a name="rec.dir.itr.nonmembers">rec.dir.itr.nonmembers</a>]</h3>
 <p>These functions enable use of <code>recursive_directory_iterator</code> 
 with C++11 range-based for statements.</p>
@@ -2530,7 +2651,7 @@ with C++11 range-based for statements.</p>
 <blockquote>
   <p><i>Returns: </i><code>recursive_directory_iterator()</code>.</p>
 </blockquote>
-<h2>1.14  <a name="Operational-functions">Operational functions</a> [fs.op.funcs]</h2>
+<h2>1.15  <a name="Operational-functions">Operational functions</a> [fs.op.funcs]</h2>
 <p>Operational functions query or modify files, including directories, in external 
 storage.</p>
 <p>[<i>Note: </i>Because hardware failures, network failures, <a href="#file-system-race">file system races</a>, and many 
@@ -2586,71 +2707,111 @@ Signatures with argument <code>ec</code> return <code>path()</code> if an error 
 <pre>void <a name="copy">copy</a>(const path&amp; from, const path&amp; to);
 void copy(const path&amp; from, const path&amp; to, error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <p><i>Effects:</i> As if</p>
+  <p><i>Effects:</i></p>
   
   <blockquote>
-    <pre>file_status s(symlink_status(from<i>[</i><code>, ec</code><i>]</i>));
-if(is_symlink(s))
-  copy_symlink(from, to<i>[</i><code>, ec</code><i>]</i>);
-else if(is_directory(s))
-  copy_directory(from, to<i>[</i><code>, ec</code><i>]</i>);
-else if(is_regular_file(s))
-  copy_file(from, to, copy_options::fail_if_exists<i>[</i><code>, ec</code><i>]</i>);
-else
-<i> Report error as specified in <a href="#Error-reporting">Error reporting</a>.</i></pre>
+  <p>Determine <code>auto f</code> by <code>symlink_status(from</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
+  
+  <p>If <code>!exists(f) || is_other(f)</code> report an error as specified in <a href="#Error-reporting">Error reporting</a>.</p>
+  
+  <p>Determine <code>auto t</code> by <code>symlink_status(to</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
+  
+    <p>If <code>exists(t)</code> then:</p>
+    <blockquote>
+    <p>If <code>is_other(t)</code> report an error as specified in <a href="#Error-reporting">
+    Error reporting</a>.</p>
+    <p>If <code>equivalent(from, to</code><i>[</i><code>, ec</code><i>]</i><code>)</code> 
+    report an error as specified in <a href="#Error-reporting">Error reporting</a>.</p>
+    </blockquote>
+    <p>Perform the operations as indicated by the conditions in bold 
+    type:</p>
   </blockquote>
+  
+</blockquote>
+
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td>&nbsp;</td>
+    <td><code><b>is_regular_file(t)</b></code></td>
+    <td><b><code>is_directory(t)</code></b></td>
+    <td><b><code>!exists(t)</code></b></td>
+  </tr>
+  <tr>
+    <td><code><b>is_symlink(f)</b></code></td>
+    <td>Report error as specified in <a href="#Error-reporting">Error reporting</a>.</td>
+    <td>Report error as specified in <a href="#Error-reporting">Error reporting</a>.</td>
+    <td valign="top"><code>copy_symlink(from, to)</code></td>
+  </tr>
+  <tr>
+    <td><code><b>is_regular_file(f)</b></code></td>
+    <td><code>copy_file(from, to, options)</code></td>
+    <td><code>copy_file(from,<br>
+&nbsp; to/from.filename(),<br>
+&nbsp; options;)</code></td>
+    <td valign="top"><code>copy_file(from, to, options)</code></td>
+  </tr>
+  <tr>
+    <td><b><code>is_directory(f)</code></b></td>
+    <td valign="top">Report error as specified in <a href="#Error-reporting">
+    Error reporting</a>.</td>
+    <td><code>for (directory_entry&amp; x : directory_iterator(from))<br>
+    {<br>
+&nbsp; if (is_directory(x.status())<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; if (options == recursive)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create_directory(<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; to/from.filename());<br>
+&nbsp; }<br>
+&nbsp; else<br>
+&nbsp;&nbsp; copy_file(x.path(), to, options);<br>
+    }</code></td>
+    <td valign="top"><code>create_directory(to)<br>
+    copy(from, to, options)</code><br>
+&nbsp;</td>
+  </tr>
+</table>
+<blockquote>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
 </blockquote>
 
-<pre>void <a name="copy_directory">copy_directory</a>(const path&amp; from, const path&amp; to);
-void copy_directory(const path&amp; from, const path&amp; to, error_code&amp; ec) noexcept;</pre>
+<pre>bool copy_file(const path&amp; from, const path&amp; to);
+bool copy_file(const path&amp; from, const path&amp; to, error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E0E0E0">
-    <tr>
-      <td width="100%">
-      <p><i>This function is poorly named; it should probably be an overload of
-      <code>create_directory</code> with an additional argument.</i></td>
-    </tr>
-  </table>
-  
-  <p><i>Effects: </i>Creates directory <code>to</code>, with 
-  attributes copied from directory <code>from</code>. The set of attributes 
-  copied is operating system dependent.</p>
-  
-<blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">
-      <p>[<i>Note:</i> For ISO 9945/POSIX based operating systems the 
-      attributes are those copied by native API <code>stat(from.c_str(), &amp;from_stat)</code> 
-      followed by <code>mkdir(to.c_str(),from_stat.st_mode)</code>.&nbsp; For 
-      Windows based operating systems the attributes are those copied by native 
-      API <code>CreateDirectoryExW(from.c_str(), to.c_str(), 0)</code>.&nbsp; <i>
-      --end note</i>]</td>
-    </tr>
-  </table>
-</blockquote>
-  
-  <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
-
-</blockquote>
-
-<pre>void copy_file(const path&amp; from, const path&amp; to);
-void copy_file(const path&amp; from, const path&amp; to, error_code&amp; ec) noexcept;</pre>
-<blockquote>
-  <p><i>Effects: </i><code>copy_file(from, to, copy_options::fail_if_exists</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
+  <p><i>Returns: </i><code>copy_file(from, to, copy_options::none</code><i>[</i><code>, ec</code><i>]</i><code>)</code>. 
+  The signature with argument <code>ec</code> returns <code>false</code> 
+  if an error occurs.</p>
   
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
 </blockquote>
-<pre>void <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options);
-void <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options,
+<pre>bool <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options);
+bool <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options,
                error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <p><i>Effects:</i> If <code>options == copy_options::none &amp;&amp; exists(to)</code>, an error is reported. Otherwise, the contents and attributes of the file <code>from</code> resolves to are copied to the file <code>to</code> resolves to.</p>
+  <p><i>Precondition:</i> At most one constant from each <code>copy_options</code> 
+  option group ([<a href="#enum.copy_options">enum.copy_options</a>]) is present 
+  in <code>options</code>.</p>
+  <p><i>Effects:</i></p>
+  <blockquote>
+  <p>&nbsp;If <code>exists(to)</code>is true:</p>
+    <ul>
+      <li>If <code>options &amp; copy_options::skip</code> is set then return <code>
+      false</code>.</li>
+      <li>otherwise if <code>options &amp; copy_options::update</code> is set:<ul>
+        <li>&nbsp;if <code>last_write_time(from) &lt;= last_write_time(to)</code> 
+        then return <code>false</code>.</li>
+        <li>otherwise proceed with copying.</li>
+      </ul>
+      </li>
+      <li>otherwise if <code>options &amp; copy_options::overwrite</code> is not set 
+      report a file already exists error.</li>
+    </ul>
+  <p>Copy the contents and attributes of the file <code>from</code> resolves to  the file <code>to</code> resolves to.</p>
+  </blockquote>
+  <p><i>Returns: </i><code>true</code> unless otherwise specified. The signature 
+  with argument <code>ec</code> returns <code>false</code> 
+  if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 <pre>void <a name="copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink);
@@ -2677,7 +2838,7 @@ bool <a name="create_directories2">create_directories</a>(const path&amp; p, err
   of <code>p</code> that do not exist.</p>
 </blockquote>
 <pre>bool <a name="create_directory">create_directory</a>(const path&amp; p);
-bool <a name="create_directory2">create_directory</a>(const path&amp; p, error_code&amp; ec) noexcept;</pre>
+bool create_directory(const path&amp; p, error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects:</i> Establishes the postcondition by attempting to create the 
   directory <code>p</code> resolves to, as if by ISO/IEC 9945 <code><a href="http://www.opengroup.org/onlinepubs/000095399/functions/mkdir.html">
@@ -2689,6 +2850,34 @@ bool <a name="create_directory2">create_directory</a>(const path&amp; p, error_c
   The signature with argument <code>ec</code> returns false if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
+
+<pre>void <a name="create_directory2">create_directory</a>(const path&amp; p, const path&amp; attributes);
+void create_directory(const path&amp; p, const path&amp; attributes, error_code&amp; ec) noexcept;</pre>
+<blockquote>
+
+  <p><i>Effects: </i>Creates directory <code>p</code>, with 
+  attributes copied from directory <code>attributes</code>. The set of attributes 
+  copied is operating system dependent.</p>
+  
+<blockquote>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">
+      <p>[<i>Note:</i> For ISO 9945/POSIX based operating systems the 
+      attributes are those copied by native API <code>stat(attributes.c_str(), &amp;attributes_stat)</code> 
+      followed by <code>mkdir(p.c_str(),attributes_stat.st_mode)</code>.&nbsp; For 
+      Windows based operating systems the attributes are those copied by native 
+      API <code>CreateDirectoryExW(attributes.c_str(), p.c_str(), 0)</code>.&nbsp; <i>
+      --end note</i>]</td>
+    </tr>
+  </table>
+</blockquote>
+  
+  <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+
+</blockquote>
+
 <pre>void <a name="create_directory_symlink">create_directory_symlink</a>(const path&amp; to, const path&amp; new_symlink);
 void create_directory_symlink(const path&amp; to, const path&amp; new_symlink,
                               error_code&amp; ec) noexcept;</pre>
