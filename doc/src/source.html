@@ -52,7 +52,7 @@ $include "../../../../doc/src/minimal.css"
 </head>
 
 <body>
-<p>$snippet frontmatter "$SNIPPET_FILE;"</p>
+<p>7$snippet frontmatter "$SNIPPET_FILE;"</p>
 
 <h2><a name="Definitions">Definitions</a> [fs.definitions]</h2>
 <p>The following definitions  shall apply throughout this $WHAT;:</p>
@@ -1635,10 +1635,11 @@ an error.</p>
 </table>
 <h2>Enum class copy_options [<a name="enum.copy_options">enum.copy_options</a>]</h2>
 <p>This enumeration specifies bitmask constants used to control the semantics of 
-copy operations.&nbsp; The constants are specified in options groups. Constant
+copy operations.&nbsp; The constants are specified in option groups. Constant
 <code>none</code> is shown in each option group for purposes of exposition; 
-implementations shall provide a single definition.&nbsp; [<i>Note:</i> Users 
-should employ only a single constant from each options group. <i>-- end note</i>]</p>
+implementations shall provide only a single definition.&nbsp; Calling a 
+Filesystem library function with more than a single constant for any option 
+group results in undefined behavior. <i>-- end note</i>]</p>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td colspan="3">
@@ -1691,29 +1692,33 @@ should employ only a single constant from each options group. <i>-- end note</i>
     <td>Recursively copy sub-directories and their contents.</td>
   </tr>
   <tr>
-    <td colspan="3" bgcolor="#FFD0D0">
+    <td colspan="3">
     <p align="center"><b>Option group controlling <code>copy</code> effects for 
     symbolic links</b></td>
   </tr>
   <tr>
-    <td bgcolor="#FFD0D0"><b>Constant</b></td>
-    <td bgcolor="#FFD0D0"><b>Value</b></td>
-    <td bgcolor="#FFD0D0"><b>Meaning</b></td>
+    <td><b>Constant</b></td>
+    <td><b>Value</b></td>
+    <td><b>Meaning</b></td>
   </tr>
   <tr>
-    <td bgcolor="#FFD0D0"><code>none</code></td>
-    <td bgcolor="#FFD0D0">
+    <td><code>none</code></td>
+    <td>
     <p align="center"><code>0</code></td>
-    <td bgcolor="#FFD0D0">(Default) Follow non-dangling symbolic links for 
-    regular files.</td>
+    <td>(Default) Follow symbolic links.</td>
   </tr>
   <tr>
-    <td bgcolor="#FFD0D0"><code>copy_symlinks</code></td>
-    <td bgcolor="#FFD0D0">
+    <td><code>copy_symlinks</code></td>
+    <td>
     <p align="center"><code>16</code></td>
-    <td bgcolor="#FFD0D0">Do not follow non-dangling symbolic links for regular 
-    files. Copy symbolic links as symbolic links rather than copying the files 
-    that they point to.</td>
+    <td>Copy symbolic links as symbolic links rather than copying the files that 
+    they point to.</td>
+  </tr>
+  <tr>
+    <td><code>skip_symlinks</code></td>
+    <td>
+    <p align="center"><code>32</code></td>
+    <td>Ignore symbolic links.</td>
   </tr>
   <tr>
     <td colspan="3">
@@ -1734,25 +1739,23 @@ should employ only a single constant from each options group. <i>-- end note</i>
   <tr>
     <td><code>structure_only</code></td>
     <td>
-    <p align="center"><code>32</code></td>
-    <td>Copy directory structure only, do not copy files.</td>
+    <p align="center"><code>64</code></td>
+    <td>Copy directory structure only, do not copy non-directory files.</td>
   </tr>
   <tr>
     <td><code>make_symlinks</code></td>
     <td>
-    <p align="center"><code>64</code></td>
-    <td>Make symbolic links instead of copies of regular files. All source file 
-    names must be absolute unless the<br>
-    destination files are in the current directory.</td>
+    <p align="center"><code>128</code></td>
+    <td>Make symbolic links instead of copies of files. The source path shall be 
+    an absolute path unless the destination path is in the current directory.</td>
   </tr>
   <tr>
     <td><code>make_hard_links</code></td>
     <td>
-    <p align="center"><code>128</code></td>
-    <td>Make hard links instead of copies of regular files.</td>
+    <p align="center"><code>256</code></td>
+    <td>Make hard links instead of copies of files.</td>
   </tr>
 </table>
-<p>&nbsp;</p>
 <h2><a name="Enum-perms">Enum perms</a> [enum.perms]</h2>
 <p>This enumeration specifies bitmask constants used to identify file 
 permissions. <i><span style="background-color: #E0E0E0">ISO/</span><span style="background-color: #E0E0E0">IEC</span><span style="background-color: #E0E0E0"> 9945 
@@ -2422,7 +2425,7 @@ Signatures with argument <code>ec</code> return <code>path()</code> if an error 
 <pre>void <a name="copy">copy</a>(const path&amp; from, const path&amp; to);
 void copy(const path&amp; from, const path&amp; to, $SYSTEM;error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <p>&nbsp;</p>
+  <p><i>Effects: </i><code>copy(from, to, copy_options::none<i>[, ec]</i>)</code>.</p>
   
 </blockquote>
 
@@ -2434,38 +2437,45 @@ void copy(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_
   <p><i>Effects:</i></p>
   
   <blockquote>
-  <p>Once only and before their first use, <code>auto f = symlink_status(from)</code> 
-  and <code>auto t = symlink_status(to)</code>.</p>
+  <p>Before the first use of <code>f</code> and <code>t</code>:</p>
   
+    <ul>
+      <li>If <code>(options &amp; copy_options::make_symlinks) || (options &amp; 
+      copy_options::skip_symlinks)</code>, then <code>auto f = 
+      symlink_status(from)</code> and if needed <code>auto t = symlink_status(to)</code>.</li>
+      <li>Otherwise, <code>auto f = status(from)</code> and if needed <code>auto 
+      t = status(to)</code>.</li>
+    </ul>
   <p>Report an error as specified in <a href="#Error-reporting">Error reporting</a> 
   if:</p>
   
     <ul>
       <li><code>!exists(f)</code>.</li>
-      <li dir="ltr">
-  <p dir="ltr"><code>equivalent(f, t)</code>.</p>
+      <li>
+  <p><code>equivalent(f, t)</code>.</p>
   
       </li>
-      <li dir="ltr">
-  <p dir="ltr"><code>is_other(f) || is_other(t)</code>.</p>
+      <li>
+  <p><code>is_other(f) || is_other(t)</code>.</p>
   
       </li>
-      <li dir="ltr">
-  <p dir="ltr"><code>is_directory(f) &amp;&amp; is_regular_file(t)</code>.</p>
+      <li>
+  <p><code>is_directory(f) &amp;&amp; is_regular_file(t)</code>.</p>
   
       </li>
     </ul>
   <p>If <code>is_symlink_file(f)</code>, then:</p>
   
     <ul>
-      <li>If <code>!exists(t)</code>, then <code>copy_symlink(from, to, options)</code>.</li>
+      <li>If <code>options &amp; copy_options::skip_symlinks</code>, then return.</li>
+      <li>Otherwise if <code>!exists(t)</code>, then <code>copy_symlink(from, 
+      to, options)</code>.</li>
       <li>Otherwise report an error as specified in <a href="#Error-reporting">Error reporting</a>.</li>
     </ul>
-  <p>If <code>is_regular_file(f)</code>, then:</p>
+  <p>Otherwise if <code>is_regular_file(f)</code>, then:</p>
   
     <ul>
-      <li>If <code>options &amp; copy_options::structure_only</code>, then no 
-      effect.</li>
+      <li>If <code>options &amp; copy_options::structure_only</code>, then return.</li>
       <li>Otherwise if <code>options &amp; copy_options::make_symlinks</code>, then 
       create a symbolic link to the source file.</li>
       <li>Otherwise if <code>options &amp; copy_options::make_hard_links</code>, 
@@ -2477,45 +2487,70 @@ void copy(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_
       </ul>
       </li>
     </ul>
-  <p>If <code>is_regular_file(f)</code>, then:</p>
-  
-    <ul>
-      <li>If <code>!exists(t)</code>, <code>create_directory(to, from)</code> 
-      and then <code>copy(from, to, options)</code>.</li>
-      <li>Otherwise, iterate over the files in <code>from</code>, as if by <code>
-      for (directory_entry&amp; x : directory_iterator(from))</code>:<ul>
-        <li>If <code>is_symlink(x.status())</code>, then
-        <span style="background-color: #FFFF99">???</span></li>
-        <li>Otherwise if <code>is_regular_file(x.status())</code>, then <code>
-        copy_file(x.path(), to, options)</code>.</li>
-        <li>Otherwise if <code>is_directory(x.status())</code>, then:<ul>
-          <li>If&nbsp; <code>options &amp; recursive</code>, then <code>
-          create_directory(to/from.filename(), to)</code> and then <code>
-          copy(from, to/from.filename(), options)</code>.</li>
-          <li>Otherwise, no effect.</li>
-        </ul>
-        </li>
-        <li>Otherwise report an error as specified in <a href="#Error-reporting">Error reporting</a>.</li>
-      </ul>
-      </li>
-    </ul>
   </blockquote>
 </blockquote>
 <blockquote>
+  <blockquote>
+  <p>Otherwise if <code>is_directory(f) &amp;&amp; ((options &amp; 
+  copy_options::recursive) || !(options &amp; copy_options::<i>unspecified</i>))</code> 
+  then:</p>
+  
+    <ul>
+      <li>If&nbsp; <code>!exists(t)</code>, then <code>create_directory(to, 
+      from)</code>.</li>
+      <li>Then, iterate over the files in <code>from</code>, as if by <code>for 
+      (directory_entry&amp; x : directory_iterator(from))</code>, and for each 
+      iteration <code>copy(x.path(), to/x.path().filename(), options | 
+      copy_options::<i>unspecified</i>)</code>.</li>
+    </ul>
+  <p>Otherwise no effects.</p>
+  
+  </blockquote>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
-  <p><i>Remarks: </i>For the signature with argument <code>ec</code>, 
-  implementations shall behave as if any Filesystem library functions called 
-  internally have an <code>ec</code> argument. </p>
+  <p><i>Remarks: </i>For the signature with argument <code>ec</code>, any 
+  Filesystem library functions called by the implementation shall have an <code>
+  error_code</code> argument if applicable. </p>
+  
+  <p>[<i>Example:</i> Given this directory structure:</p>
+  
+  <pre>/dir1
+  file1
+  file2
+  dir2
+    file3</pre>
+  <p>Calling <code>copy(&quot;/dir1&quot;, &quot;/dir3&quot;)</code> would result in: </p>
+  <pre>/dir1
+  file1
+  file2
+  dir2
+    file3
+/dir3
+  file1
+  file2
+</pre>
+  <p>Alternatively, calling <code>copy(&quot;/dir1&quot;, &quot;/dir3&quot;, 
+  copy_options::recursive)</code> would result in: </p>
+  
+  <pre>/dir1
+  file1
+  file2
+  dir2
+    file3  
+/dir3
+  file1
+  file2
+  dir2
+    file3</pre>
+
+<p><i>-- end example</i>]</p>
   
 </blockquote>
 
 <pre>void copy_file(const path&amp; from, const path&amp; to);
 void copy_file(const path&amp; from, const path&amp; to, $SYSTEM;error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <p><i>Effects: </i><code>copy_file(from, to, copy_options::none</code><i>[</i><code>, ec</code><i>]</i><code>)</code>. 
-  The signature with argument <code>ec</code> returns <code>false</code> 
-  if an error occurs.</p>
+  <p><i>Effects: </i><code>copy_file(from, to, copy_options::none</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
   
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
@@ -2527,9 +2562,9 @@ void <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to
   <p><i>Precondition:</i> At most one constant from each <code>copy_options</code> 
   option group ([<a href="#enum.copy_options">enum.copy_options</a>]) is present 
   in <code>options</code>.</p>
-  <p dir="ltr"><i>Effects:</i></p>
+  <p><i>Effects:</i></p>
   <blockquote>
-  <p dir="ltr">&nbsp;If <code>exists(to)</code>is true:</p>
+  <p>&nbsp;If <code>exists(to)</code>is true:</p>
     <ul>
       <li>If <code>options &amp; copy_options::skip</code> return <code>false</code>.</li>
       <li>otherwise if <code>options &amp; copy_options::update</code>:<ul>
@@ -2550,6 +2585,11 @@ void copy_symlink(const path&amp; existing_symlink, const path&amp; new_symlink,
                   $SYSTEM;error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Effects: </i><code>create_symlink(read_symlink(existing_symlink</code><i>[</i><code>, ec</code><i>]</i><code>), new_symlink</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
+  
+  <p><blink><span style="background-color: #FFFF99">Wrong! If the </span>
+  <span style="background-color: #FFFF99">symlink</span><span style="background-color: #FFFF99"> 
+  is a directory </span><span style="background-color: #FFFF99">symlink</span><span style="background-color: #FFFF99">, 
+  need to call create_directory_symlink()</span></blink></p>
   
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
@@ -2586,7 +2626,7 @@ bool create_directory(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</
 void create_directory(const path&amp; p, const path&amp; attributes, $SYSTEM;error_code&amp; ec) noexcept;</pre>
 <blockquote>
 
-  <p dir="ltr"><i>Effects: </i>Creates directory <code>p</code>, with 
+  <p><i>Effects: </i>Creates directory <code>p</code>, with 
   attributes copied from directory <code>attributes</code>. The set of attributes 
   copied is operating system dependent.</p>
   
