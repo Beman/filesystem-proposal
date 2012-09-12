@@ -2027,14 +2027,14 @@ group results in undefined behavior. <i>-- end note</i>]</p>
     <td>Copy directory structure only, do not copy non-directory files.</td>
   </tr>
   <tr>
-    <td><code>make_symlinks</code></td>
+    <td><code>create_symlinks</code></td>
     <td>
     <p align="center"><code>128</code></td>
     <td>Make symbolic links instead of copies of files. The source path shall be 
     an absolute path unless the destination path is in the current directory.</td>
   </tr>
   <tr>
-    <td><code>make_hard_links</code></td>
+    <td><code>create_hard_links</code></td>
     <td>
     <p align="center"><code>256</code></td>
     <td>Make hard links instead of copies of files.</td>
@@ -2728,7 +2728,7 @@ void copy(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_
   <p>Before the first use of <code>f</code> and <code>t</code>:</p>
   
     <ul>
-      <li>If <code>(options &amp; copy_options::make_symlinks) || (options &amp; 
+      <li>If <code>(options &amp; copy_options::create_symlinks) || (options &amp; 
       copy_options::skip_symlinks)</code>, then <code>auto f = 
       symlink_status(from)</code> and if needed <code>auto t = symlink_status(to)</code>.</li>
       <li>Otherwise, <code>auto f = status(from)</code> and if needed <code>auto 
@@ -2764,9 +2764,9 @@ void copy(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_
   
     <ul>
       <li>If <code>options &amp; copy_options::structure_only</code>, then return.</li>
-      <li>Otherwise if <code>options &amp; copy_options::make_symlinks</code>, then 
+      <li>Otherwise if <code>options &amp; copy_options::create_symlinks</code>, then 
       create a symbolic link to the source file.</li>
-      <li>Otherwise if <code>options &amp; copy_options::make_hard_links</code>, 
+      <li>Otherwise if <code>options &amp; copy_options::create_hard_links</code>, 
       then create a hard link to the source file.</li>
       <li>Otherwise:<ul>
         <li>If <code>is_directory(t)</code>, then <code>copy_file(from, to/from.filename(), 

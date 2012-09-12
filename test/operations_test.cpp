@@ -1467,32 +1467,79 @@ namespace
     fs::remove(d1 / "f2");  // remove possible residue from prior testing
     BOOST_TEST(fs::exists(d1));
     BOOST_TEST(!fs::exists(d1 / "f2"));
-    cout << " copy " << f1 << " to " << d1 / "f2" << endl;
-    fs::copy_file(f1, d1 / "f2");
-    cout << " copy complete" << endl;
+    cout << " copy_file " << f1 << " to " << d1 / "f2" << endl;
+    BOOST_TEST(fs::copy_file(f1, d1 / "f2"));
+    cout << " copy_file complete" << endl;
     BOOST_TEST(fs::exists(f1));
     BOOST_TEST(fs::exists(d1 / "f2"));
+    BOOST_TEST_EQ(fs::file_size(d1 / "f2"), 7U);
     BOOST_TEST(!fs::is_directory(d1 / "f2"));
     verify_file(d1 / "f2", "file-f1");
 
+    // default copy_options::none
     bool copy_ex_ok = false;
-    try { fs::copy_file(f1, d1 / "f2"); }
-    catch (const fs::filesystem_error &) { copy_ex_ok = true; }
+    try
+    {
+      BOOST_TEST(!fs::copy_file(f1, d1 / "f2"));
+    }
+    catch (const fs::filesystem_error&) { copy_ex_ok = true; }
     BOOST_TEST(copy_ex_ok);
 
+    // copy_options::none
     copy_ex_ok = false;
-    try { fs::copy_file(f1, d1 / "f2", fs::copy_options::fail_if_exists); }
-    catch (const fs::filesystem_error &) { copy_ex_ok = true; }
+    try
+    { 
+      BOOST_TEST(!fs::copy_file(f1, d1 / "f2", fs::copy_options::none));
+    }
+    catch (const fs::filesystem_error&) { copy_ex_ok = true; }
     BOOST_TEST(copy_ex_ok);
-
+   
     create_file(d1 / "f2", "1234567890");
     BOOST_TEST_EQ(fs::file_size(d1 / "f2"), 10U);
+
+    // copy_options::skip and exists(to)
+    BOOST_TEST(!fs::copy_file(f1, d1 / "f2", fs::copy_options::skip));
+    BOOST_TEST_EQ(fs::file_size(d1 / "f2"), 10U);
+
+    // copy_options::skip and !exists(to)
+    BOOST_TEST(!fs::exists(d1 / "f3"));
+    BOOST_TEST(fs::copy_file(f1, d1 / "f3", fs::copy_options::skip));
+    BOOST_TEST(fs::exists(d1 / "f3"));
+    BOOST_TEST_EQ(fs::file_size(d1 / "f3"), 7U);
+
+    // copy_options::overwrite and exists(to)
     copy_ex_ok = true;
-    try { fs::copy_file(f1, d1 / "f2", fs::copy_options::overwrite_if_exists); }
-    catch (const fs::filesystem_error &) { copy_ex_ok = false; }
+    try
+    {
+      BOOST_TEST(fs::copy_file(f1, d1 / "f2", fs::copy_options::overwrite));
+    }
+    catch (const fs::filesystem_error&) { copy_ex_ok = false; }
     BOOST_TEST(copy_ex_ok);
     BOOST_TEST_EQ(fs::file_size(d1 / "f2"), 7U);
     verify_file(d1 / "f2", "file-f1");
+
+    // copy_options::overwrite and !exists(to)
+    BOOST_TEST(!fs::exists(d1 / "f4"));
+    BOOST_TEST(fs::copy_file(f1, d1 / "f4", fs::copy_options::overwrite));
+    BOOST_TEST(fs::exists(d1 / "f4"));
+    BOOST_TEST_EQ(fs::file_size(d1 / "f4"), 7U);
+
+    // copy_options::update and !exists(to)
+    BOOST_TEST(!fs::exists(d1 / "f5"));
+    BOOST_TEST(fs::copy_file(f1, d1 / "f5", fs::copy_options::update));
+    BOOST_TEST(fs::exists(d1 / "f5"));
+    BOOST_TEST_EQ(fs::file_size(d1 / "f5"), 7U);
+
+    // copy_options::update and exists(to) and from is older
+    BOOST_TEST(!fs::copy_file(f1, d1 / "f5", fs::copy_options::update));
+    BOOST_TEST_EQ(fs::file_size(d1 / "f5"), 7U);
+
+    // copy_options::update and exists(to) and from is newer
+    create_file(d1 / "f5a", "12345");
+    BOOST_TEST(fs::copy_file(d1 / "f5a", d1 / "f5", fs::copy_options::update));
+    BOOST_TEST_EQ(fs::file_size(d1 / "f5"), 5U);
+
+
   }
 
  //  symlink_status_tests  -------------------------------------------------------------//
