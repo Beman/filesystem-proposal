@@ -19,30 +19,40 @@
   </tr>
   <tr>
     <td><code><b>is_regular_file(from)</b></code></td>
-    <td><code>copy_file(from, to, options)</code></td>
+    <td><code>copy_file(from, to,<br>
+&nbsp; options)</code></td>
     <td><code>copy_file(from,<br>
 &nbsp; to/from.filename(),<br>
 &nbsp; options;)</code></td>
-    <td valign="top"><code>copy_file(from, to, options)</code></td>
+    <td valign="top"><code>copy_file(from, to,<br>
+&nbsp;options);</code></td>
   </tr>
   <tr>
     <td><b><code>is_directory(from)</code></b></td>
     <td valign="top">Error</td>
-    <td><code>for (directory_entry&amp; x : directory_iterator(from))<br>
+    <td><code>for (directory_entry&amp; x :<br>
+&nbsp; directory_iterator(from))<br>
     {<br>
 &nbsp; if (is_directory(x.status())<br>
 &nbsp; {<br>
-&nbsp;&nbsp;&nbsp; if (options == recursive)<br>
+&nbsp;&nbsp;&nbsp; if (options &amp; copy_options::recursive)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; create_directory(to/from.filename());<br>
 &nbsp; }<br>
-&nbsp; else<br>
-&nbsp;&nbsp; copy_file(x.path(), to, options);<br>
+&nbsp; else if (is_regular_file(x.path)<br>
+&nbsp;&nbsp;&nbsp; &amp;&amp; !(options<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp; copy_options::structure_only))<br>
+&nbsp; {<br>
+&nbsp;&nbsp;&nbsp; if (options<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; &amp; copy_options::structure_only<br>
+&nbsp;&nbsp;&nbsp; copy_file(x.path(), to, options);<br>
+&nbsp; }<br>
     }</code></td>
-    <td valign="top"><code>create_directory(to)<br>
-    copy(from, to, options)</code><br>
-&nbsp;</td>
+    <td valign="top"><code>create_directory(to);<br>
+    copy(from, to,<br>
+&nbsp;options);</code></td>
   </tr>
-  </table>
+</table>
+
 <p><i>Error conditions:</i> <code>!exists(from),<b> </b></code><code>
 equivalent(from, to), !(is_regular_file(from) || is_directory(from)), exists(to) 
 &amp;&amp; !(is_regular_file(to) || is_directory(to))</code></p>
@@ -53,6 +63,7 @@ equivalent(from, to), !(is_regular_file(from) || is_directory(from)), exists(to)
   <tr>
     <td colspan="3">
     <p align="center"><b>Options controlling <code>copy_file</code> effects when 
+    the 
     target file already exists</b></td>
   </tr>
   <tr>
@@ -80,10 +91,6 @@ equivalent(from, to), !(is_regular_file(from) || is_directory(from)), exists(to)
     <td align="center"><code>3</code></td>
     <td>Overwrite the existing file if it is older than the replacement file.</td>
   </tr>
-</table>
-
-<p>&nbsp;</p>
-<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td colspan="3">
     <p align="center"><b>Options controlling <code>copy</code> effects for 
@@ -101,40 +108,33 @@ equivalent(from, to), !(is_regular_file(from) || is_directory(from)), exists(to)
   </tr>
   <tr>
     <td><code>recursive</code></td>
-    <td align="center"><code>0x04</code></td>
+    <td align="center"><code>4</code></td>
     <td>Recursively copy sub-directories and their contents.</td>
   </tr>
-</table>
-
-<p>&nbsp;</p>
-<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
-    <td colspan="3">
+    <td colspan="3" bgcolor="#FFD0D0">
     <p align="center"><b>Options controlling <code>copy</code> effects for 
     symbolic links</b></td>
   </tr>
   <tr>
-    <td><b>Constant</b></td>
-    <td><b>Value</b></td>
-    <td><b>Meaning</b></td>
+    <td bgcolor="#FFD0D0"><b>Constant</b></td>
+    <td bgcolor="#FFD0D0"><b>Value</b></td>
+    <td bgcolor="#FFD0D0"><b>Meaning</b></td>
   </tr>
   <tr>
-    <td><code>none</code></td>
-    <td>
+    <td bgcolor="#FFD0D0"><code>none</code></td>
+    <td bgcolor="#FFD0D0">
     <p align="center"><code>0</code></td>
-    <td>(Default) Follow non-dangling symbolic links for regular files.</td>
+    <td bgcolor="#FFD0D0">(Default) Follow non-dangling symbolic links for regular files.</td>
   </tr>
   <tr>
-    <td><code>do_not_follow_symlinks</code></td>
-    <td>
-    <p align="center"><code>0x08</code></td>
-    <td>Do not follow symbolic links. Copy symbolic links as symbolic links 
+    <td bgcolor="#FFD0D0"><code>copy_symlinks</code></td>
+    <td bgcolor="#FFD0D0">
+    <p align="center"><code>8</code></td>
+    <td bgcolor="#FFD0D0">Do not follow non-dangling symbolic links for regular 
+    files. Copy symbolic links as symbolic links 
     rather than copying the files that they point to.</td>
   </tr>
-</table>
-
-<p>&nbsp;</p>
-<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td colspan="3">
     <p align="center"><b>Options controlling <code>copy</code> effects choosing 
@@ -153,21 +153,33 @@ equivalent(from, to), !(is_regular_file(from) || is_directory(from)), exists(to)
   </tr>
   <tr>
     <td><code>structure_only</code></td>
-    <td><code>0x11</code></td>
+    <td>
+    <p align="center"><code>16</code></td>
     <td>Copy directory structure only, do not copy files.</td>
   </tr>
   <tr>
     <td><code>make_symlinks</code></td>
-    <td><code>0x12</code></td>
-    <td>Make symbolic links instead of copies of non-directories. All source 
+    <td>
+    <p align="center"><code>17</code></td>
+    <td>Make symbolic links instead of copies of regular files. All source 
     file names must be absolute unless the<br>
     destination files are in the current directory.</td>
   </tr>
   <tr>
     <td><code>make_hard_links</code></td>
-    <td><code>0x13</code></td>
-    <td>Make hard links instead of copies of non-directories.</td>
+    <td>
+    <p align="center"><code>18</code></td>
+    <td>Make hard links instead of copies of regular files.</td>
   </tr>
+</table>
+
+
+<p>&nbsp;</p>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+</table>
+
+<p>&nbsp;</p>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
 </table>
 
 </body>
