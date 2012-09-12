@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-10<!--webbot bot="Timestamp" endspan i-checksum="12551" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-12<!--webbot bot="Timestamp" endspan i-checksum="12555" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->10 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39616" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->12 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39620" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -205,10 +205,14 @@ Library Proposal (Revision 3). Changes include:</p>
   discussions.</li>
   <li>
   <p>Change name of <code>copy_directory</code> function to <code>
-  create_directory</code> to more clearly reflect semantics; per FSG 
+  create_directory</code> to more clearly reflect semantics per FSG 
   discussions.</li>
   <li>
-  <p>Apply major functionality upgrade to <code>copy()</code>; per FSG 
+  <p>Major upgrade to <code>copy_options</code> in response to FSG 
+  discussions..</li>
+  <li>
+  <p>Major functionality upgrades to <code>copy()</code>and <code>
+  file_copy()</code> per FSG 
   discussions.</li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
@@ -1922,7 +1926,7 @@ an error.</p>
 copy operations.&nbsp; The constants are specified in option groups. Constant
 <code>none</code> is shown in each option group for purposes of exposition; 
 implementations shall provide only a single definition.&nbsp; Calling a 
-Filesystem library function with more than a single constant for any option 
+Filesystem library function with more than a single constant for an option 
 group results in undefined behavior. <i>-- end note</i>]</p>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
@@ -2739,18 +2743,9 @@ void copy(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_
   
     <ul>
       <li><code>!exists(f)</code>.</li>
-      <li>
-  <p><code>equivalent(f, t)</code>.</p>
-  
-      </li>
-      <li>
-  <p><code>is_other(f) || is_other(t)</code>.</p>
-  
-      </li>
-      <li>
-  <p><code>is_directory(f) &amp;&amp; is_regular_file(t)</code>.</p>
-  
-      </li>
+      <li><code>equivalent(f, t)</code>.</li>
+      <li><code>is_other(f) || is_other(t)</code>.</li>
+      <li><code>is_directory(f) &amp;&amp; is_regular_file(t)</code>.</li>
     </ul>
   <p>If <code>is_symlink_file(f)</code>, then:</p>
   
@@ -2835,16 +2830,16 @@ void copy(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_
   
 </blockquote>
 
-<pre>void copy_file(const path&amp; from, const path&amp; to);
-void copy_file(const path&amp; from, const path&amp; to, error_code&amp; ec) noexcept;</pre>
+<pre>bool copy_file(const path&amp; from, const path&amp; to);
+bool copy_file(const path&amp; from, const path&amp; to, error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <p><i>Effects: </i><code>copy_file(from, to, copy_options::none</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
+  <p><i>Returns: </i><code>copy_file(from, to, copy_options::none</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
   
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
 </blockquote>
-<pre>void <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options);
-void <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options,
+<pre>bool <a name="copy_file">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options);
+bool <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options,
                error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Precondition:</i> At most one constant from each <code>copy_options</code> 
@@ -2852,21 +2847,19 @@ void <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to
   in <code>options</code>.</p>
   <p><i>Effects:</i></p>
   <blockquote>
-  <p>&nbsp;If <code>exists(to)</code>is true:</p>
-    <ul>
-      <li>If <code>options &amp; copy_options::skip</code> return <code>false</code>.</li>
-      <li>otherwise if <code>options &amp; copy_options::update</code>:<ul>
-        <li>&nbsp;if <code>last_write_time(from) &lt;= last_write_time(to)</code>return
-        <code>false</code>.</li>
-        <li>otherwise proceed with copying.</li>
-      </ul>
-      </li>
-      <li>otherwise if <code>!(options &amp; copy_options::overwrite)</code>report a 
-      file already exists error as specified in <a href="#Error-reporting">Error reporting</a>.</li>
-    </ul>
-  <p>Copy the contents and attributes of the file <code>from</code> resolves to  the file <code>to</code> resolves to.</p>
+  <p>If&nbsp; <code>exists(to) &amp;&amp;</code> <code>!(options &amp; (copy_options::skip 
+  | copy_options::overwrite | copy_options::update))</code> report a 
+      file already exists error as specified in <a href="#Error-reporting">Error reporting</a>.</p>
+  <p>If <code>!exists(to) || (options &amp; copy_options::overwrite) || ((options &amp; copy_options::update) 
+  &amp;&amp; last_write_time(from) &gt; last_write_time(to)) || !(options &amp; (copy_options::skip 
+  | copy_options::overwrite | copy_options::update))</code> copy the contents and attributes of the file <code>from</code> resolves to  the file <code>to</code> resolves to.</p>
   </blockquote>
+  <p><i>Returns</i>: <code>true</code> if the <code>from</code> file 
+  was copied, otherwise <code>false</code>. The signature with argument <code>ec</code> return
+  <code>false</code> if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
+  <p><i>Complexity:</i> At most one direct or indirect invocation of <code>
+  status(to)</code>.</p>
 </blockquote>
 <pre>void <a name="copy_symlink">copy_symlink</a>(const path&amp; existing_symlink, const path&amp; new_symlink);
 void copy_symlink(const path&amp; existing_symlink, const path&amp; new_symlink,
@@ -2874,10 +2867,10 @@ void copy_symlink(const path&amp; existing_symlink, const path&amp; new_symlink,
 <blockquote>
   <p><i>Effects: </i><code>create_symlink(read_symlink(existing_symlink</code><i>[</i><code>, ec</code><i>]</i><code>), new_symlink</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
   
-  <p><blink><span style="background-color: #FFFF99">Wrong! If the </span>
+  <p><blink><span style="background-color: #FFFF99">If the </span>
   <span style="background-color: #FFFF99">symlink</span><span style="background-color: #FFFF99"> 
   is a directory </span><span style="background-color: #FFFF99">symlink</span><span style="background-color: #FFFF99">, 
-  need to call create_directory_symlink()</span></blink></p>
+  need to call create_directory_symlink(), at least on Windows</span></blink></p>
   
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
@@ -2910,13 +2903,15 @@ bool create_directory(const path&amp; p, error_code&amp; ec) noexcept;</pre>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 </blockquote>
 
-<pre>void <a name="create_directory2">create_directory</a>(const path&amp; p, const path&amp; attributes);
-void create_directory(const path&amp; p, const path&amp; attributes, error_code&amp; ec) noexcept;</pre>
+<pre>bool <a name="create_directory2">create_directory</a>(const path&amp; p, const path&amp; existing_p);
+bool create_directory(const path&amp; p, const path&amp; existing_p, error_code&amp; ec) noexcept;</pre>
 <blockquote>
 
-  <p><i>Effects: </i>Creates directory <code>p</code>, with 
-  attributes copied from directory <code>attributes</code>. The set of attributes 
-  copied is operating system dependent.</p>
+  <p><i>Effects: </i>Establishes the postcondition by attempting to create the 
+  directory <code>p</code> resolves to, with 
+  attributes copied from directory <code>existing_p</code>. The set of attributes 
+  copied is operating system dependent. Creation failure because <code>p</code> resolves to an existing directory shall not be 
+  treated as an error. </p>
   
 <blockquote>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
@@ -2932,6 +2927,10 @@ void create_directory(const path&amp; p, const path&amp; attributes, error_code&
     </tr>
   </table>
 </blockquote>
+  
+  <p><i>Postcondition:</i> <code>is_directory(p)</code></p>
+  <p><i>Returns:</i> <code>true</code> if a new directory was created, otherwise <code>false</code>. 
+  The signature with argument <code>ec</code> returns false if an error occurs.</p>
   
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
 

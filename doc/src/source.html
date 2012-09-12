@@ -2562,7 +2562,7 @@ bool <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to
   &amp;&amp; last_write_time(from) &gt; last_write_time(to)) || !(options &amp; (copy_options::skip 
   | copy_options::overwrite | copy_options::update))</code> copy the contents and attributes of the file <code>from</code> resolves to  the file <code>to</code> resolves to.</p>
   </blockquote>
-  <p dir="ltr"><i>Returns</i>: <code>true</code> if the <code>from</code> file 
+  <p><i>Returns</i>: <code>true</code> if the <code>from</code> file 
   was copied, otherwise <code>false</code>. The signature with argument <code>ec</code> return
   <code>false</code> if an error occurs.</p>
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
