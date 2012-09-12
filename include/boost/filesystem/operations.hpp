@@ -94,7 +94,7 @@ namespace boost
     type_unknown = unknown
 #   endif
  }
-  BOOST_SCOPED_ENUM_DECLARE_END(file_type)
+ BOOST_SCOPED_ENUM_DECLARE_END(file_type)
 
 //--------------------------------------------------------------------------------------//
 //                                       perms                                          //
@@ -224,6 +224,47 @@ namespace boost
 # endif
 
 //--------------------------------------------------------------------------------------//
+//                                  copy_options                                        //
+//--------------------------------------------------------------------------------------//
+
+  BOOST_SCOPED_ENUM_DECLARE_BEGIN(copy_options)
+  {
+    none = 0,
+
+    // Option group controlling copy_file effects when the target file already exists
+    skip = 1,
+    overwrite = 2,
+    update = 4,
+
+    // Option group controlling copy effects for sub-directories
+    recursive = 8,
+
+    // Option group controlling copy effects for symbolic links
+    copy_symlinks = 16,
+    skip_symlinks = 32,
+
+    // Option group controlling copy effects choosing the form of copying
+    structure_only = 64,
+    create_symlinks = 128,
+    create_hard_links = 256,
+
+    // unspecified implementation detail
+    _detail_sub_directory = 512,
+
+# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+      fail_if_exists = none,
+      overwrite_if_exists = overwrite
+# endif
+  }
+  BOOST_SCOPED_ENUM_DECLARE_END(copy_options)
+
+# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+  typedef copy_options copy_option;
+# endif
+
+  BOOST_BITMASK(BOOST_SCOPED_ENUM(copy_options))
+
+//--------------------------------------------------------------------------------------//
 //                                       misc                                           //
 //--------------------------------------------------------------------------------------//
 
@@ -234,14 +275,6 @@ namespace boost
     boost::uintmax_t free;      // <= capacity
     boost::uintmax_t available; // <= free
   };
-
-  BOOST_SCOPED_ENUM_START(copy_options)
-    {none, fail_if_exists = none, overwrite_if_exists};
-  BOOST_SCOPED_ENUM_END
-
-# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
-  typedef copy_options copy_option;
-# endif
 
 #ifdef BOOST_FILESYSTEM_USE_TIME_T
   typedef std::time_t file_time_type;
@@ -266,19 +299,24 @@ namespace boost
     BOOST_FILESYSTEM_DECL
     path canonical(const path& p, const path& base, system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
-    void copy(const path& from, const path& to, system::error_code* ec=0);
+    void copy(const path& from, const path& to, 
+              BOOST_SCOPED_ENUM(copy_options) options, system::error_code* ec=0);
+    //BOOST_FILESYSTEM_DECL
+    //void copy_directory(const path& from, const path& to, system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
-    void copy_directory(const path& from, const path& to, system::error_code* ec=0);
+    bool copy_file(const path& from, const path& to,
+                   BOOST_SCOPED_ENUM(copy_options) options,  // See ticket #2925
+                   system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
-    void copy_file(const path& from, const path& to,
-                    BOOST_SCOPED_ENUM(copy_options) option,  // See ticket #2925
-                    system::error_code* ec=0);
-    BOOST_FILESYSTEM_DECL
-    void copy_symlink(const path& existing_symlink, const path& new_symlink, system::error_code* ec=0);
+    void copy_symlink(const path& existing_symlink, const path& new_symlink,
+                      system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
     bool create_directories(const path& p, system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
     bool create_directory(const path& p, system::error_code* ec=0);
+    BOOST_FILESYSTEM_DECL
+    bool create_directory(const path& p, const path& existing_p,
+      system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL
     void create_directory_symlink(const path& to, const path& from,
                                   system::error_code* ec=0);
@@ -439,33 +477,42 @@ namespace boost
 # endif
 
   inline
-  void copy(const path& from, const path& to) {detail::copy(from, to);}
+  void copy(const path& from, const path& to, copy_options options = copy_options::none)
+                                       {detail::copy(from, to, options);}
 
   inline
   void copy(const path& from, const path& to, system::error_code& ec) BOOST_NOEXCEPT 
-                                       {detail::copy(from, to, &ec);}
+                                       {detail::copy(from, to, copy_options::none, &ec);}
+  inline
+  void copy(const path& from, const path& to, copy_options options,
+            system::error_code& ec) BOOST_NOEXCEPT 
+                                       {detail::copy(from, to, options, &ec);}
+# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
   inline
   void copy_directory(const path& from, const path& to)
-                                       {detail::copy_directory(from, to);}
+                                       {detail::create_directory(to, from);}
   inline
   void copy_directory(const path& from, const path& to, system::error_code& ec) BOOST_NOEXCEPT
-                                       {detail::copy_directory(from, to, &ec);}
+                                       {detail::create_directory(to, from, &ec);}
+# endif
+
   inline
-  void copy_file(const path& from, const path& to,   // See ticket #2925
-                 BOOST_SCOPED_ENUM(copy_options) option)
-                                       {detail::copy_file(from, to, option);}
+  bool copy_file(const path& from, const path& to,   // See ticket #2925
+                 BOOST_SCOPED_ENUM(copy_options) options)
+                                       {return detail::copy_file(from, to, options);}
   inline
-  void copy_file(const path& from, const path& to)
-                                       {detail::copy_file(from, to, copy_options::fail_if_exists);}
+  bool copy_file(const path& from, const path& to)
+                                       {return detail::copy_file(from, to, copy_options::none);}
   inline
-  void copy_file(const path& from, const path& to,   // See ticket #2925
-                 BOOST_SCOPED_ENUM(copy_options) option, system::error_code& ec) BOOST_NOEXCEPT
-                                       {detail::copy_file(from, to, option, &ec);}
+  bool copy_file(const path& from, const path& to,   // See ticket #2925
+                 BOOST_SCOPED_ENUM(copy_options) options, system::error_code& ec) BOOST_NOEXCEPT
+                                       {return detail::copy_file(from, to, options, &ec);}
   inline
-  void copy_file(const path& from, const path& to, system::error_code& ec) BOOST_NOEXCEPT
-                                       {detail::copy_file(from, to, copy_options::fail_if_exists, &ec);}
+  bool copy_file(const path& from, const path& to, system::error_code& ec) BOOST_NOEXCEPT
+                                       {return detail::copy_file(from, to, copy_options::none, &ec);}
   inline
-  void copy_symlink(const path& existing_symlink, const path& new_symlink) {detail::copy_symlink(existing_symlink, new_symlink);}
+  void copy_symlink(const path& existing_symlink, const path& new_symlink)
+                                       {detail::copy_symlink(existing_symlink, new_symlink);}
 
   inline
   void copy_symlink(const path& existing_symlink, const path& new_symlink,
@@ -483,6 +530,14 @@ namespace boost
   inline
   bool create_directory(const path& p, system::error_code& ec) BOOST_NOEXCEPT
                                        {return detail::create_directory(p, &ec);}
+  inline
+  bool create_directory(const path& p, const path& existing_p)
+                                       {return detail::create_directory(p, existing_p);}
+
+  inline
+  bool create_directory(const path& p, const path& existing_p,
+                        system::error_code& ec) BOOST_NOEXCEPT
+                                       {return detail::create_directory(p, existing_p, &ec);}
   inline
   void create_directory_symlink(const path& to, const path& from)
                                        {detail::create_directory_symlink(to, from);}
