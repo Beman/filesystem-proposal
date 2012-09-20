@@ -481,7 +481,7 @@ $endif;
 $NAMESPACE_END;</pre>
 $if $TARGET; != BOOST
  <p><b><i><code>unspecified-trivial-clock</code></i></b> is an unspecified type 
-provided by the implementation that satisfies the TrivialClock requirements ([time.clock.req]) 
+provided by the implementation that satisfies the <code>TrivialClock</code> requirements ([time.clock.req]) 
  and that is capable of representing and measuring file time values.</p>
 $endif
 <h2><a name="Error-reporting">Error reporting</a> [fs.err.report]</h2>
@@ -872,15 +872,24 @@ character set.</p>
 
 </blockquote>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
-<p>In addition to the [fs.req] requirements, template parameters named <code><a name="Source">Source</a></code> 
+<p>In addition to the [fs.req] requirements, function template parameters named <code><a name="Source">Source</a></code> 
 shall be one of:</p>
 <ul>
-  <li>Type <code>basic_string&lt;charT, traits, Allocator&gt;</code>. The type <code>
-  charT</code> shall be an encoded character type ([fs.req]).</li>
+  <li>
+  <p> <code>basic_string&lt;charT, traits, Allocator&gt;</code>. The type <code>
+  charT</code> shall be an encoded character type ([fs.req]).&nbsp; A function 
+  argument <code>Source const&amp;</code> <code>source</code> shall have an 
+  effective range [<code>source.begin()</code>, <code>source.end()</code>).</li>
   <li>A type meeting the input iterator requirements that iterates over a NTCTS. 
-  The value type shall be an encoded character type.</li>
-  <li>A character array that after array-to-pointer conversion results in a 
-  pointer to a NTCTS. The value type shall be an encoded character type.</li>
+  The value type shall be an encoded character type. A function argument <code>
+  Source const&amp;</code> <code>source</code> shall have an effective range that 
+  begins at <code>source</code> and ends at the first element with value equal 
+  to <code>iterator_traits&lt;Source&gt;::<wbr />value_type()</code>.</li>
+  <li>A character array that after array-to-pointer decay results in a 
+  pointer to a NTCTS. The value type shall be an encoded character type. A 
+  function argument <code>Source const&amp;</code> <code>source</code> shall have an 
+  effective range that begins at <code>source</code> and ends at the first 
+  element with value equal to <code>iterator_traits&lt;decay&lt;Source&gt;:<wbr />:type&gt;::value_type()</code>.</li>
 </ul>
 
 <blockquote>
@@ -896,8 +905,8 @@ path</code> constructors</a> [path.construct]</h3>
 <pre>template &lt;class InputIterator&gt;
   path(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
 <blockquote>
-  <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> in <code>pathname</code>, converting format and 
+  <p><i>Effects:</i> Stores the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
+  or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
 </blockquote>
 <h3> <a name="path-assignments"> <code>
@@ -909,8 +918,8 @@ $if $TARGET; == BOOST  template &lt;class <a href="#Source">Source</a>&gt;
 $endif;  template &lt;class InputIterator&gt;
   path&amp; assign(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
 <blockquote>
-  <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> in <code>pathname</code>, converting format and 
+  <p><i>Effects:</i> Stores the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
+  or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]). </p>
   <p>
   <i>Returns: </i><code>*this</code></p>
@@ -954,8 +963,8 @@ $endif;  template &lt;class InputIterator&gt;
     <li><code>p.empty()</code>, or</li>
     <li><code>*p.native().cbegin()</code> is a separator.</li>
   </ul>
-    <p>Appends the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> to <code>pathname</code>, converting format and 
+    <p>Appends the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
+    or the range [<code>begin</code>,<code>end</code>) to <code>pathname</code>, converting format and 
     encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
   </blockquote>
   <p><i>Returns: </i><code>*this</code></p>
@@ -978,11 +987,12 @@ template &lt;class InputIterator&gt;
  where <code>prior_native</code> is <code>native()</code> prior to the call to <code>operator+=</code>,
  and <code><i>effective-argument</i></code> is:</p>
  <ul><li><code>x.native()</code> if <code>x</code> is present and is <code>const path&amp;</code>, otherwise</li>
- <li><code>s</code>, where <code>s</code> is
-  <code>$STD;basic_string&lt;typename $STD;iterator_traits&lt;InputIterator&gt;::value_type&gt;<br>s(begin, end)</code>,
-   if <code>begin</code> and <code>end</code> arguments are present, otherwise</li>
+ <li>the effective range <code>source</code> ([<a href="#path-Requirements">path.req</a>]), 
+ if <code>source</code> is present, otherwise,</li>
+ <li>the range [<code>begin</code>,<code>end</code>), if <code>begin</code> and
+ <code>end</code> are present, otherwise,</li>
  <li><code>x</code>.</li></ul><p>If the value type of <code><i>effective-argument</i></code> would not be <code>path::value_type</code>, the actual argument or argument range is first
-   converted so that <code><i>effective-argument</i></code> has value type <code>path::value_type</code>.</li> </p>
+   converted ([<a href="#path.arg.convert">path.arg.convert</a>]) so that <code><i>effective-argument</i></code> has value type <code>path::value_type</code>.</li> </p>
  <p><i>Returns: </i><code>*this</code></p>
  </blockquote>
 <h3><a name="path-modifiers"> <code>
