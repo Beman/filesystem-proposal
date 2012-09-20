@@ -50,7 +50,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-12<!--webbot bot="Timestamp" endspan i-checksum="12555" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-20<!--webbot bot="Timestamp" endspan i-checksum="12552" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -69,7 +69,7 @@ appears in a mailing.</span></p>
 
 
 <h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->12 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39620" --></span><br>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->20 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39617" --></span><br>
 Filesystem Library Proposal (Revision 3)</h1>
 
 
@@ -864,7 +864,7 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
 } } }  // namespaces std::tbd::filesystem</pre>
 
  <p><b><i><code>unspecified-trivial-clock</code></i></b> is an unspecified type 
-provided by the implementation that satisfies the TrivialClock requirements ([time.clock.req]) 
+provided by the implementation that satisfies the <code>TrivialClock</code> requirements ([time.clock.req]) 
  and that is capable of representing and measuring file time values.</p>
 <h2>1.5  <a name="Error-reporting">Error reporting</a> [fs.err.report]</h2>
 <p>Filesystem library functions often provide two overloads, one that 
@@ -1236,15 +1236,24 @@ character set.</p>
 
 </blockquote>
 <h3>1.6.3  <a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
-<p>In addition to the [fs.req] requirements, template parameters named <code><a name="Source">Source</a></code> 
+<p>In addition to the [fs.req] requirements, function template parameters named <code><a name="Source">Source</a></code> 
 shall be one of:</p>
 <ul>
-  <li>Type <code>basic_string&lt;charT, traits, Allocator&gt;</code>. The type <code>
-  charT</code> shall be an encoded character type ([fs.req]).</li>
+  <li>
+  <p> <code>basic_string&lt;charT, traits, Allocator&gt;</code>. The type <code>
+  charT</code> shall be an encoded character type ([fs.req]).&nbsp; A function 
+  argument <code>Source const&amp;</code> <code>source</code> shall have an 
+  effective range [<code>source.begin()</code>, <code>source.end()</code>).</li>
   <li>A type meeting the input iterator requirements that iterates over a NTCTS. 
-  The value type shall be an encoded character type.</li>
-  <li>A character array that after array-to-pointer conversion results in a 
-  pointer to a NTCTS. The value type shall be an encoded character type.</li>
+  The value type shall be an encoded character type. A function argument <code>
+  Source const&amp;</code> <code>source</code> shall have an effective range that 
+  begins at <code>source</code> and ends at the first element with value equal 
+  to <code>iterator_traits&lt;Source&gt;::<wbr />value_type()</code>.</li>
+  <li>A character array that after array-to-pointer decay results in a 
+  pointer to a NTCTS. The value type shall be an encoded character type. A 
+  function argument <code>Source const&amp;</code> <code>source</code> shall have an 
+  effective range that begins at <code>source</code> and ends at the first 
+  element with value equal to <code>iterator_traits&lt;decay&lt;Source&gt;:<wbr />:type&gt;::value_type()</code>.</li>
 </ul>
 
 <blockquote>
@@ -1260,8 +1269,8 @@ path</code> constructors</a> [path.construct]</h3>
 <pre>template &lt;class InputIterator&gt;
   path(InputIterator begin, InputIterator end);</pre>
 <blockquote>
-  <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> in <code>pathname</code>, converting format and 
+  <p><i>Effects:</i> Stores the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
+  or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
 </blockquote>
 <h3>1.6.5   <a name="path-assignments"> <code>
@@ -1271,8 +1280,8 @@ path</code> assignments</a> [path.assign]</h3>
   template &lt;class InputIterator&gt;
   path&amp; assign(InputIterator begin, InputIterator end);</pre>
 <blockquote>
-  <p><i>Effects:</i> Stores the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> in <code>pathname</code>, converting format and 
+  <p><i>Effects:</i> Stores the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
+  or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]). </p>
   <p>
   <i>Returns: </i><code>*this</code></p>
@@ -1314,8 +1323,8 @@ path</code> assignments</a> [path.assign]</h3>
     <li><code>p.empty()</code>, or</li>
     <li><code>*p.native().cbegin()</code> is a separator.</li>
   </ul>
-    <p>Appends the contents [<code>begin</code>,<code>end</code>) 
-  or <code>source</code> to <code>pathname</code>, converting format and 
+    <p>Appends the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
+    or the range [<code>begin</code>,<code>end</code>) to <code>pathname</code>, converting format and 
     encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
   </blockquote>
   <p><i>Returns: </i><code>*this</code></p>
@@ -1338,11 +1347,12 @@ template &lt;class InputIterator&gt;
  where <code>prior_native</code> is <code>native()</code> prior to the call to <code>operator+=</code>,
  and <code><i>effective-argument</i></code> is:</p>
  <ul><li><code>x.native()</code> if <code>x</code> is present and is <code>const path&amp;</code>, otherwise</li>
- <li><code>s</code>, where <code>s</code> is
-  <code>basic_string&lt;typename iterator_traits&lt;InputIterator&gt;::value_type&gt;<br>s(begin, end)</code>,
-   if <code>begin</code> and <code>end</code> arguments are present, otherwise</li>
+ <li>the effective range <code>source</code> ([<a href="#path-Requirements">path.req</a>]), 
+ if <code>source</code> is present, otherwise,</li>
+ <li>the range [<code>begin</code>,<code>end</code>), if <code>begin</code> and
+ <code>end</code> are present, otherwise,</li>
  <li><code>x</code>.</li></ul><p>If the value type of <code><i>effective-argument</i></code> would not be <code>path::value_type</code>, the actual argument or argument range is first
-   converted so that <code><i>effective-argument</i></code> has value type <code>path::value_type</code>.</li> </p>
+   converted ([<a href="#path.arg.convert">path.arg.convert</a>]) so that <code><i>effective-argument</i></code> has value type <code>path::value_type</code>.</li> </p>
  <p><i>Returns: </i><code>*this</code></p>
  </blockquote>
 <h3>1.6.8  <a name="path-modifiers"> <code>
@@ -1431,7 +1441,8 @@ basic_string&lt;charT, traits, Allocator&gt;
 
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
+<p><i>Remarks:</i> All memory allocation, including for the return value, shall 
+be performed by <code>a</code>. If the return type is different from <code>string_type</code>, 
 conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>]).</p>
 </blockquote>
 <pre>string <a name="string">string</a>() const;
@@ -1465,7 +1476,8 @@ basic_string&lt;charT, traits, Allocator&gt;
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
   pathname format ([<a href="#path.generic">path.generic</a>]). </p>
-<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
+<p><i>Remarks:</i> All memory allocation, including for the return value, shall 
+be performed by <code>a</code>. If the return type is different from <code>string_type</code>, 
 conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 <pre>string <a name="generic_string">generic_string</a>() const;
@@ -1482,9 +1494,10 @@ conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a
 <h3>1.6.11   <a name="path-compare"><code>path</code> compare</a> [path.compare]</h3>
 <pre>int compare(const path&amp; p) const noexcept;</pre>
 <blockquote>
-  <p><i>Returns:</i> A value less than 0 if the elements of <code>*this</code> are lexicographically less than the elements of <code>p</code>, otherwise a 
-  value greater than 0 if the elements of <code>*this</code> are 
-  lexicographically greater than the elements of <code>p</code>, otherwise 0.</p>
+  <p><i>Returns:</i> A value less than 0 if <code>native()</code> for the elements of <code>*this</code> are lexicographically less than
+  <code>native()</code> for the elements of <code>p</code>, otherwise a 
+  value greater than 0 if <code>native()</code> for the elements of <code>*this</code> are 
+  lexicographically greater than <code>native()</code> for the elements of <code>p</code>, otherwise 0.</p>
   <p>Remark: The elements are determined as if by iteration over the half-open 
   range [<code>begin()</code>, <code>end()</code>) for <code>*this</code> and&nbsp; <code>p</code>.</p>
 </blockquote>
@@ -1712,9 +1725,9 @@ operator&lt;&lt;(basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp; p);
   <p>[<i>Note:</i> Pathnames containing spaces require special handling by the 
   user to avoid truncation when read by the extractor. <i>--end note</i>]</p>
   <p><span style="background-color: #E0E0E0"><i>The Boost inserter outputs 
-  quoted strings, which are recognized as such by the extractor. There was 
+  quoted strings, which are recognized as such by the extractor. There is a 
   sentiment within the Filesystem Study Group that supplying a quoted and/or 
-  escaped string manipulator as a string extension was a better solution than a 
+  escaped string manipulator as a string extension would be a better solution than a 
   path specific feature. </i></span></p>
   <p><i>Returns:</i> <code>os</code></p>
   </blockquote>
@@ -1932,7 +1945,7 @@ group results in undefined behavior. <i>-- end note</i>]</p>
   <tr>
     <td colspan="3">
     <p align="center"><b>Option group controlling <code>copy_file</code> effects 
-    when the target file already exists</b></td>
+    for existing target files</b></td>
   </tr>
   <tr>
     <td><b>Constant</b></td>
@@ -1945,17 +1958,17 @@ group results in undefined behavior. <i>-- end note</i>]</p>
     <td>(Default) Error; file already exists.</td>
   </tr>
   <tr>
-    <td><code>skip</code></td>
+    <td><code>skip_existing</code></td>
     <td align="center"><code>1</code></td>
     <td>Do not overwrite existing file, do not report an error.</td>
   </tr>
   <tr>
-    <td><code>overwrite</code></td>
+    <td><code>overwrite_existing</code></td>
     <td align="center"><code>2</code></td>
     <td>Overwrite the existing file.</td>
   </tr>
   <tr>
-    <td><code>update</code></td>
+    <td><code>update_existing</code></td>
     <td align="center"><code>4</code></td>
     <td>Overwrite the existing file if it is older than the replacement file.</td>
   </tr>
@@ -1981,8 +1994,8 @@ group results in undefined behavior. <i>-- end note</i>]</p>
   </tr>
   <tr>
     <td colspan="3">
-    <p align="center"><b>Option group controlling <code>copy</code> effects for 
-    symbolic links</b></td>
+    <p align="center"><b>Option group controlling <code>copy</code> effects&nbsp; 
+    symbolic link actions</b></td>
   </tr>
   <tr>
     <td><b>Constant</b></td>
@@ -2025,7 +2038,7 @@ group results in undefined behavior. <i>-- end note</i>]</p>
     <td>(Default) Copy content.</td>
   </tr>
   <tr>
-    <td><code>structure_only</code></td>
+    <td><code>directories_only</code></td>
     <td>
     <p align="center"><code>64</code></td>
     <td>Copy directory structure only, do not copy non-directory files.</td>
