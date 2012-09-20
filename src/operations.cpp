@@ -766,6 +766,32 @@ namespace detail
 #   endif
   }
 
+#ifndef NDEBUG
+  inline bool valid_existing(copy_options opts)
+  {
+    int ct = 0;
+    if (opts & copy_options::skip_existing) ++ct;
+    if (opts & copy_options::overwrite_existing) ++ct;
+    if (opts & copy_options::update_existing) ++ct;
+    return ct < 2;
+  }
+  inline bool valid_symlink_action(copy_options opts)
+  {
+    int ct = 0;
+    if (opts & copy_options::copy_symlinks) ++ct;
+    if (opts & copy_options::skip_symlinks) ++ct;
+    return ct < 2;
+  }
+  inline bool valid_copy_form(copy_options opts)
+  {
+    int ct = 0;
+    if (opts & copy_options::directories_only) ++ct;
+    if (opts & copy_options::create_symlinks) ++ct;
+    if (opts & copy_options::create_hard_links) ++ct;
+    return ct < 2;
+  }
+# endif
+
   BOOST_FILESYSTEM_DECL
   path canonical(const path& p, const path& base, system::error_code* ec)
   {
@@ -850,6 +876,11 @@ namespace detail
   void copy(const path& from, const path& to,
             BOOST_SCOPED_ENUM(copy_options) options, system::error_code* ec)
   {
+    BOOST_ASSERT_MSG((valid_existing(options)), "Too many existing group copy_options");
+    BOOST_ASSERT_MSG((valid_symlink_action(options)),
+      "Too many symlink action group copy_options");
+    BOOST_ASSERT_MSG((valid_copy_form(options)), "Too many copy form group copy_options");
+
     file_status f = ((options & copy_options::create_symlinks)
       || (options & copy_options::skip_symlinks)) ? symlink_status(from, ec)
                                                   : status(from, ec);
@@ -877,7 +908,7 @@ namespace detail
     }
     else if (is_regular_file(f))
     {
-      if (!(options & copy_options::structure_only))
+      if (!(options & copy_options::directories_only))
       {
         if (options & copy_options::create_symlinks)
         {/*...*/}
@@ -932,14 +963,15 @@ namespace detail
                   BOOST_SCOPED_ENUM(copy_options)options,
                   error_code* ec)
   {
-    if (options & copy_options::skip)
+    BOOST_ASSERT_MSG((valid_existing(options)), "Too many existing group copy_options");
+    if (options & copy_options::skip_existing)
     {
       if (!exists(to))
         return !error(!BOOST_COPY_FILE(from.c_str(), to.c_str(), true),
           from, to, ec, "boost::filesystem::copy_file");
       return false;
     }
-    else if (options & copy_options::update)
+    else if (options & copy_options::update_existing)
     {
       if (!exists(to) || fs::last_write_time(from) > fs::last_write_time(to))
         return !error(!BOOST_COPY_FILE(from.c_str(), to.c_str(), true),
@@ -947,7 +979,7 @@ namespace detail
       return false;
     }
     return !error(!BOOST_COPY_FILE(from.c_str(), to.c_str(),
-      !(options & copy_options::overwrite)),
+      !(options & copy_options::overwrite_existing)),
       from, to, ec, "boost::filesystem::copy_file");
   }
 

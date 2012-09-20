@@ -1074,7 +1074,8 @@ $endif;
 
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
+<p><i>Remarks:</i> All memory allocation, including for the return value, shall 
+be performed by <code>a</code>. If the return type is different from <code>string_type</code>, 
 conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>]).</p>
 </blockquote>
 <pre>string <a name="string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
@@ -1111,7 +1112,8 @@ $endif;
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
   pathname format ([<a href="#path.generic">path.generic</a>]). </p>
-<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
+<p><i>Remarks:</i> All memory allocation, including for the return value, shall 
+be performed by <code>a</code>. If the return type is different from <code>string_type</code>, 
 conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 <pre>string <a name="generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
@@ -1128,9 +1130,10 @@ conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a
 <h3> <a name="path-compare"><code>path</code> compare</a> [path.compare]</h3>
 <pre>int compare(const path&amp; p) const noexcept;</pre>
 <blockquote>
-  <p><i>Returns:</i> A value less than 0 if the elements of <code>*this</code> are lexicographically less than the elements of <code>p</code>, otherwise a 
-  value greater than 0 if the elements of <code>*this</code> are 
-  lexicographically greater than the elements of <code>p</code>, otherwise 0.</p>
+  <p><i>Returns:</i> A value less than 0 if <code>native()</code> for the elements of <code>*this</code> are lexicographically less than
+  <code>native()</code> for the elements of <code>p</code>, otherwise a 
+  value greater than 0 if <code>native()</code> for the elements of <code>*this</code> are 
+  lexicographically greater than <code>native()</code> for the elements of <code>p</code>, otherwise 0.</p>
   <p>Remark: The elements are determined as if by iteration over the half-open 
   range [<code>begin()</code>, <code>end()</code>) for <code>*this</code> and&nbsp; <code>p</code>.</p>
 </blockquote>
@@ -1425,9 +1428,9 @@ operator&lt;&lt;($STD;basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp
   <p>[<i>Note:</i> Pathnames containing spaces require special handling by the 
   user to avoid truncation when read by the extractor. <i>--end note</i>]</p>
   <p><span style="background-color: #E0E0E0"><i>The Boost inserter outputs 
-  quoted strings, which are recognized as such by the extractor. There was 
+  quoted strings, which are recognized as such by the extractor. There is a 
   sentiment within the Filesystem Study Group that supplying a quoted and/or 
-  escaped string manipulator as a string extension was a better solution than a 
+  escaped string manipulator as a string extension would be a better solution than a 
   path specific feature. </i></span></p>
   <p><i>Returns:</i> <code>os</code></p>
   </blockquote>
@@ -1644,7 +1647,7 @@ group results in undefined behavior. <i>-- end note</i>]</p>
   <tr>
     <td colspan="3">
     <p align="center"><b>Option group controlling <code>copy_file</code> effects 
-    when the target file already exists</b></td>
+    for existing target files</b></td>
   </tr>
   <tr>
     <td><b>Constant</b></td>
@@ -1657,17 +1660,17 @@ group results in undefined behavior. <i>-- end note</i>]</p>
     <td>(Default) Error; file already exists.</td>
   </tr>
   <tr>
-    <td><code>skip</code></td>
+    <td><code>skip_existing</code></td>
     <td align="center"><code>1</code></td>
     <td>Do not overwrite existing file, do not report an error.</td>
   </tr>
   <tr>
-    <td><code>overwrite</code></td>
+    <td><code>overwrite_existing</code></td>
     <td align="center"><code>2</code></td>
     <td>Overwrite the existing file.</td>
   </tr>
   <tr>
-    <td><code>update</code></td>
+    <td><code>update_existing</code></td>
     <td align="center"><code>4</code></td>
     <td>Overwrite the existing file if it is older than the replacement file.</td>
   </tr>
@@ -1693,8 +1696,8 @@ group results in undefined behavior. <i>-- end note</i>]</p>
   </tr>
   <tr>
     <td colspan="3">
-    <p align="center"><b>Option group controlling <code>copy</code> effects for 
-    symbolic links</b></td>
+    <p align="center"><b>Option group controlling <code>copy</code> effects&nbsp; 
+    symbolic link actions</b></td>
   </tr>
   <tr>
     <td><b>Constant</b></td>
@@ -1737,7 +1740,7 @@ group results in undefined behavior. <i>-- end note</i>]</p>
     <td>(Default) Copy content.</td>
   </tr>
   <tr>
-    <td><code>structure_only</code></td>
+    <td><code>directories_only</code></td>
     <td>
     <p align="center"><code>64</code></td>
     <td>Copy directory structure only, do not copy non-directory files.</td>

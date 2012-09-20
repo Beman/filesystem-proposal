@@ -231,20 +231,20 @@ namespace boost
   {
     none = 0,
 
-    // Option group controlling copy_file effects when the target file already exists
-    skip = 1,
-    overwrite = 2,
-    update = 4,
+    // Option group controlling copy_file() effects for existing target files
+    skip_existing = 1,
+    overwrite_existing = 2,
+    update_existing = 4,
 
-    // Option group controlling copy effects for sub-directories
+    // Option group controlling copy() effects for sub-directories
     recursive = 8,
 
-    // Option group controlling copy effects for symbolic links
+    // Option group controlling copy() effects for symbolic links
     copy_symlinks = 16,
     skip_symlinks = 32,
 
-    // Option group controlling copy effects choosing the form of copying
-    structure_only = 64,
+    // Option group controlling copy() effects copy method
+    directories_only = 64,
     create_symlinks = 128,
     create_hard_links = 256,
 
@@ -253,7 +253,7 @@ namespace boost
 
 # ifndef BOOST_FILESYSTEM_NO_DEPRECATED
       fail_if_exists = none,
-      overwrite_if_exists = overwrite
+      overwrite_if_exists = overwrite_existing
 # endif
   }
   BOOST_SCOPED_ENUM_DECLARE_END(copy_options)
@@ -288,6 +288,7 @@ namespace boost
 
   namespace detail
   {
+
     BOOST_FILESYSTEM_DECL
     file_status status(const path&p, system::error_code* ec=0);
     BOOST_FILESYSTEM_DECL

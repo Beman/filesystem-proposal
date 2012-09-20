@@ -1456,7 +1456,7 @@ namespace
     BOOST_TEST_EQ(fs::canonical(dir / "sym-d1/f2"), d1 / "f2");
     BOOST_TEST_EQ(fs::canonical(relative_dir / "sym-d1/f2"), d1 / "f2");
   }
-
+ 
  //  copy_file_tests  ------------------------------------------------------------------//
 
   void copy_file_tests(const fs::path& f1, const fs::path& d1)
@@ -1497,48 +1497,93 @@ namespace
     create_file(d1 / "f2", "1234567890");
     BOOST_TEST_EQ(fs::file_size(d1 / "f2"), 10U);
 
-    // copy_options::skip and exists(to)
-    BOOST_TEST(!fs::copy_file(f1, d1 / "f2", fs::copy_options::skip));
+    // copy_options::skip_existing and exists(to)
+    BOOST_TEST(!fs::copy_file(f1, d1 / "f2", fs::copy_options::skip_existing));
     BOOST_TEST_EQ(fs::file_size(d1 / "f2"), 10U);
 
-    // copy_options::skip and !exists(to)
+    // copy_options::skip_existing and !exists(to)
     BOOST_TEST(!fs::exists(d1 / "f3"));
-    BOOST_TEST(fs::copy_file(f1, d1 / "f3", fs::copy_options::skip));
+    BOOST_TEST(fs::copy_file(f1, d1 / "f3", fs::copy_options::skip_existing));
     BOOST_TEST(fs::exists(d1 / "f3"));
     BOOST_TEST_EQ(fs::file_size(d1 / "f3"), 7U);
 
-    // copy_options::overwrite and exists(to)
+    // copy_options::overwrite_existing and exists(to)
     copy_ex_ok = true;
     try
     {
-      BOOST_TEST(fs::copy_file(f1, d1 / "f2", fs::copy_options::overwrite));
+      BOOST_TEST(fs::copy_file(f1, d1 / "f2", fs::copy_options::overwrite_existing));
     }
     catch (const fs::filesystem_error&) { copy_ex_ok = false; }
     BOOST_TEST(copy_ex_ok);
     BOOST_TEST_EQ(fs::file_size(d1 / "f2"), 7U);
     verify_file(d1 / "f2", "file-f1");
 
-    // copy_options::overwrite and !exists(to)
+    // copy_options::overwrite_existing and !exists(to)
     BOOST_TEST(!fs::exists(d1 / "f4"));
-    BOOST_TEST(fs::copy_file(f1, d1 / "f4", fs::copy_options::overwrite));
+    BOOST_TEST(fs::copy_file(f1, d1 / "f4", fs::copy_options::overwrite_existing));
     BOOST_TEST(fs::exists(d1 / "f4"));
     BOOST_TEST_EQ(fs::file_size(d1 / "f4"), 7U);
 
-    // copy_options::update and !exists(to)
+    // copy_options::update_existing and !exists(to)
     BOOST_TEST(!fs::exists(d1 / "f5"));
-    BOOST_TEST(fs::copy_file(f1, d1 / "f5", fs::copy_options::update));
+    BOOST_TEST(fs::copy_file(f1, d1 / "f5", fs::copy_options::update_existing));
     BOOST_TEST(fs::exists(d1 / "f5"));
     BOOST_TEST_EQ(fs::file_size(d1 / "f5"), 7U);
 
-    // copy_options::update and exists(to) and from is older
-    BOOST_TEST(!fs::copy_file(f1, d1 / "f5", fs::copy_options::update));
+    // copy_options::update_existing and exists(to) and from is older
+    BOOST_TEST(!fs::copy_file(f1, d1 / "f5", fs::copy_options::update_existing));
     BOOST_TEST_EQ(fs::file_size(d1 / "f5"), 7U);
 
-    // copy_options::update and exists(to) and from is newer
+    // copy_options::update_existing and exists(to) and from is newer
     create_file(d1 / "f5a", "12345");
-    BOOST_TEST(fs::copy_file(d1 / "f5a", d1 / "f5", fs::copy_options::update));
+    BOOST_TEST(fs::copy_file(d1 / "f5a", d1 / "f5", fs::copy_options::update_existing));
     BOOST_TEST_EQ(fs::file_size(d1 / "f5"), 5U);
+  }
 
+ //  copy_tests  ------------------------------------------------------------------//
+
+  void copy_tests()
+  {
+    cout << "copy_tests..." << endl;
+
+    //int regular_file_count = 0;
+    //int directory_count = 0;
+    //int logic_error_count = 0;
+    //for (fs::recursive_directory_iterator it (dir);
+    //     it != fs::recursive_directory_iterator();
+    //     ++it)
+    //{
+    //  if (fs::is_regular_file(it->status()))
+    //    ++regular_file_count;
+    //  else if (fs::is_directory(it->status()))
+    //    ++directory_count;
+    //  else
+    //    ++logic_error_count;
+    //}
+    //cout << regular_file_count << " regular_file_count \n";
+    //cout << directory_count << " directory_count \n";
+    //cout << logic_error_count << " logic_error_count \n";
+
+    fs::create_directories(dir/"dir1/dir2");
+    create_file(dir/"dir1/file1", "file1");
+    create_file(dir/"dir1/file2", "file2");
+    create_file(dir/"dir1/dir2/file3", "file3");
+    BOOST_TEST(exists(dir/"dir1/file1"));
+    BOOST_TEST(exists(dir/"dir1/file2"));
+    BOOST_TEST(exists(dir/"dir1/dir2/file3"));
+
+    fs::copy(dir/"dir1", dir/"dir3");
+    BOOST_TEST(exists(dir/"dir3/file1"));
+    BOOST_TEST(exists(dir/"dir3/file2"));
+    BOOST_TEST(!exists(dir/"dir3/dir2"));
+    BOOST_TEST(!exists(dir/"dir3/dir2/file3"));
+
+    fs::copy(dir/"dir1", dir/"dir3",
+      fs::copy_options::recursive | fs::copy_options::skip_existing);
+    BOOST_TEST(exists(dir/"dir3/file1"));
+    BOOST_TEST(exists(dir/"dir3/file2"));
+    BOOST_TEST(exists(dir/"dir3/dir2"));
+    BOOST_TEST(exists(dir/"dir3/dir2/file3"));
 
   }
 
@@ -2069,6 +2114,7 @@ int cpp_main(int argc, char* argv[])
     copy_symlink_tests(f1, d1);
     canonical_symlink_tests();
   }
+  copy_tests();
   iterator_status_tests();  // lots of cases by now, so a good time to test
 //  dump_tree(dir);
   recursive_directory_iterator_tests();
