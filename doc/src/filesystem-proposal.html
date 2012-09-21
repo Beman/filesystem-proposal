@@ -126,7 +126,12 @@ Library Proposal (Revision 3). Changes include:</p>
 
 
 <ul>
-  <li>Add path::operator+= and concat functions to tack on things like suffixes 
+  <li>Numerous corrections and improvements to the standardese of the proposed 
+  wording, based on comments and suggestions from the Filesystem Study Group, 
+  particularly <span class="gI">
+  <span email="daniel.kruegler@gmail.com" name="Daniel Krügler" class="gD">
+  Daniel Krügler and Robert Stewart.</span></span></li>
+  <li>Add <code>path::operator+=</code> and <code>concat</code> functions to tack on things like suffixes 
   or numbers. Suggested by Ed Smith-Rowland and others.</li>
     <li>Add section tags and section numbers, per LWG 
     discussion in Kona.</li>
@@ -185,21 +190,19 @@ Library Proposal (Revision 3). Changes include:</p>
   It was Boost specific and is inappropriate for the standard library.</li>
   <li>Change name of <code>recursive_directory_iterator::level()</code> to <code>
   depth()</code>.</li>
-  <li>
-  <p>Change <code>enum file_type</code> to <code>enum class file_type</code>, 
+  <li>Change <code>enum file_type</code> to <code>enum class file_type</code>, 
   simplify constant names, supply explicit values for constant names; per FSG 
   discussions.</li>
-  <li>
-  <p>Change name of <code>copy_directory</code> function to <code>
+  <li>Change name of <code>copy_directory</code> function to <code>
   create_directory</code> to more clearly reflect semantics per FSG 
   discussions.</li>
-  <li>
-  <p>Major upgrade to <code>copy_options</code> in response to FSG 
+  <li>Major upgrade to <code>copy_options</code> in response to FSG 
   discussions..</li>
-  <li>
-  <p>Major functionality upgrades to <code>copy()</code>and <code>
+  <li>Major functionality upgrades to <code>copy()</code>and <code>
   file_copy()</code> per FSG 
   discussions.</li>
+  <li>Add path member function <code>replace_filename()</code>, suggested by 
+  Robert Stewart and others.</li>
   <li>Add C++11 features to both the proposal and the Boost implementation and 
   test suite:<ul>
   <li>R-value reference move semantics.</li>
@@ -965,7 +968,8 @@ system or for a particular file system.</p>
         void  <a href="#path-clear">clear</a>() noexcept;
         path&amp; <a href="#path-make_preferred">make_preferred</a>();
         path&amp; <a href="#path-remove_filename">remove_filename</a>();
-        path&amp; <a href="#path-replace_extension">replace_extension</a>(const path&amp; new_extension = path());
+        path&amp; <a href="#replace_filename">replace_filename</a>(const path&amp; replacement);
+        path&amp; <a href="#path-replace_extension">replace_extension</a>(const path&amp; replacement = path());
         void  <a href="#path-swap">swap</a>(path&amp; rhs) noexcept;
 
         // <a href="#path-native-format-observers">native format observers</a>
@@ -1376,22 +1380,41 @@ std::cout &lt;&lt; p &lt;&lt; '\n';
 
 <pre>path&amp; <a name="path-remove_filename">remove_filename</a>();</pre>
 <blockquote>
-  <p><i>Returns: </i>As if, <code>*this = parent_path();</code></p>
-  <p>[<i>Note:</i> This function is needed to efficiently implement <code>directory_iterator</code>. It is exposed to allow additional uses. The actual 
-  implementation may be much more efficient than <code>*this = parent_path()</code>&nbsp; <i>-- end 
-  note</i>]</p>
+  <p><i>Postcondition:</i> <code>!has_filename()</code>.</p>
+  <p><i>Returns: </i> <code>*this</code>.</p>
+  <p>[<i>Example:</i></p>
+  <blockquote>
+    <pre><code>std::cout &lt;&lt; path(&quot;/foo&quot;).remove_filename();</code>  // outputs &quot;<code>/</code>&quot;
+std::cout &lt;&lt; path(&quot;/&quot;).<code>remove_</code>filename();     // outputs &quot;&quot;</pre>
+  </blockquote>
+  <p> <i>--end example</i>]</p>
 </blockquote>
-<pre>path&amp; <a name="path-replace_extension">replace_extension</a>(const path&amp; new_extension = path());</pre>
+
+<pre>path&amp; <a name="replace_filename">replace_filename</a>(const path&amp; replacement);</pre>
+<blockquote>
+  <p><i>Effects:</i></p>
+  <blockquote>
+    <p><code>remove_filename();<br>
+    operator/=(replacement);</code></p>
+  </blockquote>
+  <p><i>Returns: </i> <code>*this</code>.</p>
+  <p>[<i>Example:</i></p>
+  <blockquote>
+    <pre><code>std::cout &lt;&lt; path(&quot;/foo&quot;).replace_filename(&quot;bar&quot;);</code>  // outputs &quot;<code>/bar</code>&quot;
+std::cout &lt;&lt; path(&quot;/&quot;).<code>replace_</code>filename(<code>&quot;bar&quot;</code>);     // outputs &quot;bar&quot;</pre>
+  </blockquote>
+  <p> <i>--end example</i>]</p>
+</blockquote>
+<pre>path&amp; <a name="path-replace_extension">replace_extension</a>(const path&amp; replacement = path());</pre>
 <blockquote>
   <p><i>Effects:</i></p>
   <ul>
     <li>Any existing <code>extension()</code> is removed from the stored path, 
     then</li>
-    <li>iff
-  <code>new_extension</code> is not empty and does not begin with a dot 
+    <li>iff <code>replacement</code> is not empty and does not begin with a dot 
     character, a dot character is appended to the stored path, then</li>
     <li>
-  <code>new_extension</code> is appended to the stored path.</li>
+  <code>replacement</code> is appended to the stored path.</li>
   </ul>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
@@ -1527,7 +1550,10 @@ with the first <i>filename</i> after <i>root-path</i>. Otherwise, <code>path()</
   <p><i>Returns:</i> <code>empty() ? path() : *--end()</code></p>
   <p>[<i>Example:</i></p>
   <blockquote>
-    <pre><code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).filename();</code> // outputs &quot;<code>bar.txt</code>&quot;</pre>
+    <pre><code>std::cout &lt;&lt; path(&quot;/foo/bar.txt&quot;).filename();</code> // outputs &quot;<code>bar.txt</code>&quot;
+std::cout &lt;&lt; path(&quot;/&quot;).filename();            // outputs &quot;/&quot;
+std::cout &lt;&lt; path(&quot;.&quot;).filename();            // outputs &quot;.&quot;
+std::cout &lt;&lt; path(&quot;..&quot;).filename();           // outputs &quot;..&quot;</pre>
   </blockquote>
   <p> <i>--end example</i>]</p>
 </blockquote>

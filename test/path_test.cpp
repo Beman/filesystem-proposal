@@ -1745,6 +1745,27 @@ namespace
     BOOST_TEST(!fs::portable_file_name(std::string("foo.")));
   }
   
+  //  replace_filename_tests  ---------------------------------------------------------//
+
+  void replace_filename_tests()
+  {
+    std::cout << "replace_filename_tests..." << std::endl;
+
+    BOOST_TEST(path().replace_filename("").empty());
+    BOOST_TEST(path().replace_filename("a") == "a");
+    BOOST_TEST(path().replace_filename("a.txt") == "a.txt");
+
+    BOOST_TEST(path("foo").replace_filename("bar") == "bar");
+    BOOST_TEST_EQ(path("/").replace_filename("bar"), path("bar"));
+    BOOST_TEST_EQ(path(".").replace_filename("bar"), path("bar"));
+    BOOST_TEST_EQ(path("..").replace_filename("bar"), path("bar"));
+    BOOST_TEST(path("/foo").replace_filename("bar") == "/bar");
+    BOOST_TEST(path("my/foo").replace_filename("bar") == "my/bar");
+    BOOST_TEST(path("my//foo").replace_filename("bar") == "my/bar");
+    BOOST_TEST(path("./foo").replace_filename("bar") == "./bar");
+    BOOST_TEST(path("../foo").replace_filename("bar") == "../bar");
+  }
+  
   //  replace_extension_tests  ---------------------------------------------------------//
 
   void replace_extension_tests()
@@ -1836,6 +1857,7 @@ int cpp_main(int, char*[])
   non_member_tests();
   exception_tests();
   name_function_tests();
+  replace_filename_tests();
   replace_extension_tests();
   make_preferred_tests();
 
