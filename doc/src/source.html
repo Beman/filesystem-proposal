@@ -897,16 +897,17 @@ shall be one of:</p>
   charT</code> shall be an encoded character type ([fs.req]).&nbsp; A function 
   argument <code>Source const&amp;</code> <code>source</code> shall have an 
   effective range [<code>source.begin()</code>, <code>source.end()</code>).</li>
-  <li>A type meeting the input iterator requirements that iterates over a NTCTS. 
+  <li dir="ltr">
+  <p dir="ltr">A type meeting the input iterator requirements that iterates over a NTCTS. 
   The value type shall be an encoded character type. A function argument <code>
-  Source const&amp;</code> <code>source</code> shall have an effective range that 
-  begins at <code>source</code> and ends at the first element with value equal 
-  to <code>iterator_traits&lt;Source&gt;::<wbr />value_type()</code>.</li>
+  Source const&amp;</code> <code>source</code> shall have an effective range&nbsp; 
+  [<code>source</code>, <code>end</code>) where <code>end</code> is the first 
+  iterator value with an element value equal to <code>iterator_traits&lt;Source&gt;::<wbr />value_type()</code>.</li>
   <li>A character array that after array-to-pointer decay results in a 
   pointer to a NTCTS. The value type shall be an encoded character type. A 
-  function argument <code>Source const&amp;</code> <code>source</code> shall have an 
-  effective range that begins at <code>source</code> and ends at the first 
-  element with value equal to <code>iterator_traits&lt;decay&lt;Source&gt;:<wbr />:type&gt;::value_type()</code>.</li>
+  function argument <code>Source const&amp;</code> <code>source</code> shall 
+  have an effective range [<code>source</code>, <code>end</code>) where <code>
+  end</code> is the first iterator value with an element value equal to <code>iterator_traits&lt;decay&lt;Source&gt;:<wbr />:type&gt;::value_type()</code>.</li>
 </ul>
 
 <blockquote>
