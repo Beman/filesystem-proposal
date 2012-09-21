@@ -1950,7 +1950,7 @@ and permissions of a file.</p>
       public:
 
         // <a href="#directory_entry-constructors">constructors</a> and destructor
-        directory_entry() noexcept = default;
+        directory_entry() = default;
         directory_entry(const directory_entry&amp;) = default;
         directory_entry(directory_entry&amp;&amp;) noexcept = default;
         explicit directory_entry(const path_type&amp; p, file_status st=file_status(),
@@ -1980,7 +1980,7 @@ and permissions of a file.</p>
         bool operator&gt; (const directory_entry&amp; rhs) const noexcept;
         bool operator&gt;=(const directory_entry&amp; rhs) const noexcept;
       private:
-        path_type            m_path;           // for exposition only
+        path                 m_path;           // for exposition only
         mutable file_status  m_status;         // for exposition only; stat()-like
         mutable file_status  m_symlink_status; // for exposition only; lstat()-like
       };
