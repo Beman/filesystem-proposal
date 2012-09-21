@@ -1,7 +1,9 @@
 <html>
+$if $TARGET; == BOOST
 <!-- © Copyright Beman Dawes, 2002, 2006, 2007, 2009, 2010, 2011 -->
 <!-- Distributed under the Boost Software License, Version 1.0. -->
 <!-- See http://www.boost.org/LICENSE_1_0.txt -->
+$endif
 
 <!-- generate-section-numbers=false -->
 
@@ -47,7 +49,22 @@ $else
 $endif
 </title>
 <style type="text/css">
+$if $TARGET; == BOOST
 $include "../../../../doc/src/minimal.css"
+$else
+body  {
+        font-family: sans-serif;
+        margin: 1em;
+        max-width : 7.5in;
+      }
+
+table { margin: 0.5em; }
+
+pre   { background-color:#D7EEFF }
+
+ins   { background-color:#A0FFA0 }
+del   { background-color:#FFA0A0 }
+$endif
 </style>
 </head>
 
