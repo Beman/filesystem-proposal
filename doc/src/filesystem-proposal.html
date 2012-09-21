@@ -1230,16 +1230,17 @@ shall be one of:</p>
   charT</code> shall be an encoded character type ([fs.req]).&nbsp; A function 
   argument <code>Source const&amp;</code> <code>source</code> shall have an 
   effective range [<code>source.begin()</code>, <code>source.end()</code>).</li>
-  <li>A type meeting the input iterator requirements that iterates over a NTCTS. 
+  <li>
+  <p>A type meeting the input iterator requirements that iterates over a NTCTS. 
   The value type shall be an encoded character type. A function argument <code>
-  Source const&amp;</code> <code>source</code> shall have an effective range that 
-  begins at <code>source</code> and ends at the first element with value equal 
-  to <code>iterator_traits&lt;Source&gt;::<wbr />value_type()</code>.</li>
+  Source const&amp;</code> <code>source</code> shall have an effective range&nbsp; 
+  [<code>source</code>, <code>end</code>) where <code>end</code> is the first 
+  iterator value with an element value equal to <code>iterator_traits&lt;Source&gt;::<wbr />value_type()</code>.</li>
   <li>A character array that after array-to-pointer decay results in a 
   pointer to a NTCTS. The value type shall be an encoded character type. A 
-  function argument <code>Source const&amp;</code> <code>source</code> shall have an 
-  effective range that begins at <code>source</code> and ends at the first 
-  element with value equal to <code>iterator_traits&lt;decay&lt;Source&gt;:<wbr />:type&gt;::value_type()</code>.</li>
+  function argument <code>Source const&amp;</code> <code>source</code> shall 
+  have an effective range [<code>source</code>, <code>end</code>) where <code>
+  end</code> is the first iterator value with an element value equal to <code>iterator_traits&lt;decay&lt;Source&gt;:<wbr />:type&gt;::value_type()</code>.</li>
 </ul>
 
 <blockquote>
@@ -1782,7 +1783,7 @@ an error.</p>
     </tr>
   </table>
 </blockquote>
-<pre><a name="filesystem_error-3-arg">filesystem_error</a>(const string&amp; what_arg, const path_type&amp; p1, error_code ec);</pre>
+<pre><a name="filesystem_error-3-arg">filesystem_error</a>(const string&amp; what_arg, const path&amp; p1, error_code ec);</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="46%">
@@ -1810,7 +1811,7 @@ an error.</p>
     </tr>
   </table>
 </blockquote>
-<pre><a name="filesystem_error-4-arg">filesystem_error</a>(const string&amp; what_arg, const path_type&amp; p1, const path_type&amp; p2, error_code ec);</pre>
+<pre><a name="filesystem_error-4-arg">filesystem_error</a>(const string&amp; what_arg, const path&amp; p1, const path&amp; p2, error_code ec);</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="46%">
@@ -1926,7 +1927,7 @@ copy operations.&nbsp; The constants are specified in option groups. Constant
 <code>none</code> is shown in each option group for purposes of exposition; 
 implementations shall provide only a single definition.&nbsp; Calling a 
 Filesystem library function with more than a single constant for an option 
-group results in undefined behavior. <i>-- end note</i>]</p>
+group results in undefined behavior.</p>
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td colspan="3">
@@ -2208,17 +2209,17 @@ and permissions of a file.</p>
       public:
 
         // <a href="#directory_entry-constructors">constructors</a> and destructor
-        directory_entry() noexcept = default;
+        directory_entry() = default;
         directory_entry(const directory_entry&amp;) = default;
         directory_entry(directory_entry&amp;&amp;) noexcept = default;
-        explicit directory_entry(const path_type&amp; p, file_status st=file_status(),
+        explicit directory_entry(const path&amp; p, file_status st=file_status(),
           file_status symlink_st=file_status());
        ~directory_entry() = default; 
 
         // <a href="#directory_entry-modifiers">modifiers</a>
         directory_entry&amp; operator=(const directory_entry&amp;) = default;
         directory_entry&amp; operator=(directory_entry&amp;&amp;) noexcept = default;
-        void assign(const path_type&amp; p, file_status st=file_status(),
+        void assign(const path&amp; p, file_status st=file_status(),
           file_status symlink_st=file_status());
         void replace_filename(const path&amp; p, file_status st=file_status(),
           file_status symlink_st=file_status());
@@ -2238,7 +2239,7 @@ and permissions of a file.</p>
         bool operator&gt; (const directory_entry&amp; rhs) const noexcept;
         bool operator&gt;=(const directory_entry&amp; rhs) const noexcept;
       private:
-        path_type            m_path;           // for exposition only
+        path                 m_path;           // for exposition only
         mutable file_status  m_status;         // for exposition only; stat()-like
         mutable file_status  m_symlink_status; // for exposition only; lstat()-like
       };
@@ -2254,7 +2255,7 @@ non-cached results may differ in the presence of file system races. <i>-- end no
 </blockquote>
 <h3>1.12.1   <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a> 
 [directory_entry.cons]</h3>
-<pre>explicit directory_entry(const path_type&amp; p, file_status st=file_status(),
+<pre>explicit directory_entry(const path&amp; p, file_status st=file_status(),
                          file_status symlink_st=file_status());</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
@@ -2279,7 +2280,7 @@ non-cached results may differ in the presence of file system races. <i>-- end no
 </blockquote>
 <h3>1.12.2   <a name="directory_entry-modifiers"> <code>directory_entry </code>modifiers</a> 
 [directory_entry.mods]</h3>
-<pre>void assign(const path_type&amp; p, file_status st=file_status(),
+<pre>void assign(const path&amp; p, file_status st=file_status(),
             file_status symlink_st=file_status());</pre>
 <blockquote>
   <p><i>Postcondition:</i></p>
