@@ -1482,7 +1482,9 @@ operator&lt;&lt;($STD;basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp
   quoted strings, which are recognized as such by the extractor. There is a 
   sentiment within the Filesystem Study Group that supplying a quoted and/or 
   escaped string manipulator as a string extension would be a better solution than a 
-  path specific feature. </i></span></p>
+  path specific feature. See proposal 
+  <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3431.html">N3431</a>, Quoted Strings 
+  Library Proposal.</i></span></p>
   <p><i>Returns:</i> <code>os</code></p>
   </blockquote>
 <pre>template &lt;class charT, class traits&gt;
@@ -2627,12 +2629,9 @@ bool <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to
 void copy_symlink(const path&amp; existing_symlink, const path&amp; new_symlink,
                   $SYSTEM;error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <p><i>Effects: </i><code>create_symlink(read_symlink(existing_symlink</code><i>[</i><code>, ec</code><i>]</i><code>), new_symlink</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
-  
-  <p><blink><span style="background-color: #FFFF99">If the </span>
-  <span style="background-color: #FFFF99">symlink</span><span style="background-color: #FFFF99"> 
-  is a directory </span><span style="background-color: #FFFF99">symlink</span><span style="background-color: #FFFF99">, 
-  need to call create_directory_symlink(), at least on Windows</span></blink></p>
+  <p><i>Effects: </i><code><i>function</i>(read_symlink(existing_symlink</code><i>[</i><code>, ec</code><i>]</i><code>), new_symlink</code><i>[</i><code>, ec</code><i>]</i><code>)</code>, 
+  where <i><code>function</code></i> is <code>create_symlink</code> or <code>
+  create_directory_symlink</code>, as appropriate.</p>
   
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   

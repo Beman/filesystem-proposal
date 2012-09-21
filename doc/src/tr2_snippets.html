@@ -15,7 +15,7 @@ $id frontmatter=
   <table border="0">
     <tr>
       <td>Document number:&nbsp;&nbsp; </td>
-      <td><span style="background-color: #FFFF99">D3399=12-0089</span></td>
+      <td>N3399=12-0089</td>
     </tr>
     <tr>
       <td>Date:</td>
@@ -33,14 +33,7 @@ $id frontmatter=
   </table>
 
 
-<p><span style="font-style: italic; background-color: #FFFF99">Material 
-high-lighted in yellow is specific to this draft and will be revised before it 
-appears in a mailing.</span></p>
-
-
-<h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->21 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39619" --></span><br>
-Filesystem Library Proposal (Revision 3)</h1>
+<h1>Filesystem Library Proposal (Revision 3)</h1>
 
 
       <a href="#Introduction">Introduction</a><br>
@@ -65,7 +58,9 @@ version 3. Proposed wording is provided. A
 <a href="#TODO">TODO</a> list identifies remaining work to be done.</p>
 
 
-<p>The proposal is a pure addition; no existing standard library headers are modified. No 
+<p>The proposal is a pure addition; no existing standard library headers are modified.&nbsp; 
+No existing code is broken by this proposal, assuming the usual namespace 
+discipline caveats. No 
 special compiler or runtime support is required, although C++11 features are used where appropriate. The 
 entire library is in a namespace within namespace <code>std</code>.</p>
 
@@ -90,13 +85,12 @@ N1975</a>, and are not repeated here.</p>
 (i.e. <code>char</code>) character strings with encodings other than the 
 operating system's native encoding. These facilities have been removed from the 
 Filesystem library proposal. Instead, proposal
-<span style="background-color: #FFFF99">
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3398.html">N3398, String Interoperability Library</a></span>, 
+<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3398.html">N3398, String Interoperation Library</a>, 
 provides general facilities that also handle the class <code>path</code> use 
 cases.</p>
 
 
-<p>Otherwise, the proposal is virtually identical to the Boost library. Indeed, 
+<p>Otherwise, the proposal is very similar to the Boost library. Indeed, 
 the proposed wording is generated from the same source as the Boost library's 
 reference documentation.</p>
 
@@ -104,8 +98,8 @@ reference documentation.</p>
 <h2><a name="Revision-history">Revision history</a></h2>
 
 
-<p><span style="background-color: #FFFF99">
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3399.html">D3399=12-0089</a></span>, Filesystem 
+<p><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3399.html">
+N3399=12-0089</a>, Filesystem 
 Library Proposal (Revision 3). Changes include:</p>
 
 
@@ -277,7 +271,6 @@ C++0x.</p>
     <li>Test, then add wording for, path automatic private conversion to const 
     string_type&amp; with &lt;fstream&gt; friendship. Allow implementers latitude to 
     instead add additional overloads to &lt;fstream&gt;.</li>
-    <li><span style="background-color: #FFFF99">Update Acknowledgements.</span></li>
     <li>At Portland meeting, review trademarked names with Filesystem Study 
     Group and project editor.</li>
     <li>Ion Todirel suggests &quot;Would be nice if path::append was variadic, to 
@@ -287,6 +280,9 @@ C++0x.</p>
     <li>Dinkumware/Microsoft report slightly different results for Decomposition 
     table. Rerun table. Check discrepancies.</li>
     <li>Review Nick Stoughton's email for suggestions, action items.</li>
+    <li>Review Filesystem Study Group reflector messages for unresolved 
+    comments, particularly in the area of Permissions.</li>
+    <li>Review and resolve any pending issues in the GitHub issues list.</li>
   </ul>
   
 <h2>Proposed Wording <a name="TOC">Table of Contents</a></h2>
