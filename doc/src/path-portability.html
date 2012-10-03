@@ -10,17 +10,38 @@
 
 <body>
 
-<p>&nbsp;</p>
+<h2>Path portability</h2>
+
+<p>Moving code from a tidy environment where narrow character strings are always 
+UTF-8 encoded to a new environment where the narrow character encoding differs 
+can be a daunting experience.&nbsp; Filenames can become unrecognizable to a 
+human or to a file system. The same problem also applies to other encodings, 
+although UTF-8 is so ubiquitous it deserves special consideration.</p>
+
+<p>One of the design objectives of the Filesystem Library is to ease this 
+problem. The solution centers around the constructors for class <code>path</code>:</p>
 <table border="1" cellpadding="10" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
   <tr>
     <td>
     <h2>Recommendations for portable use of class <code>path</code> constructors</h2>
     <ul>
-      <li>Only use <code>char</code> string literals (&quot;an&quot;) for strings that are 
-      entirely 7-bit ASCII characters. Use char16_t (u&quot;&quot;) 
-      literals for strings that include non-ASCII characters within the 16-bit 
-      Unicode Basic Multilingual Plane(BMP), 
-      or char32_t (U&quot;&quot;) literals for strings that include Unicode characters 
+      <li dir="ltr">For narrow (i.e. <code>char</code>) strings that are not 
+      composed entirely of 7-bit ASCII characters, if the encoding is fixed 
+      (e.g. UTF-8) rather than changing when the native encoding changes, do one 
+      of two things:<ul>
+      <li>Convert the narrow string data to <code>u16string</code> or <code>
+      u32string</code>, so that encoding never changes.</li>
+      <li>Tell the constructor (or a helper) what the actual narrow string 
+      encoding is, so that the default native encoding will be overridden. <br>
+&nbsp;</li>
+    </ul>
+      </li>
+      <li dir="ltr">Use <code>char</code> string literals (<code>&quot;an&quot;</code>) 
+      only for strings composed 
+      entirely of 7-bit ASCII characters. Use <code>char16_t</code> 
+      literals (<code>u&quot;äñ&quot;</code>) for strings that include non-ASCII characters within the 16-bit 
+      Unicode Basic Multilingual Plane (BMP), 
+      or <code>char32_t</code> literals (<code>U&quot;𠃰&quot;</code>) for strings that include Unicode characters 
       above the BMP.</li>
     </ul>
     </td>
