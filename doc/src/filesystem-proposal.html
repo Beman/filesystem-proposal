@@ -36,7 +36,7 @@ del   { background-color:#FFA0A0 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-10-03<!--webbot bot="Timestamp" endspan i-checksum="12012" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-10-04<!--webbot bot="Timestamp" endspan i-checksum="12014" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -120,7 +120,7 @@ Library Proposal (Revision 4). Changes include:</p>
 
 
 <ul>
-  <li>None yet.</li>
+  <li>Editorial corrections reported by Jens Maurer.</li>
 </ul>
 
 
@@ -1152,7 +1152,7 @@ operating system.</p>
 format conversions</a> [path.fmt.cvt]</h4>
 <p>Member functions arguments that take character sequences representing paths 
 may use the generic pathname format grammar ([<a href="#path.generic">path.generic</a>]) or 
-the <a href="#fs.def.native">native pathname format</a>. Iff such 
+the <a href="#fs.def.native">native pathname format</a>. If and only if such 
 arguments are in the generic format and the generic format is not acceptable to 
 the operating system as a native path, conversion to native format shall be 
 performed during the processing of the argument. </p>
@@ -1417,7 +1417,7 @@ std::cout &lt;&lt; path(&quot;/&quot;).<code>replace_</code>filename(<code>&quot
   <ul>
     <li>Any existing <code>extension()</code> is removed from the stored path, 
     then</li>
-    <li>iff <code>replacement</code> is not empty and does not begin with a dot 
+    <li>If <code>replacement</code> is not empty and does not begin with a dot 
     character, a dot character is appended to the stored path, then</li>
     <li>
   <code>replacement</code> is appended to the stored path.</li>
@@ -2634,9 +2634,9 @@ if present, otherwise <code>directory_options::none</code>.</p>
 <pre>bool <code>recursion_pending</code>() const;</pre>
 <blockquote>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
-  <p><i>Returns:</i> <code>true</code> iff <code>disable_recursion_pending()</code> 
+  <p><i>Returns:</i> <code>true</code> if <code>disable_recursion_pending()</code> 
   has not been called subsequent to the prior construction or increment 
-  operation.</p>
+  operation, otherwise <code>false</code>.</p>
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre><code>recursive_directory_iterator</code>&amp; <a name="recursive_directory_iterator-increment">operator++</a>();
@@ -2950,10 +2950,10 @@ bool create_directory(const path&amp; p, const path&amp; existing_p, error_code&
     <tr>
       <td width="100%">
       <p>[<i>Note:</i> For ISO 9945/POSIX based operating systems the 
-      attributes are those copied by native API <code>stat(attributes.c_str(), &amp;attributes_stat)</code> 
-      followed by <code>mkdir(p.c_str(),attributes_stat.st_mode)</code>.&nbsp; For 
+      attributes are those copied by native API <code>stat(existing_p.c_str(), &amp;attributes_stat)</code> 
+      followed by <code>mkdir(p.c_str(), attributes_stat.st_mode)</code>.&nbsp; For 
       Windows based operating systems the attributes are those copied by native 
-      API <code>CreateDirectoryExW(attributes.c_str(), p.c_str(), 0)</code>.&nbsp; <i>
+      API <code>CreateDirectoryExW(existing_p.c_str(), p.c_str(), 0)</code>.&nbsp; <i>
       --end note</i>]</td>
     </tr>
   </table>
