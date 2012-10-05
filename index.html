@@ -31,12 +31,12 @@ del   { background-color:#FFA0A0 }
   <table border="0">
     <tr>
       <td>Document number:&nbsp;&nbsp; </td>
-      <td><span style="background-color: #FFFF99">D3399=12-0089</span></td>
+      <td><span style="background-color: #FFFF99">Nxxxx</span><span style="background-color: #FFFF99">=12-xxxx</span></td>
     </tr>
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-09-21<!--webbot bot="Timestamp" endspan i-checksum="12554" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-10-04<!--webbot bot="Timestamp" endspan i-checksum="12014" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -49,14 +49,8 @@ del   { background-color:#FFA0A0 }
   </table>
 
 
-<p><span style="font-style: italic; background-color: #FFFF99">Material 
-high-lighted in yellow is specific to this draft and will be revised before it 
-appears in a mailing.</span></p>
-
-
-<h1><span style="background-color: #FFFF99">Draft,
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->21 September 2012<!--webbot bot="Timestamp" endspan i-checksum="39619" --></span><br>
-Filesystem Library Proposal (Revision 3)</h1>
+<h1>Filesystem Library Proposal (Revision 4)
+<span style="background-color: #FFFF99">DRAFT</span></h1>
 
 
       <a href="#Introduction">Introduction</a><br>
@@ -81,7 +75,9 @@ version 3. Proposed wording is provided. A
 <a href="#TODO">TODO</a> list identifies remaining work to be done.</p>
 
 
-<p>The proposal is a pure addition; no existing standard library headers are modified. No 
+<p>The proposal is a pure addition; no existing standard library headers are modified.&nbsp; 
+No existing code is broken by this proposal, assuming the usual namespace 
+discipline caveats. No 
 special compiler or runtime support is required, although C++11 features are used where appropriate. The 
 entire library is in a namespace within namespace <code>std</code>.</p>
 
@@ -106,13 +102,12 @@ N1975</a>, and are not repeated here.</p>
 (i.e. <code>char</code>) character strings with encodings other than the 
 operating system's native encoding. These facilities have been removed from the 
 Filesystem library proposal. Instead, proposal
-<span style="background-color: #FFFF99">
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3398.html">N3398, String Interoperability Library</a></span>, 
+<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3398.html">N3398, String Interoperation Library</a>, 
 provides general facilities that also handle the class <code>path</code> use 
 cases.</p>
 
 
-<p>Otherwise, the proposal is virtually identical to the Boost library. Indeed, 
+<p>Otherwise, the proposal is very similar to the Boost library. Indeed, 
 the proposed wording is generated from the same source as the Boost library's 
 reference documentation.</p>
 
@@ -120,8 +115,17 @@ reference documentation.</p>
 <h2><a name="Revision-history">Revision history</a></h2>
 
 
-<p><span style="background-color: #FFFF99">
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3399.html">D3399=12-0089</a></span>, Filesystem 
+<p><span style="background-color: #FFFF99">Nxxxx</span><span style="background-color: #FFFF99">=12-xxxx</span>, Filesystem 
+Library Proposal (Revision 4). Changes include:</p>
+
+
+<ul>
+  <li>Editorial corrections reported by Jens Maurer.</li>
+</ul>
+
+
+<p><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3399.html">
+N3399=12-0089</a>, Filesystem 
 Library Proposal (Revision 3). Changes include:</p>
 
 
@@ -293,7 +297,6 @@ C++0x.</p>
     <li>Test, then add wording for, path automatic private conversion to const 
     string_type&amp; with &lt;fstream&gt; friendship. Allow implementers latitude to 
     instead add additional overloads to &lt;fstream&gt;.</li>
-    <li><span style="background-color: #FFFF99">Update Acknowledgements.</span></li>
     <li>At Portland meeting, review trademarked names with Filesystem Study 
     Group and project editor.</li>
     <li>Ion Todirel suggests &quot;Would be nice if path::append was variadic, to 
@@ -303,6 +306,9 @@ C++0x.</p>
     <li>Dinkumware/Microsoft report slightly different results for Decomposition 
     table. Rerun table. Check discrepancies.</li>
     <li>Review Nick Stoughton's email for suggestions, action items.</li>
+    <li>Review Filesystem Study Group reflector messages for unresolved 
+    comments, particularly in the area of Permissions.</li>
+    <li>Review and resolve any pending issues in the GitHub issues list.</li>
   </ul>
   
 <h2>Proposed Wording <a name="TOC">Table of Contents</a></h2>
@@ -1146,7 +1152,7 @@ operating system.</p>
 format conversions</a> [path.fmt.cvt]</h4>
 <p>Member functions arguments that take character sequences representing paths 
 may use the generic pathname format grammar ([<a href="#path.generic">path.generic</a>]) or 
-the <a href="#fs.def.native">native pathname format</a>. Iff such 
+the <a href="#fs.def.native">native pathname format</a>. If and only if such 
 arguments are in the generic format and the generic format is not acceptable to 
 the operating system as a native path, conversion to native format shall be 
 performed during the processing of the argument. </p>
@@ -1411,7 +1417,7 @@ std::cout &lt;&lt; path(&quot;/&quot;).<code>replace_</code>filename(<code>&quot
   <ul>
     <li>Any existing <code>extension()</code> is removed from the stored path, 
     then</li>
-    <li>iff <code>replacement</code> is not empty and does not begin with a dot 
+    <li>If <code>replacement</code> is not empty and does not begin with a dot 
     character, a dot character is appended to the stored path, then</li>
     <li>
   <code>replacement</code> is appended to the stored path.</li>
@@ -1741,7 +1747,9 @@ operator&lt;&lt;(basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp; p);
   quoted strings, which are recognized as such by the extractor. There is a 
   sentiment within the Filesystem Study Group that supplying a quoted and/or 
   escaped string manipulator as a string extension would be a better solution than a 
-  path specific feature. </i></span></p>
+  path specific feature. See proposal 
+  <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3431.html">N3431</a>, Quoted Strings 
+  Library Proposal.</i></span></p>
   <p><i>Returns:</i> <code>os</code></p>
   </blockquote>
 <pre>template &lt;class charT, class traits&gt;
@@ -2626,9 +2634,9 @@ if present, otherwise <code>directory_options::none</code>.</p>
 <pre>bool <code>recursion_pending</code>() const;</pre>
 <blockquote>
   <p><i>Requires:</i> <code>*this != recursive_directory_iterator()</code>.</p>
-  <p><i>Returns:</i> <code>true</code> iff <code>disable_recursion_pending()</code> 
+  <p><i>Returns:</i> <code>true</code> if <code>disable_recursion_pending()</code> 
   has not been called subsequent to the prior construction or increment 
-  operation.</p>
+  operation, otherwise <code>false</code>.</p>
   <p><i>Throws:</i> Nothing.</p>
 </blockquote>
 <pre><code>recursive_directory_iterator</code>&amp; <a name="recursive_directory_iterator-increment">operator++</a>();
@@ -2891,12 +2899,9 @@ bool <a name="copy_file2">copy_file</a>(const path&amp; from, const path&amp; to
 void copy_symlink(const path&amp; existing_symlink, const path&amp; new_symlink,
                   error_code&amp; ec) noexcept;</pre>
 <blockquote>
-  <p><i>Effects: </i><code>create_symlink(read_symlink(existing_symlink</code><i>[</i><code>, ec</code><i>]</i><code>), new_symlink</code><i>[</i><code>, ec</code><i>]</i><code>)</code>.</p>
-  
-  <p><blink><span style="background-color: #FFFF99">If the </span>
-  <span style="background-color: #FFFF99">symlink</span><span style="background-color: #FFFF99"> 
-  is a directory </span><span style="background-color: #FFFF99">symlink</span><span style="background-color: #FFFF99">, 
-  need to call create_directory_symlink(), at least on Windows</span></blink></p>
+  <p><i>Effects: </i><code><i>function</i>(read_symlink(existing_symlink</code><i>[</i><code>, ec</code><i>]</i><code>), new_symlink</code><i>[</i><code>, ec</code><i>]</i><code>)</code>, 
+  where <i><code>function</code></i> is <code>create_symlink</code> or <code>
+  create_directory_symlink</code>, as appropriate.</p>
   
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
@@ -2945,10 +2950,10 @@ bool create_directory(const path&amp; p, const path&amp; existing_p, error_code&
     <tr>
       <td width="100%">
       <p>[<i>Note:</i> For ISO 9945/POSIX based operating systems the 
-      attributes are those copied by native API <code>stat(attributes.c_str(), &amp;attributes_stat)</code> 
-      followed by <code>mkdir(p.c_str(),attributes_stat.st_mode)</code>.&nbsp; For 
+      attributes are those copied by native API <code>stat(existing_p.c_str(), &amp;attributes_stat)</code> 
+      followed by <code>mkdir(p.c_str(), attributes_stat.st_mode)</code>.&nbsp; For 
       Windows based operating systems the attributes are those copied by native 
-      API <code>CreateDirectoryExW(attributes.c_str(), p.c_str(), 0)</code>.&nbsp; <i>
+      API <code>CreateDirectoryExW(existing_p.c_str(), p.c_str(), 0)</code>.&nbsp; <i>
       --end note</i>]</td>
     </tr>
   </table>
