@@ -1,6 +1,6 @@
 <html>
 $if $TARGET; == BOOST
-<!-- © Copyright Beman Dawes, 2002, 2006, 2007, 2009, 2010, 2011 -->
+<!-- Â© Copyright Beman Dawes, 2002, 2006, 2007, 2009, 2010, 2011 -->
 <!-- Distributed under the Boost Software License, Version 1.0. -->
 <!-- See http://www.boost.org/LICENSE_1_0.txt -->
 $endif
@@ -11,7 +11,7 @@ $endif
 <meta http-equiv="Content-Language" content="en-us">
 <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>
 $if $TARGET; == BOOST
   Filesystem Reference
@@ -315,8 +315,8 @@ $if $TARGET; == BOOST
 $endif;    class <a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a>;
 
     // enable c++11 range-based for statements
-    const recursive_directory_iterator&amp; <a href="#recursive_directory_iterator-non-member-functions">begin</a>(const recursive_directory_iterator&amp; iter) noexcept;
-    recursive_directory_iterator <a href="#recursive_directory_iterator-non-member-functions">end</a>(const recursive_directory_iterator&amp;) noexcept;
+    const recursive_directory_iterator&amp; <a href="#rec.dir.itr.nonmembers">begin</a>(const recursive_directory_iterator&amp; iter) noexcept;
+    recursive_directory_iterator <a href="#rec.dir.itr.nonmembers">end</a>(const recursive_directory_iterator&amp;) noexcept;
 
 $if $TARGET; == BOOST
     // enable BOOST_FOREACH
@@ -427,9 +427,9 @@ $endif;
     bool         <a href="#is_character_file">is_character_file</a>(const path&amp; p,);
     bool         <a href="#is_character_file">is_character_file</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
 
-    bool         <a href="#is_block_file">is_directory</a>(file_status s) noexcept;
-    bool         <a href="#is_directory2">is_directory</a>(const path&amp; p);
-    bool         <a href="#is_directory2">is_directory</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
+    bool         <a href="#is_directory">is_directory</a>(file_status s) noexcept;
+    bool         <a href="#is_directory">is_directory</a>(const path&amp; p);
+    bool         <a href="#is_directory">is_directory</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
 
     bool         <a href="#is_empty">is_empty</a>(const path&amp; p);
     bool         <a href="#is_empty">is_empty</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;
@@ -711,11 +711,11 @@ is the operating system dependent <i>preferred-separator</i> character ([path.ge
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
    bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
     <tr>
-      <td width="100%">[<i>Example:</i> For ISO 9945/POSIX based operating 
+      <td width="100%">[<i>Example:</i> For  POSIX based operating 
       systems, <code>value_type</code> is <code>char</code> and <code>
-      preferred_separator</code> is the slash character.&nbsp; For Windows based 
+      preferred_separator</code> is the slash character (/).&nbsp; For Windows based 
 operating systems, <code>value_type</code> is <code>wchar_t</code> and <code>
-      preferred_separator</code> is the backslash character.&nbsp; <i>--end example</i>]</td>
+      preferred_separator</code> is the backslash character (\).&nbsp; <i>--end example</i>]</td>
     </tr>
   </table>
 </blockquote>
@@ -763,8 +763,7 @@ sequence of characters other than <i>directory-separator</i> characters.</p>
     <tr>
       <td width="100%">[<i>Note:</i> Operating systems often place restrictions 
       on the characters that may be used in a <i>filename</i>. For wide 
-      portability, users may wish to limit <i>filename</i> characters to the ISO 
-      9945/POSIX Portable Filename Character Set: <br>
+      portability, users may wish to limit <i>filename</i> characters to the  POSIX Portable Filename Character Set: <br>
       <br>
       <tt>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br>
       a b c d e f g h i j k l m n o p q r s t u v w x y z<br>
@@ -776,11 +775,11 @@ sequence of characters other than <i>directory-separator</i> characters.</p>
 </blockquote>
 <p><i>dot:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The 
-filename consisting solely of a single period (.) character.<br>
+filename consisting solely of a single period character (.).<br>
 <br>
 <i>dot-dot:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The 
-filename consisting solely of two period (..) characters.<br>
+filename consisting solely of two period characters (..).<br>
 <br>
 <i>directory-separator:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; slash<code><br>
@@ -796,8 +795,8 @@ operating system dependent directory separator character. May be a synonym for
 <i>slash</i>.<br>
 <br>
 <i>slash:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The slash (/) 
-character. </p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The slash 
+character (/). </p>
 <p>Multiple successive <i>directory-separator</i> characters are considered to 
 be the same as one <i>directory-separator</i> character.</p>
 <p>The filename <i>dot</i> is treated as a reference to the current directory. The filename <i>
@@ -808,6 +807,24 @@ operating system.</p>
 <h3><a name="path-Conversions"><code>path</code> conversions</a> [path.cvt]</h3>
 <h4><a name="path-Conversions-to-native-format"><code>path</code> argument 
 format conversions</a> [path.fmt.cvt]</h4>
+
+<blockquote>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">[<i>Note:</i> The format conversions described in this 
+      section are never applied on POSIX or Windows based operating systems:<ul>
+        <li>The generic format is acceptable as a native path.</li>
+        <li>There is no need to distinguish between native format and generic 
+        format arguments.</li>
+        <li>Paths for regular files and paths for directories share the same 
+        syntax.</li>
+      </ul>
+      <p>&nbsp;<i>-- end note</i>]</td>
+    </tr>
+  </table>
+</blockquote>
+
 <p>Member functions arguments that take character sequences representing paths 
 may use the generic pathname format grammar ([<a href="#path.generic">path.generic</a>]) or 
 the <a href="#fs.def.native">native pathname format</a>. If and only if such 
@@ -827,25 +844,7 @@ as an extension to distinguish between the formats. <i>
 differently from paths for directories, the path shall be treated as a directory 
 path if last element is <i>directory-separator</i>, 
 otherwise it shall be treated as a regular file path.</p>
-<blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">[<i>Note:</i> For ISO 9945/POSIX and Windows based operating 
-      systems,<ul>
-        <li>The generic format is acceptable as a native path so paragraph 1 
-        does not apply and format 
-        conversion is not performed.</li>
-        <li>There is no need to distinguish between native format and generic 
-        format arguments so paragraph 1 does not apply and&nbsp; no extension is required.</li>
-        <li>Paths for regular files and paths for directories share the same 
-      syntax so paragraph 1 does not apply and there is no special treatment for a path with a last element of
-      <i>directory-separator</i>.</li>
-      </ul>
-      <p>&nbsp;<i>-- end note</i>]</td>
-    </tr>
-  </table>
-</blockquote>
+
 <h4><code>path</code> type and encoding conversions [<a name="path.arg.convert">path.type.cvt</a>]</h4>
 <p>For member function arguments that take character sequences representing 
 paths and for member function returning strings, value type and encoding 
@@ -855,39 +854,38 @@ path::value_type</code>. Encoding is determined based on the value type:</p>
   <ul>
     <li>
 <p><code>char</code>: Operating system dependent narrow character path 
-encoding. [<i>Note:</i> The intent is to preserve the current behavior of C and C++ 
+encoding.<br>
+<br>
+[<i>Note:</i> The intent is to supply the same behavior as other C and C++ 
 standard library functions that perform file operations using narrow character 
 strings to identify paths. Changing this behavior would be surprising and break 
-much existing code. <i>--end note</i>]</p>
+much existing code. <i>--end note</i>]<br>
+<br>
+      <i><span style="background-color: #E0E0E0">The native encoding for narrow character paths varies considerably:</span></i><ul>
+        <li>
+        <p><i><span style="background-color: #E0E0E0">Apple OS X always uses UTF-8.</span></i></li>
+        <li><i><span style="background-color: #E0E0E0">On some POSIX based operating systems, the encoding is determined by <code>locale(&quot;&quot;)</code>;</span></i></li>
+        <li><i><span style="background-color: #E0E0E0">On Windows based operating systems, the encoding is determined 
+        testing by <code>AreFileApisANSI()</code>; if true, the <code>CP_ACP</code> 
+        codepage is used, otherwise the <code>CP_OEMCP</code> codepage is 
+        used. </span></i><br>
+&nbsp;</li>
+      </ul>
+</p>
     </li>
     <li>
 <p><code>wchar_t</code>: Encoding of the implementation's native wide 
-character set.</p>
+character set.<br>
+&nbsp;</p>
     </li>
     <li>
-<p><code>char16_t</code>: UTF-16</p>
+<p><code>char16_t</code>: UTF-16<br>
+&nbsp;</p>
     </li>
     <li>
 <p><code>char32_t</code>: UTF-32</p>
     </li>
   </ul>
-<blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">[<i>Note:</i> Native narrow character path encoding 
-      varies considerably:<ul>
-        <li>
-        <p>MAC OS X operating system: Always UTF-8.</li>
-        <li>Some ISO 9945/POSIX based operating systems: determined by <code>locale(&quot;&quot;)</code>;</li>
-        <li>Windows based operating systems: Codepage of <code>CP_ACP</code> 
-    if <code>AreFileApisANSI()</code>is true, otherwise codepage <code>CP_OEMCP</code>.</li>
-      </ul>
-      <p>&nbsp;<i>-- end note</i>]</td>
-    </tr>
-  </table>
-</blockquote>
-
 </blockquote>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
 <p>In addition to the [fs.req] requirements, function template parameters named <code><a name="Source">Source</a></code> 
@@ -1090,13 +1088,8 @@ std::cout &lt;&lt; path(&quot;/&quot;).<code>replace_</code>filename(<code>&quot
 <blockquote>
   <p><i>Effects:</i> Swaps the contents of the two paths.</p>
   <p><i>Complexity: </i>constant time.</p>
-  <p><span style="background-color: #E0E0E0"><i>See </i></span><i>
-  <span class="gI"><span style="background-color: #E0E0E0">
-  &nbsp;[c++std-filesystem-44] from </span></span>
-  <span email="daniel.kruegler@gmail.com" name="Daniel Krügler" class="gD">
-  <span style="background-color: #E0E0E0">Daniel Krügler </span></span>
-  <span class="gI"><span style="background-color: #E0E0E0">for <code>noexcept</code> 
-  rationale.</span></span></i></p>
+  <p><span style="background-color: #E0E0E0"><i>See 
+    [c++std-filesystem-44] from Daniel KrÃ¼gler for <code>noexcept</code> rationale.</span></i></p>
 </blockquote>
 
 <h3> <a name="path-native-format-observers"><code>path</code> native format observers</a> 
@@ -1316,8 +1309,7 @@ for (; !p.extension().empty(); p = p.stem())
    bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
     <tr>
       <td width="100%">[<i>Example:</i> <code>path(&quot;/&quot;).is_absolute()</code> is
-      <code>true</code> for ISO 
-9945/POSIX based operating systems, and <code>false</code> for Windows based 
+      <code>true</code> for  POSIX based operating systems, and <code>false</code> for Windows based 
 operating systems.&nbsp; <i>--end example</i>]</td>
     </tr>
   </table>
@@ -2315,7 +2307,7 @@ $NAMESPACE_END;</pre>
 
 <p>The behavior of a <code>recursive_directory_iterator</code> is the same 
 as a <code>directory_iterator</code> unless otherwise specified.</p>
-<h3><code>recursive_<a name="directory_iterator-members">directory_iterator</a></code> members 
+<h3><code><a name="recursive_directory_iterator-members">recursive_directory_iterator</a></code> members 
 [<a name="rec.dir.itr.members">rec.dir.itr.members</a>]</h3>
 
 <pre>recursive_directory_iterator() noexcept;</pre>
@@ -2485,7 +2477,7 @@ void copy(const path&amp; from, const path&amp; to, $SYSTEM;error_code&amp; ec) 
   
 </blockquote>
 
-<pre>void <a name="copy">copy</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options);
+<pre>void <a name="copy2">copy</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options);
 void copy(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options, $SYSTEM;error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Precondition:</i> At most one constant from each option group ([<a href="#enum.copy_options">enum.copy_options</a>]) 
@@ -2679,7 +2671,7 @@ bool create_directory(const path&amp; p, const path&amp; existing_p, $SYSTEM;err
    bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
     <tr>
       <td width="100%">
-      <p>[<i>Note:</i> For ISO 9945/POSIX based operating systems the 
+      <p>[<i>Note:</i> For POSIX based operating systems the 
       attributes are those copied by native API <code>stat(existing_p.c_str(), &amp;attributes_stat)</code> 
       followed by <code>mkdir(p.c_str(), attributes_stat.st_mode)</code>.&nbsp; For 
       Windows based operating systems the attributes are those copied by native 
@@ -2842,8 +2834,8 @@ uintmax_t hard_link_count(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcep
 <blockquote>
   <p><i>Returns:</i> <code>s.type() == file_type::block</code></p>
 </blockquote>
-<pre><code>bool <a name="is_directory2">is_block_file</a>(const path&amp; p);
-bool <a name="is_directory3">is_</a><a name="is_directory2">block_file</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
+<pre><code>bool is_block_file(const path&amp; p);
+bool is_block_file</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_block_file(status(p))</code> or <code>
   is_block_file(status(p, ec))</code>, respectively. The signature with argument <code>
@@ -2855,11 +2847,11 @@ bool <a name="is_directory3">is_</a><a name="is_directory2">block_file</a>(const
 <blockquote>
   <p><i>Returns:</i> <code>s.type() == file_type::character</code></p>
 </blockquote>
-<pre><code>bool <a name="is_directory">is_character_file</a>(const path&amp; p);
-bool <a name="is_directory">is_character_file</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
+<pre><code>bool is_character_file</a>(const path&amp; p);
+bool is_character_file</a>(const path&amp; p, $SYSTEM;error_code&amp; ec) noexcept;</code></pre>
 <blockquote>
-  <p><i>Returns:</i> <code><a name="is_directory">is_character_file</a>(status(p))</code> 
-  or <code><a name="is_directory">is_character_file</a>(status(p, ec))</code>, 
+  <p><i>Returns:</i> <code>is_character_file(status(p))</code> 
+  or <code>is_character_file(status(p, ec))</code>, 
   respectively. The signature with argument <code>ec</code> returns <code>false</code> 
   if an error occurs.</p>
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
@@ -3245,7 +3237,7 @@ path <a name="system_complete2">system_complete</a>(const path&amp; p, $SYSTEM;e
     <tr>
       <td width="100%">
   
-  <p>[<i>Example:</i> For ISO 9945/POSIX based operating systems, <code>system_complete(p)</code>
+  <p>[<i>Example:</i> For POSIX based operating systems, <code>system_complete(p)</code>
   has the same semantics as <code>complete(p, current_path())</code>.</p>
   <p>For Windows based operating systems, <code>system_complete(p)</code> has the 
   same semantics as <code>absolute(ph, current_path())</code> if <code>p.is_absolute() ||
@@ -3281,7 +3273,7 @@ path temp_directory_path($SYSTEM;error_code&amp; ec);</pre>
     <tr>
       <td width="100%">
   
-  <p>[<i>Example:</i> For ISO 9945/POSIX based operating systems, the path 
+  <p>[<i>Example:</i> For POSIX based operating systems, the path 
   supplied by the first environment variable found in the list TMPDIR, TMP, TEMP, TEMPDIR. If none of these are found, <code>&quot;/tmp&quot;</code>.</p>
   <p>For Windows based operating systems, the path reported by the <i>Windows</i> <code>GetTempPath</code> API function. <i>-- end example</i>]</p>
   
@@ -3861,7 +3853,7 @@ through to completion. She gave me the strength to continue after a difficult
 year of cancer treatment in the middle of it all.</p>
 <p>Members of the C++ standards committee Filesystem Study Group contributed 
 numerous comments, suggestions, and bug-fixes to the post-C++11 proposal for 
-standardizing the library. Daniel Krügler and Robert Steward reviewed the text 
+standardizing the library. Daniel KrÃ¼gler and Robert Steward reviewed the text 
 in great detail, and made major contributions to the standardization effort both 
 in terms of fixes and suggested improvements.</p>
 <p>Many people contributed technical comments, ideas, and suggestions to the 
@@ -3884,7 +3876,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
   <tr>
     <td width="16%" valign="top">[<a name="ISO_POSIX">ISO/IEC 9945</a>]</td>
     <td width="84%">ISO/IEC 9945:2003, IEEE&nbsp;Std&nbsp;1003.1-2001, and The Open Group 
-    Base Specifications, Issue 6. Also known as The Single Unix<font face="Times New Roman">® 
+    Base Specifications, Issue 6. Also known as The Single Unix<font face="Times New Roman">Â® 
     Specification, Version 3. Available from each of the organizations involved 
     in its creation. For example, read online or download from <a href="http://www.unix.org/single_unix_specification/">www.unix.org/single_unix_specification/</a>.</font> The ISO JTC1/SC22/WG15 - 
     POSIX homepage is <a href="http://www.open-std.org/jtc1/sc22/WG15/">www.open-std.org/jtc1/sc22/WG15/</a></td>
