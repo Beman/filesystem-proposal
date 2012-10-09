@@ -847,9 +847,10 @@ otherwise it shall be treated as a regular file path.</p>
 
 <h4><code>path</code> type and encoding conversions [<a name="path.arg.convert">path.type.cvt</a>]</h4>
 <p>For member function arguments that take character sequences representing 
-paths and for member function returning strings, value type and encoding 
+paths and for member functions returning strings, value type and encoding 
 conversion is performed if the value type of the argument or return differs from <code>
-path::value_type</code>. Encoding is determined based on the value type:</p>
+path::value_type</code>. Encoding of the argument or return value is determined 
+by its value type:</p>
 <blockquote>
   <ul>
     <li>
@@ -865,8 +866,8 @@ much existing code. <i>--end note</i>]<br>
         <li>
         <p><i><span style="background-color: #E0E0E0">Apple OS X always uses UTF-8.</span></i></li>
         <li><i><span style="background-color: #E0E0E0">On some POSIX based operating systems, the encoding is determined by <code>locale(&quot;&quot;)</code>;</span></i></li>
-        <li><i><span style="background-color: #E0E0E0">On Windows based operating systems, the encoding is determined 
-        testing by <code>AreFileApisANSI()</code>; if true, the <code>CP_ACP</code> 
+        <li><i><span style="background-color: #E0E0E0">On Windows based 
+        operating systems, the encoding is determined by testing <code>AreFileApisANSI()</code>; if true, the <code>CP_ACP</code> 
         codepage is used, otherwise the <code>CP_OEMCP</code> codepage is 
         used. </span></i><br>
 &nbsp;</li>
