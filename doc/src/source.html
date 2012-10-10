@@ -297,6 +297,9 @@ $endif;    void swap(path&amp; lhs, path&amp; rhs) noexcept;
     $STD;basic_istream&lt;charT, traits&gt;&amp;
     operator&gt;&gt;($STD;basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);
 
+    <ins>path::codecvt_type* native();</ins>
+    <ins>path::codecvt_type* utf8();</ins>
+
     class <a href="#Class-filesystem_error">filesystem_error</a>;      
     class <a href="#Class-directory_entry">directory_entry</a>;
 
@@ -564,14 +567,21 @@ system or for a particular file system.</p>
         static constexpr value_type            preferred_separator = <b><i><a href="#value_type">see below</a></i></b>;
 $if $TARGET; == BOOST        typedef std::codecvt&lt;wchar_t, char, std::mbstate_t&gt;
                                                codecvt_type;
+$else
+         <ins>typedef std::codecvt&lt;value_type, char, std::mbstate_t&gt;  codecvt_type;</ins>
+         <ins>typedef codecvt_type* (*codecvt_func)();</ins>  
 $endif;
         // <a href="#path-constructors">constructors</a> and destructor
         path() = default;
         path(const path&) = default;
         path(path&amp;&amp;) noexcept = default;
 
-        template &lt;class <a href="#Source">Source</a>&gt;
+$if $TARGET; == BOOST        template &lt;class <a href="#Source">Source</a>&gt;
           path(Source const&amp; source$CODECVT_ARG2;$CODECVT_DEFAULT;);
+$else
+        template &lt;class <a href="#Source">Source</a>&gt;
+          path(Source const&amp; source<ins>, codecvt_func cvt=codecvt()</ins>);
+$endif
 
         template &lt;class InputIterator&gt;
           path(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
@@ -633,26 +643,30 @@ $endif;        template &lt;class InputIterator&gt;
 
 $if $TARGET; == BOOST        template &lt;class String&gt;
           String  <a href="#string-template">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+        string    <a href="#string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 $else        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
                   class Allocator = allocator&lt;charT&gt; &gt;
         basic_string&lt;charT, traits, Allocator&gt;
           <a href="#string-template">string</a>(const Allocator&amp; a = Allocator()) const;
+        string    <a href="#string">string</a>(<ins>codecvt_func cvt=codecvt()</ins>) const;
 $endif;
-        string    <a href="#string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         wstring   <a href="#wstring">wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+        <ins>string    u8string() const;</ins>
         u16string <a href="#u16string">u16string</a>() const;
         u32string <a href="#u32string">u32string</a>() const;
 
         // <a href="#path-generic-format-observers">generic format observers</a>
 $if $TARGET; == BOOST        template &lt;class String&gt;
           String  <a href="#generic_string-template">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+        string    <a href="#generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 $else        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
                   class Allocator = allocator&lt;charT&gt; &gt;
         basic_string&lt;charT, traits, Allocator&gt;
           <a href="#generic_string-template">generic_string</a>(const Allocator&amp; a = Allocator()) const;
+        string    <a href="#generic_string">generic_string</a>(<ins>codecvt_func cvt=codecvt()</ins>) const;
 $endif;
-        string    <a href="#generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         wstring   <a href="#generic_wstring">generic_wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+        <ins>string    generic_u8string() const;</ins>
         u16string <a href="#generic_u16string">generic_u16string</a>() const;
         u32string <a href="#generic_u32string">generic_u32string</a>() const;
 
@@ -695,7 +709,10 @@ $if $TARGET; == BOOST
         // <a href="#path-imbued-locale">imbued locale</a>
         static std::locale <a href="#path-imbue">imbue</a>(const std::locale&amp; loc);
         static const codecvt_type &amp; <a href="#path-codecvt">codecvt</a>();
-
+$else
+       <ins>// <a href="#path-imbued-codecvt">imbued codecvt</a></ins>
+       <ins>static codecvt_func codecvt();</ins>
+       <ins>static codecvt_func codecvt(codecvt_func func);</ins>
 $endif;      private:
         string_type pathname;  // <b><i>exposition only</i></b>
       };
@@ -849,7 +866,7 @@ otherwise it shall be treated as a regular file path.</p>
 <p>For member function arguments that take character sequences representing 
 paths and for member functions returning strings, value type and encoding 
 conversion is performed if the value type of the argument or return differs from <code>
-path::value_type</code>. Encoding of the argument or return value is determined 
+path::value_type</code><ins> or either type is <code>char</code></ins>. Encoding of the argument or return value is determined 
 by its value type:</p>
 <blockquote>
   <ul>
