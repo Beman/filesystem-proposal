@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-10-09<!--webbot bot="Timestamp" endspan i-checksum="12024" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-10-13<!--webbot bot="Timestamp" endspan i-checksum="12013" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -106,7 +106,11 @@ Library Proposal (Revision 4). Changes include:</p>
 <ul>
   <li>Editorial: corrections reported by Jens Maurer.</li>
   <li>Editorial: cleanup of operating system references.</li>
-  <li>Editorial: change HTML encoding to <code>charset=utf-8</code>.</li>
+  <li>Editorial: change document HTML encoding to <code>charset=utf-8</code>.</li>
+  <li>Reintroduce <code>codecvt</code> facilities to class <code>path</code>,&nbsp; 
+  relatively minimal compared to the Boost design, touching far fewer 
+  signatures, avoiding locale dependencies, and providing explicit support for 
+  UTF-8. Provide UTF-8 conversion example.</li>
 </ul>
 
 

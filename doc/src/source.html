@@ -62,8 +62,8 @@ table { margin: 0.5em; }
 
 pre   { background-color:#D7EEFF }
 
-ins   { background-color:#A0FFA0 }
-del   { background-color:#FFA0A0 }
+ins   { background-color:#D0FFE8 }
+del   { background-color:#FFD7D7 }
 $endif
 </style>
 </head>
@@ -297,8 +297,8 @@ $endif;    void swap(path&amp; lhs, path&amp; rhs) noexcept;
     $STD;basic_istream&lt;charT, traits&gt;&amp;
     operator&gt;&gt;($STD;basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);
 
-    <ins>path::codecvt_type* native();</ins>
-    <ins>path::codecvt_type* utf8();</ins>
+    <ins>path::codecvt_type* <a href="#native-func">native</a>() noexcept;</ins>
+    <ins>path::codecvt_type* <a href="#utf8">utf8</a>() noexcept;</ins>
 
     class <a href="#Class-filesystem_error">filesystem_error</a>;      
     class <a href="#Class-directory_entry">directory_entry</a>;
@@ -569,7 +569,7 @@ $if $TARGET; == BOOST        typedef std::codecvt&lt;wchar_t, char, std::mbstate
                                                codecvt_type;
 $else
          <ins>typedef std::codecvt&lt;value_type, char, std::mbstate_t&gt;  codecvt_type;</ins>
-         <ins>typedef codecvt_type* (*codecvt_func)();</ins>  
+         <ins>typedef codecvt_type* (*codecvt_func)() noexcept;</ins>  
 $endif;
         // <a href="#path-constructors">constructors</a> and destructor
         path() = default;
@@ -648,7 +648,10 @@ $else        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
                   class Allocator = allocator&lt;charT&gt; &gt;
         basic_string&lt;charT, traits, Allocator&gt;
           <a href="#string-template">string</a>(const Allocator&amp; a = Allocator()) const;
-        string    <a href="#string">string</a>(<ins>codecvt_func cvt=codecvt()</ins>) const;
+        <ins>template &lt;class charT, class traits= char_traits&lt;charT&gt;,</ins>
+                  <ins>class Allocator = allocator&lt;charT&gt; &gt;</ins>
+        <ins>basic_string&lt;charT, traits, Allocator&gt;</ins>
+          <ins><a href="#string-template">string</a>(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</ins>
 $endif;
         wstring   <a href="#wstring">wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         <ins>string    u8string() const;</ins>
@@ -663,7 +666,10 @@ $else        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
                   class Allocator = allocator&lt;charT&gt; &gt;
         basic_string&lt;charT, traits, Allocator&gt;
           <a href="#generic_string-template">generic_string</a>(const Allocator&amp; a = Allocator()) const;
-        string    <a href="#generic_string">generic_string</a>(<ins>codecvt_func cvt=codecvt()</ins>) const;
+        <ins>template &lt;class charT, class traits= char_traits&lt;charT&gt;,</ins>
+                  <ins>class Allocator = allocator&lt;charT&gt; &gt;</ins>
+        <ins>basic_string&lt;charT, traits, Allocator&gt;</ins>
+          <ins><a href="#generic_string-template">generic_string</a>(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</ins>
 $endif;
         wstring   <a href="#generic_wstring">generic_wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
         <ins>string    generic_u8string() const;</ins>
@@ -710,9 +716,9 @@ $if $TARGET; == BOOST
         static std::locale <a href="#path-imbue">imbue</a>(const std::locale&amp; loc);
         static const codecvt_type &amp; <a href="#path-codecvt">codecvt</a>();
 $else
-       <ins>// <a href="#path-imbued-codecvt">imbued codecvt</a></ins>
-       <ins>static codecvt_func codecvt();</ins>
-       <ins>static codecvt_func codecvt(codecvt_func func);</ins>
+       <ins>// <a href="#path-imbued-codecvt">imbued codecvt facet</a></ins>
+       <ins>static codecvt_func codecvt() noexcept;</ins>
+       <ins>static codecvt_func codecvt(codecvt_func func) noexcept;</ins>
 $endif;      private:
         string_type pathname;  // <b><i>exposition only</i></b>
       };
@@ -866,17 +872,21 @@ otherwise it shall be treated as a regular file path.</p>
 <p>For member function arguments that take character sequences representing 
 paths and for member functions returning strings, value type and encoding 
 conversion is performed if the value type of the argument or return differs from <code>
-path::value_type</code><ins> or either type is <code>char</code></ins>. Encoding of the argument or return value is determined 
+path::value_type</code><ins> or either type is <code>char</code></ins>. Encoding 
+and method of conversion for the argument <ins>to be converted from</ins> or the return value
+<ins>to be converted to</ins> is determined 
 by its value type:</p>
 <blockquote>
   <ul>
     <li>
-<p><code>char</code>: Operating system dependent narrow character path 
-encoding.<br>
-<br>
-[<i>Note:</i> The intent is to supply the same behavior as other C and C++ 
+<p><code>char</code>: <ins>Conversion is performed by calling the
+<code>codecvt</code> facet determined by calling the returned value of the 
+either the <code>cvt</code> argument if present or calling <code>path::codecvt()</code> 
+if not present. The encoding of the argument being converted from or the return 
+value being converted to is determined by the called <code>codecvt</code> facet.</ins><p>[<i>Note:</i> <del>The intent is to supply the same behavior</del>
+<ins>These conversion rules result in default behavior that is the same</ins> as other C and C++ 
 standard library functions that perform file operations using narrow character 
-strings to identify paths. Changing this behavior would be surprising and break 
+strings to identify paths. Changing this <ins>default</ins> behavior would be surprising and break 
 much existing code. <i>--end note</i>]<br>
 <br>
       <i><span style="background-color: #E0E0E0">The native encoding for narrow character paths varies considerably:</span></i><ul>
@@ -892,19 +902,62 @@ much existing code. <i>--end note</i>]<br>
 </p>
     </li>
     <li>
-<p><code>wchar_t</code>: Encoding of the implementation's native wide 
-character set.<br>
+<p><code>wchar_t</code>: Encoding is the implementation's native wide 
+character set. <ins>Conversion method is unspecified.</ins><br>
 &nbsp;</p>
     </li>
     <li>
-<p><code>char16_t</code>: UTF-16<br>
+<p><code>char16_t</code>: Encoding is UTF-16. <ins>Conversion method 
+is unspecified.</ins> <br>
 &nbsp;</p>
     </li>
     <li>
-<p><code>char32_t</code>: UTF-32</p>
+<p><code>char32_t</code>: Encoding is UTF-32. <ins>Conversion method 
+is unspecified.</ins></p>
     </li>
   </ul>
 </blockquote>
+<p><span style="background-color: #E8FFE8">[</span><i><span style="background-color: #E8FFE8">Example:</span></i></p>
+<p><span style="background-color: #E8FFE8">In a program intended for use with a 
+variety of systems, </span><code><span style="background-color: #E8FFE8">
+std::string name</span></code><span style="background-color: #E8FFE8"> has been 
+given a value by a database that stores string values as UTF-8. The program 
+needs to create a directory named with the value of </span><code>
+<span style="background-color: #E8FFE8">name</span></code><span style="background-color: #E8FFE8">. 
+Because not all systems encode narrow strings as UTF-8, the programmer needs to 
+explicitly identify the encoding if the program is to be portable:</span></p>
+<blockquote>
+  <pre><span style="background-color: #E8FFE8">create_directory(path(name</span><span style="background-color: #E8FFE8">, utf8));</span></pre>
+</blockquote>
+<p><span style="background-color: #E8FFE8">On Windows-like systems, which often 
+default to native encodings other than UTF-8, a conversion from UTF-8 to UTF-16 
+is done and all is well because this is a lossless conversion.</span></p>
+<p><span style="background-color: #E8FFE8">On POSIX-like systems configured to 
+use UTF-8 as the default native encoding, no conversion is necessary and none 
+occurs.</span></p>
+<p><span style="background-color: #E8FFE8">On POSIX-like systems configured to 
+use some encoding other than UTF-8 as the default native encoding, a conversion 
+is done from UTF-8 to the native encoding. Depending on the native encoding, 
+this may be a </span><span style="background-color: #E8FFE8">lossy</span><span style="background-color: #E8FFE8"> 
+conversion.</span></p>
+<p><span style="background-color: #E8FFE8">What if most of the calls to </span>
+<span style="background-color: #E8FFE8">filesystem</span><span style="background-color: #E8FFE8"> 
+functions use UTF-8? Calling the static function </span><code>
+<span style="background-color: #E8FFE8">path::codecvt(utf8)</span></code><span style="background-color: #E8FFE8"> 
+will set </span><code><span style="background-color: #E8FFE8">path::codecvt()</span></code><span style="background-color: #E8FFE8">, 
+the default encoding, to UTF-8. Then it is no long required to explicitly 
+identify the narrow character encoding in the UTF-8 cases, so the programmer can 
+just write:</span></p>
+<blockquote>
+  <p><span style="background-color: #E8FFE8"><code>create_directory(name</code></span><code></code><span style="background-color: #E8FFE8"><code>);</code></span></p>
+</blockquote>
+<p><span style="background-color: #E8FFE8">Since </span><code>
+<span style="background-color: #E8FFE8">path::codecvt()</span></code><span style="background-color: #E8FFE8">is</span><span style="background-color: #E8FFE8"> 
+static, it must be used with care to avoid confusion and </span><code>
+<span style="background-color: #E8FFE8">path(<i>p</i>, native)</span></code><span style="background-color: #E8FFE8"> 
+must be used if </span><code><i><span style="background-color: #E8FFE8">p</span></i></code><span style="background-color: #E8FFE8"> 
+is a char based string that is not UTF-8 encoded.</span></p>
+<p><i><span style="background-color: #E8FFE8">--end example</span></i><span style="background-color: #E8FFE8">]</span></p>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
 <p>In addition to the [fs.req] requirements, function template parameters named <code><a name="Source">Source</a></code> 
 shall be one of:</p>
@@ -1128,23 +1181,26 @@ $else
 <pre>template &lt;class charT, class traits = char_traits&lt;charT&gt;,
           class Allocator = allocator&lt;charT&gt; &gt;
 basic_string&lt;charT, traits, Allocator&gt;
-  <a name="string-template">string</a>(const Allocator& a = Allocator()) const;</pre>
+  <a name="string-template">string</a>(const Allocator& a = Allocator()) const;
+template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+          class Allocator = allocator&lt;charT&gt; &gt;
+basic_string&lt;charT, traits, Allocator&gt;
+  string(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</pre>
 $endif;
 
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Remarks:</i> All memory allocation, including for the return value, shall 
-be performed by <code>a</code>. If the return type is different from <code>string_type</code>, 
-conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>]).</p>
+be performed by <code>a</code>. Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>]).</p>
 </blockquote>
 <pre>string <a name="string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 wstring <a name="wstring">wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+string <a name="u8string">u8string</a>() const;
 u16string <a name="u16string">u16string</a>() const;
 u32string <a name="u32string">u32string</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
-conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
+<p><i>Remarks:</i> Conversion, if any, is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 
 <h3> <a name="path-generic-format-observers"><code>path</code> generic format observers</a> 
@@ -1166,24 +1222,27 @@ $else
 <pre>template &lt;class charT, class traits = char_traits&lt;charT&gt;,
           class Allocator = allocator&lt;charT&gt; &gt;
 basic_string&lt;charT, traits, Allocator&gt;
-  <a name="generic_string-template">generic_string</a>(const Allocator& a = Allocator()) const;</pre>
+  <a name="generic_string-template">generic_string</a>(const Allocator& a = Allocator()) const;
+template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class Allocator = allocator&lt;charT&gt; &gt;
+basic_string&lt;charT, traits, Allocator&gt;
+&nbsp; generic_string(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</pre>
 $endif;
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
   pathname format ([<a href="#path.generic">path.generic</a>]). </p>
 <p><i>Remarks:</i> All memory allocation, including for the return value, shall 
-be performed by <code>a</code>. If the return type is different from <code>string_type</code>, 
-conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
+be performed by <code>a</code>. Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 <pre>string <a name="generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
 wstring <a name="generic_wstring">generic_wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+string generic_u8string() const;
 u16string <a name="generic_u16string">generic_u16string</a>() const;
 u32string <a name="generic_u32string">generic_u32string</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
 pathname format ([<a href="#path.generic">path.generic</a>]).</p>
-<p><i>Remarks:</i>&nbsp; If the return type is different from <code>string_type</code>, 
-conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
+<p><i>Remarks:</i>&nbsp; Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 
 <h3> <a name="path-compare"><code>path</code> compare</a> [path.compare]</h3>
@@ -1391,6 +1450,19 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is <code>p
   locale .</p>
 </blockquote>
 
+<h3> <code>path</code> imbued codecvt facet [<a name="path.imbued.codecvt">path.imbued.codecvt</a>]</h3>
+
+<p> Class path stores a static <code>codecvt_func</code> value, initialized to
+<code>&amp;native()</code>.</p>
+<pre>static codecvt_func codecvt() noexcept;</pre>
+<blockquote>
+<p><i>Returns:</i> The stored <code>codecvt_func</code> value.</p>
+</blockquote>
+<pre>static codecvt_func codecvt(codecvt_func func) noexcept;</pre>
+<blockquote>
+<p><i>Effects:</i> Stores the value of <code>func</code>.</p>
+<p><i>Returns:</i> <code>codecvt()</code> prior to the application of <i>Effects</i>.</p>
+</blockquote>
 <h3> <a name="path-deprecated-functions"><code><font size="4"> path</font></code> deprecated functions</a></h3>
 <p> Several member functions from previous versions of <code>class path</code> have been deprecated, either because they have been renamed or because the 
 functionality is no longer desirable or has become obsolete.</p>
@@ -1509,6 +1581,17 @@ p = tmp;</pre>
   </blockquote>
   <p><i>Returns:</i> <code>is</code></p>
   </blockquote>
+<h3><code>path</code> codecvt facets [path.facets]</h3>
+<pre>path::codecvt_type* <a name="native-func">native</a>() noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> The address of a <code>codecvt</code> facet for the native 
+  narrow character encoding.</p>
+</blockquote>
+<pre>path::codecvt_type* <a name="utf8">utf8</a>() noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> The address of a <code>codecvt</code> facet for UTF-8, 
+  without byte-order marker, narrow character encoding.</p>
+</blockquote>
 <h2><a name="Class-filesystem_error">Class <code>filesystem_error</code> 
 [class.filesystem_error]</a></h2>
 <pre>$NAMESPACE_BEGIN;
