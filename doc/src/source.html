@@ -62,7 +62,7 @@ table { margin: 0.5em; }
 
 pre   { background-color:#D7EEFF }
 
-ins   { background-color:#D0FFE8 }
+ins   { background-color:#E8FFE8 }
 del   { background-color:#FFD7D7 }
 $endif
 </style>
@@ -568,8 +568,8 @@ system or for a particular file system.</p>
 $if $TARGET; == BOOST        typedef std::codecvt&lt;wchar_t, char, std::mbstate_t&gt;
                                                codecvt_type;
 $else
-         <ins>typedef std::codecvt&lt;value_type, char, std::mbstate_t&gt;  codecvt_type;</ins>
-         <ins>typedef codecvt_type* (*codecvt_func)() noexcept;</ins>  
+        <ins>typedef std::codecvt&lt;value_type, char, std::mbstate_t&gt;  codecvt_type;</ins>
+        <ins>typedef codecvt_type* (*codecvt_func)() noexcept;</ins>  
 $endif;
         // <a href="#path-constructors">constructors</a> and destructor
         path() = default;
@@ -578,11 +578,9 @@ $endif;
 
 $if $TARGET; == BOOST        template &lt;class <a href="#Source">Source</a>&gt;
           path(Source const&amp; source$CODECVT_ARG2;$CODECVT_DEFAULT;);
-$else
-        template &lt;class <a href="#Source">Source</a>&gt;
+$else        template &lt;class <a href="#Source">Source</a>&gt;
           path(Source const&amp; source<ins>, codecvt_func cvt=codecvt()</ins>);
-$endif
-
+$endif;
         template &lt;class InputIterator&gt;
           path(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
 
@@ -716,9 +714,9 @@ $if $TARGET; == BOOST
         static std::locale <a href="#path-imbue">imbue</a>(const std::locale&amp; loc);
         static const codecvt_type &amp; <a href="#path-codecvt">codecvt</a>();
 $else
-       <ins>// <a href="#path-imbued-codecvt">imbued codecvt facet</a></ins>
-       <ins>static codecvt_func codecvt() noexcept;</ins>
-       <ins>static codecvt_func codecvt(codecvt_func func) noexcept;</ins>
+        <ins>// <a href="#path-imbued-codecvt">imbued codecvt facet</a></ins>
+        <ins>static codecvt_func codecvt() noexcept;</ins>
+        <ins>static codecvt_func codecvt(codecvt_func func) noexcept;</ins>
 $endif;      private:
         string_type pathname;  // <b><i>exposition only</i></b>
       };

@@ -21,7 +21,7 @@ table { margin: 0.5em; }
 
 pre   { background-color:#D7EEFF }
 
-ins   { background-color:#D0FFE8 }
+ins   { background-color:#E8FFE8 }
 del   { background-color:#FFD7D7 }
 </style>
 </head>
@@ -931,18 +931,18 @@ system or for a particular file system.</p>
         typedef basic_string&lt;value_type&gt;       string_type;
         static constexpr value_type            preferred_separator = <b><i><a href="#value_type">see below</a></i></b>;
 
-         <ins>typedef std::codecvt&lt;value_type, char, std::mbstate_t&gt;  codecvt_type;</ins>
-         <ins>typedef codecvt_type* (*codecvt_func)() noexcept;</ins>  
+        <ins>typedef std::codecvt&lt;value_type, char, std::mbstate_t&gt;  codecvt_type;</ins>
+        <ins>typedef codecvt_type* (*codecvt_func)() noexcept;</ins>  
 
         // <a href="#path-constructors">constructors</a> and destructor
         path() = default;
         path(const path&) = default;
         path(path&amp;&amp;) noexcept = default;
 
-
         template &lt;class <a href="#Source">Source</a>&gt;
           path(Source const&amp; source<ins>, codecvt_func cvt=codecvt()</ins>);
-template &lt;class InputIterator&gt;
+
+        template &lt;class InputIterator&gt;
           path(InputIterator begin, InputIterator end);
 
        ~path() = default;
@@ -1057,9 +1057,9 @@ template &lt;class InputIterator&gt;
         iterator end() const;
 
 
-       <ins>// <a href="#path-imbued-codecvt">imbued codecvt facet</a></ins>
-       <ins>static codecvt_func codecvt() noexcept;</ins>
-       <ins>static codecvt_func codecvt(codecvt_func func) noexcept;</ins>
+        <ins>// <a href="#path-imbued-codecvt">imbued codecvt facet</a></ins>
+        <ins>static codecvt_func codecvt() noexcept;</ins>
+        <ins>static codecvt_func codecvt(codecvt_func func) noexcept;</ins>
       private:
         string_type pathname;  // <b><i>exposition only</i></b>
       };
