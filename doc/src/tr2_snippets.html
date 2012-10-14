@@ -107,10 +107,15 @@ Library Proposal (Revision 4). Changes include:</p>
   <li>Editorial: corrections reported by Jens Maurer.</li>
   <li>Editorial: cleanup of operating system references.</li>
   <li>Editorial: change document HTML encoding to <code>charset=utf-8</code>.</li>
-  <li>Reintroduce <code>codecvt</code> facilities to class <code>path</code>,&nbsp; 
+  <li>Reintroduce <code>codecvt</code> facilities to class <code>path</code>;&nbsp; 
   relatively minimal compared to the Boost design, touching far fewer 
   signatures, avoiding locale dependencies, and providing explicit support for 
   UTF-8. Provide UTF-8 conversion example.</li>
+  <li>Add <code>operator string_type() const;</code> to class <code>path</code>. 
+  Microsoft and Dinkumware are already shipping this in their implementations. 
+  It provides a reasonable level of interoperation with standard library file 
+  steam constructors and opens without modifying existing standard library 
+  classes or headers.</li>
 </ul>
 
 

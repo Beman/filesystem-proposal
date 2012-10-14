@@ -123,10 +123,15 @@ Library Proposal (Revision 4). Changes include:</p>
   <li>Editorial: corrections reported by Jens Maurer.</li>
   <li>Editorial: cleanup of operating system references.</li>
   <li>Editorial: change document HTML encoding to <code>charset=utf-8</code>.</li>
-  <li>Reintroduce <code>codecvt</code> facilities to class <code>path</code>,&nbsp; 
+  <li>Reintroduce <code>codecvt</code> facilities to class <code>path</code>;&nbsp; 
   relatively minimal compared to the Boost design, touching far fewer 
   signatures, avoiding locale dependencies, and providing explicit support for 
   UTF-8. Provide UTF-8 conversion example.</li>
+  <li>Add <code>operator string_type() const;</code> to class <code>path</code>. 
+  Microsoft and Dinkumware are already shipping this in their implementations. 
+  It provides a reasonable level of interoperation with standard library file 
+  steam constructors and opens without modifying existing standard library 
+  classes or headers.</li>
 </ul>
 
 
@@ -991,6 +996,7 @@ system or for a particular file system.</p>
         // <a href="#path-native-format-observers">native format observers</a>
         const string_type&amp;  <a href="#native">native</a>() const noexcept;  // native format, encoding
         const value_type*   <a href="#c_str">c_str</a>() const noexcept;   // native().c_str()
+        <ins><a href="#operator-string_type">operator string_type</a>() const;</ins>
 
         template &lt;class charT, class traits= char_traits&lt;charT&gt;,
                   class Allocator = allocator&lt;charT&gt; &gt;
@@ -1511,7 +1517,22 @@ std::cout &lt;&lt; path(&quot;/&quot;).<code>replace_</code>filename(<code>&quot
 <blockquote>
 <p><i>Returns:</i> <code>pathname.c_str()</code>.</p>
 </blockquote>
-
+<pre><a name="operator-string_type">operator</a> string_type() const;</pre>
+<blockquote>
+  <p><i>Returns: </i><code>pathname</code>.</p>
+  <p>[<i>Note:</i> Conversion to <code>string_type</code> is provided so that an 
+  object of class <code>path</code> can be given as an argument to existing 
+  standard library file stream constructors and open functions. This provides 
+  basic interoperability without the need to modify existing standard library 
+  classes or headers. <i>--end note</i>]</p>
+  <p><i><span style="background-color: #E0E0E0">Implementations of the standard 
+  library for systems where string_type is wstring, such as Windows, are 
+  encouraged to provide an extension to existing standard library file stream 
+  constructors and open functions that adds overloads that accept wstrings for 
+  file names. Microsoft and Dinkumware already provide such an extension. </span>
+  </i></p>
+</blockquote>
+<p>
 <pre>template &lt;class charT, class traits = char_traits&lt;charT&gt;,
           class Allocator = allocator&lt;charT&gt; &gt;
 basic_string&lt;charT, traits, Allocator&gt;

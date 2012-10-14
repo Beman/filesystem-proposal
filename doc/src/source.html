@@ -638,6 +638,7 @@ $endif;        template &lt;class InputIterator&gt;
         // <a href="#path-native-format-observers">native format observers</a>
         const string_type&amp;  <a href="#native">native</a>() const noexcept;  // native format, encoding
         const value_type*   <a href="#c_str">c_str</a>() const noexcept;   // native().c_str()
+        <ins><a href="#operator-string_type">operator string_type</a>() const;</ins>
 
 $if $TARGET; == BOOST        template &lt;class String&gt;
           String  <a href="#string-template">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
@@ -1172,7 +1173,22 @@ std::cout &lt;&lt; path(&quot;/&quot;).<code>replace_</code>filename(<code>&quot
 <blockquote>
 <p><i>Returns:</i> <code>pathname.c_str()</code>.</p>
 </blockquote>
-$if $TARGET; == BOOST
+<pre><a name="operator-string_type">operator</a> string_type() const;</pre>
+<blockquote>
+  <p><i>Returns: </i><code>pathname</code>.</p>
+  <p>[<i>Note:</i> Conversion to <code>string_type</code> is provided so that an 
+  object of class <code>path</code> can be given as an argument to existing 
+  standard library file stream constructors and open functions. This provides 
+  basic interoperability without the need to modify existing standard library 
+  classes or headers. <i>--end note</i>]</p>
+  <p><i><span style="background-color: #E0E0E0">Implementations of the standard 
+  library for systems where string_type is wstring, such as Windows, are 
+  encouraged to provide an extension to existing standard library file stream 
+  constructors and open functions that adds overloads that accept wstrings for 
+  file names. Microsoft and Dinkumware already provide such an extension. </span>
+  </i></p>
+</blockquote>
+<p>$if $TARGET; == BOOST </p>
 <pre>template &lt;class String&gt;
 String  <a name="string-template">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;</pre>
 $else
