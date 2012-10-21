@@ -27,6 +27,7 @@ SOURCES =
 lib boost_filesystem
     : $(SOURCES).cpp ../../system/build//boost_system
                      ../../interop/build//boost_interop
+                     ../../chrono/build//boost_chrono
     : <link>shared:<define>BOOST_FILESYSTEM_DYN_LINK=1
       <link>static:<define>BOOST_FILESYSTEM_STATIC_LINK=1
     :
@@ -37,6 +38,7 @@ lib boost_filesystem
       # linking this happens anyway, but for shared we need to make it happen. Since
       # doing so is harmless even when not needed, we do it for all platforms.
       <link>shared:<library>../../system/build//boost_system
+      <link>shared:<library>../../chrono/build//boost_chrono
     ;
 
 boost-install boost_filesystem ;

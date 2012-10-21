@@ -1338,6 +1338,8 @@ namespace filesystem
       catch (...) { m_imp_ptr.reset(); }
     }
 
+   ~filesystem_error() throw() {}
+
     const path& path1() const BOOST_NOEXCEPT
     {
       static const path empty_path;

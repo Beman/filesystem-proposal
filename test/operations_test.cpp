@@ -1167,7 +1167,7 @@ namespace
 
     fs::file_status s = fs::status(p);
     BOOST_TEST(!fs::exists(s));
-    BOOST_TEST_EQ(s.type(), fs::file_type::not_found);
+    BOOST_TEST(s.type() == fs::file_type::not_found);
     BOOST_TEST(fs::type_present(s));
     BOOST_TEST(!fs::is_regular_file(s));
     BOOST_TEST(!fs::is_directory(s));
@@ -1201,7 +1201,7 @@ namespace
     BOOST_TEST(ec.category() == system_category()); 
 
     BOOST_TEST(!fs::exists(s));
-    BOOST_TEST_EQ(s.type(), fs::file_type::not_found);
+    BOOST_TEST(s.type() == fs::file_type::not_found);
     BOOST_TEST(fs::type_present(s));
     BOOST_TEST(!fs::is_regular_file(s));
     BOOST_TEST(!fs::is_directory(s));
@@ -1609,23 +1609,23 @@ namespace
     fs::create_symlink(sym_f1, symsym_f1);
 
     //  verify all cases detected as symlinks
-    BOOST_TEST_EQ(fs::symlink_status(dangling_sym, ec).type(), fs::file_type::symlink);
-    BOOST_TEST_EQ(fs::symlink_status(dangling_directory_sym, ec).type(), fs::file_type::symlink);
-    BOOST_TEST_EQ(fs::symlink_status(sym_d1, ec).type(), fs::file_type::symlink);
-    BOOST_TEST_EQ(fs::symlink_status(symsym_d1, ec).type(), fs::file_type::symlink);
-    BOOST_TEST_EQ(fs::symlink_status(sym_f1, ec).type(), fs::file_type::symlink);
-    BOOST_TEST_EQ(fs::symlink_status(symsym_f1, ec).type(), fs::file_type::symlink);
+    BOOST_TEST(fs::symlink_status(dangling_sym, ec).type() == fs::file_type::symlink);
+    BOOST_TEST(fs::symlink_status(dangling_directory_sym, ec).type() == fs::file_type::symlink);
+    BOOST_TEST(fs::symlink_status(sym_d1, ec).type() == fs::file_type::symlink);
+    BOOST_TEST(fs::symlink_status(symsym_d1, ec).type() == fs::file_type::symlink);
+    BOOST_TEST(fs::symlink_status(sym_f1, ec).type() == fs::file_type::symlink);
+    BOOST_TEST(fs::symlink_status(symsym_f1, ec).type() == fs::file_type::symlink);
 
     //  verify all cases resolve to the (possibly recursive) symlink target
-    BOOST_TEST_EQ(fs::status(dangling_sym, ec).type(), fs::file_type::not_found);
-    BOOST_TEST_EQ(fs::status(dangling_directory_sym, ec).type(), fs::file_type::not_found);
+    BOOST_TEST(fs::status(dangling_sym, ec).type() == fs::file_type::not_found);
+    BOOST_TEST(fs::status(dangling_directory_sym, ec).type() == fs::file_type::not_found);
 
-    BOOST_TEST_EQ(fs::status(sym_d1, ec).type(), fs::file_type::directory);
-    BOOST_TEST_EQ(fs::status(sym_d1 / "d1f1", ec).type(), fs::file_type::regular);
-    BOOST_TEST_EQ(fs::status(symsym_d1, ec).type(), fs::file_type::directory);
-    BOOST_TEST_EQ(fs::status(symsym_d1 / "d1f1", ec).type(), fs::file_type::regular);
-    BOOST_TEST_EQ(fs::status(sym_f1, ec).type(), fs::file_type::regular);
-    BOOST_TEST_EQ(fs::status(symsym_f1, ec).type(), fs::file_type::regular);
+    BOOST_TEST(fs::status(sym_d1, ec).type() == fs::file_type::directory);
+    BOOST_TEST(fs::status(sym_d1 / "d1f1", ec).type() == fs::file_type::regular);
+    BOOST_TEST(fs::status(symsym_d1, ec).type() == fs::file_type::directory);
+    BOOST_TEST(fs::status(symsym_d1 / "d1f1", ec).type() == fs::file_type::regular);
+    BOOST_TEST(fs::status(sym_f1, ec).type() == fs::file_type::regular);
+    BOOST_TEST(fs::status(symsym_f1, ec).type() == fs::file_type::regular);
 
 #ifdef BOOST_WINDOWS_API
 

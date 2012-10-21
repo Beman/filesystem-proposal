@@ -770,24 +770,24 @@ namespace detail
   inline bool valid_existing(copy_options opts)
   {
     int ct = 0;
-    if (opts & copy_options::skip_existing) ++ct;
-    if (opts & copy_options::overwrite_existing) ++ct;
-    if (opts & copy_options::update_existing) ++ct;
+    if ((opts & copy_options::skip_existing) == copy_options::skip_existing) ++ct;
+    if ((opts & copy_options::overwrite_existing) == copy_options::overwrite_existing) ++ct;
+    if ((opts & copy_options::update_existing) == copy_options::update_existing) ++ct;
     return ct < 2;
   }
   inline bool valid_symlink_action(copy_options opts)
   {
     int ct = 0;
-    if (opts & copy_options::copy_symlinks) ++ct;
-    if (opts & copy_options::skip_symlinks) ++ct;
+    if ((opts & copy_options::copy_symlinks) == copy_options::copy_symlinks) ++ct;
+    if ((opts & copy_options::skip_symlinks) == copy_options::skip_symlinks) ++ct;
     return ct < 2;
   }
   inline bool valid_copy_form(copy_options opts)
   {
     int ct = 0;
-    if (opts & copy_options::directories_only) ++ct;
-    if (opts & copy_options::create_symlinks) ++ct;
-    if (opts & copy_options::create_hard_links) ++ct;
+    if ((opts & copy_options::directories_only) == copy_options::directories_only) ++ct;
+    if ((opts & copy_options::create_symlinks) == copy_options::create_symlinks) ++ct;
+    if ((opts & copy_options::create_hard_links) == copy_options::create_hard_links) ++ct;
     return ct < 2;
   }
 # endif
@@ -881,25 +881,29 @@ namespace detail
       "Too many symlink action group copy_options");
     BOOST_ASSERT_MSG((valid_copy_form(options)), "Too many copy form group copy_options");
 
-    file_status f = ((options & copy_options::create_symlinks)
-      || (options & copy_options::skip_symlinks)) ? symlink_status(from, ec)
-                                                  : status(from, ec);
+    file_status f = (((options & copy_options::create_symlinks)
+        == copy_options::create_symlinks)
+      || ((options & copy_options::skip_symlinks) == copy_options::skip_symlinks)) 
+        ? symlink_status(from, ec)
+        : status(from, ec);
     if (ec != 0 && *ec) return;
 
     if (!exists(f))
     {
     }
 
-    file_status t = ((options & copy_options::create_symlinks)
-      || (options & copy_options::skip_symlinks)) ? symlink_status(to, ec)
-                                                  : status(to, ec);
+    file_status t = (((options & copy_options::create_symlinks)
+        == copy_options::create_symlinks)
+      || ((options & copy_options::skip_symlinks) == copy_options::skip_symlinks))
+        ? symlink_status(to, ec)
+        : status(to, ec);
     if (ec != 0 && *ec) return;
 
     /* ... error handling */
 
     if (is_symlink(f))
     {
-      if (!(options & copy_options::skip_symlinks))
+      if ((options & copy_options::skip_symlinks) != copy_options::skip_symlinks)
       {
         if (!exists(t))
           copy_symlink(from, to, ec);
@@ -908,11 +912,12 @@ namespace detail
     }
     else if (is_regular_file(f))
     {
-      if (!(options & copy_options::directories_only))
+      if ((options & copy_options::directories_only) != copy_options::directories_only)
       {
-        if (options & copy_options::create_symlinks)
+        if ((options & copy_options::create_symlinks) == copy_options::create_symlinks)
         {/*...*/}
-        else if (options & copy_options::create_hard_links)
+        else if ((options & copy_options::create_hard_links)
+          == copy_options::create_hard_links)
         {/*...*/}
         else if (is_directory(t))
           copy_file(from, to/from.filename(), options, ec);
@@ -923,8 +928,9 @@ namespace detail
     else if (is_directory(f))
     {
       BOOST_ASSERT_MSG(is_directory(f), "copy() internal error");
-      if ((options & copy_options::recursive)
-        || !(options & copy_options::_detail_sub_directory))
+      if (((options & copy_options::recursive) == copy_options::recursive)
+        || ((options & copy_options::_detail_sub_directory)
+          != copy_options::_detail_sub_directory))
       {
         if (!exists(t))
         {
@@ -947,15 +953,14 @@ namespace detail
         }
       }
     }
-
-
-    //else
-    //{
-    //  if (ec == 0)
-    //    BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::copy",
-    //      from, to, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category())));
-    //  ec->assign(BOOST_ERROR_NOT_SUPPORTED, system_category());
-    //}
+ 
+    else
+    {
+      if (ec == 0)
+        BOOST_FILESYSTEM_THROW(filesystem_error("boost::filesystem::copy",
+          from, to, error_code(BOOST_ERROR_NOT_SUPPORTED, system_category())));
+      ec->assign(BOOST_ERROR_NOT_SUPPORTED, system_category());
+    }
   }
 
   BOOST_FILESYSTEM_DECL
@@ -964,14 +969,14 @@ namespace detail
                   error_code* ec)
   {
     BOOST_ASSERT_MSG((valid_existing(options)), "Too many existing group copy_options");
-    if (options & copy_options::skip_existing)
+    if ((options & copy_options::skip_existing) == copy_options::skip_existing)
     {
       if (!exists(to))
         return !error(!BOOST_COPY_FILE(from.c_str(), to.c_str(), true),
           from, to, ec, "boost::filesystem::copy_file");
       return false;
     }
-    else if (options & copy_options::update_existing)
+    else if ((options & copy_options::update_existing) == copy_options::update_existing)
     {
       if (!exists(to) || fs::last_write_time(from) > fs::last_write_time(to))
         return !error(!BOOST_COPY_FILE(from.c_str(), to.c_str(), true),
@@ -979,7 +984,7 @@ namespace detail
       return false;
     }
     return !error(!BOOST_COPY_FILE(from.c_str(), to.c_str(),
-      !(options & copy_options::overwrite_existing)),
+      (options & copy_options::overwrite_existing) != copy_options::overwrite_existing),
       from, to, ec, "boost::filesystem::copy_file");
   }
 
