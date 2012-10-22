@@ -1754,16 +1754,16 @@ namespace detail
       return fs::file_status(fs::file_type::regular,
         static_cast<perms>(path_stat.st_mode) & fs::perms_mask);
     if (S_ISBLK(path_stat.st_mode))
-      return fs::file_status(fs::block_file,
+      return fs::file_status(fs::file_type::block_file,
         static_cast<perms>(path_stat.st_mode) & fs::perms_mask);
     if (S_ISCHR(path_stat.st_mode))
-      return fs::file_status(fs::character_file,
+      return fs::file_status(fs::file_type::character_file,
         static_cast<perms>(path_stat.st_mode) & fs::perms_mask);
     if (S_ISFIFO(path_stat.st_mode))
-      return fs::file_status(fs::fifo_file,
+      return fs::file_status(fs::file_type::fifo_file,
         static_cast<perms>(path_stat.st_mode) & fs::perms_mask);
     if (S_ISSOCK(path_stat.st_mode))
-      return fs::file_status(fs::socket_file,
+      return fs::file_status(fs::file_type::socket_file,
         static_cast<perms>(path_stat.st_mode) & fs::perms_mask);
     return fs::file_status(fs::file_type::unknown);
 
@@ -1837,16 +1837,16 @@ namespace detail
       return fs::file_status(fs::file_type::symlink,
         static_cast<perms>(path_stat.st_mode) & fs::perms_mask);
     if (S_ISBLK(path_stat.st_mode))
-      return fs::file_status(fs::block_file,
+      return fs::file_status(fs::file_type::block_file,
         static_cast<perms>(path_stat.st_mode) & fs::perms_mask);
     if (S_ISCHR(path_stat.st_mode))
-      return fs::file_status(fs::character_file,
+      return fs::file_status(fs::file_type::character_file,
         static_cast<perms>(path_stat.st_mode) & fs::perms_mask);
     if (S_ISFIFO(path_stat.st_mode))
-      return fs::file_status(fs::fifo_file,
+      return fs::file_status(fs::file_type::fifo_file,
         static_cast<perms>(path_stat.st_mode) & fs::perms_mask);
     if (S_ISSOCK(path_stat.st_mode))
-      return fs::file_status(fs::socket_file,
+      return fs::file_status(fs::file_type::socket_file,
         static_cast<perms>(path_stat.st_mode) & fs::perms_mask);
     return fs::file_status(fs::file_type::unknown);
 
@@ -2052,7 +2052,8 @@ namespace
 
   error_code dir_itr_first(void *& handle, void *& buffer,
     const char* dir, string& target,
-    fs::file_status &, fs::file_status &)
+    fs::file_status &, fs::file_status &,
+    bool)
   {
     if ((handle = ::opendir(dir))== 0)
       return error_code(errno, system_category());

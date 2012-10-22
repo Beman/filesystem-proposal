@@ -1342,12 +1342,12 @@ namespace filesystem
 
     const path& path1() const BOOST_NOEXCEPT
     {
-      static const path empty_path;
+      static const path empty_path = path();
       return m_imp_ptr.get() ? m_imp_ptr->m_path1 : empty_path ;
     }
     const path& path2() const BOOST_NOEXCEPT
     {
-      static const path empty_path;
+      static const path empty_path = path();
       return m_imp_ptr.get() ? m_imp_ptr->m_path2 : empty_path ;
     }
 
