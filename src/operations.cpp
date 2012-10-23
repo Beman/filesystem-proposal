@@ -697,7 +697,8 @@ namespace
 namespace boost
 {
 namespace filesystem
-{
+{                                  
+  //----------------------------------- absolute ---------------------------------------//
 
   BOOST_FILESYSTEM_DECL
   path absolute(const path& p, const path& base)
@@ -754,6 +755,8 @@ namespace filesystem
     return p;  // p.is_absolute() is true
   }
 
+  //------------------------------------------------------------------------------------//
+
 namespace detail
 {
   BOOST_FILESYSTEM_DECL bool possible_large_file_size_support()
@@ -765,6 +768,8 @@ namespace detail
     return true;
 #   endif
   }
+
+  //------------------------------------------------------------------------------------//
 
 #ifndef NDEBUG
   inline bool valid_existing(copy_options opts)
@@ -791,6 +796,8 @@ namespace detail
     return ct < 2;
   }
 # endif
+
+  //----------------------------------  canonical  -------------------------------------//
 
   BOOST_FILESYSTEM_DECL
   path canonical(const path& p, const path& base, system::error_code* ec)
@@ -871,6 +878,8 @@ namespace detail
     BOOST_ASSERT_MSG(result.is_absolute(), "canonical() implementation error; please report");
     return result;
   }
+
+  //-----------------------------------  copy  -----------------------------------------//
 
   BOOST_FILESYSTEM_DECL
   void copy(const path& from, const path& to,
@@ -963,6 +972,8 @@ namespace detail
     }
   }
 
+  //---------------------------------  copy_file  --------------------------------------//
+
   BOOST_FILESYSTEM_DECL
   bool copy_file(const path& from, const path& to,
                   BOOST_SCOPED_ENUM(copy_options)options,
@@ -988,6 +999,8 @@ namespace detail
       from, to, ec, "boost::filesystem::copy_file");
   }
 
+  //-------------------------------  copy_symlink  -------------------------------------//
+
   BOOST_FILESYSTEM_DECL
   void copy_symlink(const path& existing_symlink, const path& new_symlink,
     system::error_code* ec)
@@ -1005,7 +1018,9 @@ namespace detail
 # endif
   }
 
- BOOST_FILESYSTEM_DECL
+  //----------------------------  create_directories  ----------------------------------//
+
+  BOOST_FILESYSTEM_DECL
   bool create_directories(const path& p, system::error_code* ec)
   {
     error_code local_ec;
@@ -1044,6 +1059,8 @@ namespace detail
     return create_directory(p, ec);
   }
 
+  //------------------------  create_directory (1 path)  -------------------------------//
+
   BOOST_FILESYSTEM_DECL
   bool create_directory(const path& p, error_code* ec)
   {
@@ -1072,6 +1089,8 @@ namespace detail
       ec->assign(errval, system_category());
     return false;
   }
+
+  //------------------------  create_directory (2 paths)  ------------------------------//
 
   BOOST_FILESYSTEM_DECL
   bool create_directory(const path& p, const path& existing_p, system::error_code* ec)
@@ -1105,6 +1124,8 @@ namespace detail
     return false;
   }
 
+  //--------------------------  create_directory_symlink  ------------------------------//
+
   BOOST_FILESYSTEM_DECL
   void create_directory_symlink(const path& to, const path& from,
                                  system::error_code* ec)
@@ -1128,6 +1149,8 @@ namespace detail
       to, from, ec, "boost::filesystem::create_directory_symlink");
 #   endif
   }
+
+  //-----------------------------  create_hard_link  -----------------------------------//
 
   BOOST_FILESYSTEM_DECL
   void create_hard_link(const path& to, const path& from, error_code* ec)
@@ -1153,6 +1176,8 @@ namespace detail
 #   endif
   }
 
+  //------------------------------  create_symlink  ------------------------------------//
+
   BOOST_FILESYSTEM_DECL
   void create_symlink(const path& to, const path& from, error_code* ec)
   {
@@ -1174,6 +1199,8 @@ namespace detail
       to, from, ec, "boost::filesystem::create_symlink");
 #   endif
   }
+
+  //----------------------------- (get) current_path  ----------------------------------//
 
   BOOST_FILESYSTEM_DECL
   path current_path(error_code* ec)
@@ -1217,6 +1244,7 @@ namespace detail
 #   endif
   }
 
+  //-----------------------------  (set) current_path  ---------------------------------//
 
   BOOST_FILESYSTEM_DECL
   void current_path(const path& p, system::error_code* ec)
@@ -1224,6 +1252,8 @@ namespace detail
     error(!BOOST_SET_CURRENT_DIRECTORY(p.c_str()),
       p, ec, "boost::filesystem::current_path");
   }
+
+  //--------------------------------  equivalent  --------------------------------------//
 
   BOOST_FILESYSTEM_DECL
   bool equivalent(const path& p1, const path& p2, system::error_code* ec)
@@ -1318,6 +1348,8 @@ namespace detail
 #   endif
   }
 
+  //---------------------------------  file_size  --------------------------------------//
+
   BOOST_FILESYSTEM_DECL
   boost::uintmax_t file_size(const path& p, error_code* ec)
   {
@@ -1354,6 +1386,8 @@ namespace detail
 #   endif
   }
 
+  //------------------------------  hard_link_count  -----------------------------------//
+
   BOOST_FILESYSTEM_DECL
   boost::uintmax_t hard_link_count(const path& p, system::error_code* ec)
   {
@@ -1383,6 +1417,8 @@ namespace detail
 #   endif
   }
 
+  //-------------------------------  initial_path  -------------------------------------//
+
   BOOST_FILESYSTEM_DECL
   path initial_path(error_code* ec)
   {
@@ -1393,6 +1429,8 @@ namespace detail
         ec->clear();
       return init_path;
   }
+
+  //---------------------------------  is_empty  ---------------------------------------//
 
   BOOST_FILESYSTEM_DECL
   bool is_empty(const path& p, system::error_code* ec)
@@ -1420,6 +1458,8 @@ namespace detail
         : (!fad.nFileSizeHigh && !fad.nFileSizeLow);
 #   endif
   }
+
+  //-------------------------  (get) last_write_time  ----------------------------------//
 
   BOOST_FILESYSTEM_DECL
   std::time_t last_write_time(const path& p, system::error_code* ec)
@@ -1452,6 +1492,8 @@ namespace detail
     return to_time_t(lwt);
 #   endif
   }
+
+  //-------------------------  (set) last_write_time  ----------------------------------//
 
   BOOST_FILESYSTEM_DECL
   void last_write_time(const path& p, const std::time_t new_time,
@@ -1492,6 +1534,8 @@ namespace detail
     const perms active_bits(all_all | set_uid_on_exe | set_gid_on_exe | sticky_bit);
     inline mode_t mode_cast(perms prms) { return prms & active_bits; }
 # endif
+
+  //-------------------------------  permissions  --------------------------------------//
 
   BOOST_FILESYSTEM_DECL
   void permissions(const path& p, perms prms, system::error_code* ec)
@@ -1576,6 +1620,8 @@ namespace detail
 # endif
   }
 
+  //-------------------------------  read_symlink  -------------------------------------//
+
   BOOST_FILESYSTEM_DECL
   path read_symlink(const path& p, system::error_code* ec)
   {
@@ -1638,6 +1684,8 @@ namespace detail
 #     endif
     return symlink_path;
   }
+
+  //----------------------------------  remove  ----------------------------------------//
   
   BOOST_FILESYSTEM_DECL
   bool remove(const path& p, error_code* ec)
@@ -1655,6 +1703,8 @@ namespace detail
     return remove_file_or_directory(p, type, ec);
   }
 
+  //--------------------------------  remove_all  --------------------------------------//
+
   BOOST_FILESYSTEM_DECL
   boost::uintmax_t remove_all(const path& p, error_code* ec)
   {
@@ -1669,6 +1719,8 @@ namespace detail
       : 0;
   }
 
+  //----------------------------------  rename  ----------------------------------------//
+
   BOOST_FILESYSTEM_DECL
   void rename(const path& old_p, const path& new_p, error_code* ec)
   {
@@ -1681,6 +1733,8 @@ namespace detail
   {
     error(!BOOST_RESIZE_FILE(p.c_str(), size), p, ec, "boost::filesystem::resize_file");
   }
+
+  //----------------------------------  space  -----------------------------------------//
 
   BOOST_FILESYSTEM_DECL
   space_info space(const path& p, error_code* ec)
@@ -1725,6 +1779,8 @@ namespace detail
     }
     return info;
   }
+
+  //----------------------------------  status  ----------------------------------------//
 
   BOOST_FILESYSTEM_DECL
   file_status status(const path& p, error_code* ec)
@@ -1806,6 +1862,8 @@ namespace detail
 #   endif
   }
 
+  //------------------------------  symlink_status  ------------------------------------//
+
   BOOST_FILESYSTEM_DECL
   file_status symlink_status(const path& p, error_code* ec)
   {
@@ -1872,6 +1930,8 @@ namespace detail
 #   endif
   }
 
+  //---------------------------  temp_directory_path  ----------------------------------//
+
    // contributed by Jeff Flinn
   BOOST_FILESYSTEM_DECL
   path temp_directory_path(system::error_code* ec)
@@ -1920,6 +1980,8 @@ namespace detail
       return p;
 #   endif
   }
+
+  //-----------------------------  system_complete  ------------------------------------//
   
   BOOST_FILESYSTEM_DECL
   path system_complete(const path& p, system::error_code* ec)
