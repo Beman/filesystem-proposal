@@ -181,6 +181,14 @@ namespace
     return false;
   }
 
+  void delay(std::time_t amt)
+  {
+    std::time_t start = std::time(0);
+    cout << "  start delay" << endl;
+    while (start + amt >= std::time(0)) {}
+    cout << "  end delay" << endl;
+  }
+
   boost::system::error_category* poison_category_aux() { return 0; }
   boost::system::error_category& poison_category()     { return *poison_category_aux(); }
 
@@ -1467,9 +1475,9 @@ namespace
     fs::remove(d1 / "f2");  // remove possible residue from prior testing
     BOOST_TEST(fs::exists(d1));
     BOOST_TEST(!fs::exists(d1 / "f2"));
-    cout << " copy_file " << f1 << " to " << d1 / "f2" << endl;
+//    cout << " copy_file " << f1 << " to " << d1 / "f2" << endl;
     BOOST_TEST(fs::copy_file(f1, d1 / "f2"));
-    cout << " copy_file complete" << endl;
+//    cout << " copy_file complete" << endl;
     BOOST_TEST(fs::exists(f1));
     BOOST_TEST(fs::exists(d1 / "f2"));
     BOOST_TEST_EQ(fs::file_size(d1 / "f2"), 7U);
@@ -1535,6 +1543,7 @@ namespace
     BOOST_TEST_EQ(fs::file_size(d1 / "f5"), 7U);
 
     // copy_options::update_existing and exists(to) and from is newer
+    delay(1);
     create_file(d1 / "f5a", "12345");
     BOOST_TEST(fs::copy_file(d1 / "f5a", d1 / "f5", fs::copy_options::update_existing));
     BOOST_TEST_EQ(fs::file_size(d1 / "f5"), 5U);

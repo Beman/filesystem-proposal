@@ -183,7 +183,7 @@ typedef struct _REPARSE_DATA_BUFFER {
 #   define BOOST_FILESYSTEM_STATUS_CACHE
 # endif
 
-//  POSIX/Windows macros  ----------------------------------------------------//
+//  POSIX/Windows macros  --------------------------------------------------------------//
 
 //  Portions of the POSIX and Windows API's are very similar, except for name,
 //  order of arguments, and meaning of zero/non-zero returns. The macros below
@@ -191,6 +191,8 @@ typedef struct _REPARSE_DATA_BUFFER {
 //  arguments, and return true to indicate no error occurred. [POSIX naming,
 //  order of arguments, and meaning of return were followed initially, but
 //  found to be less clear and cause more coding errors.]
+
+#define FAIL_IF_EXISTS true
 
 # if defined(BOOST_POSIX_API)
 
@@ -234,7 +236,7 @@ typedef struct _REPARSE_DATA_BUFFER {
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
-//                        helpers (all operating systems)                              //
+//                        helpers (all operating systems)                               //
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
 
@@ -897,18 +899,17 @@ namespace detail
         : status(from, ec);
     if (ec != 0 && *ec) return;
 
-    if (!exists(f))
-    {
-    }
+    if (error(!exists(f), from, ec, "boost::filesystem::copy"))
+      return;
 
     file_status t = (((options & copy_options::create_symlinks)
         == copy_options::create_symlinks)
       || ((options & copy_options::skip_symlinks) == copy_options::skip_symlinks))
         ? symlink_status(to, ec)
         : status(to, ec);
-    if (ec != 0 && *ec) return;
 
-    /* ... error handling */
+    if (error(t.type() == file_type::none, to, ec, "boost::filesystem::copy"))
+      return;
 
     if (is_symlink(f))
     {
@@ -916,7 +917,8 @@ namespace detail
       {
         if (!exists(t))
           copy_symlink(from, to, ec);
-        /*...*/
+     //******************************* TODO ******************************
+       /*...*/
       }
     }
     else if (is_regular_file(f))
@@ -924,9 +926,11 @@ namespace detail
       if ((options & copy_options::directories_only) != copy_options::directories_only)
       {
         if ((options & copy_options::create_symlinks) == copy_options::create_symlinks)
+    //******************************* TODO ******************************
         {/*...*/}
         else if ((options & copy_options::create_hard_links)
           == copy_options::create_hard_links)
+    //******************************* TODO ******************************
         {/*...*/}
         else if (is_directory(t))
           copy_file(from, to/from.filename(), options, ec);
@@ -979,18 +983,19 @@ namespace detail
                   BOOST_SCOPED_ENUM(copy_options)options,
                   error_code* ec)
   {
-    BOOST_ASSERT_MSG((valid_existing(options)), "Too many existing group copy_options");
+    BOOST_ASSERT_MSG((valid_existing(options)), "Too many existing-group copy_options");
+
     if ((options & copy_options::skip_existing) == copy_options::skip_existing)
     {
       if (!exists(to))
-        return !error(!BOOST_COPY_FILE(from.c_str(), to.c_str(), true),
+        return !error(!BOOST_COPY_FILE(from.c_str(), to.c_str(), FAIL_IF_EXISTS),
           from, to, ec, "boost::filesystem::copy_file");
       return false;
     }
     else if ((options & copy_options::update_existing) == copy_options::update_existing)
     {
       if (!exists(to) || fs::last_write_time(from) > fs::last_write_time(to))
-        return !error(!BOOST_COPY_FILE(from.c_str(), to.c_str(), true),
+        return !error(!BOOST_COPY_FILE(from.c_str(), to.c_str(), !FAIL_IF_EXISTS),
           from, to, ec, "boost::filesystem::copy_file");
       return false;
     }
