@@ -305,7 +305,7 @@ $endif;    void swap(path&amp; lhs, path&amp; rhs) noexcept;
 
     class <a href="#Class-directory_iterator">directory_iterator</a>;
 
-    // enable c++11 range-based for statements
+    // enable directory_iterator range-based for statements
     const directory_iterator&amp; <a href="#directory_iterator-non-member-functions">begin</a>(const directory_iterator&amp; iter) noexcept;
     directory_iterator <a href="#directory_iterator-non-member-functions">end</a>(const directory_iterator&amp;) noexcept;
 
@@ -317,7 +317,7 @@ $if $TARGET; == BOOST
 
 $endif;    class <a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a>;
 
-    // enable c++11 range-based for statements
+    // enable recursive_directory_iterator range-based for statements
     const recursive_directory_iterator&amp; <a href="#rec.dir.itr.nonmembers">begin</a>(const recursive_directory_iterator&amp; iter) noexcept;
     recursive_directory_iterator <a href="#rec.dir.itr.nonmembers">end</a>(const recursive_directory_iterator&amp;) noexcept;
 
@@ -327,18 +327,9 @@ $if $TARGET; == BOOST
     recursive_directory_iterator range_begin(const recursive_directory_iterator&amp; iter) noexcept;
     recursive_directory_iterator range_end(const recursive_directory_iterator&amp;) noexcept;
 
-$endif;    enum class <a name="file_type" href="#Enum-file_type">file_type</a>;  // [<a href="#Enum-file_type">enum.file_type</a>]
+$endif;    enum class file_type;  // [<a href="#Enum-file_type">enum.file_type</a>]
 
-    enum <a href="#Enum-perms">perms</a>
-    {
-      no_perms,
-      owner_read, owner_write, owner_exe, owner_all,
-      group_read, group_write, group_exe, group_all,
-      others_read, others_write, others_exe, others_all, all_all,
-      set_uid_on_exe, set_gid_on_exe, sticky_bit,
-      perms_mask, perms_not_known,
-      add_perms, remove_perms, symlink_perms
-    };
+    enum class perms;  // [<a href="#enum.perms">enum.perms</a>]
 
     class <a href="#file_status">file_status</a>;
 
@@ -1919,7 +1910,7 @@ group results in undefined behavior.</p>
     <td>Make hard links instead of copies of files.</td>
   </tr>
 </table>
-<h2><a name="Enum-perms">Enum perms</a> [enum.perms]</h2>
+<h2>Enum class perms [<a name="enum.perms">enum.perms</a>]</h2>
 <p>This enumeration specifies bitmask constants used to identify file 
 permissions. <i><span style="background-color: #E0E0E0">ISO/</span><span style="background-color: #E0E0E0">IEC</span><span style="background-color: #E0E0E0"> 9945 
 (POSIX) specifies actual values, and those values have been adopted here because 
@@ -1935,7 +1926,7 @@ they are very familiar and ingrained for many  users.</span></i></p>
   </tr>
 
 <tr><td>
-  <p><code>no_perms</code></td><td><code>0</code></td><td></td>
+  <p><code>none</code></td><td><code>0</code></td><td></td>
   <td>There are no permissions set for the file. Note: <code>
   file_type::not_found</code> is <code>no_perms</code> rather than <code>perms_not_known</code></td>
 </tr>
@@ -1945,7 +1936,7 @@ they are very familiar and ingrained for many  users.</span></i></p>
 <tr><td><code>owner_write</code></td><td><code>0200</code></td><td> <code>S_IWUSR</code></td>
   <td> Write permission, owner</td>
 </tr>
-<tr><td><code>owner_exe</code></td><td><code>0100</code></td><td>  <code>S_IXUSR</code></td>
+<tr><td><code>owner_exec</code></td><td><code>0100</code></td><td>  <code>S_IXUSR</code></td>
   <td> Execute/search permission, owner</td>
 </tr>
 <tr><td><code>owner_all</code></td><td><code>0700</code></td><td>  <code>S_IRWXU</code></td>
@@ -1957,7 +1948,7 @@ they are very familiar and ingrained for many  users.</span></i></p>
 <tr><td><code>group_write</code></td><td><code>020</code></td><td> <code>S_IWGRP</code></td>
   <td> Write permission, group</td>
 </tr>
-<tr><td><code>group_exe</code></td><td><code>010</code></td><td>   <code>S_IXGRP</code></td>
+<tr><td><code>group_exec</code></td><td><code>010</code></td><td>   <code>S_IXGRP</code></td>
   <td> Execute/search permission, group</td>
 </tr>
 <tr><td><code>group_all</code></td><td><code>070</code></td><td>   <code>S_IRWXG</code></td>
@@ -1969,39 +1960,30 @@ they are very familiar and ingrained for many  users.</span></i></p>
 <tr><td><code>others_write</code></td><td><code>02</code></td><td> <code>S_IWOTH</code></td>
   <td> Write permission, others</td>
 </tr>
-<tr><td><code>others_exe</code></td><td><code>01</code></td><td>   <code>S_IXOTH</code></td>
+<tr><td><code>others_exec</code></td><td><code>01</code></td><td>   <code>S_IXOTH</code></td>
   <td> Execute/search permission, others</td>
 </tr>
 <tr><td><code>others_all</code></td><td><code>07</code></td><td>   <code>S_IRWXO</code></td>
   <td>Read, write, execute/search by others; <code>others_read | others_write | others_exe</code></td>
 </tr>
-<tr><td><code>all_all</code></td><td><code>0777</code></td><td> </td><td><code>owner_all | group_all | others_all</code></td>
+<tr><td><code>all</code></td><td><code>0777</code></td><td> </td><td><code>owner_all | group_all | others_all</code></td>
 </tr>
-<tr><td><code>set_uid_on_exe</code></td><td><code>04000</code></td><td> <code>S_ISUID</code></td>
+<tr><td><code>set_uid</code></td><td><code>04000</code></td><td> <code>S_ISUID</code></td>
   <td> Set-user-ID on execution</td>
 </tr>
-<tr><td><code>set_gid_on_exe</code></td><td><code>02000</code></td><td> <code>S_ISGID</code></td>
+<tr><td><code>set_gid</code></td><td><code>02000</code></td><td> <code>S_ISGID</code></td>
   <td> Set-group-ID on execution</td>
 </tr>
 <tr><td><code><a name="sticky_bit">sticky_bit</a> </code></td><td><code>01000</code></td><td> <code>S_ISVTX</code></td>
   <td> Operating system dependent. Inherently non-portable, even between ISO/IEC 9945 
   operating systems.</td>
 </tr>
-<tr><td><code><a name="perms_mask">perms_mask</a></code></td><td><code>07777</code></td><td> &nbsp;</td>
-  <td><code>all_all | set_uid_on_exe | set_gid_on_exe | sticky_bit</code></td>
+<tr><td><code><a name="perms_mask">mask</a></code></td><td><code>07777</code></td><td> &nbsp;</td>
+  <td><code>all | set_uid | set_gid | sticky_bit</code></td>
 </tr>
-<tr><td><code>perms_not_known</code></td><td><code>0xFFFF</code></td><td></td><td> 
+<tr><td><code>unknown</code></td><td><code>0xFFFF</code></td><td></td><td> 
   The permissions are not known, such as when a <code>file_status</code> object 
   is created without specifying the permissions</td>
-</tr>
-<tr><td>
-  <p><code>add_perms</code></td><td><code>0x1000</code></td><td></td><td>
-  <p><code>permissions()</code> adds the argument permission bits to the 
-  file's current bits</td>
-</tr>
-<tr><td><code>remove_perms</code></td><td><code>0x2000</code></td><td></td><td>
-  <code>permissions()</code> removes the argument permission bits from the 
-  file's current bits</td>
 </tr>
 <tr><td><code><a name="symlink_perms">symlink_perms</a></code></td><td><code>0x4000</code></td><td></td><td>
   <span style="background-color: #E8FFE8">ISO-9945/POSIX </span> <code>
@@ -2020,6 +2002,38 @@ write permission for owner, group, or others sets write permission for all, and
 removing write permission for owner, group, or others removes write permission 
 for all. The Cygwin users guide has extensive discussion of the problems 
 involved. Input from security experts is needed.</span></i></p>
+<h2>Enum class permissions_options [<a name="enum.perm-opts">enum.perm-opts</a>]</h2>
+<table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td><b>Name</b></td>
+    <td><b>Value</b></td>
+    <td><b>Meaning</b></td>
+  </tr>
+  <tr>
+    <td><code>replace_bits</code></td>
+    <td><code>0</code></td>
+    <td><code>permissions()</code> shall replace the file&#39;s current permission 
+    bits with the <code>perm</code> argument&#39;s permission bits.</td>
+  </tr>
+  <tr>
+    <td><code>add_bits</code></td>
+    <td><code>1</code></td>
+    <td><code>permissions()</code> shall bitwise <i>or</i> the <code>perm</code> argument&#39;s permission bits to the 
+  file's current permission bits.</td>
+  </tr>
+  <tr>
+    <td><code>remove_bits</code></td>
+    <td><code>2</code></td>
+    <td><code>permissions()</code> shall bitwise <i>and</i> the complement of
+    <code>perm</code> argument&#39;s permission bits to the 
+  file's current permission bits.</td>
+  </tr>
+  <tr>
+    <td><code>follow_symlinks</code></td>
+    <td><code>4</code></td>
+    <td>&nbsp;</td>
+  </tr>
+</table>
 <h2><a name="file_status">Class file_status</a> [class.file_status]</h2>
 <pre>$NAMESPACE_BEGIN;
       class file_status
@@ -2028,7 +2042,7 @@ involved. Input from security experts is needed.</span></i></p>
 
         // <a href="#file_status-constructors">constructors</a>
         explicit file_status(<a href="#file_type">file_type</a> ft = file_type::none,
-                             <a href="#Enum-perms">perms</a> prms = perms_not_known) noexcept;
+                             <a href="#Enum.perms">perms</a> prms = perms_not_known) noexcept;
         file_status(const file_status&amp;) noexcept = default;
         file_status(file_status&amp;&amp;) noexcept = default;
        ~file_status() = default;
@@ -2038,11 +2052,11 @@ involved. Input from security experts is needed.</span></i></p>
 
         // <a href="#file_status-observers">observers</a>
         <a href="#file_type">file_type</a>  type() const noexcept;
-        <a href="#Enum-perms">perms</a>      permissions() const noexcept;
+        <a href="#Enum.perms">perms</a>      permissions() const noexcept;
 
         // <a href="#file_status-modifiers">modifiers</a>
         void       type(<a href="#file_type">file_type</a> ft) noexcept;
-        void       permissions(<a href="#Enum-perms">perms</a> prms) noexcept;
+        void       permissions(<a href="#Enum.perms">perms</a> prms) noexcept;
       };
 $NAMESPACE_END;</pre>
 <p>An object of type <code>file_status</code> stores information about the type 
@@ -2053,7 +2067,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Postconditions:</i> <code>type() == file_type::none</code>, <code>permissions() == perms_not_known</code>.</p>
 </blockquote>
-<pre>explicit file_status(<a href="#file_type">file_type</a> ft, <a href="#Enum-perms">perms</a> prms = perms_not_known) noexcept;</pre>
+<pre>explicit file_status(<a href="#file_type">file_type</a> ft, <a href="#Enum.perms">perms</a> prms = perms_not_known) noexcept;</pre>
 <blockquote>
   <p><i>Postconditions:</i> <code>type() == ft</code>, <code>permissions() == prms</code>.</p>
 </blockquote>
@@ -2062,7 +2076,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Returns: </i>The value of <code>type()</code> specified by the <i>postconditions</i> of the most recent call to a constructor, operator=, or <code>type(file_type)</code> function.</p>
 </blockquote>
-<pre><a href="#Enum-perms">perms</a> permissions() const noexcept;</pre>
+<pre><a href="#Enum.perms">perms</a> permissions() const noexcept;</pre>
 <blockquote>
   <p><i>Returns: </i>The value of <code>permissions()</code> specified by the <i>postconditions</i> of the most recent call to a constructor, operator=, or <code>permissions(perms)</code> function.</p>
 </blockquote>
@@ -2071,7 +2085,7 @@ and permissions of a file.</p>
 <blockquote>
   <p><i>Postconditions:</i> <code>type() == ft</code>.</p>
 </blockquote>
-<pre>void permissions(<a href="#Enum-perms">perms</a> prms) noexcept;</pre>
+<pre>void permissions(<a href="#Enum.perms">perms</a> prms) noexcept;</pre>
 <blockquote>
   <p><i>Postconditions:</i> <code>permissions() == prms</code>.</p>
 </blockquote>

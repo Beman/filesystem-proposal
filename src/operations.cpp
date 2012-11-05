@@ -1,3 +1,9 @@
+copy() implementation is incomplete. operations_test.cpp is missing copy() test cases.
+
+
+
+
+
 //  operations.cpp  --------------------------------------------------------------------//
 
 //  Copyright 2002-2009 Beman Dawes
