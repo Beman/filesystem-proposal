@@ -15,12 +15,12 @@ $id frontmatter=
   <table border="0">
     <tr>
       <td>Document number:&nbsp;&nbsp; </td>
-      <td><span style="background-color: #FFFF99">D3461=12-0151</span></td>
+      <td><span style="background-color: #FFFF99">Dxxxx=13-xxxx</span></td>
     </tr>
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-10-24<!--webbot bot="Timestamp" endspan i-checksum="12016" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-11-18<!--webbot bot="Timestamp" endspan i-checksum="12087" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -116,6 +116,7 @@ Library Proposal (Revision 4). Changes include:</p>
   It provides a reasonable level of interoperation with standard library file 
   steam constructors and opens without modifying existing standard library 
   classes or headers.</li>
+  <li>Update POSIX references to ISO/IEC/IEEE 9945:2009</li>
 </ul>
 
 
@@ -285,20 +286,26 @@ afterward the Library Working Group set aside work on TR2 to concentrate on
 C++0x.</p>
 
 
-  <h2><a name="TODO">TODO</a></h2>
+  <h2><a name="TODO"><span style="background-color: #FFFF99">TODO</span></a></h2>
   <ul>
-    <li>At Portland meeting, review trademarked names with Filesystem Study 
-    Group and project editor.</li>
-    <li>Ion Todirel suggests &quot;Would be nice if path::append was variadic, to 
-    improve usability&quot;.</li>
-    <li>Ion Todirel: Would be nice to have a make_relative. Need to review 
-    similar suggestions.</li>
-    <li>Dinkumware/Microsoft report slightly different results for Decomposition 
-    table. Rerun table. Check discrepancies.</li>
-    <li>Review Nick Stoughton's email for suggestions, action items.</li>
-    <li>Review Filesystem Study Group reflector messages for unresolved 
-    comments, particularly in the area of Permissions.</li>
-    <li>Review and resolve any pending issues in the GitHub issues list.</li>
+    <li><span style="background-color: #FFFF99">At Portland meeting, review trademarked names with Filesystem Study 
+    Group and project editor.</span></li>
+    <li><span style="background-color: #FFFF99">Ion </span>
+    <span style="background-color: #FFFF99">Todirel</span><span style="background-color: #FFFF99"> suggests &quot;Would be nice if 
+    </span><span style="background-color: #FFFF99">path::append</span><span style="background-color: #FFFF99"> was 
+    </span><span style="background-color: #FFFF99">variadic</span><span style="background-color: #FFFF99">, to 
+    improve usability&quot;.</span></li>
+    <li><span style="background-color: #FFFF99">Ion </span>
+    <span style="background-color: #FFFF99">Todirel</span><span style="background-color: #FFFF99">: Would be nice to have a 
+    </span><span style="background-color: #FFFF99">make_relative</span><span style="background-color: #FFFF99">. Need to review 
+    similar suggestions.</span></li>
+    <li><span style="background-color: #FFFF99">Dinkumware</span><span style="background-color: #FFFF99">/Microsoft report slightly different results for Decomposition 
+    table. Rerun table. Check discrepancies.</span></li>
+    <li><span style="background-color: #FFFF99">Review Nick Stoughton's email for suggestions, action items.</span></li>
+    <li><span style="background-color: #FFFF99">Review Filesystem Study Group reflector messages for unresolved 
+    comments, particularly in the area of Permissions.</span></li>
+    <li><span style="background-color: #FFFF99">Review and resolve any pending issues in the 
+    </span><span style="background-color: #FFFF99">GitHub</span><span style="background-color: #FFFF99"> issues list.</span></li>
   </ul>
   
 <h2>Proposed Wording <a name="TOC">Table of Contents</a></h2>
@@ -399,14 +406,14 @@ non-member functions </a><br>
 
 <!-- generate-section-numbers=true -->
 
-<p>Gray-shaded italic text is commentary on the proposal. It is not to be added to 
-the working paper.</p>
+<p><i><span style="background-color: #E0E0E0">Gray-shaded italic text is commentary on the proposal. It is not to be added to 
+the working paper.</span></i></p>
 
-<p>Green shaded text in rectangular boxes calls attention to examples and notes 
-intended to illuminate differences in behavior between operating systems. 
-Trademarked names are used, as permitted by <a href="#ISO-Drafting">ISO/IEC Directives</a>, Part2, section 
-6.6.3 <i>Use of trade names and trademarks</i>. It is the belief of the proposal author 
-that these examples and notes add considerable clarity, and should be retained.</p>
+<p><i><span style="background-color: #E0E0E0">Trademarked names are used in 
+non-normative examples and notes to illustrate operating system dependent 
+behavior.&nbsp; Such use is in accordance with <a href="#ISO-Drafting">ISO/IEC 
+Directives</a>, Part2, section 6.6.3, Use of trade names and trademarks</span></i><span style="background-color: #E0E0E0">.
+</span></p>
 
 <p><span style="font-style: italic; background-color: #E0E0E0">Start of proposed 
 wording:</span></p>
@@ -415,7 +422,7 @@ wording:</span></p>
 <p>This clause describes components that perform operations on file systems and 
 their components, such as paths, regular files, and directories.</p>
 
-<p>ISO/IEC 9945 contains provisions which, through referenced in this 
+<p>ISO/IEC/IEEE 9945 contains provisions which, through referenced in this 
 text, constitute provisions of this clause. At the time of 
 publication, the editions indicated were valid. All standards are subject to 
 revision, and parties to agreements based on this clause are 
@@ -423,9 +430,8 @@ encouraged to investigate the possibility of applying the most recent editions
 of the standard indicated below. Members of IEC and ISO maintain registers of 
 currently valid International Standards.</p>
 <ul>
-  <li>ISO/IEC 9945:2003, <i>Portable Operating System Interface (POSIX</i>®<i>), 
-  part 1 (Base Definitions) and part 2 (System Interfaces)</i>, both as 
-  corrected by their respective 2004 Correction 1 documents.</li>
+  <li>ISO/IEC/IEEE 9945:2009, Portable Operating System Interface (POSIX®) Base 
+  Specifications, Issue 7.</li>
 </ul>
 
 <p>This clause  mentions commercially 
