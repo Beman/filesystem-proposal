@@ -33,7 +33,7 @@ $if $TARGET; == BOOST
   $def CODECVT_DEFAULT "=codecvt()" 
 $else
   Filesystem Proposal
-  $def WHAT "clause"
+  $def WHAT "technical specification"
   $def SNIPPET_FILE "tr2_snippets.html"
   $def HEADER "filesystem"
   $def STD ""
@@ -720,16 +720,11 @@ operating system dependent encoded character type used  to represent pathnames.<
 <p>The value of <a name="preferred_separator"><code>preferred_separator</code></a> 
 is the operating system dependent <i>preferred-separator</i> character ([path.generic]).</p>
 <blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">[<i>Example:</i> For  POSIX based operating 
+  [<i>Example:</i> For  POSIX based operating 
       systems, <code>value_type</code> is <code>char</code> and <code>
       preferred_separator</code> is the slash character (/).&nbsp; For Windows based 
 operating systems, <code>value_type</code> is <code>wchar_t</code> and <code>
-      preferred_separator</code> is the backslash character (\).&nbsp; <i>--end example</i>]</td>
-    </tr>
-  </table>
+      preferred_separator</code> is the backslash character (\).&nbsp; <i>--end example</i>]
 </blockquote>
 <h3>Generic pathname format grammar [<a name="path.generic">path.generic</a>]</h3>
 <p><i>pathname:<br>
@@ -770,20 +765,16 @@ name:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>A 
 sequence of characters other than <i>directory-separator</i> characters.</p>
 <blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">[<i>Note:</i> Operating systems often place restrictions 
+<blockquote>
+[<i>Note:</i> Operating systems often place restrictions 
       on the characters that may be used in a <i>filename</i>. For wide 
       portability, users may wish to limit <i>filename</i> characters to the  POSIX Portable Filename Character Set: <br>
       <br>
       <tt>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br>
       a b c d e f g h i j k l m n o p q r s t u v w x y z<br>
-      0 1 2 3 4 5 6 7 8 9 . _ -<br>
-      <br>
-      </tt> <i>--end note</i>]</td>
-    </tr>
-  </table>
+      0 1 2 3 4 5 6 7 8 9 . _ -
+      </tt> <i>--end note</i>]
+</blockquote>
 </blockquote>
 <p><i>dot:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The 
@@ -821,21 +812,16 @@ operating system.</p>
 format conversions</a> [path.fmt.cvt]</h4>
 
 <blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">[<i>Note:</i> The format conversions described in this 
-      section are never applied on POSIX or Windows based operating systems 
-      because:<ul>
+[<i>Note:</i> The format conversions described in this 
+      section are not applied on POSIX or Windows based operating systems 
+      because on these systems:<ul>
         <li>The generic format is acceptable as a native path.</li>
         <li>There is no need to distinguish between native format and generic 
         format arguments.</li>
         <li>Paths for regular files and paths for directories share the same 
         syntax.</li>
       </ul>
-      <p>&nbsp;<i>-- end note</i>]</td>
-    </tr>
-  </table>
+      <p>&nbsp;<i>-- end note</i>]
 </blockquote>
 
 <p>Member functions arguments that take character sequences representing paths 
@@ -1387,14 +1373,9 @@ for (; !p.extension().empty(); p = p.stem())
   file system location, else <code>false</code>.</p>
 </blockquote>
 <blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">[<i>Example:</i> <code>path(&quot;/&quot;).is_absolute()</code> is
+[<i>Example:</i> <code>path(&quot;/&quot;).is_absolute()</code> is
       <code>true</code> for  POSIX based operating systems, and <code>false</code> for Windows based 
-operating systems.&nbsp; <i>--end example</i>]</td>
-    </tr>
-  </table>
+operating systems.&nbsp; <i>--end example</i>]
 </blockquote>
 <pre>bool <a name="path-is_relative">is_relative</a>() const;</pre>
 <blockquote>
@@ -1986,13 +1967,13 @@ they are very familiar and ingrained for many  users.</span></i></p>
   is created without specifying the permissions</td>
 </tr>
 <tr><td><code><a name="symlink_perms">symlink_perms</a></code></td><td><code>0x4000</code></td><td></td><td>
-  <span style="background-color: #E8FFE8">ISO-9945/POSIX </span> <code>
-  <span style="background-color: #E8FFE8">permissions()</span></code><span style="background-color: #E8FFE8"> resolves symlinks unless
-  </span> <code><span style="background-color: #E8FFE8">symlink_perms</span></code><span style="background-color: #E8FFE8"> is specified. 
+  <span style="background-color: #FFFF99">ISO-9945/POSIX </span> <code>
+  <span style="background-color: #FFFF99">permissions()</span></code><span style="background-color: #FFFF99"> resolves symlinks unless
+  </span> <code><span style="background-color: #FFFF99">symlink_perms</span></code><span style="background-color: #FFFF99"> is specified. 
   Meaningless on Windows as </span> <code>
-  <span style="background-color: #E8FFE8">permissions()</span></code><span style="background-color: #E8FFE8"> never resolves symlinks. 
+  <span style="background-color: #FFFF99">permissions()</span></code><span style="background-color: #FFFF99"> never resolves symlinks. 
   Meaningless on Mac OS X and some other BSD systems as </span> <code>
-  <span style="background-color: #E8FFE8">permissions()</span></code><span style="background-color: #E8FFE8"> always resolves symlinks. Get over it.</span></td>
+  <span style="background-color: #FFFF99">permissions()</span></code><span style="background-color: #FFFF99"> always resolves symlinks. Get over it.</span></td>
 </tr>
 
 </table>
@@ -2795,18 +2776,12 @@ bool create_directory(const path&amp; p, const path&amp; existing_p, $SYSTEM;err
   treated as an error. </p>
   
 <blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">
-      <p>[<i>Note:</i> For POSIX based operating systems the 
+[<i>Note:</i> For POSIX based operating systems the 
       attributes are those copied by native API <code>stat(existing_p.c_str(), &amp;attributes_stat)</code> 
       followed by <code>mkdir(p.c_str(), attributes_stat.st_mode)</code>.&nbsp; For 
       Windows based operating systems the attributes are those copied by native 
       API <code>CreateDirectoryExW(existing_p.c_str(), p.c_str(), 0)</code>.&nbsp; <i>
-      --end note</i>]</td>
-    </tr>
-  </table>
+      --end note</i>]
 </blockquote>
   
   <p><i>Postcondition:</i> <code>is_directory(p)</code></p>
@@ -3248,8 +3223,7 @@ thrown.<i> -- end note</i>] </p>
     <ul>
       <li>If the specific error indicates that <code>p</code> cannot be resolved 
       because some element of the path does not exist, return <code>
-      file_status(file_type::not_found)</code>.<span style="font-style: italic; background-color: #E0E0E0"> [</span><i><span style="background-color: #E0E0E0">Note: 
-      ISO/</span><span style="background-color: #E0E0E0">IEC/IEEE</span><span style="background-color: #E0E0E0"> 9945 errors that 
+      file_status(file_type::not_found)</code>.<span style="font-style: italic; background-color: #E0E0E0"> </span><i><span style="background-color: #E0E0E0">ISO/</span><span style="background-color: #E0E0E0">IEC/IEEE</span><span style="background-color: #E0E0E0"> 9945 errors that 
       indicate this are </span><span style="background-color: #E0E0E0">ENOENT</span><span style="background-color: #E0E0E0"> or 
       </span><span style="background-color: #E0E0E0">ENOTDIR</span><span style="background-color: #E0E0E0">. Windows equivalents 
       include </span><span style="background-color: #E0E0E0">
@@ -3258,16 +3232,14 @@ thrown.<i> -- end note</i>] </p>
       </span><span style="background-color: #E0E0E0">ERROR_INVALID_NAME</span><span style="background-color: #E0E0E0">, 
       </span><span style="background-color: #E0E0E0">ERROR_INVALID_PARAMETER</span><span style="background-color: #E0E0E0">, 
       </span><span style="background-color: #E0E0E0">ERROR_BAD_PATHNAME</span><span style="background-color: #E0E0E0">, and 
-      </span><span style="background-color: #E0E0E0">ERROR_BAD_NETPATH</span><span style="background-color: #E0E0E0">. -- 
-      end note</span></i><span style="font-style: italic; background-color: #E0E0E0">]</span><br>
+      </span><span style="background-color: #E0E0E0">ERROR_BAD_NETPATH</span><span style="background-color: #E0E0E0">.</span></i><br>
 &nbsp;</li>
       <li>Otherwise, if the specific error indicates that <code>p</code> can be resolved 
       but the attributes cannot be determined, return <code>
-      file_status(file_type::unknown)</code>. 
-      <span style="font-style: italic; background-color: #E0E0E0">[</span><i><span style="background-color: #E0E0E0">Note: For example, Windows 
+      file_status(file_type::unknown)</code>. <i><span style="background-color: #E0E0E0">For example, Windows 
       </span><span style="background-color: #E0E0E0">ERROR_SHARING_VIOLATION</span><span style="background-color: #E0E0E0"> 
-      errors. For ISO/</span><span style="background-color: #E0E0E0">IEC/IEEE</span><span style="background-color: #E0E0E0"> 9945, the case never arises. -- end 
-      note</span></i><span style="font-style: italic; background-color: #E0E0E0">]</span><br>
+      errors. For ISO/</span><span style="background-color: #E0E0E0">IEC/IEEE</span><span style="background-color: #E0E0E0"> 
+      9945, the case never arises.</span></i><br>
 &nbsp;</li>
       <li>Otherwise, return <code>
       file_status(file_type::none)</code>.</li>
@@ -3362,12 +3334,7 @@ path <a name="system_complete2">system_complete</a>(const path&amp; p, $SYSTEM;e
   <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
   
 <blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">
-  
-  <p>[<i>Example:</i> For POSIX based operating systems, <code>system_complete(p)</code>
+[<i>Example:</i> For POSIX based operating systems, <code>system_complete(p)</code>
   has the same semantics as <code>complete(p, current_path())</code>.</p>
   <p>For Windows based operating systems, <code>system_complete(p)</code> has the 
   same semantics as <code>absolute(ph, current_path())</code> if <code>p.is_absolute() ||
@@ -3378,18 +3345,14 @@ path <a name="system_complete2">system_complete</a>(const path&amp; p, $SYSTEM;e
   be the current directory for that drive the last time it was set, and thus may 
   be <b>residue left over from a prior program</b> run by the command 
   processor! Although these semantics are useful, they are very 
-  error-prone. <i>-- end example</i>]</p>
-  
-      </td>
-    </tr>
-  </table>
+  error-prone. <i>-- end example</i>]
 </blockquote>
   
 </blockquote>
 <pre>path <a name="temp_directory_path">temp_directory_path</a>();
 path temp_directory_path($SYSTEM;error_code&amp; ec);</pre>
 <blockquote>
-  <p><i>Returns:</i> An operating system dependent directory path suitable for temporary files. An error shall be reported if<code> !exists(p) 
+  <p><i>Returns:</i> An unspecifed directory path suitable for temporary files. An error shall be reported if<code> !exists(p) 
   || !is_directory(p)</code>, where <code>p</code> is the path to be returned. 
   The signature with argument <code>ec</code> returns <code>path()</code> if an 
   error occurs.</p>
@@ -3398,18 +3361,13 @@ path temp_directory_path($SYSTEM;error_code&amp; ec);</pre>
   name was chosen to emphasize that the return is a path, not just a single 
   directory name.</span></i></p>
 <blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">
+[<i>Example:</i> For POSIX based operating systems, an implementation might 
+  return the path 
+  supplied by the first environment variable found in the list TMPDIR, TMP, TEMP, TEMPDIR, 
+  or if none of these are found, <code>&quot;/tmp&quot;</code>.</p>
+  <p>For Windows based operating systems, an implementation might return the path
+  reported by the <i>Windows</i> <code>GetTempPath</code> API function.<i> -- end example</i>] </p> 
   
-  <p>[<i>Example:</i> For POSIX based operating systems, the path 
-  supplied by the first environment variable found in the list TMPDIR, TMP, TEMP, TEMPDIR. If none of these are found, <code>&quot;/tmp&quot;</code>.</p>
-  <p>For Windows based operating systems, the path reported by the <i>Windows</i> <code>GetTempPath</code> API function. <i>-- end example</i>]</p>
-  
-      </td>
-    </tr>
-  </table>
 </blockquote>
 </blockquote>
 <pre>path <a name="unique_path">unique_path</a>(const path&amp; model=&quot;%%%%-%%%%-%%%%-%%%%&quot;);
