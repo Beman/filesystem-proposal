@@ -57,7 +57,6 @@ del   { background-color:#FFD7D7 }
       <a href="#Library-background">Library background</a><br>
       <a href="#Differences-Boost">Differences from Boost Filesystem</a><br>
       <a href="#Revision-history">Revision history</a><br>
-      <a href="#TODO">TODO</a><br>
       <a href="#TOC">Proposed Wording Table of Contents</a><br>
       <a href="#Proposed-Wording">Proposed Wording</a><br>
       <a href="#Acknowledgements">Acknowledgements</a><br>
@@ -71,9 +70,7 @@ del   { background-color:#FFD7D7 }
 Standard Library Technical Specification.</i> 
 The proposed library is based on the 
 <a href="http://www.boost.org/libs/filesystem">Boost Filesystem Library</a>, 
-version 3. Proposed wording is provided. <span style="background-color: #FFFF99">A
-</span>
-<a href="#TODO"><span style="background-color: #FFFF99">TODO</span></a><span style="background-color: #FFFF99"> list identifies remaining work to be done.</span></p>
+version 3. </p>
 
 
 <p>The proposal is a pure addition; no existing standard library headers are modified.&nbsp; 
@@ -133,7 +130,12 @@ Library Proposal (Revision 4). Changes include:</p>
   It provides a reasonable level of interoperation with standard library file 
   steam constructors and opens without modifying existing standard library 
   classes or headers.</li>
-  <li>Update POSIX references to ISO/IEC/IEEE 9945:2009</li>
+  <li>Update POSIX references to ISO/IEC/IEEE 9945:2009.</li>
+  <li>Remove the table and shading formatting from examples and notes that 
+  mention trademarked names. The SG reviewed the use of trademarked names in 
+  Portland, and is satisfied they are useful and that ISO requirements have been 
+  met.</li>
+  <li>Remove the TODO list. Items have either been completed or moved elsewhere.</li>
 </ul>
 
 
@@ -303,28 +305,6 @@ afterward the Library Working Group set aside work on TR2 to concentrate on
 C++0x.</p>
 
 
-  <h2><a name="TODO"><span style="background-color: #FFFF99">TODO</span></a></h2>
-  <ul>
-    <li><span style="background-color: #FFFF99">At Portland meeting, review trademarked names with Filesystem Study 
-    Group and project editor.</span></li>
-    <li><span style="background-color: #FFFF99">Ion </span>
-    <span style="background-color: #FFFF99">Todirel</span><span style="background-color: #FFFF99"> suggests &quot;Would be nice if 
-    </span><span style="background-color: #FFFF99">path::append</span><span style="background-color: #FFFF99"> was 
-    </span><span style="background-color: #FFFF99">variadic</span><span style="background-color: #FFFF99">, to 
-    improve usability&quot;.</span></li>
-    <li><span style="background-color: #FFFF99">Ion </span>
-    <span style="background-color: #FFFF99">Todirel</span><span style="background-color: #FFFF99">: Would be nice to have a 
-    </span><span style="background-color: #FFFF99">make_relative</span><span style="background-color: #FFFF99">. Need to review 
-    similar suggestions.</span></li>
-    <li><span style="background-color: #FFFF99">Dinkumware</span><span style="background-color: #FFFF99">/Microsoft report slightly different results for Decomposition 
-    table. Rerun table. Check discrepancies.</span></li>
-    <li><span style="background-color: #FFFF99">Review Nick Stoughton's email for suggestions, action items.</span></li>
-    <li><span style="background-color: #FFFF99">Review Filesystem Study Group reflector messages for unresolved 
-    comments, particularly in the area of Permissions.</span></li>
-    <li><span style="background-color: #FFFF99">Review and resolve any pending issues in the 
-    </span><span style="background-color: #FFFF99">GitHub</span><span style="background-color: #FFFF99"> issues list.</span></li>
-  </ul>
-  
 <h2>Proposed Wording <a name="TOC">Table of Contents</a></h2>
 
 <p>   <a href="#Filesystem Library">1 Filesystem Library </a><br>
