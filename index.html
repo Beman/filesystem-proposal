@@ -4,7 +4,7 @@
 <meta http-equiv="Content-Language" content="en-us">
 <meta name="GENERATOR" content="Microsoft FrontPage 5.0">
 <meta name="ProgId" content="FrontPage.Editor.Document">
-<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 <title>
 
   Filesystem Proposal
@@ -21,8 +21,8 @@ table { margin: 0.5em; }
 
 pre   { background-color:#D7EEFF }
 
-ins   { background-color:#A0FFA0 }
-del   { background-color:#FFA0A0 }
+ins   { background-color:#E8FFE8 }
+del   { background-color:#FFD7D7 }
 </style>
 </head>
 
@@ -31,12 +31,12 @@ del   { background-color:#FFA0A0 }
   <table border="0">
     <tr>
       <td>Document number:&nbsp;&nbsp; </td>
-      <td><span style="background-color: #FFFF99">Nxxxx</span><span style="background-color: #FFFF99">=12-xxxx</span></td>
+      <td><span style="background-color: #FFFF99">D3461=12-0151</span></td>
     </tr>
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-10-04<!--webbot bot="Timestamp" endspan i-checksum="12014" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-10-15<!--webbot bot="Timestamp" endspan i-checksum="12017" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -120,7 +120,18 @@ Library Proposal (Revision 4). Changes include:</p>
 
 
 <ul>
-  <li>Editorial corrections reported by Jens Maurer.</li>
+  <li>Editorial: corrections reported by Jens Maurer.</li>
+  <li>Editorial: cleanup of operating system references.</li>
+  <li>Editorial: change document HTML encoding to <code>charset=utf-8</code>.</li>
+  <li>Reintroduce <code>codecvt</code> facilities to class <code>path</code>;&nbsp; 
+  relatively minimal compared to the Boost design, touching far fewer 
+  signatures, avoiding locale dependencies, and providing explicit support for 
+  UTF-8. Provide UTF-8 conversion example.</li>
+  <li>Add <code>operator string_type() const;</code> to class <code>path</code>. 
+  Microsoft and Dinkumware are already shipping this in their implementations. 
+  It provides a reasonable level of interoperation with standard library file 
+  steam constructors and opens without modifying existing standard library 
+  classes or headers.</li>
 </ul>
 
 
@@ -132,9 +143,7 @@ Library Proposal (Revision 3). Changes include:</p>
 <ul>
   <li>Numerous corrections and improvements to the standardese of the proposed 
   wording, based on comments and suggestions from the Filesystem Study Group, 
-  particularly <span class="gI">
-  <span email="daniel.kruegler@gmail.com" name="Daniel Krügler" class="gD">
-  Daniel Krügler and Robert Stewart.</span></span></li>
+  particularly Daniel KrÃ¼gler and Robert Stewart.</li>
   <li>Add <code>path::operator+=</code> and <code>concat</code> functions to tack on things like suffixes 
   or numbers. Suggested by Ed Smith-Rowland and others.</li>
     <li>Add section tags and section numbers, per LWG 
@@ -294,9 +303,6 @@ C++0x.</p>
 
   <h2><a name="TODO">TODO</a></h2>
   <ul>
-    <li>Test, then add wording for, path automatic private conversion to const 
-    string_type&amp; with &lt;fstream&gt; friendship. Allow implementers latitude to 
-    instead add additional overloads to &lt;fstream&gt;.</li>
     <li>At Portland meeting, review trademarked names with Filesystem Study 
     Group and project editor.</li>
     <li>Ion Todirel suggests &quot;Would be nice if path::append was variadic, to 
@@ -432,7 +438,7 @@ encouraged to investigate the possibility of applying the most recent editions
 of the standard indicated below. Members of IEC and ISO maintain registers of 
 currently valid International Standards.</p>
 <ul>
-  <li>ISO/IEC 9945:2003, <i>Portable Operating System Interface (POSIX</i>®<i>), 
+  <li>ISO/IEC 9945:2003, <i>Portable Operating System Interface (POSIX</i>Â®<i>), 
   part 1 (Base Definitions) and part 2 (System Interfaces)</i>, both as 
   corrected by their respective 2004 Correction 1 documents.</li>
 </ul>
@@ -441,9 +447,9 @@ currently valid International Standards.</p>
 available operating systems for purposes of exposition.<sup> <a href="#footnote">
 [footnote]</a></sup><p><i><span style="background-color: #E0E0E0">This footnote 
 is required by ISO/IEC Directives, Part2, section 6.6.3 Use of trade names and 
-trademarks:</span></i><p><sup>[<a name="footnote">footnote</a>]</sup> POSIX® is 
-a registered trademark of The IEEE. MAC OS® is a registered trademark of Apple 
-Inc. Windows® is a registered trademark of Microsoft Corporation. This information is given for the convenience of 
+trademarks:</span></i><p><sup>[<a name="footnote">footnote</a>]</sup> POSIXÂ® is 
+a registered trademark of The IEEE. MAC OSÂ® is a registered trademark of Apple 
+Inc. WindowsÂ® is a registered trademark of Microsoft Corporation. This information is given for the convenience of 
 users of this document and does not constitute an endorsement by ISO or IEC of 
 these products.<p><span style="background-color: #E0E0E0"><i>End of footnote.</i></span><p></p>
 
@@ -672,6 +678,9 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     basic_istream&lt;charT, traits&gt;&amp;
     operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);
 
+    <ins>path::codecvt_type* <a href="#native-func">native</a>() noexcept;</ins>
+    <ins>path::codecvt_type* <a href="#utf8">utf8</a>() noexcept;</ins>
+
     class <a href="#Class-filesystem_error">filesystem_error</a>;      
     class <a href="#Class-directory_entry">directory_entry</a>;
 
@@ -684,8 +693,8 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     class <a href="#Class-recursive_directory_iterator">recursive_directory_iterator</a>;
 
     // enable c++11 range-based for statements
-    const recursive_directory_iterator&amp; <a href="#recursive_directory_iterator-non-member-functions">begin</a>(const recursive_directory_iterator&amp; iter) noexcept;
-    recursive_directory_iterator <a href="#recursive_directory_iterator-non-member-functions">end</a>(const recursive_directory_iterator&amp;) noexcept;
+    const recursive_directory_iterator&amp; <a href="#rec.dir.itr.nonmembers">begin</a>(const recursive_directory_iterator&amp; iter) noexcept;
+    recursive_directory_iterator <a href="#rec.dir.itr.nonmembers">end</a>(const recursive_directory_iterator&amp;) noexcept;
 
     enum class <a name="file_type" href="#Enum-file_type">file_type</a>;  // [<a href="#Enum-file_type">enum.file_type</a>]
 
@@ -788,9 +797,9 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     bool         <a href="#is_character_file">is_character_file</a>(const path&amp; p,);
     bool         <a href="#is_character_file">is_character_file</a>(const path&amp; p, error_code&amp; ec) noexcept;
 
-    bool         <a href="#is_block_file">is_directory</a>(file_status s) noexcept;
-    bool         <a href="#is_directory2">is_directory</a>(const path&amp; p);
-    bool         <a href="#is_directory2">is_directory</a>(const path&amp; p, error_code&amp; ec) noexcept;
+    bool         <a href="#is_directory">is_directory</a>(file_status s) noexcept;
+    bool         <a href="#is_directory">is_directory</a>(const path&amp; p);
+    bool         <a href="#is_directory">is_directory</a>(const path&amp; p, error_code&amp; ec) noexcept;
 
     bool         <a href="#is_empty">is_empty</a>(const path&amp; p);
     bool         <a href="#is_empty">is_empty</a>(const path&amp; p, error_code&amp; ec) noexcept;
@@ -924,13 +933,16 @@ system or for a particular file system.</p>
         typedef basic_string&lt;value_type&gt;       string_type;
         static constexpr value_type            preferred_separator = <b><i><a href="#value_type">see below</a></i></b>;
 
+        <ins>typedef std::codecvt&lt;value_type, char, std::mbstate_t&gt;  codecvt_type;</ins>
+        <ins>typedef codecvt_type* (*codecvt_func)() noexcept;</ins>  
+
         // <a href="#path-constructors">constructors</a> and destructor
         path() = default;
         path(const path&) = default;
         path(path&amp;&amp;) noexcept = default;
 
         template &lt;class <a href="#Source">Source</a>&gt;
-          path(Source const&amp; source);
+          path(Source const&amp; source<ins>, codecvt_func cvt=codecvt()</ins>);
 
         template &lt;class InputIterator&gt;
           path(InputIterator begin, InputIterator end);
@@ -981,14 +993,19 @@ system or for a particular file system.</p>
         // <a href="#path-native-format-observers">native format observers</a>
         const string_type&amp;  <a href="#native">native</a>() const noexcept;  // native format, encoding
         const value_type*   <a href="#c_str">c_str</a>() const noexcept;   // native().c_str()
+        <ins><a href="#operator-string_type">operator string_type</a>() const;</ins>
 
         template &lt;class charT, class traits= char_traits&lt;charT&gt;,
                   class Allocator = allocator&lt;charT&gt; &gt;
         basic_string&lt;charT, traits, Allocator&gt;
           <a href="#string-template">string</a>(const Allocator&amp; a = Allocator()) const;
+        <ins>template &lt;class charT, class traits= char_traits&lt;charT&gt;,</ins>
+                  <ins>class Allocator = allocator&lt;charT&gt; &gt;</ins>
+        <ins>basic_string&lt;charT, traits, Allocator&gt;</ins>
+          <ins><a href="#string-template">string</a>(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</ins>
 
-        string    <a href="#string">string</a>() const;
         wstring   <a href="#wstring">wstring</a>() const;
+        <ins>string    u8string() const;</ins>
         u16string <a href="#u16string">u16string</a>() const;
         u32string <a href="#u32string">u32string</a>() const;
 
@@ -997,9 +1014,13 @@ system or for a particular file system.</p>
                   class Allocator = allocator&lt;charT&gt; &gt;
         basic_string&lt;charT, traits, Allocator&gt;
           <a href="#generic_string-template">generic_string</a>(const Allocator&amp; a = Allocator()) const;
+        <ins>template &lt;class charT, class traits= char_traits&lt;charT&gt;,</ins>
+                  <ins>class Allocator = allocator&lt;charT&gt; &gt;</ins>
+        <ins>basic_string&lt;charT, traits, Allocator&gt;</ins>
+          <ins><a href="#generic_string-template">generic_string</a>(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</ins>
 
-        string    <a href="#generic_string">generic_string</a>() const;
         wstring   <a href="#generic_wstring">generic_wstring</a>() const;
+        <ins>string    generic_u8string() const;</ins>
         u16string <a href="#generic_u16string">generic_u16string</a>() const;
         u32string <a href="#generic_u32string">generic_u32string</a>() const;
 
@@ -1038,6 +1059,10 @@ system or for a particular file system.</p>
         iterator begin() const;
         iterator end() const;
 
+
+        <ins>// <a href="#path-imbued-codecvt">imbued codecvt facet</a></ins>
+        <ins>static codecvt_func codecvt() noexcept;</ins>
+        <ins>static codecvt_func codecvt(codecvt_func func) noexcept;</ins>
       private:
         string_type pathname;  // <b><i>exposition only</i></b>
       };
@@ -1053,11 +1078,11 @@ is the operating system dependent <i>preferred-separator</i> character ([path.ge
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
    bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
     <tr>
-      <td width="100%">[<i>Example:</i> For ISO 9945/POSIX based operating 
+      <td width="100%">[<i>Example:</i> For  POSIX based operating 
       systems, <code>value_type</code> is <code>char</code> and <code>
-      preferred_separator</code> is the slash character.&nbsp; For Windows based 
+      preferred_separator</code> is the slash character (/).&nbsp; For Windows based 
 operating systems, <code>value_type</code> is <code>wchar_t</code> and <code>
-      preferred_separator</code> is the backslash character.&nbsp; <i>--end example</i>]</td>
+      preferred_separator</code> is the backslash character (\).&nbsp; <i>--end example</i>]</td>
     </tr>
   </table>
 </blockquote>
@@ -1105,8 +1130,7 @@ sequence of characters other than <i>directory-separator</i> characters.</p>
     <tr>
       <td width="100%">[<i>Note:</i> Operating systems often place restrictions 
       on the characters that may be used in a <i>filename</i>. For wide 
-      portability, users may wish to limit <i>filename</i> characters to the ISO 
-      9945/POSIX Portable Filename Character Set: <br>
+      portability, users may wish to limit <i>filename</i> characters to the  POSIX Portable Filename Character Set: <br>
       <br>
       <tt>A B C D E F G H I J K L M N O P Q R S T U V W X Y Z<br>
       a b c d e f g h i j k l m n o p q r s t u v w x y z<br>
@@ -1118,11 +1142,11 @@ sequence of characters other than <i>directory-separator</i> characters.</p>
 </blockquote>
 <p><i>dot:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The 
-filename consisting solely of a single period (.) character.<br>
+filename consisting solely of a single period character (.).<br>
 <br>
 <i>dot-dot:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The 
-filename consisting solely of two period (..) characters.<br>
+filename consisting solely of two period characters (..).<br>
 <br>
 <i>directory-separator:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; slash<code><br>
@@ -1138,8 +1162,8 @@ operating system dependent directory separator character. May be a synonym for
 <i>slash</i>.<br>
 <br>
 <i>slash:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The slash (/) 
-character. </p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </i>The slash 
+character (/). </p>
 <p>Multiple successive <i>directory-separator</i> characters are considered to 
 be the same as one <i>directory-separator</i> character.</p>
 <p>The filename <i>dot</i> is treated as a reference to the current directory. The filename <i>
@@ -1150,6 +1174,24 @@ operating system.</p>
 <h3>1.6.2  <a name="path-Conversions"><code>path</code> conversions</a> [path.cvt]</h3>
 <h4>1.6.2.1  <a name="path-Conversions-to-native-format"><code>path</code> argument 
 format conversions</a> [path.fmt.cvt]</h4>
+
+<blockquote>
+  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
+   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
+    <tr>
+      <td width="100%">[<i>Note:</i> The format conversions described in this 
+      section are never applied on POSIX or Windows based operating systems:<ul>
+        <li>The generic format is acceptable as a native path.</li>
+        <li>There is no need to distinguish between native format and generic 
+        format arguments.</li>
+        <li>Paths for regular files and paths for directories share the same 
+        syntax.</li>
+      </ul>
+      <p>&nbsp;<i>-- end note</i>]</td>
+    </tr>
+  </table>
+</blockquote>
+
 <p>Member functions arguments that take character sequences representing paths 
 may use the generic pathname format grammar ([<a href="#path.generic">path.generic</a>]) or 
 the <a href="#fs.def.native">native pathname format</a>. If and only if such 
@@ -1169,68 +1211,97 @@ as an extension to distinguish between the formats. <i>
 differently from paths for directories, the path shall be treated as a directory 
 path if last element is <i>directory-separator</i>, 
 otherwise it shall be treated as a regular file path.</p>
-<blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">[<i>Note:</i> For ISO 9945/POSIX and Windows based operating 
-      systems,<ul>
-        <li>The generic format is acceptable as a native path so paragraph 1 
-        does not apply and format 
-        conversion is not performed.</li>
-        <li>There is no need to distinguish between native format and generic 
-        format arguments so paragraph 1 does not apply and&nbsp; no extension is required.</li>
-        <li>Paths for regular files and paths for directories share the same 
-      syntax so paragraph 1 does not apply and there is no special treatment for a path with a last element of
-      <i>directory-separator</i>.</li>
-      </ul>
-      <p>&nbsp;<i>-- end note</i>]</td>
-    </tr>
-  </table>
-</blockquote>
+
 <h4>1.6.2.2  <code>path</code> type and encoding conversions [<a name="path.arg.convert">path.type.cvt</a>]</h4>
 <p>For member function arguments that take character sequences representing 
-paths and for member function returning strings, value type and encoding 
+paths and for member functions returning strings, value type and encoding 
 conversion is performed if the value type of the argument or return differs from <code>
-path::value_type</code>. Encoding is determined based on the value type:</p>
+path::value_type</code><ins> or either type is <code>char</code></ins>. Encoding 
+and method of conversion for the argument <ins>to be converted from</ins> or the return value
+<ins>to be converted to</ins> is determined 
+by its value type:</p>
 <blockquote>
   <ul>
     <li>
-<p><code>char</code>: Operating system dependent narrow character path 
-encoding. [<i>Note:</i> The intent is to preserve the current behavior of C and C++ 
+<p><code>char</code>: <ins>Conversion is performed by calling the
+<code>codecvt</code> facet determined by calling the returned value of the 
+either the <code>cvt</code> argument if present or calling <code>path::codecvt()</code> 
+if not present. The encoding of the argument being converted from or the return 
+value being converted to is determined by the called <code>codecvt</code> facet.</ins><p>[<i>Note:</i> <del>The intent is to supply the same behavior</del>
+<ins>These conversion rules result in default behavior that is the same</ins> as other C and C++ 
 standard library functions that perform file operations using narrow character 
-strings to identify paths. Changing this behavior would be surprising and break 
-much existing code. <i>--end note</i>]</p>
+strings to identify paths. Changing this <ins>default</ins> behavior would be surprising and break 
+much existing code. <i>--end note</i>]<br>
+<br>
+      <i><span style="background-color: #E0E0E0">The native encoding for narrow character paths varies considerably:</span></i><ul>
+        <li>
+        <p><i><span style="background-color: #E0E0E0">Apple OS X always uses UTF-8.</span></i></li>
+        <li><i><span style="background-color: #E0E0E0">On some POSIX based operating systems, the encoding is determined by <code>locale(&quot;&quot;)</code>;</span></i></li>
+        <li><i><span style="background-color: #E0E0E0">On Windows based 
+        operating systems, the encoding is determined by testing <code>AreFileApisANSI()</code>; if true, the <code>CP_ACP</code> 
+        codepage is used, otherwise the <code>CP_OEMCP</code> codepage is 
+        used. </span></i><br>
+&nbsp;</li>
+      </ul>
+</p>
     </li>
     <li>
-<p><code>wchar_t</code>: Encoding of the implementation's native wide 
-character set.</p>
+<p><code>wchar_t</code>: Encoding is the implementation's native wide 
+character set. <ins>Conversion method is unspecified.</ins><br>
+&nbsp;</p>
     </li>
     <li>
-<p><code>char16_t</code>: UTF-16</p>
+<p><code>char16_t</code>: Encoding is UTF-16. <ins>Conversion method 
+is unspecified.</ins> <br>
+&nbsp;</p>
     </li>
     <li>
-<p><code>char32_t</code>: UTF-32</p>
+<p><code>char32_t</code>: Encoding is UTF-32. <ins>Conversion method 
+is unspecified.</ins></p>
     </li>
   </ul>
+</blockquote>
+<p><span style="background-color: #E8FFE8">[</span><i><span style="background-color: #E8FFE8">Example:</span></i></p>
+<p><span style="background-color: #E8FFE8">In a program intended for use with a 
+variety of systems, </span><code><span style="background-color: #E8FFE8">
+std::string name</span></code><span style="background-color: #E8FFE8"> has been 
+given a value by a database that stores string values as UTF-8. The program 
+needs to create a directory named with the value of </span><code>
+<span style="background-color: #E8FFE8">name</span></code><span style="background-color: #E8FFE8">. 
+Because not all systems encode narrow strings as UTF-8, the programmer needs to 
+explicitly identify the encoding if the program is to be portable:</span></p>
 <blockquote>
-  <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse"
-   bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
-    <tr>
-      <td width="100%">[<i>Note:</i> Native narrow character path encoding 
-      varies considerably:<ul>
-        <li>
-        <p>MAC OS X operating system: Always UTF-8.</li>
-        <li>Some ISO 9945/POSIX based operating systems: determined by <code>locale(&quot;&quot;)</code>;</li>
-        <li>Windows based operating systems: Codepage of <code>CP_ACP</code> 
-    if <code>AreFileApisANSI()</code>is true, otherwise codepage <code>CP_OEMCP</code>.</li>
-      </ul>
-      <p>&nbsp;<i>-- end note</i>]</td>
-    </tr>
-  </table>
+  <pre><span style="background-color: #E8FFE8">create_directory(path(name</span><span style="background-color: #E8FFE8">, utf8));</span></pre>
 </blockquote>
-
+<p><span style="background-color: #E8FFE8">On Windows-like systems, which often 
+default to native encodings other than UTF-8, a conversion from UTF-8 to UTF-16 
+is done and all is well because this is a lossless conversion.</span></p>
+<p><span style="background-color: #E8FFE8">On POSIX-like systems configured to 
+use UTF-8 as the default native encoding, no conversion is necessary and none 
+occurs.</span></p>
+<p><span style="background-color: #E8FFE8">On POSIX-like systems configured to 
+use some encoding other than UTF-8 as the default native encoding, a conversion 
+is done from UTF-8 to the native encoding. Depending on the native encoding, 
+this may be a </span><span style="background-color: #E8FFE8">lossy</span><span style="background-color: #E8FFE8"> 
+conversion.</span></p>
+<p><span style="background-color: #E8FFE8">What if most of the calls to </span>
+<span style="background-color: #E8FFE8">filesystem</span><span style="background-color: #E8FFE8"> 
+functions use UTF-8? Calling the static function </span><code>
+<span style="background-color: #E8FFE8">path::codecvt(utf8)</span></code><span style="background-color: #E8FFE8"> 
+will set </span><code><span style="background-color: #E8FFE8">path::codecvt()</span></code><span style="background-color: #E8FFE8">, 
+the default encoding, to UTF-8. Then it is no long required to explicitly 
+identify the narrow character encoding in the UTF-8 cases, so the programmer can 
+just write:</span></p>
+<blockquote>
+  <p><span style="background-color: #E8FFE8"><code>create_directory(name</code></span><code></code><span style="background-color: #E8FFE8"><code>);</code></span></p>
 </blockquote>
+<p><span style="background-color: #E8FFE8">Since </span><code>
+<span style="background-color: #E8FFE8">path::codecvt()</span></code><span style="background-color: #E8FFE8">is</span><span style="background-color: #E8FFE8"> 
+static, it must be used with care to avoid confusion and </span><code>
+<span style="background-color: #E8FFE8">path(<i>p</i>, native)</span></code><span style="background-color: #E8FFE8"> 
+must be used if </span><code><i><span style="background-color: #E8FFE8">p</span></i></code><span style="background-color: #E8FFE8"> 
+is a char based string that is not UTF-8 encoded.</span></p>
+<p><i><span style="background-color: #E8FFE8">--end example</span></i><span style="background-color: #E8FFE8">]</span></p>
 <h3>1.6.3  <a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
 <p>In addition to the [fs.req] requirements, function template parameters named <code><a name="Source">Source</a></code> 
 shall be one of:</p>
@@ -1428,13 +1499,8 @@ std::cout &lt;&lt; path(&quot;/&quot;).<code>replace_</code>filename(<code>&quot
 <blockquote>
   <p><i>Effects:</i> Swaps the contents of the two paths.</p>
   <p><i>Complexity: </i>constant time.</p>
-  <p><span style="background-color: #E0E0E0"><i>See </i></span><i>
-  <span class="gI"><span style="background-color: #E0E0E0">
-  &nbsp;[c++std-filesystem-44] from </span></span>
-  <span email="daniel.kruegler@gmail.com" name="Daniel Krügler" class="gD">
-  <span style="background-color: #E0E0E0">Daniel Krügler </span></span>
-  <span class="gI"><span style="background-color: #E0E0E0">for <code>noexcept</code> 
-  rationale.</span></span></i></p>
+  <p><span style="background-color: #E0E0E0"><i>See 
+    [c++std-filesystem-44] from Daniel KrÃ¼gler for <code>noexcept</code> rationale.</span></i></p>
 </blockquote>
 
 <h3>1.6.9   <a name="path-native-format-observers"><code>path</code> native format observers</a> 
@@ -1448,27 +1514,45 @@ std::cout &lt;&lt; path(&quot;/&quot;).<code>replace_</code>filename(<code>&quot
 <blockquote>
 <p><i>Returns:</i> <code>pathname.c_str()</code>.</p>
 </blockquote>
-
+<pre><a name="operator-string_type">operator</a> string_type() const;</pre>
+<blockquote>
+  <p><i>Returns: </i><code>pathname</code>.</p>
+  <p>[<i>Note:</i> Conversion to <code>string_type</code> is provided so that an 
+  object of class <code>path</code> can be given as an argument to existing 
+  standard library file stream constructors and open functions. This provides 
+  basic interoperability without the need to modify existing standard library 
+  classes or headers. <i>--end note</i>]</p>
+  <p><i><span style="background-color: #E0E0E0">Implementations of the standard 
+  library for systems where string_type is wstring, such as Windows, are 
+  encouraged to provide an extension to existing standard library file stream 
+  constructors and open functions that adds overloads that accept wstrings for 
+  file names. Microsoft and Dinkumware already provide such an extension. </span>
+  </i></p>
+</blockquote>
+<p>
 <pre>template &lt;class charT, class traits = char_traits&lt;charT&gt;,
           class Allocator = allocator&lt;charT&gt; &gt;
 basic_string&lt;charT, traits, Allocator&gt;
-  <a name="string-template">string</a>(const Allocator& a = Allocator()) const;</pre>
+  <a name="string-template">string</a>(const Allocator& a = Allocator()) const;
+template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+          class Allocator = allocator&lt;charT&gt; &gt;
+basic_string&lt;charT, traits, Allocator&gt;
+  string(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</pre>
 
 
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>.</p>
 <p><i>Remarks:</i> All memory allocation, including for the return value, shall 
-be performed by <code>a</code>. If the return type is different from <code>string_type</code>, 
-conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>]).</p>
+be performed by <code>a</code>. Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>]).</p>
 </blockquote>
 <pre>string <a name="string">string</a>() const;
 wstring <a name="wstring">wstring</a>() const;
+string <a name="u8string">u8string</a>() const;
 u16string <a name="u16string">u16string</a>() const;
 u32string <a name="u32string">u32string</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i> If the return type is different from <code>string_type</code>, 
-conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
+<p><i>Remarks:</i> Conversion, if any, is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 
 <h3>1.6.10   <a name="path-generic-format-observers"><code>path</code> generic format observers</a> 
@@ -1487,24 +1571,27 @@ returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
 <pre>template &lt;class charT, class traits = char_traits&lt;charT&gt;,
           class Allocator = allocator&lt;charT&gt; &gt;
 basic_string&lt;charT, traits, Allocator&gt;
-  <a name="generic_string-template">generic_string</a>(const Allocator& a = Allocator()) const;</pre>
+  <a name="generic_string-template">generic_string</a>(const Allocator& a = Allocator()) const;
+template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; class Allocator = allocator&lt;charT&gt; &gt;
+basic_string&lt;charT, traits, Allocator&gt;
+&nbsp; generic_string(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</pre>
 
 <blockquote>
   <p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
   pathname format ([<a href="#path.generic">path.generic</a>]). </p>
 <p><i>Remarks:</i> All memory allocation, including for the return value, shall 
-be performed by <code>a</code>. If the return type is different from <code>string_type</code>, 
-conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
+be performed by <code>a</code>. Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 <pre>string <a name="generic_string">generic_string</a>() const;
 wstring <a name="generic_wstring">generic_wstring</a>() const;
+string generic_u8string() const;
 u16string <a name="generic_u16string">generic_u16string</a>() const;
 u32string <a name="generic_u32string">generic_u32string</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
 pathname format ([<a href="#path.generic">path.generic</a>]).</p>
-<p><i>Remarks:</i>&nbsp; If the return type is different from <code>string_type</code>, 
-conversion is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
+<p><i>Remarks:</i>&nbsp; Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
 
 <h3>1.6.11   <a name="path-compare"><code>path</code> compare</a> [path.compare]</h3>
@@ -1648,8 +1735,7 @@ for (; !p.extension().empty(); p = p.stem())
    bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
     <tr>
       <td width="100%">[<i>Example:</i> <code>path(&quot;/&quot;).is_absolute()</code> is
-      <code>true</code> for ISO 
-9945/POSIX based operating systems, and <code>false</code> for Windows based 
+      <code>true</code> for  POSIX based operating systems, and <code>false</code> for Windows based 
 operating systems.&nbsp; <i>--end example</i>]</td>
     </tr>
   </table>
@@ -1764,6 +1850,17 @@ p = tmp;</pre>
   </blockquote>
   <p><i>Returns:</i> <code>is</code></p>
   </blockquote>
+<h3>1.6.17  <code>path</code> codecvt facets [path.facets]</h3>
+<pre>path::codecvt_type* <a name="native-func">native</a>() noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> The address of a <code>codecvt</code> facet for the native 
+  narrow character encoding.</p>
+</blockquote>
+<pre>path::codecvt_type* <a name="utf8">utf8</a>() noexcept;</pre>
+<blockquote>
+  <p><i>Returns:</i> The address of a <code>codecvt</code> facet for UTF-8, 
+  without byte-order marker, narrow character encoding.</p>
+</blockquote>
 <h2>1.7  <a name="Class-filesystem_error">Class <code>filesystem_error</code> 
 [class.filesystem_error]</a></h2>
 <pre>namespace std { namespace tbd { namespace filesystem {
@@ -2585,7 +2682,7 @@ directory and its sub-directories.</p>
 
 <p>The behavior of a <code>recursive_directory_iterator</code> is the same 
 as a <code>directory_iterator</code> unless otherwise specified.</p>
-<h3>1.14.1  <code>recursive_<a name="directory_iterator-members">directory_iterator</a></code> members 
+<h3>1.14.1  <code><a name="recursive_directory_iterator-members">recursive_directory_iterator</a></code> members 
 [<a name="rec.dir.itr.members">rec.dir.itr.members</a>]</h3>
 
 <pre>recursive_directory_iterator() noexcept;</pre>
@@ -2755,7 +2852,7 @@ void copy(const path&amp; from, const path&amp; to, error_code&amp; ec) noexcept
   
 </blockquote>
 
-<pre>void <a name="copy">copy</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options);
+<pre>void <a name="copy2">copy</a>(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options);
 void copy(const path&amp; from, const path&amp; to, <a href="#copy_option">copy_options</a> options, error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Precondition:</i> At most one constant from each option group ([<a href="#enum.copy_options">enum.copy_options</a>]) 
@@ -2949,7 +3046,7 @@ bool create_directory(const path&amp; p, const path&amp; existing_p, error_code&
    bordercolor="#111111" width="90%" bgcolor="#E8FFE8">
     <tr>
       <td width="100%">
-      <p>[<i>Note:</i> For ISO 9945/POSIX based operating systems the 
+      <p>[<i>Note:</i> For POSIX based operating systems the 
       attributes are those copied by native API <code>stat(existing_p.c_str(), &amp;attributes_stat)</code> 
       followed by <code>mkdir(p.c_str(), attributes_stat.st_mode)</code>.&nbsp; For 
       Windows based operating systems the attributes are those copied by native 
@@ -3112,8 +3209,8 @@ uintmax_t hard_link_count(const path&amp; p, error_code&amp; ec) noexcept;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>s.type() == file_type::block</code></p>
 </blockquote>
-<pre><code>bool <a name="is_directory2">is_block_file</a>(const path&amp; p);
-bool <a name="is_directory3">is_</a><a name="is_directory2">block_file</a>(const path&amp; p, error_code&amp; ec) noexcept;</code></pre>
+<pre><code>bool is_block_file(const path&amp; p);
+bool is_block_file</a>(const path&amp; p, error_code&amp; ec) noexcept;</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_block_file(status(p))</code> or <code>
   is_block_file(status(p, ec))</code>, respectively. The signature with argument <code>
@@ -3125,11 +3222,11 @@ bool <a name="is_directory3">is_</a><a name="is_directory2">block_file</a>(const
 <blockquote>
   <p><i>Returns:</i> <code>s.type() == file_type::character</code></p>
 </blockquote>
-<pre><code>bool <a name="is_directory">is_character_file</a>(const path&amp; p);
-bool <a name="is_directory">is_character_file</a>(const path&amp; p, error_code&amp; ec) noexcept;</code></pre>
+<pre><code>bool is_character_file</a>(const path&amp; p);
+bool is_character_file</a>(const path&amp; p, error_code&amp; ec) noexcept;</code></pre>
 <blockquote>
-  <p><i>Returns:</i> <code><a name="is_directory">is_character_file</a>(status(p))</code> 
-  or <code><a name="is_directory">is_character_file</a>(status(p, ec))</code>, 
+  <p><i>Returns:</i> <code>is_character_file(status(p))</code> 
+  or <code>is_character_file(status(p, ec))</code>, 
   respectively. The signature with argument <code>ec</code> returns <code>false</code> 
   if an error occurs.</p>
 <p><i>Throws:</i> As specified in <a href="#Error-reporting">Error reporting</a>.</p>
@@ -3515,7 +3612,7 @@ path <a name="system_complete2">system_complete</a>(const path&amp; p, error_cod
     <tr>
       <td width="100%">
   
-  <p>[<i>Example:</i> For ISO 9945/POSIX based operating systems, <code>system_complete(p)</code>
+  <p>[<i>Example:</i> For POSIX based operating systems, <code>system_complete(p)</code>
   has the same semantics as <code>complete(p, current_path())</code>.</p>
   <p>For Windows based operating systems, <code>system_complete(p)</code> has the 
   same semantics as <code>absolute(ph, current_path())</code> if <code>p.is_absolute() ||
@@ -3551,7 +3648,7 @@ path temp_directory_path(error_code&amp; ec);</pre>
     <tr>
       <td width="100%">
   
-  <p>[<i>Example:</i> For ISO 9945/POSIX based operating systems, the path 
+  <p>[<i>Example:</i> For POSIX based operating systems, the path 
   supplied by the first environment variable found in the list TMPDIR, TMP, TEMP, TEMPDIR. If none of these are found, <code>&quot;/tmp&quot;</code>.</p>
   <p>For Windows based operating systems, the path reported by the <i>Windows</i> <code>GetTempPath</code> API function. <i>-- end example</i>]</p>
   
@@ -3604,7 +3701,7 @@ through to completion. She gave me the strength to continue after a difficult
 year of cancer treatment in the middle of it all.</p>
 <p>Members of the C++ standards committee Filesystem Study Group contributed 
 numerous comments, suggestions, and bug-fixes to the post-C++11 proposal for 
-standardizing the library. Daniel Krügler and Robert Steward reviewed the text 
+standardizing the library. Daniel KrÃ¼gler and Robert Steward reviewed the text 
 in great detail, and made major contributions to the standardization effort both 
 in terms of fixes and suggested improvements.</p>
 <p>Many people contributed technical comments, ideas, and suggestions to the 
@@ -3627,7 +3724,7 @@ multiple string types. His idea became the basis for the version 3 path design.<
   <tr>
     <td width="16%" valign="top">[<a name="ISO_POSIX">ISO/IEC 9945</a>]</td>
     <td width="84%">ISO/IEC 9945:2003, IEEE&nbsp;Std&nbsp;1003.1-2001, and The Open Group 
-    Base Specifications, Issue 6. Also known as The Single Unix<font face="Times New Roman">® 
+    Base Specifications, Issue 6. Also known as The Single Unix<font face="Times New Roman">Â® 
     Specification, Version 3. Available from each of the organizations involved 
     in its creation. For example, read online or download from <a href="http://www.unix.org/single_unix_specification/">www.unix.org/single_unix_specification/</a>.</font> The ISO JTC1/SC22/WG15 - 
     POSIX homepage is <a href="http://www.open-std.org/jtc1/sc22/WG15/">www.open-std.org/jtc1/sc22/WG15/</a></td>
