@@ -28,9 +28,8 @@ $if $TARGET; == BOOST
   {"
   $def NAMESPACE_END "  }  // namespace filesystem
 }  // namespace boost"
-  $def CODECVT_ARG "const codecvt_type&amp; cvt" 
-  $def CODECVT_ARG2 ", const codecvt_type&amp; cvt" 
-  $def CODECVT_DEFAULT "=codecvt()" 
+  $def CODECVT_ARG "const codecvt_type&amp; cvt=codecvt()" 
+  $def CODECVT_ARG2 ", const codecvt_type&amp; cvt=codecvt()" 
 $else
   Filesystem Proposal
   $def WHAT "technical specification"
@@ -43,9 +42,8 @@ $else
   $def NAMESPACE_BEGIN "namespace std { namespace tbd { namespace filesystem {
 "
   $def NAMESPACE_END "} } }  // namespaces std::tbd::filesystem"
-  $def CODECVT_ARG "" 
-  $def CODECVT_ARG2 "" 
-  $def CODECVT_DEFAULT "" 
+  $def CODECVT_ARG "encoding enc = native" 
+  $def CODECVT_ARG2 ", encoding enc = native" 
 $endif
 </title>
 <style type="text/css">
@@ -288,6 +286,13 @@ $endif;    void swap(path&amp; lhs, path&amp; rhs) noexcept;
 
     path operator/ (const path&amp; lhs, const path&amp; rhs);
 
+    path make_path(const string&amp; s, const locale&amp; loc);
+    path make_path(const char* s, const locale&amp; loc);
+    template &lt;class <a href="#Source">Source</a>&gt;
+      path make_path(Source const&amp; source, const locale&amp; loc);
+    template &lt;class InputIterator&gt;
+      path make_path(InputIterator begin, InputIterator end, const locale&amp; loc);
+
     template &lt;class charT, class traits&gt;
     $STD;basic_ostream&lt;charT, traits&gt;&amp;
     operator&lt;&lt;($STD;basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp; p);
@@ -295,9 +300,6 @@ $endif;    void swap(path&amp; lhs, path&amp; rhs) noexcept;
     template &lt;class charT, class traits&gt;
     $STD;basic_istream&lt;charT, traits&gt;&amp;
     operator&gt;&gt;($STD;basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);
-
-    <ins>path::codecvt_type* <a href="#native-func">native</a>() noexcept;</ins>
-    <ins>path::codecvt_type* <a href="#utf8">utf8</a>() noexcept;</ins>
 
     class <a href="#Class-filesystem_error">filesystem_error</a>;      
     class <a href="#Class-directory_entry">directory_entry</a>;
@@ -558,48 +560,37 @@ system or for a particular file system.</p>
 $if $TARGET; == BOOST        typedef std::codecvt&lt;wchar_t, char, std::mbstate_t&gt;
                                                codecvt_type;
 $else
-        <ins>typedef std::codecvt&lt;value_type, char, std::mbstate_t&gt;  codecvt_type;</ins>
-        <ins>typedef codecvt_type* (*codecvt_func)() noexcept;</ins>  
+        <ins>enum encoding {native, utf8};</ins>
 $endif;
         // <a href="#path-constructors">constructors</a> and destructor
         path() = default;
         path(const path&) = default;
         path(path&amp;&amp;) noexcept = default;
-
-$if $TARGET; == BOOST        template &lt;class <a href="#Source">Source</a>&gt;
-          path(Source const&amp; source$CODECVT_ARG2;$CODECVT_DEFAULT;);
-$else        template &lt;class <a href="#Source">Source</a>&gt;
-          path(Source const&amp; source<ins>, codecvt_func cvt=codecvt()</ins>);
-$endif;
+        template &lt;class <a href="#Source">Source</a>&gt;
+          path(Source const&amp; source$CODECVT_ARG2;);
         template &lt;class InputIterator&gt;
-          path(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
+          path(InputIterator begin, InputIterator end$CODECVT_ARG2;);
 
        ~path() = default;
 
         // <a href="#path-assignments">assignments</a>
         path&amp; operator=(const path&amp;) = default;
         path&amp; operator=(path&amp;&amp;) noexcept = default;
-
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator=(Source const&amp; source);
-
-$if $TARGET; == BOOST        template &lt;class <a href="#Source">Source</a>&gt;
+        template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; assign(Source const&amp; source$CODECVT_ARG2;)
-
-$endif;        template &lt;class InputIterator&gt;
-          path&amp; assign(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
+        template &lt;class InputIterator&gt;
+          path&amp; assign(InputIterator begin, InputIterator end$CODECVT_ARG2;);
 
         // <a href="#path-appends">appends</a>
         path&amp; operator/=(const path&amp; p);
-
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator/=(Source const&amp; source);
-
-$if $TARGET; == BOOST        template &lt;class <a href="#Source">Source</a>&gt;
+        template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; append(Source const&amp; source$CODECVT_ARG2;);
-
-$endif;        template &lt;class InputIterator&gt;
-          path&amp; append(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);
+        template &lt;class InputIterator&gt;
+          path&amp; append(InputIterator begin, InputIterator end$CODECVT_ARG2;);
 
         // <a href="#path-concatenation">concatenation</a>
         path&amp; operator+=(const path&amp; x);
@@ -610,10 +601,8 @@ $endif;        template &lt;class InputIterator&gt;
           path&amp; operator+=(Source const&amp; x);
         template &lt;class charT&gt;
           path&amp; operator+=(charT x);
-$if $TARGET; == BOOST        template &lt;class Source&gt;
+        template &lt;class Source&gt;
           path&amp; concat(Source const&amp; x$CODECVT_ARG2;);
-$endif;        template &lt;class InputIterator&gt;
-          path&amp; concat(InputIterator begin, InputIterator end);
         template &lt;class InputIterator&gt;
           path&amp; concat(InputIterator begin, InputIterator end$CODECVT_ARG2;);
         
@@ -626,41 +615,33 @@ $endif;        template &lt;class InputIterator&gt;
         void  <a href="#path-swap">swap</a>(path&amp; rhs) noexcept;
 
         // <a href="#path-native-format-observers">native format observers</a>
-        const string_type&amp;  <a href="#native">native</a>() const noexcept;  // native format, encoding
-        const value_type*   <a href="#c_str">c_str</a>() const noexcept;   // native().c_str()
+        const string_type&amp;  <a href="#native">native</a>() const noexcept;
+        const value_type*   <a href="#c_str">c_str</a>() const noexcept;
         <ins><a href="#operator-string_type">operator string_type</a>() const;</ins>
 
 $if $TARGET; == BOOST        template &lt;class String&gt;
-          String  <a href="#string-template">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
-        string    <a href="#string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
-$else        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+          String  <a href="#string-template">string</a>($CODECVT_ARG;) const;
+        string    <a href="#string">string</a>($CODECVT_ARG;) const;
+$else        template &lt;class charT, class traits = char_traits&lt;charT&gt;,
                   class Allocator = allocator&lt;charT&gt; &gt;
         basic_string&lt;charT, traits, Allocator&gt;
-          <a href="#string-template">string</a>(const Allocator&amp; a = Allocator()) const;
-        <ins>template &lt;class charT, class traits= char_traits&lt;charT&gt;,</ins>
-                  <ins>class Allocator = allocator&lt;charT&gt; &gt;</ins>
-        <ins>basic_string&lt;charT, traits, Allocator&gt;</ins>
-          <ins><a href="#string-template">string</a>(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</ins>
+          <a href="#string-template">string</a>($CODECVT_ARG;, const Allocator&amp; a = Allocator()) const;
 $endif;
-        wstring   <a href="#wstring">wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+        wstring   <a href="#wstring">wstring</a>($CODECVT_ARG;) const;
         <ins>string    u8string() const;</ins>
         u16string <a href="#u16string">u16string</a>() const;
         u32string <a href="#u32string">u32string</a>() const;
 
         // <a href="#path-generic-format-observers">generic format observers</a>
 $if $TARGET; == BOOST        template &lt;class String&gt;
-          String  <a href="#generic_string-template">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
-        string    <a href="#generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
-$else        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+          String  <a href="#generic_string-template">generic_string</a>($CODECVT_ARG;) const;
+        string    <a href="#generic_string">generic_string</a>($CODECVT_ARG;) const;
+$else        template &lt;class charT, class traits = char_traits&lt;charT&gt;,
                   class Allocator = allocator&lt;charT&gt; &gt;
         basic_string&lt;charT, traits, Allocator&gt;
-          <a href="#generic_string-template">generic_string</a>(const Allocator&amp; a = Allocator()) const;
-        <ins>template &lt;class charT, class traits= char_traits&lt;charT&gt;,</ins>
-                  <ins>class Allocator = allocator&lt;charT&gt; &gt;</ins>
-        <ins>basic_string&lt;charT, traits, Allocator&gt;</ins>
-          <ins><a href="#generic_string-template">generic_string</a>(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</ins>
+          <a href="#generic_string-template">generic_string</a>($CODECVT_ARG;, const Allocator&amp; a = Allocator()) const;
 $endif;
-        wstring   <a href="#generic_wstring">generic_wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+        wstring   <a href="#generic_wstring">generic_wstring</a>($CODECVT_ARG;) const;
         <ins>string    generic_u8string() const;</ins>
         u16string <a href="#generic_u16string">generic_u16string</a>() const;
         u32string <a href="#generic_u32string">generic_u32string</a>() const;
@@ -704,10 +685,6 @@ $if $TARGET; == BOOST
         // <a href="#path-imbued-locale">imbued locale</a>
         static std::locale <a href="#path-imbue">imbue</a>(const std::locale&amp; loc);
         static const codecvt_type &amp; <a href="#path-codecvt">codecvt</a>();
-$else
-        <ins>// <a href="#path-imbued-codecvt">imbued codecvt facet</a></ins>
-        <ins>static codecvt_func codecvt() noexcept;</ins>
-        <ins>static codecvt_func codecvt(codecvt_func func) noexcept;</ins>
 $endif;      private:
         string_type pathname;  // <b><i>exposition only</i></b>
       };
@@ -965,9 +942,9 @@ shall be one of:</p>
 <h3> <a name="path-constructors"> <code>
 path</code> constructors</a> [path.construct]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
-  path(Source const&amp; source$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
+  path(Source const&amp; source$CODECVT_ARG2;);</pre>
 <pre>template &lt;class InputIterator&gt;
-  path(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
+  path(InputIterator begin, InputIterator end$CODECVT_ARG2;);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
@@ -980,7 +957,7 @@ path</code> assignments</a> [path.assign]</h3>
 $if $TARGET; == BOOST  template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; assign(Source const&amp; source$CODECVT_ARG2;);
 $endif;  template &lt;class InputIterator&gt;
-  path&amp; assign(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
+  path&amp; assign(InputIterator begin, InputIterator end$CODECVT_ARG2;);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
@@ -1014,7 +991,7 @@ $endif;  template &lt;class InputIterator&gt;
 $if $TARGET; == BOOST  template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; append(Source const &amp; source$CODECVT_ARG2;);
 $endif;  template &lt;class InputIterator&gt;
-  path&amp; append(InputIterator begin, InputIterator end$CODECVT_ARG2;$CODECVT_DEFAULT;);</pre>
+  path&amp; append(InputIterator begin, InputIterator end$CODECVT_ARG2;);</pre>
 <blockquote>
   <p><i>Effects:</i></p>
   <blockquote>
@@ -1167,7 +1144,7 @@ std::cout &lt;&lt; path(&quot;/&quot;).<code>replace_</code>filename(<code>&quot
 </blockquote>
 <p>$if $TARGET; == BOOST </p>
 <pre>template &lt;class String&gt;
-String  <a name="string-template">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;</pre>
+String  <a name="string-template">string</a>($CODECVT_ARG;) const;</pre>
 $else
 <pre>template &lt;class charT, class traits = char_traits&lt;charT&gt;,
           class Allocator = allocator&lt;charT&gt; &gt;
@@ -1184,8 +1161,8 @@ $endif;
 <p><i>Remarks:</i> All memory allocation, including for the return value, shall 
 be performed by <code>a</code>. Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>]).</p>
 </blockquote>
-<pre>string <a name="string">string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
-wstring <a name="wstring">wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+<pre>string <a name="string">string</a>($CODECVT_ARG;) const;
+wstring <a name="wstring">wstring</a>($CODECVT_ARG;) const;
 string <a name="u8string">u8string</a>() const;
 u16string <a name="u16string">u16string</a>() const;
 u32string <a name="u32string">u32string</a>() const; </pre>
@@ -1208,7 +1185,7 @@ returns <code>&quot;foo/bar&quot;</code>. <i>-- end example</i>]</p>
 </blockquote>
 $if $TARGET; == BOOST
 <pre>template &lt;class String&gt;
-String  <a name="generic_string-template">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;</pre>
+String  <a name="generic_string-template">generic_string</a>($CODECVT_ARG;) const;</pre>
 $else
 <pre>template &lt;class charT, class traits = char_traits&lt;charT&gt;,
           class Allocator = allocator&lt;charT&gt; &gt;
@@ -1225,8 +1202,8 @@ $endif;
 <p><i>Remarks:</i> All memory allocation, including for the return value, shall 
 be performed by <code>a</code>. Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
-<pre>string <a name="generic_string">generic_string</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
-wstring <a name="generic_wstring">generic_wstring</a>($CODECVT_ARG;$CODECVT_DEFAULT;) const;
+<pre>string <a name="generic_string">generic_string</a>($CODECVT_ARG;) const;
+wstring <a name="generic_wstring">generic_wstring</a>($CODECVT_ARG;) const;
 string generic_u8string() const;
 u16string <a name="generic_u16string">generic_u16string</a>() const;
 u32string <a name="generic_u32string">generic_u32string</a>() const; </pre>

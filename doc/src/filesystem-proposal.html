@@ -31,12 +31,12 @@ del   { background-color:#FFD7D7 }
   <table border="0">
     <tr>
       <td>Document number:&nbsp;&nbsp; </td>
-      <td><span style="background-color: #FFFF99">Dxxxx=13-xxxx</span></td>
+      <td><span style="background-color: #FFFF99">Dxxxx</span></td>
     </tr>
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-11-18<!--webbot bot="Timestamp" endspan i-checksum="12087" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-12-22<!--webbot bot="Timestamp" endspan i-checksum="12140" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -113,7 +113,7 @@ reference documentation.</p>
 <h2><a name="Revision-history">Revision history</a></h2>
 
 
-<p><span style="background-color: #FFFF99">Nxxxx</span><span style="background-color: #FFFF99">=12-xxxx</span>, Filesystem 
+<p><span style="background-color: #FFFF99">Dxxxx</span>, Filesystem 
 Library Proposal (Revision 4). Changes include:</p>
 
 
@@ -125,6 +125,15 @@ Library Proposal (Revision 4). Changes include:</p>
   relatively minimal compared to the Boost design, touching far fewer 
   signatures, avoiding locale dependencies, and providing explicit support for 
   UTF-8. Provide UTF-8 conversion example.</li>
+  <li>Apply class <code>path</code> utf-8 support as agreed in Portland:<ul>
+  <li>Add <code>path::encoding</code> enum.</li>
+  <li>Add <code>encoding enc = native</code> argument to applicable <code>path</code> 
+  member functions.</li>
+  <li>Add <code>make_path()</code> non-member function. </li>
+</ul>
+
+
+  </li>
   <li>Add <code>operator string_type() const;</code> to class <code>path</code>. 
   Microsoft and Dinkumware are already shipping this in their implementations. 
   It provides a reasonable level of interoperation with standard library file 
@@ -656,6 +665,13 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
 
     path operator/ (const path&amp; lhs, const path&amp; rhs);
 
+    path make_path(const string&amp; s, const locale&amp; loc);
+    path make_path(const char* s, const locale&amp; loc);
+    template &lt;class <a href="#Source">Source</a>&gt;
+      path make_path(Source const&amp; source, const locale&amp; loc);
+    template &lt;class InputIterator&gt;
+      path make_path(InputIterator begin, InputIterator end, const locale&amp; loc);
+
     template &lt;class charT, class traits&gt;
     basic_ostream&lt;charT, traits&gt;&amp;
     operator&lt;&lt;(basic_ostream&lt;charT, traits&gt;&amp; os, const path&amp; p);
@@ -663,9 +679,6 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     template &lt;class charT, class traits&gt;
     basic_istream&lt;charT, traits&gt;&amp;
     operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);
-
-    <ins>path::codecvt_type* <a href="#native-func">native</a>() noexcept;</ins>
-    <ins>path::codecvt_type* <a href="#utf8">utf8</a>() noexcept;</ins>
 
     class <a href="#Class-filesystem_error">filesystem_error</a>;      
     class <a href="#Class-directory_entry">directory_entry</a>;
@@ -910,40 +923,37 @@ system or for a particular file system.</p>
         typedef basic_string&lt;value_type&gt;       string_type;
         static constexpr value_type            preferred_separator = <b><i><a href="#value_type">see below</a></i></b>;
 
-        <ins>typedef std::codecvt&lt;value_type, char, std::mbstate_t&gt;  codecvt_type;</ins>
-        <ins>typedef codecvt_type* (*codecvt_func)() noexcept;</ins>  
+        <ins>enum encoding {native, utf8};</ins>
 
         // <a href="#path-constructors">constructors</a> and destructor
         path() = default;
         path(const path&) = default;
         path(path&amp;&amp;) noexcept = default;
-
         template &lt;class <a href="#Source">Source</a>&gt;
-          path(Source const&amp; source<ins>, codecvt_func cvt=codecvt()</ins>);
-
+          path(Source const&amp; source, encoding enc = native);
         template &lt;class InputIterator&gt;
-          path(InputIterator begin, InputIterator end);
+          path(InputIterator begin, InputIterator end, encoding enc = native);
 
        ~path() = default;
 
         // <a href="#path-assignments">assignments</a>
         path&amp; operator=(const path&amp;) = default;
         path&amp; operator=(path&amp;&amp;) noexcept = default;
-
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator=(Source const&amp; source);
-
+        template &lt;class <a href="#Source">Source</a>&gt;
+          path&amp; assign(Source const&amp; source, encoding enc = native)
         template &lt;class InputIterator&gt;
-          path&amp; assign(InputIterator begin, InputIterator end);
+          path&amp; assign(InputIterator begin, InputIterator end, encoding enc = native);
 
         // <a href="#path-appends">appends</a>
         path&amp; operator/=(const path&amp; p);
-
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator/=(Source const&amp; source);
-
+        template &lt;class <a href="#Source">Source</a>&gt;
+          path&amp; append(Source const&amp; source, encoding enc = native);
         template &lt;class InputIterator&gt;
-          path&amp; append(InputIterator begin, InputIterator end);
+          path&amp; append(InputIterator begin, InputIterator end, encoding enc = native);
 
         // <a href="#path-concatenation">concatenation</a>
         path&amp; operator+=(const path&amp; x);
@@ -954,10 +964,10 @@ system or for a particular file system.</p>
           path&amp; operator+=(Source const&amp; x);
         template &lt;class charT&gt;
           path&amp; operator+=(charT x);
+        template &lt;class Source&gt;
+          path&amp; concat(Source const&amp; x, encoding enc = native);
         template &lt;class InputIterator&gt;
-          path&amp; concat(InputIterator begin, InputIterator end);
-        template &lt;class InputIterator&gt;
-          path&amp; concat(InputIterator begin, InputIterator end);
+          path&amp; concat(InputIterator begin, InputIterator end, encoding enc = native);
         
         // <a href="#path-modifiers">modifiers</a>
         void  <a href="#path-clear">clear</a>() noexcept;
@@ -968,35 +978,27 @@ system or for a particular file system.</p>
         void  <a href="#path-swap">swap</a>(path&amp; rhs) noexcept;
 
         // <a href="#path-native-format-observers">native format observers</a>
-        const string_type&amp;  <a href="#native">native</a>() const noexcept;  // native format, encoding
-        const value_type*   <a href="#c_str">c_str</a>() const noexcept;   // native().c_str()
+        const string_type&amp;  <a href="#native">native</a>() const noexcept;
+        const value_type*   <a href="#c_str">c_str</a>() const noexcept;
         <ins><a href="#operator-string_type">operator string_type</a>() const;</ins>
 
-        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+        template &lt;class charT, class traits = char_traits&lt;charT&gt;,
                   class Allocator = allocator&lt;charT&gt; &gt;
         basic_string&lt;charT, traits, Allocator&gt;
-          <a href="#string-template">string</a>(const Allocator&amp; a = Allocator()) const;
-        <ins>template &lt;class charT, class traits= char_traits&lt;charT&gt;,</ins>
-                  <ins>class Allocator = allocator&lt;charT&gt; &gt;</ins>
-        <ins>basic_string&lt;charT, traits, Allocator&gt;</ins>
-          <ins><a href="#string-template">string</a>(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</ins>
+          <a href="#string-template">string</a>(encoding enc = native, const Allocator&amp; a = Allocator()) const;
 
-        wstring   <a href="#wstring">wstring</a>() const;
+        wstring   <a href="#wstring">wstring</a>(encoding enc = native) const;
         <ins>string    u8string() const;</ins>
         u16string <a href="#u16string">u16string</a>() const;
         u32string <a href="#u32string">u32string</a>() const;
 
         // <a href="#path-generic-format-observers">generic format observers</a>
-        template &lt;class charT, class traits= char_traits&lt;charT&gt;,
+        template &lt;class charT, class traits = char_traits&lt;charT&gt;,
                   class Allocator = allocator&lt;charT&gt; &gt;
         basic_string&lt;charT, traits, Allocator&gt;
-          <a href="#generic_string-template">generic_string</a>(const Allocator&amp; a = Allocator()) const;
-        <ins>template &lt;class charT, class traits= char_traits&lt;charT&gt;,</ins>
-                  <ins>class Allocator = allocator&lt;charT&gt; &gt;</ins>
-        <ins>basic_string&lt;charT, traits, Allocator&gt;</ins>
-          <ins><a href="#generic_string-template">generic_string</a>(codecvt_func cvt, const Allocator&amp; a = Allocator()) const;</ins>
+          <a href="#generic_string-template">generic_string</a>(encoding enc = native, const Allocator&amp; a = Allocator()) const;
 
-        wstring   <a href="#generic_wstring">generic_wstring</a>() const;
+        wstring   <a href="#generic_wstring">generic_wstring</a>(encoding enc = native) const;
         <ins>string    generic_u8string() const;</ins>
         u16string <a href="#generic_u16string">generic_u16string</a>() const;
         u32string <a href="#generic_u32string">generic_u32string</a>() const;
@@ -1036,10 +1038,6 @@ system or for a particular file system.</p>
         iterator begin() const;
         iterator end() const;
 
-
-        <ins>// <a href="#path-imbued-codecvt">imbued codecvt facet</a></ins>
-        <ins>static codecvt_func codecvt() noexcept;</ins>
-        <ins>static codecvt_func codecvt(codecvt_func func) noexcept;</ins>
       private:
         string_type pathname;  // <b><i>exposition only</i></b>
       };
@@ -1297,9 +1295,9 @@ shall be one of:</p>
 <h3>1.6.4   <a name="path-constructors"> <code>
 path</code> constructors</a> [path.construct]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
-  path(Source const&amp; source);</pre>
+  path(Source const&amp; source, encoding enc = native);</pre>
 <pre>template &lt;class InputIterator&gt;
-  path(InputIterator begin, InputIterator end);</pre>
+  path(InputIterator begin, InputIterator end, encoding enc = native);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
@@ -1310,7 +1308,7 @@ path</code> assignments</a> [path.assign]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; operator=(Source const&amp; source);
   template &lt;class InputIterator&gt;
-  path&amp; assign(InputIterator begin, InputIterator end);</pre>
+  path&amp; assign(InputIterator begin, InputIterator end, encoding enc = native);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
@@ -1342,7 +1340,7 @@ path</code> assignments</a> [path.assign]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; operator/=(Source const &amp; source);
   template &lt;class InputIterator&gt;
-  path&amp; append(InputIterator begin, InputIterator end);</pre>
+  path&amp; append(InputIterator begin, InputIterator end, encoding enc = native);</pre>
 <blockquote>
   <p><i>Effects:</i></p>
   <blockquote>
@@ -1374,7 +1372,7 @@ template &lt;class charT&gt;
 template &lt;class InputIterator&gt;
   path&amp; concat(InputIterator begin, InputIterator end);
 template &lt;class InputIterator&gt;
-  path&amp; concat(InputIterator begin, InputIterator end);</pre>
+  path&amp; concat(InputIterator begin, InputIterator end, encoding enc = native);</pre>
 <blockquote><p><i>Postcondition:</i> <code>native() == prior_native + <i>effective-argument</i></code>,
  where <code>prior_native</code> is <code>native()</code> prior to the call to <code>operator+=</code>,
  and <code><i>effective-argument</i></code> is:</p>
@@ -1509,8 +1507,8 @@ basic_string&lt;charT, traits, Allocator&gt;
 <p><i>Remarks:</i> All memory allocation, including for the return value, shall 
 be performed by <code>a</code>. Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>]).</p>
 </blockquote>
-<pre>string <a name="string">string</a>() const;
-wstring <a name="wstring">wstring</a>() const;
+<pre>string <a name="string">string</a>(encoding enc = native) const;
+wstring <a name="wstring">wstring</a>(encoding enc = native) const;
 string <a name="u8string">u8string</a>() const;
 u16string <a name="u16string">u16string</a>() const;
 u32string <a name="u32string">u32string</a>() const; </pre>
@@ -1547,8 +1545,8 @@ basic_string&lt;charT, traits, Allocator&gt;
 <p><i>Remarks:</i> All memory allocation, including for the return value, shall 
 be performed by <code>a</code>. Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>].</p>
 </blockquote>
-<pre>string <a name="generic_string">generic_string</a>() const;
-wstring <a name="generic_wstring">generic_wstring</a>() const;
+<pre>string <a name="generic_string">generic_string</a>(encoding enc = native) const;
+wstring <a name="generic_wstring">generic_wstring</a>(encoding enc = native) const;
 string generic_u8string() const;
 u16string <a name="generic_u16string">generic_u16string</a>() const;
 u32string <a name="generic_u32string">generic_u32string</a>() const; </pre>

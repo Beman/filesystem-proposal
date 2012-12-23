@@ -15,12 +15,12 @@ $id frontmatter=
   <table border="0">
     <tr>
       <td>Document number:&nbsp;&nbsp; </td>
-      <td><span style="background-color: #FFFF99">Dxxxx=13-xxxx</span></td>
+      <td><span style="background-color: #FFFF99">Dxxxx</span></td>
     </tr>
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-11-18<!--webbot bot="Timestamp" endspan i-checksum="12087" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-12-22<!--webbot bot="Timestamp" endspan i-checksum="12140" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -97,7 +97,7 @@ reference documentation.</p>
 <h2><a name="Revision-history">Revision history</a></h2>
 
 
-<p><span style="background-color: #FFFF99">Nxxxx</span><span style="background-color: #FFFF99">=12-xxxx</span>, Filesystem 
+<p><span style="background-color: #FFFF99">Dxxxx</span>, Filesystem 
 Library Proposal (Revision 4). Changes include:</p>
 
 
@@ -109,6 +109,15 @@ Library Proposal (Revision 4). Changes include:</p>
   relatively minimal compared to the Boost design, touching far fewer 
   signatures, avoiding locale dependencies, and providing explicit support for 
   UTF-8. Provide UTF-8 conversion example.</li>
+  <li>Apply class <code>path</code> utf-8 support as agreed in Portland:<ul>
+  <li>Add <code>path::encoding</code> enum.</li>
+  <li>Add <code>encoding enc = native</code> argument to applicable <code>path</code> 
+  member functions.</li>
+  <li>Add <code>make_path()</code> non-member function. </li>
+</ul>
+
+
+  </li>
   <li>Add <code>operator string_type() const;</code> to class <code>path</code>. 
   Microsoft and Dinkumware are already shipping this in their implementations. 
   It provides a reasonable level of interoperation with standard library file 
