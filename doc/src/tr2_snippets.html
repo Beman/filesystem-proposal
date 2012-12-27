@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-12-22<!--webbot bot="Timestamp" endspan i-checksum="12140" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-12-27<!--webbot bot="Timestamp" endspan i-checksum="12150" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -102,33 +102,30 @@ Library Proposal (Revision 4). Changes include:</p>
 
 
 <ul>
-  <li>Editorial: corrections reported by Jens Maurer.</li>
-  <li>Editorial: cleanup of operating system references.</li>
-  <li>Editorial: change document HTML encoding to <code>charset=utf-8</code>.</li>
-  <li>Reintroduce <code>codecvt</code> facilities to class <code>path</code>;&nbsp; 
-  relatively minimal compared to the Boost design, touching far fewer 
-  signatures, avoiding locale dependencies, and providing explicit support for 
-  UTF-8. Provide UTF-8 conversion example.</li>
-  <li>Apply class <code>path</code> utf-8 support as agreed in Portland:<ul>
-  <li>Add <code>path::encoding</code> enum.</li>
-  <li>Add <code>encoding enc = native</code> argument to applicable <code>path</code> 
-  member functions.</li>
-  <li>Add <code>make_path()</code> non-member function. </li>
-</ul>
-
-
-  </li>
-  <li>Add <code>operator string_type() const;</code> to class <code>path</code>. 
+  <li>Editorial: Corrections reported by Jens Maurer.</li>
+  <li>Editorial: Cleanup of operating system references.</li>
+  <li>Editorial: Change document HTML encoding to <code>charset=utf-8</code>.</li>
+  <li>
+  <p>Add three <code>class path</code> constructors taking <code>const 
+  codecvt&amp;</code> arguments. This is a simplification of the Portland agreement 
+  to add an encoding <code>enum</code> for UTF-8, three constructors taking the
+  <code>enum</code> as an argument, and three <code>make_path()</code> 
+  non-member functions.</li>
+  <li>
+  <p>Add <code>class path</code> observer functions <code>u8string()</code> 
+  and <code>generic_u8string()</code>, as discussed by the SG in Portland.</li>
+  <li>
+  <p>Add <code>operator string_type() const;</code> to class <code>path</code>. 
   Microsoft and Dinkumware are already shipping this in their implementations. 
   It provides a reasonable level of interoperation with standard library file 
   steam constructors and opens without modifying existing standard library 
   classes or headers.</li>
-  <li>Update POSIX references to ISO/IEC/IEEE 9945:2009.</li>
-  <li>Remove the table and shading formatting from examples and notes that 
+  <li>Editorial:  Update POSIX references to ISO/IEC/IEEE 9945:2009.</li>
+  <li>Editorial:  Remove the table and shading formatting from examples and notes that 
   mention trademarked names. The SG reviewed the use of trademarked names in 
   Portland, and is satisfied they are useful and that ISO requirements have been 
   met.</li>
-  <li>Remove the TODO list. Items have either been completed or moved elsewhere.</li>
+  <li>Editorial:  Remove the TODO list. Items have either been completed or moved elsewhere.</li>
 </ul>
 
 
