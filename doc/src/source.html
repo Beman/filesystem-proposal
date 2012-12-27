@@ -822,92 +822,42 @@ otherwise it shall be treated as a regular file path.</p>
 <p>For member function arguments that take character sequences representing 
 paths and for member functions returning strings, value type and encoding 
 conversion is performed if the value type of the argument or return differs from <code>
-path::value_type</code><ins> or either type is <code>char</code></ins>. Encoding 
-and method of conversion for the argument <ins>to be converted from</ins> or the return value
-<ins>to be converted to</ins> is determined 
+path::value_type</code>. Encoding 
+and method of conversion for the argument to be converted from or the return value
+to be converted to is determined 
 by its value type:</p>
 <blockquote>
   <ul>
     <li>
-<p><code>char</code>: <ins>Conversion is performed by calling the
-<code>codecvt</code> facet determined by calling the returned value of the 
-either the <code>cvt</code> argument if present or calling <code>path::codecvt()</code> 
-if not present. The encoding of the argument being converted from or the return 
-value being converted to is determined by the called <code>codecvt</code> facet.</ins><p>[<i>Note:</i> <del>The intent is to supply the same behavior</del>
-<ins>These conversion rules result in default behavior that is the same</ins> as other C and C++ 
+<p><code>char</code>: Encoding is the implementation&#39;s native narrow character 
+set for path names. Conversion, if any, is operating system dependent.<p>[<i>Note:</i> 
+For POSIX based operating systems <code>path::value_type</code> is <code>char</code> 
+so no conversion is performed.<p>For Windows based operating systems, the 
+encoding is determined by calling a special Windows API function. <i>-- end note</i>]<p><i><span style="background-color: #E0E0E0">On Windows, the encoding is determined by testing <code>AreFileApisANSI()</code>; if true, the <code>CP_ACP</code> 
+        codepage applies, otherwise the <code>CP_OEMCP</code> codepage applies. </span></i><p>[<i>Note:</i> 
+Conversion  results in behavior identical to other C and C++ 
 standard library functions that perform file operations using narrow character 
-strings to identify paths. Changing this <ins>default</ins> behavior would be surprising and break 
+strings to identify paths. Changing this  behavior would be surprising and break 
 much existing code. <i>--end note</i>]<br>
-<br>
-      <i><span style="background-color: #E0E0E0">The native encoding for narrow character paths varies considerably:</span></i><ul>
-        <li>
-        <p><i><span style="background-color: #E0E0E0">Apple OS X always uses UTF-8.</span></i></li>
-        <li><i><span style="background-color: #E0E0E0">On some POSIX based operating systems, the encoding is determined by <code>locale(&quot;&quot;)</code>;</span></i></li>
-        <li><i><span style="background-color: #E0E0E0">On Windows based 
-        operating systems, the encoding is determined by testing <code>AreFileApisANSI()</code>; if true, the <code>CP_ACP</code> 
-        codepage is used, otherwise the <code>CP_OEMCP</code> codepage is 
-        used. </span></i><br>
-&nbsp;</li>
-      </ul>
+&nbsp;<p>
 </p>
     </li>
     <li>
 <p><code>wchar_t</code>: Encoding is the implementation's native wide 
-character set. <ins>Conversion method is unspecified.</ins><br>
+character set. Conversion method is unspecified.<br>
 &nbsp;</p>
     </li>
     <li>
-<p><code>char16_t</code>: Encoding is UTF-16. <ins>Conversion method 
-is unspecified.</ins> <br>
+<p><code>char16_t</code>: Encoding is UTF-16. Conversion method 
+is unspecified. <br>
 &nbsp;</p>
     </li>
     <li>
-<p><code>char32_t</code>: Encoding is UTF-32. <ins>Conversion method 
-is unspecified.</ins></p>
+<p><code>char32_t</code>: Encoding is UTF-32. Conversion method 
+is unspecified.</p>
     </li>
   </ul>
 </blockquote>
-<p><span style="background-color: #E8FFE8">[</span><i><span style="background-color: #E8FFE8">Example:</span></i></p>
-<p><span style="background-color: #E8FFE8">In a program intended for use with a 
-variety of systems, </span><code><span style="background-color: #E8FFE8">
-std::string name</span></code><span style="background-color: #E8FFE8"> has been 
-given a value by a database that stores string values as UTF-8. The program 
-needs to create a directory named with the value of </span><code>
-<span style="background-color: #E8FFE8">name</span></code><span style="background-color: #E8FFE8">. 
-Because not all systems encode narrow strings as UTF-8, the programmer needs to 
-explicitly identify the encoding if the program is to be portable:</span></p>
-<blockquote>
-  <pre><span style="background-color: #E8FFE8">create_directory(path(name</span><span style="background-color: #E8FFE8">, utf8));</span></pre>
-</blockquote>
-<p><span style="background-color: #E8FFE8">On Windows-like systems, which often 
-default to native encodings other than UTF-8, a conversion from UTF-8 to UTF-16 
-is done and all is well because this is a lossless conversion.</span></p>
-<p><span style="background-color: #E8FFE8">On POSIX-like systems configured to 
-use UTF-8 as the default native encoding, no conversion is necessary and none 
-occurs.</span></p>
-<p><span style="background-color: #E8FFE8">On POSIX-like systems configured to 
-use some encoding other than UTF-8 as the default native encoding, a conversion 
-is done from UTF-8 to the native encoding. Depending on the native encoding, 
-this may be a </span><span style="background-color: #E8FFE8">lossy</span><span style="background-color: #E8FFE8"> 
-conversion.</span></p>
-<p><span style="background-color: #E8FFE8">What if most of the calls to </span>
-<span style="background-color: #E8FFE8">filesystem</span><span style="background-color: #E8FFE8"> 
-functions use UTF-8? Calling the static function </span><code>
-<span style="background-color: #E8FFE8">path::codecvt(utf8)</span></code><span style="background-color: #E8FFE8"> 
-will set </span><code><span style="background-color: #E8FFE8">path::codecvt()</span></code><span style="background-color: #E8FFE8">, 
-the default encoding, to UTF-8. Then it is no long required to explicitly 
-identify the narrow character encoding in the UTF-8 cases, so the programmer can 
-just write:</span></p>
-<blockquote>
-  <p><span style="background-color: #E8FFE8"><code>create_directory(name</code></span><code></code><span style="background-color: #E8FFE8"><code>);</code></span></p>
-</blockquote>
-<p><span style="background-color: #E8FFE8">Since </span><code>
-<span style="background-color: #E8FFE8">path::codecvt()</span></code><span style="background-color: #E8FFE8">is</span><span style="background-color: #E8FFE8"> 
-static, it must be used with care to avoid confusion and </span><code>
-<span style="background-color: #E8FFE8">path(<i>p</i>, native)</span></code><span style="background-color: #E8FFE8"> 
-must be used if </span><code><i><span style="background-color: #E8FFE8">p</span></i></code><span style="background-color: #E8FFE8"> 
-is a char based string that is not UTF-8 encoded.</span></p>
-<p><i><span style="background-color: #E8FFE8">--end example</span></i><span style="background-color: #E8FFE8">]</span></p>
 <h3><a name="path-Requirements"><code>path</code> Requirements</a> [path.req]</h3>
 <p>In addition to the [fs.req] requirements, function template parameters named <code><a name="Source">Source</a></code> 
 shall be one of:</p>
@@ -947,12 +897,12 @@ template &lt;class InputIterator&gt;
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
 </blockquote>
-<pre><ins>template &lt;class Codecvt&gt;</ins>
-  <ins>path(const string&amp; s, const Codecvt&amp; cvt);</ins>
-<ins>template &lt;class Codecvt&gt;</ins>
-  <ins>path(const char* s, const Codecvt&amp; cvt);</ins>
-<ins>template &lt;class InputIterator, class Codecvt&gt;</ins>
-  <ins>path(InputIterator begin, InputIterator end, const Codecvt&amp; cvt);</ins></pre>
+<pre>template &lt;class Codecvt&gt;
+  path(const string&amp; s, const Codecvt&amp; cvt);
+template &lt;class Codecvt&gt;
+  path(const char* s, const Codecvt&amp; cvt);
+template &lt;class InputIterator, class Codecvt&gt;
+  path(InputIterator begin, InputIterator end, const Codecvt&amp; cvt);</pre>
   <blockquote>
   <p><i>Effects:</i> Constructs an object of type path, storing the effective range of <code>
   s</code> 
@@ -1203,7 +1153,8 @@ u16string <a name="u16string">u16string</a>() const;
 u32string <a name="u32string">u32string</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>.</p>
-<p><i>Remarks:</i> Conversion, if any, is performed as specified by [<a href="#path-Conversions">path.cvt</a>].</p>
+<p><i>Remarks:</i> Conversion, if any, is performed as specified by [<a href="#path-Conversions">path.cvt</a>]. 
+The encoding of the string returned by <code>u8string()</code> is always UTF-8.</p>
 </blockquote>
 
 <h3> <a name="path-generic-format-observers"><code>path</code> generic format observers</a> 
@@ -1241,7 +1192,9 @@ u32string <a name="generic_u32string">generic_u32string</a>() const; </pre>
 <blockquote>
 <p><i>Returns:</i> <code>pathname</code>, reformatted according to the generic 
 pathname format ([<a href="#path.generic">path.generic</a>]).</p>
-<p><i>Remarks:</i>&nbsp; Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>].</p>
+<p><i>Remarks:</i>&nbsp; Conversion, if any, is  specified by [<a href="#path-Conversions">path.cvt</a>]. 
+The encoding of the string returned by <code>generic_u8string()</code> is always 
+UTF-8.</p>
 </blockquote>
 
 <h3> <a name="path-compare"><code>path</code> compare</a> [path.compare]</h3>
@@ -1575,17 +1528,6 @@ p = tmp;</pre>
   </blockquote>
   <p><i>Returns:</i> <code>is</code></p>
   </blockquote>
-<h3><code>path</code> codecvt facets [path.facets]</h3>
-<pre>path::codecvt_type* <a name="native-func">native</a>() noexcept;</pre>
-<blockquote>
-  <p><i>Returns:</i> The address of a <code>codecvt</code> facet for the native 
-  narrow character encoding.</p>
-</blockquote>
-<pre>path::codecvt_type* <a name="utf8">utf8</a>() noexcept;</pre>
-<blockquote>
-  <p><i>Returns:</i> The address of a <code>codecvt</code> facet for UTF-8, 
-  without byte-order marker, narrow character encoding.</p>
-</blockquote>
 <h2><a name="Class-filesystem_error">Class <code>filesystem_error</code> 
 [class.filesystem_error]</a></h2>
 <pre>$NAMESPACE_BEGIN;
