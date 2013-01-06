@@ -36,7 +36,7 @@ del   { background-color:#FFD7D7 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-12-27<!--webbot bot="Timestamp" endspan i-checksum="12150" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2013-01-06<!--webbot bot="Timestamp" endspan i-checksum="12058" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -647,6 +647,11 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
 <pre>namespace std { namespace tbd { namespace filesystem {
 
     class <a href="#class-path">path</a>;
+
+    <ins>path u8path(const char* s);</ins>
+    <ins>path u8path(const string&amp; s);</ins>
+    <ins>template &lt;class InputIterator&gt;</ins>
+      <ins>u8path(InputIterator begin, InputIterator end);</ins>
     
     void swap(path&amp; lhs, path&amp; rhs) noexcept;
     size_t <a href="#hash_value">hash_value</a>(const path&amp; p) noexcept;
@@ -919,13 +924,10 @@ system or for a particular file system.</p>
           path(Source const&amp; source);
         template &lt;class InputIterator&gt;
           path(InputIterator begin, InputIterator end);
-        <ins>template &lt;class Codecvt&gt;</ins>
-          <ins>path(const string&amp; s, const Codecvt&amp; cvt);</ins>
-        <ins>template &lt;class Codecvt&gt;</ins>
-          <ins>path(const char* s, const Codecvt&amp; cvt);</ins>
-        <ins>template &lt;class InputIterator, class Codecvt&gt;</ins>
-          <ins>path(InputIterator begin, InputIterator end, const Codecvt&amp; cvt);</ins>
-
+        <ins>path(const string&amp; s, const locale&amp; loc);</ins>
+        <ins>path(const char* s, const locale&amp; loc);</ins>
+        <ins>template &lt;class InputIterator&gt;</ins>
+          <ins>path(InputIterator begin, InputIterator end, const locale&amp; loc);</ins>
        ~path() = default;
 
         // <a href="#path-assignments">assignments</a>
@@ -1241,49 +1243,53 @@ path</code> constructors</a> [path.construct]</h3>
 template &lt;class InputIterator&gt;
   path(InputIterator begin, InputIterator end);</pre>
 <blockquote>
-  <p><i>Effects:</i> Constructs an object of type path, storing the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
+  <p><i>Effects:</i> Constructs an object of class <code>path</code>, storing the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
 </blockquote>
-<pre>template &lt;class Codecvt&gt;
-  path(const string&amp; s, const Codecvt&amp; cvt);
-template &lt;class Codecvt&gt;
-  path(const char* s, const Codecvt&amp; cvt);
-template &lt;class InputIterator, class Codecvt&gt;
-  path(InputIterator begin, InputIterator end, const Codecvt&amp; cvt);</pre>
+<pre>path(const string&amp; s, const locale&amp; loc);
+path(const char* s, const locale&amp; loc);
+template &lt;class InputIterator&gt;
+  path(InputIterator begin, InputIterator end, const locale&amp; loc);</pre>
   <blockquote>
-  <p><i>Effects:</i> Constructs an object of type path, storing the effective range of <code>
+  <p><i>Requires:</i> The value type of <code>InputIterator</code> is <code>
+  char</code>.</p>
+  <p><i>Effects:</i> Constructs an object of class <code>path</code>, storing the effective range of <code>
   s</code> 
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, 
-  converting format and encoding if required.</p>
-  <p><i>Remarks:</i> <code>Codecvt</code> shall be type <code>codecvt&lt;wchar_t, 
-  char, mbstate&gt;</code> or a type derived from <code>codecvt&lt;wchar_t, char, 
-  mbstate&gt;</code>. The value type of <code>InputIterator</code> shall be <code>
-  char</code>. Uses <code>cvt</code> to perform the conversion, if required. If
-  <code>Codecvt</code> is type <code>codecvt_utf8&lt;value_type&gt;</code> and 
-  the native encoding is UTF-8, no conversion is performed.</p>
+  after converting format if required and after converting the encoding as 
+  follows:</p>
+  <blockquote>
+  <p>If <code>value_type</code> is <code>wchar_t</code>, converts to the 
+  encoding of <code>wchar_t</code> using the <code>codecvt&lt;wchar_t, char&gt;</code> 
+  facet of <code>loc</code>. Otherwise a conversion is performed using the <code>
+  codecvt&lt;wchar_t, char&gt;</code> facet of <code>loc</code>, and then a second 
+  conversion to the native encoding ([<a href="#path.arg.convert">path.arg.convert</a>]). </p>
+  </blockquote>
   <p>[<i>Example</i>:</p>
     <blockquote>
-  <p>These constructors are useful when a narrow string is encoded differently 
-  than for the system&#39;s native narrow string encoding. That may happen when a 
-  database encodes strings in UTF-8, but the program must be portable to systems 
-  that use other narrow string encodings.</p>
-      <pre>std::string get_customer_name(int id) const;  // result is UTF-8 encoded
-...
-namespace fs = std::tbd::filesystem;
-std::codecvt_utf8&lt;wchar_t&gt; UTF8;
-auto customer_name = get_customer_name(customer_id); 
-...
-fs::create_directory(fs::path(customer_name, UTF8));</pre>
-<p> On POSIX based systems with UTF-8 native string encoding, no conversion is 
-performed.</p>
-<p> On POSIX based systems with native string encoding that is not UTF-8, a 
-conversion is performed from UTF-8 to the native wide encoding, and then from 
-the native wide encoding to the native narrow encoding. These conversion may 
-result in errors.</p>
-<p> On Windows based systems, a conversion will be performed from UTF-8 to the 
-native UTF-16 encoding for filenames. Errors will not occur as long as the UTF-8 
-encoding is well-formed.</p>
+  <p>A string is to be read from a database 
+  that is encoded in ISO/IEC 8859-1, and used to create a directory using the native 
+  encoding for filenames:</p>
+      <pre>namespace fs = std::tbd::filesystem;
+std::string latin1_string = read_latin1_data();
+codecvt_8859_1&lt;wchar_t&gt; latin1_facet;
+std::locale latin1_locale(std::locale(), latin1_facet);
+fs::create_directory(fs::path(latin1_string, latin1_locale);</pre>
+    <p>For POSIX based operating systems the path is constructed by 
+    first using <code>latin1_facet</code> to convert ISO/IEC 8859-1 encoded
+    <code>latin1_string</code> to a wide character string in the native wide 
+    encoding. The resulting wide string is then converted to a narrow character
+    <code>pathname</code> string in the native encoding. If the native wide 
+    encoding is UTF-16 or UTF-32, and the native narrow encoding is UTF-8, all 
+    of the characters in the ISO/IEC 8859-1 character set will be converted to 
+    their Unicode representation, but for other native encodings some characters 
+    may have no native representation. </p>                                                   
+    <p>For Windows based operating systems the path is constructed by 
+    using <code>latin1_facet</code> to convert ISO/IEC 8859-1 encoded <code>
+    latin1_string</code> to a UTF-16 encoded wide character <code>pathname</code> 
+    string. All of the characters in the ISO/IEC 8859-1 character set will be 
+    converted to their Unicode representation.</p>                                                   
     </blockquote>
 <p> <i>--end example]</i> </p>
 </blockquote>
