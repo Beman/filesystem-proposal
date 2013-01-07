@@ -271,11 +271,6 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
 [filesystem.synopsis]</h2>
 <pre>$NAMESPACE_BEGIN;
     class <a href="#class-path">path</a>;
-
-    <ins>path u8path(const char* s);</ins>
-    <ins>path u8path(const $STD;string&amp; s);</ins>
-    <ins>template &lt;class InputIterator&gt;</ins>
-      <ins>u8path(InputIterator begin, InputIterator end);</ins>
     
 $if $TARGET; == BOOST    bool lexicographical_compare(path::iterator first1, path::iterator last1,
       path::iterator first2, path::iterator last2);
@@ -298,6 +293,11 @@ $endif;    void swap(path&amp; lhs, path&amp; rhs) noexcept;
     template &lt;class charT, class traits&gt;
     $STD;basic_istream&lt;charT, traits&gt;&amp;
     operator&gt;&gt;($STD;basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);
+
+    <ins>path u8path(const char* s);</ins>
+    <ins>path u8path(const $STD;string&amp; s);</ins>
+    <ins>template &lt;class InputIterator&gt;</ins>
+      <ins>path u8path(InputIterator begin, InputIterator end);</ins>
 
     class <a href="#Class-filesystem_error">filesystem_error</a>;      
     class <a href="#Class-directory_entry">directory_entry</a>;
@@ -1534,6 +1534,48 @@ p = tmp;</pre>
   </blockquote>
   <p><i>Returns:</i> <code>is</code></p>
   </blockquote>
+<h3><a name="path.factory"><code>path</code> factory functions [path.factory]</a></h3>
+<pre>path u8path(const char* s);
+path u8path(const $STD;string&amp; s);
+template &lt;class InputIterator&gt;
+ path u8path(InputIterator begin, InputIterator end);</pre>
+<blockquote>
+  <p><i>Requires:</i> The arguments are UTF-8 encoded. The value type of <code>
+  InputIterator</code> is <code>char</code>.</p>
+  <p><i>Returns:</i></p>
+  <blockquote>
+    <ul>
+      <li>If <code>value_type</code> is <code>char</code> and the native 
+      encoding is UTF-8, <code>path(s)</code> or <code>path(begin, end)</code>, 
+      else</li>
+      <li>if the native encoding of <code>value_type</code> is a 
+      Unicode encoding, return a <code>path</code> object constructed from the 
+      arguments after conversion to that encoding, else</li>
+      <li>convert <code>s</code> or [<code>begin</code>,<code>end</code>) 
+      to a temporary, <code>tmp</code>, of type <code>u32string</code> and 
+      return <code>path(tmp)</code>.</li>
+    </ul>
+  </blockquote>
+  <p><i>Remarks: </i>How Unicode encoding conversions are performed is 
+  unspecified.</p>
+  <p>[<i>Example</i>:</p>
+  <blockquote>
+    <p>A string is to be read from a database that is encoded in UTF-8, and used 
+    to create a directory using the native encoding for filenames:</p>
+    <pre>namespace fs = std::tbd::filesystem;
+std::string utf8_string = read_utf8_data();
+fs::create_directory(fs::u8path(utf8_string));</pre>
+    <p>For POSIX based operating systems with the native encoding set 
+    to UTF-8, no encoding or type conversion occurs.</p>
+    <p>For POSIX based operating systems with the native encoding not 
+    set to UTF-8, a conversion to UTF-32 occurs, followed by a conversion to the 
+    native narrow encoding. Some Unicode characters may have no native character 
+    set representation.</p>
+    <p>For Windows based operating systems a conversion from UTF-8 to 
+    UTF-16 occurs.</p>
+  </blockquote>
+  <p><i>--end example]</i></p>
+</blockquote>
 <h2><a name="Class-filesystem_error">Class <code>filesystem_error</code> 
 [class.filesystem_error]</a></h2>
 <pre>$NAMESPACE_BEGIN;
