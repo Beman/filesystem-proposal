@@ -36,7 +36,7 @@ del   { background-color:#FFD7D7 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2012-12-27<!--webbot bot="Timestamp" endspan i-checksum="12150" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2013-01-07<!--webbot bot="Timestamp" endspan i-checksum="12060" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -118,27 +118,31 @@ Library Proposal (Revision 4). Changes include:</p>
 
 
 <ul>
-  <li>Editorial: Corrections reported by Jens Maurer.</li>
-  <li>Editorial: Cleanup of operating system references.</li>
-  <li>Editorial: Change document HTML encoding to <code>charset=utf-8</code>.</li>
-  <li>Add three <code>class path</code> constructors taking <code>const 
-  codecvt&amp;</code> arguments. This is a simplification of the Portland agreement 
-  to add an encoding <code>enum</code> for UTF-8, three constructors taking the
-  <code>enum</code> as an argument, and three <code>make_path()</code> 
-  non-member functions.</li>
-  <li>Add <code>class path</code> observer functions <code>u8string()</code> 
-  and <code>generic_u8string()</code>, as discussed by the SG in Portland.</li>
-  <li >Add <code>operator string_type() const;</code> to class <code>path</code>. 
-  Microsoft and Dinkumware are already shipping this in their implementations. 
-  It provides a reasonable level of interoperation with standard library file 
-  steam constructors and opens without modifying existing standard library 
-  classes or headers.</li>
   <li>Editorial:  Update POSIX references to ISO/IEC/IEEE 9945:2009.</li>
   <li>Editorial:  Remove the table and shading formatting from examples and notes that 
   mention trademarked names. The SG reviewed the use of trademarked names in 
   Portland, and is satisfied they are useful and that ISO requirements have been 
   met.</li>
   <li>Editorial:  Remove the TODO list. Items have either been completed or moved elsewhere.</li>
+  <li>Editorial: Corrections reported by Jens Maurer.</li>
+  <li>Editorial: Cleanup of operating system references.</li>
+  <li>Editorial: Change document HTML encoding to <code>charset=utf-8</code>.</li>
+  <li>Remove all <code>codecvt</code> arguments, as agreed by the SG in Portland.</li>
+  <li>Add three class <code>path</code> constructors and three <code>path</code> 
+  factory functions, with the UTF-8 and locale functionality agreed on by the SG in Portland. 
+  The functionality for the constructors and factory functions were reversed compared to 
+  the Portland discussion. This eliminated the need for an encoding enum, 
+  shortened the UTF-8 use case from <code>path(my_string, encoding::utf8)</code> 
+  to <code>u8path(my_string)</code>, and shortened the locale argument use case 
+  from <code>make_path(my_string, my_locale)</code> to <code>path(my_string, 
+  my_locale)</code>.</li>
+  <li>Add class <code>path</code> observer functions <code>u8string()</code> 
+  and <code>generic_u8string()</code>, as agreed by the SG in Portland.</li>
+  <li >Add <code>operator string_type() const;</code> to class <code>path</code>. 
+  Microsoft and Dinkumware are already shipping this in their implementations. 
+  It provides a reasonable level of interoperation with standard library file 
+  steam constructors and open functions without modifying existing standard library 
+  classes or headers.</li>
 </ul>
 
 
@@ -310,97 +314,98 @@ C++0x.</p>
 
 <h2>Proposed Wording <a name="TOC">Table of Contents</a></h2>
 
-<p>   <a href="#Filesystem Library">1 Filesystem Library </a><br>
-<a href="#Definitions">1.1 Definitions </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#Absolute-path">1.1.1 absolute path </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#canonical-path">1.1.2 canonical path </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#directory">1.1.3 directory </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#file">1.1.4 file </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#file-system">1.1.5 file system </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#file-system-race">1.1.6 file system race </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#filename">1.1.7 filename </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#hard-link">1.1.8 hard link </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#link">1.1.9 link </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#fs.def.native">1.1.10 native pathname format </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#NTCTS">1.1.11 NTCTS </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#operating system dependent">1.1.12 operating system dependent 
-behavior </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#fs.def.parent">1.1.13 parent directory </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path">1.1.14 path </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.15 pathname </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#fs.def.pathres">1.1.16 pathname resolution </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.17 relative path </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.18 symbolic link </a><br>
-<a href="#Conformance">1.2 Conformance </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#fs.conform.9945">1.2.1 ISO/IEC/IEEE 9945 conformance </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#fs.conform.os">1.2.2 Operating system dependent behavior 
-conformance </a><br>
-<a href="#fs.req">1.3 Requirements </a><br>
-<a href="#Header-filesystem-synopsis">1.4 Header <code>&lt;filesystem&gt;</code> 
-synopsis </a><br>
-<a href="#Error-reporting">1.5 Error reporting </a><br>
-<a href="#class-path">1.6 Class <code>path</code> </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path.generic">1.6.1 Generic pathname format grammar </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-Conversions">1.6.2 <code>path</code> conversions </a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-Conversions-to-native-format">1.6.2.1 <code>path</code> 
-argument format conversions </a><br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path.arg.convert">1.6.2.2 <code>path</code> type and encoding 
-conversions </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-Requirements">1.6.3 <code>path</code> Requirements </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-constructors">1.6.4 <code>path</code> constructors </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-assignments">1.6.5 <code>path</code> assignments </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-appends">1.6.6 <code><font size="4">path</font></code> appends
+<p>      <a href="#Filesystem Library">1  Filesystem Library </a><br>
+      <a href="#Definitions">1.1  Definitions </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#Absolute-path">1.1.1  absolute path </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#canonical-path">1.1.2  canonical path </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#directory">1.1.3  directory </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file">1.1.4  file </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file-system">1.1.5  file system </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file-system-race">1.1.6  file system race </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#filename">1.1.7  filename </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#hard-link">1.1.8  hard link </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#link">1.1.9  link </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.def.native">1.1.10  native pathname format </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#NTCTS">1.1.11  NTCTS </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#operating system dependent">1.1.12  operating system dependent behavior 
 </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-concatenation">1.6.7 <code>path</code> concatenation </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-modifiers">1.6.8 <code>path</code> modifiers </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-native-format-observers">1.6.9 <code>path</code> native format 
-observers </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-generic-format-observers">1.6.10 <code>path</code> generic 
-format observers </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-compare">1.6.11 <code>path</code> compare </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-decomposition">1.6.12 <code>path</code> decomposition </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-query">1.6.13 <code>path</code> query </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-iterators">1.6.14 <code>path</code> iterators </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-non-member-functions">1.6.15 <code>path</code> non-member 
-functions </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#path-inserter-extractor">1.6.16 <code>path</code> inserter and 
-extractor </a><br>
-<a href="#Class-filesystem_error">1.7 Class <code>filesystem_error</code> </a>
-<br>
-&nbsp;&nbsp;&nbsp;<a href="#filesystem_error-members">1.7.1 <code>filesystem_error</code> 
-members </a><br>
-<a href="#Enum-file_type">1.8 Enum class file_type </a><br>
-<a href="#enum.copy_options">1.9 Enum class copy_options </a><br>
-<a href="#enum.perms">1.10 Enum class perms </a><br>
-<a href="#enum.perm-opts">1.11 Enum class permissions_options </a><br>
-<a href="#file_status">1.12 Class file_status </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#file_status-constructors">1.12.1 <code>file_status</code> 
-constructors </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#file_status-observers">1.12.2 <code>file_status</code> observers
+      &nbsp;&nbsp;&nbsp;<a href="#fs.def.parent">1.1.13  parent directory </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path">1.1.14  path </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.15  pathname </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.def.pathres">1.1.16  pathname resolution </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.17  relative path </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.18  symbolic link </a><br>
+      <a href="#Conformance">1.2  Conformance </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.conform.9945">1.2.1  ISO/IEC/IEEE 9945 conformance </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.conform.os">1.2.2  Operating system dependent behavior conformance </a><br>
+      <a href="#fs.req">1.3  Requirements </a><br>
+      <a href="#Header-filesystem-synopsis">1.4  Header <code>&lt;filesystem&gt;</code> synopsis 
 </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#file_status-modifiers">1.12.3 <code>file_status</code> modifiers
+      <a href="#Error-reporting">1.5  Error reporting </a><br>
+      <a href="#class-path">1.6  Class <code>path</code> </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path.generic">1.6.1  Generic pathname format grammar </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-Conversions">1.6.2  <code>path</code> conversions </a><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path-Conversions-to-native-format">1.6.2.1  <code>path</code> argument 
+format conversions </a><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<a href="#path.arg.convert">1.6.2.2  <code>path</code> type and encoding conversions </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-Requirements">1.6.3  <code>path</code> Requirements </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-constructors">1.6.4    <code>
+path</code> constructors </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-assignments">1.6.5    <code>
+path</code> assignments </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-appends">1.6.6  <code><font size="4"> path</font></code> appends 
 </a><br>
-<a href="#Class-directory_entry">1.13 Class <code>directory_entry</code> </a>
-<br>
-&nbsp;&nbsp;&nbsp;<a href="#directory_entry-constructors">1.13.1 <code>directory_entry </code>
-constructors </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#directory_entry-modifiers">1.13.2 <code>directory_entry </code>
-modifiers </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#directory_entry-observers">1.13.3 <code>directory_entry</code> 
-observers </a><br>
-<a href="#Class-directory_iterator">1.14 Class <code>directory_iterator</code>
+      &nbsp;&nbsp;&nbsp;<a href="#path-concatenation">1.6.7  <code>path</code> concatenation </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-modifiers">1.6.8   <code>
+path</code> modifiers </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-native-format-observers">1.6.9   <code>path</code> native format observers 
 </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#directory_iterator-members">1.14.1 <code>directory_iterator</code> 
-members </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#directory_iterator-non-member-functions">1.14.2 <code>
-directory_iterator</code> non-member functions </a><br>
-<a href="#Class-recursive_directory_iterator">1.15 Class <code>
-recursive_directory_iterator</code> </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#recursive_directory_iterator-members">1.15.1 <code>
-recursive_directory_iterator</code> members </a><br>
-&nbsp;&nbsp;&nbsp;<a href="#rec.dir.itr.nonmembers">1.15.2 <code>recursive_directory_iterator</code> 
-non-member functions </a><br>
-<a href="#Operational-functions">1.16 Operational functions </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-generic-format-observers">1.6.10   <code>path</code> generic format observers 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-compare">1.6.11   <code>path</code> compare </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-decomposition">1.6.12    <code>path</code> decomposition 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-query">1.6.13    <code>path</code> query </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-iterators">1.6.14    <code>
+path</code> iterators </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-non-member-functions">1.6.15    <code>path</code> non-member functions 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path-inserter-extractor">1.6.16  <code>path</code> inserter 
+  and extractor </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path.factory">1.6.17  <code>path</code> factory functions </a><br>
+      <a href="#Class-filesystem_error">1.7  Class <code>filesystem_error</code> 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#filesystem_error-members">1.7.1    <code>filesystem_error</code> members 
+</a><br>
+      <a href="#Enum-file_type">1.8  Enum class file_type </a><br>
+      <a href="#enum.copy_options">1.9  Enum class copy_options </a><br>
+      <a href="#enum.perms">1.10  Enum class perms </a><br>
+      <a href="#enum.perm-opts">1.11  Enum class permissions_options </a><br>
+      <a href="#file_status">1.12  Class file_status </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file_status-constructors">1.12.1  <code>file_status</code> constructors 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file_status-observers">1.12.2  <code>file_status</code> observers </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#file_status-modifiers">1.12.3  <code>file_status</code> modifiers </a><br>
+      <a href="#Class-directory_entry">1.13  Class <code>directory_entry</code> </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#directory_entry-constructors">1.13.1    <code>directory_entry </code>constructors 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#directory_entry-modifiers">1.13.2    <code>directory_entry </code>modifiers 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#directory_entry-observers">1.13.3    <code>directory_entry</code> observers 
+</a><br>
+      <a href="#Class-directory_iterator">1.14  Class <code>directory_iterator</code> 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#directory_iterator-members">1.14.1  <code>directory_iterator</code> members 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#directory_iterator-non-member-functions">1.14.2  <code>directory_iterator</code> non-member functions 
+</a><br>
+      <a href="#Class-recursive_directory_iterator">1.15  Class <code>recursive_directory_iterator</code> 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#recursive_directory_iterator-members">1.15.1  <code>recursive_directory_iterator</code> members 
+</a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#rec.dir.itr.nonmembers">1.15.2  <code>recursive_directory_iterator</code> non-member functions 
+</a><br>
+      <a href="#Operational-functions">1.16  Operational functions </a><br>
 </p>
       
 <h2><a name="Proposed-Wording">Proposed Wording</a></h2>
@@ -668,6 +673,11 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     basic_istream&lt;charT, traits&gt;&amp;
     operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);
 
+    <ins>path u8path(const char* s);</ins>
+    <ins>path u8path(const string&amp; s);</ins>
+    <ins>template &lt;class InputIterator&gt;</ins>
+      <ins>path u8path(InputIterator begin, InputIterator end);</ins>
+
     class <a href="#Class-filesystem_error">filesystem_error</a>;      
     class <a href="#Class-directory_entry">directory_entry</a>;
 
@@ -919,13 +929,10 @@ system or for a particular file system.</p>
           path(Source const&amp; source);
         template &lt;class InputIterator&gt;
           path(InputIterator begin, InputIterator end);
-        <ins>template &lt;class Codecvt&gt;</ins>
-          <ins>path(const string&amp; s, const Codecvt&amp; cvt);</ins>
-        <ins>template &lt;class Codecvt&gt;</ins>
-          <ins>path(const char* s, const Codecvt&amp; cvt);</ins>
-        <ins>template &lt;class InputIterator, class Codecvt&gt;</ins>
-          <ins>path(InputIterator begin, InputIterator end, const Codecvt&amp; cvt);</ins>
-
+        <ins>path(const string&amp; s, const locale&amp; loc);</ins>
+        <ins>path(const char* s, const locale&amp; loc);</ins>
+        <ins>template &lt;class InputIterator&gt;</ins>
+          <ins>path(InputIterator begin, InputIterator end, const locale&amp; loc);</ins>
        ~path() = default;
 
         // <a href="#path-assignments">assignments</a>
@@ -1241,49 +1248,53 @@ path</code> constructors</a> [path.construct]</h3>
 template &lt;class InputIterator&gt;
   path(InputIterator begin, InputIterator end);</pre>
 <blockquote>
-  <p><i>Effects:</i> Constructs an object of type path, storing the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
+  <p><i>Effects:</i> Constructs an object of class <code>path</code>, storing the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
 </blockquote>
-<pre>template &lt;class Codecvt&gt;
-  path(const string&amp; s, const Codecvt&amp; cvt);
-template &lt;class Codecvt&gt;
-  path(const char* s, const Codecvt&amp; cvt);
-template &lt;class InputIterator, class Codecvt&gt;
-  path(InputIterator begin, InputIterator end, const Codecvt&amp; cvt);</pre>
+<pre>path(const string&amp; s, const locale&amp; loc);
+path(const char* s, const locale&amp; loc);
+template &lt;class InputIterator&gt;
+  path(InputIterator begin, InputIterator end, const locale&amp; loc);</pre>
   <blockquote>
-  <p><i>Effects:</i> Constructs an object of type path, storing the effective range of <code>
+  <p><i>Requires:</i> The value type of <code>InputIterator</code> is <code>
+  char</code>.</p>
+  <p><i>Effects:</i> Constructs an object of class <code>path</code>, storing the effective range of <code>
   s</code> 
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, 
-  converting format and encoding if required.</p>
-  <p><i>Remarks:</i> <code>Codecvt</code> shall be type <code>codecvt&lt;wchar_t, 
-  char, mbstate&gt;</code> or a type derived from <code>codecvt&lt;wchar_t, char, 
-  mbstate&gt;</code>. The value type of <code>InputIterator</code> shall be <code>
-  char</code>. Uses <code>cvt</code> to perform the conversion, if required. If
-  <code>Codecvt</code> is type <code>codecvt_utf8&lt;value_type&gt;</code> and 
-  the native encoding is UTF-8, no conversion is performed.</p>
+  after converting format if required and after converting the encoding as 
+  follows:</p>
+  <blockquote>
+  <p>If <code>value_type</code> is <code>wchar_t</code>, converts to the 
+  encoding of <code>wchar_t</code> using the <code>codecvt&lt;wchar_t, char&gt;</code> 
+  facet of <code>loc</code>. Otherwise a conversion is performed using the <code>
+  codecvt&lt;wchar_t, char&gt;</code> facet of <code>loc</code>, and then a second 
+  conversion to the native encoding ([<a href="#path.arg.convert">path.arg.convert</a>]). </p>
+  </blockquote>
   <p>[<i>Example</i>:</p>
     <blockquote>
-  <p>These constructors are useful when a narrow string is encoded differently 
-  than for the system&#39;s native narrow string encoding. That may happen when a 
-  database encodes strings in UTF-8, but the program must be portable to systems 
-  that use other narrow string encodings.</p>
-      <pre>std::string get_customer_name(int id) const;  // result is UTF-8 encoded
-...
-namespace fs = std::tbd::filesystem;
-std::codecvt_utf8&lt;wchar_t&gt; UTF8;
-auto customer_name = get_customer_name(customer_id); 
-...
-fs::create_directory(fs::path(customer_name, UTF8));</pre>
-<p> On POSIX based systems with UTF-8 native string encoding, no conversion is 
-performed.</p>
-<p> On POSIX based systems with native string encoding that is not UTF-8, a 
-conversion is performed from UTF-8 to the native wide encoding, and then from 
-the native wide encoding to the native narrow encoding. These conversion may 
-result in errors.</p>
-<p> On Windows based systems, a conversion will be performed from UTF-8 to the 
-native UTF-16 encoding for filenames. Errors will not occur as long as the UTF-8 
-encoding is well-formed.</p>
+  <p>A string is to be read from a database 
+  that is encoded in ISO/IEC 8859-1, and used to create a directory using the native 
+  encoding for filenames:</p>
+      <pre>namespace fs = std::tbd::filesystem;
+std::string latin1_string = read_latin1_data();
+codecvt_8859_1&lt;wchar_t&gt; latin1_facet;
+std::locale latin1_locale(std::locale(), latin1_facet);
+fs::create_directory(fs::path(latin1_string, latin1_locale);</pre>
+    <p>For POSIX based operating systems the path is constructed by 
+    first using <code>latin1_facet</code> to convert ISO/IEC 8859-1 encoded
+    <code>latin1_string</code> to a wide character string in the native wide 
+    encoding. The resulting wide string is then converted to a narrow character
+    <code>pathname</code> string in the native encoding. If the native wide 
+    encoding is UTF-16 or UTF-32, and the native narrow encoding is UTF-8, all 
+    of the characters in the ISO/IEC 8859-1 character set will be converted to 
+    their Unicode representation, but for other native encodings some characters 
+    may have no native representation. </p>                                                   
+    <p>For Windows based operating systems the path is constructed by 
+    using <code>latin1_facet</code> to convert ISO/IEC 8859-1 encoded <code>
+    latin1_string</code> to a UTF-16 encoded wide character <code>pathname</code> 
+    string. All of the characters in the ISO/IEC 8859-1 character set will be 
+    converted to their Unicode representation.</p>                                                   
     </blockquote>
 <p> <i>--end example]</i> </p>
 </blockquote>
@@ -1786,6 +1797,48 @@ p = tmp;</pre>
   </blockquote>
   <p><i>Returns:</i> <code>is</code></p>
   </blockquote>
+<h3>1.6.17  <a name="path.factory"><code>path</code> factory functions [path.factory]</a></h3>
+<pre>path u8path(const char* s);
+path u8path(const string&amp; s);
+template &lt;class InputIterator&gt;
+ path u8path(InputIterator begin, InputIterator end);</pre>
+<blockquote>
+  <p><i>Requires:</i> The arguments are UTF-8 encoded. The value type of <code>
+  InputIterator</code> is <code>char</code>.</p>
+  <p><i>Returns:</i></p>
+  <blockquote>
+    <ul>
+      <li>If <code>value_type</code> is <code>char</code> and the native 
+      encoding is UTF-8, <code>path(s)</code> or <code>path(begin, end)</code>, 
+      else</li>
+      <li>if the native encoding of <code>value_type</code> is a 
+      Unicode encoding, return a <code>path</code> object constructed from the 
+      arguments after conversion to that encoding, else</li>
+      <li>convert <code>s</code> or [<code>begin</code>,<code>end</code>) 
+      to a temporary, <code>tmp</code>, of type <code>u32string</code> and 
+      return <code>path(tmp)</code>.</li>
+    </ul>
+  </blockquote>
+  <p><i>Remarks: </i>How Unicode encoding conversions are performed is 
+  unspecified.</p>
+  <p>[<i>Example</i>:</p>
+  <blockquote>
+    <p>A string is to be read from a database that is encoded in UTF-8, and used 
+    to create a directory using the native encoding for filenames:</p>
+    <pre>namespace fs = std::tbd::filesystem;
+std::string utf8_string = read_utf8_data();
+fs::create_directory(fs::u8path(utf8_string));</pre>
+    <p>For POSIX based operating systems with the native encoding set 
+    to UTF-8, no encoding or type conversion occurs.</p>
+    <p>For POSIX based operating systems with the native encoding not 
+    set to UTF-8, a conversion to UTF-32 occurs, followed by a conversion to the 
+    native narrow encoding. Some Unicode characters may have no native character 
+    set representation.</p>
+    <p>For Windows based operating systems a conversion from UTF-8 to 
+    UTF-16 occurs.</p>
+  </blockquote>
+  <p><i>--end example]</i></p>
+</blockquote>
 <h2>1.7  <a name="Class-filesystem_error">Class <code>filesystem_error</code> 
 [class.filesystem_error]</a></h2>
 <pre>namespace std { namespace tbd { namespace filesystem {
