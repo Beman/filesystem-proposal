@@ -146,11 +146,13 @@ Library Proposal (Revision 4). Changes include:</p>
   <li>Editorial: Corrections reported by Jens Maurer.</li>
   <li>Editorial: Cleanup of operating system references.</li>
   <li>Editorial: Change document HTML encoding to <code>charset=utf-8</code>.</li>
-  <li>Editorial: Replace all uses of &quot;native encoding&quot; and similar terms with 
-  more explicit wording such as &quot;current operating system dependent narrow 
-  character encoding for path names&quot; or &quot;execution wide-character set (C++ 
-  standard [lex.charset]) encoding&quot; in response to request for clarification 
-  from Jean-Marc Bourguet.</li>
+  <li>Editorial: Add &quot;native encoding&quot; definition for both narrow and 
+  wide encoding, and then replace uses of &quot;native encoding&quot; with &quot;native narrow 
+  encoding&quot; or &quot;native wide encode&quot; in response to request for clarification 
+  from Jean-Marc Bourguet, and a suggestion to add definition from Pete Becker.</li>
+  <li>Fix some class <code>path</code> editorial issues, remove &quot;<code>= default</code>&quot; 
+  from special member functions, and supply semantics for these functions. 
+  (Daniel Krügler, Alberto Ganesh Barbati)</li>
   <li>Remove all <code>codecvt</code> arguments, as agreed by the SG in Portland.</li>
   <li>Add three class <code>path</code> constructors and three <code>path</code> 
   factory functions, with the UTF-8 and locale functionality agreed on by the SG in Portland. 
@@ -952,9 +954,9 @@ system or for a particular file system.</p>
         static constexpr value_type            preferred_separator = <b><i><a href="#value_type">see below</a></i></b>;
 
         // <a href="#path-constructors">constructors</a> and destructor
-        path() = default;
-        path(const path&) = default;
-        path(path&amp;&amp;) noexcept = default;
+        path();
+        path(const path& p);
+        path(path&amp;&amp; p) noexcept;
         template &lt;class <a href="#Source">Source</a>&gt;
           path(Source const&amp; source);
         template &lt;class InputIterator&gt;
@@ -966,8 +968,8 @@ system or for a particular file system.</p>
        ~path() = default;
 
         // <a href="#path-assignments">assignments</a>
-        path&amp; operator=(const path&amp;) = default;
-        path&amp; operator=(path&amp;&amp;) noexcept = default;
+        path&amp; operator=(const path&amp; p);
+        path&amp; operator=(path&amp;&amp; p) noexcept;
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator=(Source const&amp; source);
         template &lt;class <a href="#Source">Source</a>&gt;
@@ -1278,6 +1280,19 @@ shall be one of:</p>
 
 <h3>1.6.4   <a name="path-constructors"> <code>
 path</code> constructors</a> [path.construct]</h3>
+<pre>path();</pre>
+<blockquote>
+  <p><i>Effects:</i> Constructs an object of class <code>path</code>.</p>
+  <p><i>Postconditions:</i> <code>empty()</code>.</p>
+</blockquote>
+<pre>path(const path&amp; p);
+path(path&amp;&amp; p) noexcept;</pre>
+<blockquote>
+  <p><i>Effects:</i> Constructs an object of class <code>path</code> with <code>
+  pathname</code> having the original value of <code>p.pathname</code>. In the 
+  second form, <code>p</code> is left in a valid but unspecified state.</p>
+  <p><i>Postconditions:</i> empty().</p>
+</blockquote>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path(Source const&amp; source);
 template &lt;class InputIterator&gt;
@@ -1335,9 +1350,29 @@ fs::create_directory(fs::path(latin1_string, latin1_locale);</pre>
 </blockquote>
 <h3>1.6.5   <a name="path-assignments"> <code>
 path</code> assignments</a> [path.assign]</h3>
+<pre>path&amp; operator=(const path&amp; p);</pre>
+<blockquote>
+  <p><i>Effects: </i>If <code>*this</code> and <code>p</code> are the same 
+  object, has no effect. Otherwise, modifies <code>pathname</code> to have the 
+  original value of <code>p.pathname</code>.</p>
+  <p>
+  <i>Returns: </i><code>*this</code></p>
+</blockquote>
+<pre>path&amp; operator=(path&amp;&amp; p) noexcept;</pre>
+<blockquote>
+  <p><i>Effects: </i>If <code>*this</code> and <code>p</code> are the same 
+  object, has no effect. Otherwise, modifies <code>pathname</code> to have the 
+  original value of <code>p.pathname</code>.&nbsp; <code>p</code> is left in a 
+  valid but unspecified state. [<i>Note:</i> A valid implementation is <code>
+  swap(p)</code>. <i>—end note</i>]</p>
+  <p>
+  <i>Returns: </i><code>*this</code></p>
+</blockquote>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; operator=(Source const&amp; source);
-  template &lt;class InputIterator&gt;
+template &lt;class <a href="#Source">Source</a>&gt;
+  path&amp; assign(Source const&amp; source);
+template &lt;class InputIterator&gt;
   path&amp; assign(InputIterator begin, InputIterator end);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
@@ -1369,7 +1404,9 @@ path</code> assignments</a> [path.assign]</h3>
 </blockquote>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; operator/=(Source const &amp; source);
-  template &lt;class InputIterator&gt;
+template &lt;class <a href="#Source">Source</a>&gt;
+  path&amp; append(Source const &amp; source);
+template &lt;class InputIterator&gt;
   path&amp; append(InputIterator begin, InputIterator end);</pre>
 <blockquote>
   <p><i>Effects:</i></p>
@@ -1399,8 +1436,8 @@ template &lt;class Source&gt;
   path&amp; operator+=(Source const&amp; x);
 template &lt;class charT&gt;
   path&amp; operator+=(charT x);
-template &lt;class InputIterator&gt;
-  path&amp; concat(InputIterator begin, InputIterator end);
+template &lt;class Source&gt;
+  path&amp; concat(Source const&amp; x);
 template &lt;class InputIterator&gt;
   path&amp; concat(InputIterator begin, InputIterator end);</pre>
 <blockquote><p><i>Postcondition:</i> <code>native() == prior_native + <i>effective-argument</i></code>,
