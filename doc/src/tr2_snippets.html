@@ -15,12 +15,12 @@ $id frontmatter=
   <table border="0">
     <tr>
       <td>Document number:&nbsp;&nbsp; </td>
-      <td><span style="background-color: #FFFF99">Dxxxx</span></td>
+      <td><span style="background-color: #FFFF99">D3505</span></td>
     </tr>
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2013-01-07<!--webbot bot="Timestamp" endspan i-checksum="12060" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2013-01-10<!--webbot bot="Timestamp" endspan i-checksum="12047" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -80,17 +80,17 @@ N1975</a>, and are not repeated here.</p>
 <h2><a name="Differences-Boost">Differences from Boost Filesystem</a></h2>
 
 
-<p>In the Boost library, class <code>path</code> has facilities to handle narrow 
+<p>In the Boost library, facilities in class <code>path</code> to handle narrow 
 (i.e. <code>char</code>) character strings with encodings other than the 
-operating system's native encoding. These facilities have been removed from the 
-Filesystem library proposal. Instead, proposal
-<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2012/n3398.html">N3398, String Interoperation Library</a>, 
-provides general facilities that also handle the class <code>path</code> use 
-cases.</p>
+operating system's native encoding depend on <code>codecvt</code> arguments. In 
+the proposal, these facilities have been replaced by facilities that depend on
+<code>locale</code> arguments and additional UTF-8 facilities have been added. 
+The Filesystem Study Group believes this approach is more reliable and useful, 
+particularly as UTF-8 use continues to spread.</p>
 
 
 <p>Otherwise, the proposal is very similar to the Boost library. Indeed, 
-the proposed wording is generated from the same source as the Boost library's 
+most of the proposed wording is generated from the same source as the Boost library's 
 reference documentation.</p>
 
 
@@ -111,6 +111,11 @@ Library Proposal (Revision 4). Changes include:</p>
   <li>Editorial: Corrections reported by Jens Maurer.</li>
   <li>Editorial: Cleanup of operating system references.</li>
   <li>Editorial: Change document HTML encoding to <code>charset=utf-8</code>.</li>
+  <li>Editorial: Replace all uses of &quot;native encoding&quot; and similar terms with 
+  more explicit wording such as &quot;current operating system dependent narrow 
+  character encoding for path names&quot; or &quot;execution wide-character set (C++ 
+  standard [lex.charset]) encoding&quot; in response to request for clarification 
+  from Jean-Marc Bourguet.</li>
   <li>Remove all <code>codecvt</code> arguments, as agreed by the SG in Portland.</li>
   <li>Add three class <code>path</code> constructors and three <code>path</code> 
   factory functions, with the UTF-8 and locale functionality agreed on by the SG in Portland. 
