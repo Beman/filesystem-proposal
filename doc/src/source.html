@@ -135,6 +135,11 @@ pointer to a file.<i> -- end note</i>]<i> </i></p>
 filename with a file. A link is either a hard link ([fs.def.hardlink]) or a 
 symbolic link ([fs.def.symlink]).</p>
 
+<h3>native encoding [<a name="fs.def.native.encode">fs.def.native.encode</a>]</h3>
+<p>For narrow character strings, the operating system dependent current encoding 
+for path names. For wide character strings, the implementation defined execution 
+wide-character set encoding (C++ standard [lex.charset]).</p>
+
 <h3>native pathname format [<a name="fs.def.native">fs.def.native</a>]</h3>
 <p>The operating system dependent pathname format accepted by the host operating system.</p>
 <h3><a name="NTCTS">NTCTS</a> [<a name="fs.def.ntcts">fs.def.ntcts</a>]</h3>
@@ -831,12 +836,11 @@ by its value type:</p>
 <blockquote>
   <ul>
     <li>
-<p><code>char</code>: Encoding is the current operating system dependent narrow character 
-encoding for path names. Conversion, if any, is operating system dependent.<p>[<i>Note:</i> 
+<p><code>char</code>: Encoding is the native narrow encoding ([fs.def.native.encode]). Conversion, if any, is operating system dependent.<p>[<i>Note:</i> 
 For POSIX based operating systems <code>path::value_type</code> is <code>char</code> 
 so no conversion from <code>char</code> value type arguments or to <code>char</code> 
 value type returns is performed.<p>For Windows based operating systems, the 
-system&#39;s current narrow character encoding is determined by calling a  Windows API function. <i>-- end note</i>]<p><i><span style="background-color: #E0E0E0">On Windows, the encoding is determined by testing <code>AreFileApisANSI()</code>; if true, the <code>CP_ACP</code> 
+native narrow  encoding is determined by calling a  Windows API function. <i>-- end note</i>]<p><i><span style="background-color: #E0E0E0">On Windows, the encoding is determined by testing <code>AreFileApisANSI()</code>; if true, the <code>CP_ACP</code> 
         codepage applies, otherwise the <code>CP_OEMCP</code> codepage applies. </span></i><p>[<i>Note:</i> 
 This results in behavior identical to other C and C++ 
 standard library functions that perform file operations using narrow character 
@@ -846,8 +850,7 @@ prone. <i>--end note</i>]<br>
 </p>
     </li>
     <li>
-<p><code>wchar_t</code>: Encoding is the execution wide-character set (C++ 
-standard [lex.charset]). Conversion method is unspecified.</p>
+<p><code>wchar_t</code>: Encoding is the native wide encoding ([fs.def.native.encode]). Conversion method is unspecified.</p>
     <p>[<i>Note:</i> 
 For Windows based operating systems <code>path::value_type</code> is <code>wchar_t</code> 
 so no conversion from <code>wchar_t</code> value type arguments or to <code>wchar_t</code> 
@@ -887,7 +890,7 @@ shall be one of:</p>
 </ul>
 
 <blockquote>
-  <p dir="ltr">[<i>Note:</i> See <a href="#path-Conversions">path conversions</a> ([path.cvt]) 
+  <p>[<i>Note:</i> See <a href="#path-Conversions">path conversions</a> ([path.cvt]) 
   for how these value types and their encodings convert to <code>
   path::value_type</code> and its encoding. <i>-- end note</i>]</p>
 </blockquote>
@@ -920,11 +923,10 @@ template &lt;class InputIterator&gt;
   follows:</p>
   <blockquote>
   <p>If <code>value_type</code> is <code>wchar_t</code>, converts to the 
-  execution wide-character set (C++ standard [lex.charset]) encoding of <code>wchar_t</code> using the <code>codecvt&lt;wchar_t, char&gt;</code> 
+  native wide encoding ([fs.def.native.encode]) using the <code>codecvt&lt;wchar_t, char&gt;</code> 
   facet of <code>loc</code>. Otherwise a conversion is performed using the <code>
   codecvt&lt;wchar_t, char&gt;</code> facet of <code>loc</code>, and then a second 
-  conversion to the current operating system dependent narrow character encoding 
-  for path names. </p>
+  conversion to the current narrow encoding. </p>
   </blockquote>
   <p>[<i>Example</i>:</p>
     <blockquote>
@@ -937,17 +939,14 @@ std::locale latin1_locale(std::locale(), latin1_facet);
 fs::create_directory(fs::path(latin1_string, latin1_locale);</pre>
     <p>For POSIX based operating systems the path is constructed by first using <code>
     latin1_facet</code> to convert ISO/IEC 8859-1 encoded
-    <code>latin1_string</code> to a wide character string in the execution 
-    wide-character set (C++ standard [lex.charset]) encoding. The resulting wide 
-    string is then converted to a narrow character
-    <code>pathname</code> string in the current operating system dependent 
-    narrow character encoding. If the execution wide-character set (C++ standard 
-    [lex.charset]) encoding is UTF-16 or UTF-32, and the current operating 
-    system dependent narrow character encoding for path names is UTF-8, all of 
-    the characters in the ISO/IEC 8859-1 character set will be converted to 
-    their Unicode representation, but for other current operating system 
-    dependent narrow character encodings some characters may have no 
-    representation. </p>                                                   
+    <code>latin1_string</code> to a wide character string in the native wide 
+    encoding ([fs.def.native.encode]). The resulting wide string is then 
+    converted to a narrow character
+    <code>pathname</code> string in the current native narrow encoding. If the 
+    native wide encoding is UTF-16 or UTF-32, and the current native narrow 
+    encoding is UTF-8, all of the characters in the ISO/IEC 8859-1 character set 
+    will be converted to their Unicode representation, but for other native 
+    narrow encodings some characters may have no representation. </p>                                                   
     <p>For Windows based operating systems the path is constructed by 
     using <code>latin1_facet</code> to convert ISO/IEC 8859-1 encoded <code>
     latin1_string</code> to a UTF-16 encoded wide character <code>pathname</code> 
@@ -1558,13 +1557,12 @@ template &lt;class InputIterator&gt;
   <p><i>Returns:</i></p>
   <blockquote>
     <ul>
-      <li>If <code>value_type</code> is <code>char</code> and the current 
-      operating system dependent narrow character encoding for path names is UTF-8, <code>path(s)</code> or <code>path(begin, end)</code>, 
+      <li>If <code>value_type</code> is <code>char</code> and the current native 
+      narrow encoding ([fs.def.native.encode]) is UTF-8, <code>path(s)</code> or <code>path(begin, end)</code>, 
       else</li>
-      <li dir="ltr">if <code>value_type</code> is <code>wchar_t </code>and the 
-      execution wide-character set (C++ standard [lex.charset]) encoding is 
-      UTF-16, or if <code>value_type</code> is <code>char16_t</code> or <code>
-      char32_t</code>,&nbsp; convert <code>s</code> or [<code>begin</code>,<code>end</code>) 
+      <li>if <code>value_type</code> is <code>wchar_t </code>and the 
+      native wide encoding is UTF-16, or if <code>value_type</code> is <code>char16_t</code> 
+      or <code>char32_t</code>,&nbsp; convert <code>s</code> or [<code>begin</code>,<code>end</code>) 
       to a temporary, <code>tmp</code>, of type <code>string_type</code> and 
       return <code>path(tmp)</code>, 
       else</li>
@@ -1583,11 +1581,11 @@ template &lt;class InputIterator&gt;
     <pre>namespace fs = std::tbd::filesystem;
 std::string utf8_string = read_utf8_data();
 fs::create_directory(fs::u8path(utf8_string));</pre>
-    <p>For POSIX based operating systems with the native encoding set 
+    <p>For POSIX based operating systems with the native narrow encoding set 
     to UTF-8, no encoding or type conversion occurs.</p>
-    <p>For POSIX based operating systems with the native encoding not 
+    <p>For POSIX based operating systems with the native narrow encoding not 
     set to UTF-8, a conversion to UTF-32 occurs, followed by a conversion to the 
-    current operating system dependent narrow character encoding for path names. Some Unicode characters may have no native character 
+    current native narrow encoding. Some Unicode characters may have no native character 
     set representation.</p>
     <p>For Windows based operating systems a conversion from UTF-8 to 
     UTF-16 occurs.</p>

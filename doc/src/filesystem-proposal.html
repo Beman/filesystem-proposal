@@ -36,7 +36,7 @@ del   { background-color:#FFD7D7 }
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2013-01-10<!--webbot bot="Timestamp" endspan i-checksum="12047" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2013-01-11<!--webbot bot="Timestamp" endspan i-checksum="12049" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -349,16 +349,17 @@ C++0x.</p>
       &nbsp;&nbsp;&nbsp;<a href="#filename">1.1.7  filename </a><br>
       &nbsp;&nbsp;&nbsp;<a href="#hard-link">1.1.8  hard link </a><br>
       &nbsp;&nbsp;&nbsp;<a href="#link">1.1.9  link </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#fs.def.native">1.1.10  native pathname format </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#NTCTS">1.1.11  NTCTS </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#operating system dependent">1.1.12  operating system dependent behavior 
+      &nbsp;&nbsp;&nbsp;<a href="#fs.def.native.encode">1.1.10  native encoding </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.def.native">1.1.11  native pathname format </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#NTCTS">1.1.12  NTCTS </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#operating system dependent">1.1.13  operating system dependent behavior 
 </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#fs.def.parent">1.1.13  parent directory </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#path">1.1.14  path </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.15  pathname </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#fs.def.pathres">1.1.16  pathname resolution </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.17  relative path </a><br>
-      &nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.18  symbolic link </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.def.parent">1.1.14  parent directory </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#path">1.1.15  path </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.def.pathname">1.1.16  pathname </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#fs.def.pathres">1.1.17  pathname resolution </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#Relative-path">1.1.18  relative path </a><br>
+      &nbsp;&nbsp;&nbsp;<a href="#symbolic-link">1.1.19  symbolic link </a><br>
       <a href="#Conformance">1.2  Conformance </a><br>
       &nbsp;&nbsp;&nbsp;<a href="#fs.conform.9945">1.2.1  ISO/IEC/IEEE 9945 conformance </a><br>
       &nbsp;&nbsp;&nbsp;<a href="#fs.conform.os">1.2.2  Operating system dependent behavior conformance </a><br>
@@ -429,7 +430,7 @@ path</code> iterators </a><br>
 </a><br>
       &nbsp;&nbsp;&nbsp;<a href="#rec.dir.itr.nonmembers">1.15.2  <code>recursive_directory_iterator</code> non-member functions 
 </a><br>
-      <a href="#Operational-functions">1.16  Operational functions </a><br>
+      <a href="#Operational-functions">1.16  Operational functions </a>
 </p>
       
 <h2><a name="Proposed-Wording">Proposed Wording</a></h2>
@@ -539,32 +540,37 @@ pointer to a file.<i> -- end note</i>]<i> </i></p>
 filename with a file. A link is either a hard link ([fs.def.hardlink]) or a 
 symbolic link ([fs.def.symlink]).</p>
 
-<h3>1.1.10  native pathname format [<a name="fs.def.native">fs.def.native</a>]</h3>
+<h3>1.1.10  native encoding [<a name="fs.def.native.encode">fs.def.native.encode</a>]</h3>
+<p>For narrow character strings, the operating system dependent current encoding 
+for path names. For wide character strings, the implementation defined execution 
+wide-character set encoding (C++ standard [lex.charset]).</p>
+
+<h3>1.1.11  native pathname format [<a name="fs.def.native">fs.def.native</a>]</h3>
 <p>The operating system dependent pathname format accepted by the host operating system.</p>
-<h3>1.1.11  <a name="NTCTS">NTCTS</a> [<a name="fs.def.ntcts">fs.def.ntcts</a>]</h3>
+<h3>1.1.12  <a name="NTCTS">NTCTS</a> [<a name="fs.def.ntcts">fs.def.ntcts</a>]</h3>
 <p>Acronym for &quot;null-terminated character-type sequence&quot;. Describes a sequence 
 of values of a given encoded character type terminated by that type's null character. If 
 the encoded character type is <code>charT</code>, the null character can be constructed 
 by <code>charT()</code>. <span style="background-color: #E0E0E0"><i>This is an 
 expansion of the definition in chapter 17; that definition is very hard to 
 parse. A request for clarification has been sent to the C++ standard project editor.</i></span></p>
-<h3>1.1.12  <a name="operating system dependent">operating system dependent</a> behavior 
+<h3>1.1.13  <a name="operating system dependent">operating system dependent</a> behavior 
 [fs.def.osdep]</h3>
 <p>Behavior  that is dependent upon the behavior 
 and characteristics of an operating system. See [fs.conform.os].</p>
-<h3>1.1.13  parent directory [<a name="fs.def.parent">fs.def.parent</a>]</h3>
+<h3>1.1.14  parent directory [<a name="fs.def.parent">fs.def.parent</a>]</h3>
 <p>When discussing a given directory, the directory that both contains a 
 directory entry for the given directory and is represented by the pathname 
 dot-dot in the given directory.</p>
 <p>When discussing other types of files, a directory containing a directory 
 entry for the file under discussion.</p>
 <p>This concept does not apply to dot and dot-dot.</p>
-<h3>1.1.14  <a name="path">path</a> [fs.def.path]</h3>
+<h3>1.1.15  <a name="path">path</a> [fs.def.path]</h3>
 <p>A sequence of elements that identify 
 the location of a file within a filesystem. The elements are the <i>root-name<sub>opt</sub></i>, <i>
 root-directory<sub>opt</sub></i>, and an optional sequence of filenames.</p>
 
-<h3>1.1.15  pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
+<h3>1.1.16  pathname [<a name="fs.def.pathname">fs.def.pathname</a>]</h3>
 <p>A character string that represents 
 the name of a 
 path. Pathnames are formatted according to the generic pathname format grammar 
@@ -572,7 +578,7 @@ path. Pathnames are formatted according to the generic pathname format grammar
 operating system dependent 
 native pathname format.</p>
 
-<h3>1.1.16  pathname resolution [<a name="fs.def.pathres">fs.def.pathres</a>]</h3>
+<h3>1.1.17  pathname resolution [<a name="fs.def.pathres">fs.def.pathres</a>]</h3>
 
 <p>Pathname resolution is the operating system dependent mechanism for resolving 
 a pathname to a particular file in a file hierarchy. There may be multiple 
@@ -580,7 +586,7 @@ pathnames that resolve to the same file.&nbsp; [<i>Example:</i> The ISO/IEC/IEEE
 POSIX standard specifies the mechanism in section 4.11, Pathname resolution. <i>
 --end example]</i></p>
 
-<h3>1.1.17  <a name="Relative-path">relative path</a> [fs.def.relative-path]</h3>
+<h3>1.1.18  <a name="Relative-path">relative path</a> [fs.def.relative-path]</h3>
 <p>A path that 
 is not absolute, and so only 
 unambiguously 
@@ -588,7 +594,7 @@ identifies the location of a file when resolved relative to
 an implied starting location. The elements of a path that determine if it is 
 relative are operating system dependent.&nbsp; [<i>Note:</i> 
 Paths <code>&quot;.&quot;</code> and <code>&quot;..&quot;</code> are relative paths. <i>--end note</i>]</p>
-<h3>1.1.18  <a name="symbolic-link">symbolic link</a> [fs.def.symlink]</h3>
+<h3>1.1.19  <a name="symbolic-link">symbolic link</a> [fs.def.symlink]</h3>
 <p>A link ([fs.def.link]) with the 
 property that when the file is encountered during pathname resolution, a string 
 stored by the file is used to modify the pathname resolution.</p>
@@ -1177,7 +1183,7 @@ format conversions</a> [path.fmt.cvt]</h4>
       <p>&nbsp;<i>-- end note</i>]
 </blockquote>
 
-<p>Member functions arguments that take character sequences representing paths 
+<p>Functions arguments that take character sequences representing paths 
 may use the generic pathname format grammar ([<a href="#path.generic">path.generic</a>]) or 
 the <a href="#fs.def.native">native pathname format</a>. If and only if such 
 arguments are in the generic format and the generic format is not acceptable to 
@@ -1208,12 +1214,11 @@ by its value type:</p>
 <blockquote>
   <ul>
     <li>
-<p><code>char</code>: Encoding is the current operating system dependent narrow character 
-encoding for path names. Conversion, if any, is operating system dependent.<p>[<i>Note:</i> 
+<p><code>char</code>: Encoding is the native narrow encoding ([fs.def.native.encode]). Conversion, if any, is operating system dependent.<p>[<i>Note:</i> 
 For POSIX based operating systems <code>path::value_type</code> is <code>char</code> 
 so no conversion from <code>char</code> value type arguments or to <code>char</code> 
 value type returns is performed.<p>For Windows based operating systems, the 
-system&#39;s current narrow character encoding is determined by calling a  Windows API function. <i>-- end note</i>]<p><i><span style="background-color: #E0E0E0">On Windows, the encoding is determined by testing <code>AreFileApisANSI()</code>; if true, the <code>CP_ACP</code> 
+native narrow  encoding is determined by calling a  Windows API function. <i>-- end note</i>]<p><i><span style="background-color: #E0E0E0">On Windows, the encoding is determined by testing <code>AreFileApisANSI()</code>; if true, the <code>CP_ACP</code> 
         codepage applies, otherwise the <code>CP_OEMCP</code> codepage applies. </span></i><p>[<i>Note:</i> 
 This results in behavior identical to other C and C++ 
 standard library functions that perform file operations using narrow character 
@@ -1223,8 +1228,7 @@ prone. <i>--end note</i>]<br>
 </p>
     </li>
     <li>
-<p><code>wchar_t</code>: Encoding is the execution wide-character set (C++ 
-standard [lex.charset]). Conversion method is unspecified.</p>
+<p><code>wchar_t</code>: Encoding is the native wide encoding ([fs.def.native.encode]). Conversion method is unspecified.</p>
     <p>[<i>Note:</i> 
 For Windows based operating systems <code>path::value_type</code> is <code>wchar_t</code> 
 so no conversion from <code>wchar_t</code> value type arguments or to <code>wchar_t</code> 
@@ -1269,6 +1273,9 @@ shall be one of:</p>
   path::value_type</code> and its encoding. <i>-- end note</i>]</p>
 </blockquote>
 
+  <p>Pointer to NTCTS arguments to class <code>path</code> member functions 
+  shall not be null pointers.</p>
+
 <h3>1.6.4   <a name="path-constructors"> <code>
 path</code> constructors</a> [path.construct]</h3>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
@@ -1294,11 +1301,10 @@ template &lt;class InputIterator&gt;
   follows:</p>
   <blockquote>
   <p>If <code>value_type</code> is <code>wchar_t</code>, converts to the 
-  execution wide-character set (C++ standard [lex.charset]) encoding of <code>wchar_t</code> using the <code>codecvt&lt;wchar_t, char&gt;</code> 
+  native wide encoding ([fs.def.native.encode]) using the <code>codecvt&lt;wchar_t, char&gt;</code> 
   facet of <code>loc</code>. Otherwise a conversion is performed using the <code>
   codecvt&lt;wchar_t, char&gt;</code> facet of <code>loc</code>, and then a second 
-  conversion to the current operating system dependent narrow character encoding 
-  for path names. </p>
+  conversion to the current narrow encoding. </p>
   </blockquote>
   <p>[<i>Example</i>:</p>
     <blockquote>
@@ -1311,17 +1317,14 @@ std::locale latin1_locale(std::locale(), latin1_facet);
 fs::create_directory(fs::path(latin1_string, latin1_locale);</pre>
     <p>For POSIX based operating systems the path is constructed by first using <code>
     latin1_facet</code> to convert ISO/IEC 8859-1 encoded
-    <code>latin1_string</code> to a wide character string in the execution 
-    wide-character set (C++ standard [lex.charset]) encoding. The resulting wide 
-    string is then converted to a narrow character
-    <code>pathname</code> string in the current operating system dependent 
-    narrow character encoding. If the execution wide-character set (C++ standard 
-    [lex.charset]) encoding is UTF-16 or UTF-32, and the current operating 
-    system dependent narrow character encoding for path names is UTF-8, all of 
-    the characters in the ISO/IEC 8859-1 character set will be converted to 
-    their Unicode representation, but for other current operating system 
-    dependent narrow character encodings some characters may have no 
-    representation. </p>                                                   
+    <code>latin1_string</code> to a wide character string in the native wide 
+    encoding ([fs.def.native.encode]). The resulting wide string is then 
+    converted to a narrow character
+    <code>pathname</code> string in the current native narrow encoding. If the 
+    native wide encoding is UTF-16 or UTF-32, and the current native narrow 
+    encoding is UTF-8, all of the characters in the ISO/IEC 8859-1 character set 
+    will be converted to their Unicode representation, but for other native 
+    narrow encodings some characters may have no representation. </p>                                                   
     <p>For Windows based operating systems the path is constructed by 
     using <code>latin1_facet</code> to convert ISO/IEC 8859-1 encoded <code>
     latin1_string</code> to a UTF-16 encoded wide character <code>pathname</code> 
@@ -1835,18 +1838,19 @@ path u8path(const string&amp; s);
 template &lt;class InputIterator&gt;
  path u8path(InputIterator begin, InputIterator end);</pre>
 <blockquote>
-  <p><i>Requires:</i> The arguments are UTF-8 encoded. The value type of <code>
-  InputIterator</code> is <code>char</code>.</p>
+  <p><i>Requires:</i> The <code>s</code> and [<code>begin</code>,<code>end</code>) 
+  sequences are UTF-8 encoded. The value type of <code>
+  InputIterator</code> is <code>char</code>. <code>s</code> is not a null 
+  pointer.</p>
   <p><i>Returns:</i></p>
   <blockquote>
     <ul>
-      <li>If <code>value_type</code> is <code>char</code> and the current 
-      operating system dependent narrow character encoding for path names is UTF-8, <code>path(s)</code> or <code>path(begin, end)</code>, 
+      <li>If <code>value_type</code> is <code>char</code> and the current native 
+      narrow encoding ([fs.def.native.encode]) is UTF-8, <code>path(s)</code> or <code>path(begin, end)</code>, 
       else</li>
       <li>if <code>value_type</code> is <code>wchar_t </code>and the 
-      execution wide-character set (C++ standard [lex.charset]) encoding is 
-      UTF-16, or if <code>value_type</code> is <code>char16_t</code> or <code>
-      char32_t</code>,&nbsp; convert <code>s</code> or [<code>begin</code>,<code>end</code>) 
+      native wide encoding is UTF-16, or if <code>value_type</code> is <code>char16_t</code> 
+      or <code>char32_t</code>,&nbsp; convert <code>s</code> or [<code>begin</code>,<code>end</code>) 
       to a temporary, <code>tmp</code>, of type <code>string_type</code> and 
       return <code>path(tmp)</code>, 
       else</li>
@@ -1855,8 +1859,9 @@ template &lt;class InputIterator&gt;
       return <code>path(tmp)</code>.</li>
     </ul>
   </blockquote>
-  <p><i>Remarks: </i>How Unicode encoding conversions are performed is 
-  unspecified.</p>
+  <p><i>Remarks: </i>Argument format conversion ([path.fmt.cvt]) applies to the 
+  arguments for these functions. How Unicode encoding conversions are performed is 
+  unspecified. </p>
   <p>[<i>Example</i>:</p>
   <blockquote>
     <p>A string is to be read from a database that is encoded in UTF-8, and used 
@@ -1864,11 +1869,11 @@ template &lt;class InputIterator&gt;
     <pre>namespace fs = std::tbd::filesystem;
 std::string utf8_string = read_utf8_data();
 fs::create_directory(fs::u8path(utf8_string));</pre>
-    <p>For POSIX based operating systems with the native encoding set 
+    <p>For POSIX based operating systems with the native narrow encoding set 
     to UTF-8, no encoding or type conversion occurs.</p>
-    <p>For POSIX based operating systems with the native encoding not 
+    <p>For POSIX based operating systems with the native narrow encoding not 
     set to UTF-8, a conversion to UTF-32 occurs, followed by a conversion to the 
-    current operating system dependent narrow character encoding for path names. Some Unicode characters may have no native character 
+    current native narrow encoding. Some Unicode characters may have no native character 
     set representation.</p>
     <p>For Windows based operating systems a conversion from UTF-8 to 
     UTF-16 occurs.</p>
