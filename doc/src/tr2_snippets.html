@@ -40,6 +40,7 @@ $id frontmatter=
       <a href="#Introduction">Introduction</a><br>
       <a href="#Library-background">Library background</a><br>
       <a href="#Differences-Boost">Differences from Boost Filesystem</a><br>
+<a href="#Design-path-encoding">Design decisions for paths</a><br>
       <a href="#Revision-history">Revision history</a><br>
       <a href="#TOC">Proposed Wording Table of Contents</a><br>
       <a href="#Proposed-Wording">Proposed Wording</a><br>
@@ -83,15 +84,33 @@ N1975</a>, and are not repeated here.</p>
 <p>In the Boost library, facilities in class <code>path</code> to handle narrow 
 (i.e. <code>char</code>) character strings with encodings other than the 
 operating system's native encoding depend on <code>codecvt</code> arguments. In 
-the proposal, these facilities have been replaced by facilities that depend on
-<code>locale</code> arguments and additional UTF-8 facilities have been added. 
-The Filesystem Study Group believes this approach is more reliable and useful, 
-particularly as UTF-8 use continues to spread.</p>
+the proposal, these facilities depend on <code>locale</code> arguments and 
+additional UTF-8 facilities have been added. The Filesystem Study Group believes 
+this approach is more reliable and useful, particularly as UTF-8 use continues 
+to spread.</p>
 
 
 <p>Otherwise, the proposal is very similar to the Boost library. Indeed, 
 most of the proposed wording is generated from the same source as the Boost library's 
 reference documentation.</p>
+
+
+<h2><a name="Design-path-encoding">Design</a> decisions for paths</h2>
+
+
+<p>The Filesystem library specification for paths carefully to 
+duplicates the encoding related behavior of the traditional C++ and C library 
+I/O functions that take narrow character path arguments. (E.G. on POSIX pass the 
+arguments unchanged to system API functions, on Windows let system API functions 
+handle the narrow to wide conversion.) Users who have been satisfied with that 
+behavior, and have not been plagued by portability or other path name encoding 
+problems, presumably will continue to supply paths to file system related 
+functions the same way they do currently and will continue to be satisfied. But 
+users who have been frustrated with portability or other path name encoding 
+problems may use C++11 <code>char16_t</code> and <code>char32_t</code> arguments 
+to and returns from class <code>path</code>, the class <code>path</code> 
+constructors that take locales, and the UTF-8 specific functions to address 
+encoding problems.</p>
 
 
 <h2><a name="Revision-history">Revision history</a></h2>

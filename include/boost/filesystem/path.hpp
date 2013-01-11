@@ -40,7 +40,6 @@
 #include <cassert>
 #include <locale>
 #include <algorithm>
-#include <cvt/wstring>
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
@@ -194,10 +193,6 @@ namespace filesystem
         path_traits::convert(s.c_str(), s.c_str()+s.size(), m_pathname, cvt);
       }
     }
-
-    //  Filesystem TS constructors
-    path(const std::string& s, const std::locale& loc);
-    path(const char* s, const std::locale& loc);
 
     //  -----  assignments  -----
 
