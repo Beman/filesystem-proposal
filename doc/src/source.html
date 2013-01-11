@@ -564,9 +564,9 @@ $if $TARGET; == BOOST        typedef std::codecvt&lt;wchar_t, char, std::mbstate
                                                codecvt_type;
 $endif;
         // <a href="#path-constructors">constructors</a> and destructor
-        path() = default;
-        path(const path&) = default;
-        path(path&amp;&amp;) noexcept = default;
+        path();
+        path(const path& p);
+        path(path&amp;&amp; p) noexcept;
         template &lt;class <a href="#Source">Source</a>&gt;
           path(Source const&amp; source$CODECVT_ARG2;);
         template &lt;class InputIterator&gt;
@@ -578,8 +578,8 @@ $endif;
        ~path() = default;
 
         // <a href="#path-assignments">assignments</a>
-        path&amp; operator=(const path&amp;) = default;
-        path&amp; operator=(path&amp;&amp;) noexcept = default;
+        path&amp; operator=(const path&amp; p);
+        path&amp; operator=(path&amp;&amp; p) noexcept;
         template &lt;class <a href="#Source">Source</a>&gt;
           path&amp; operator=(Source const&amp; source);
         template &lt;class <a href="#Source">Source</a>&gt;
@@ -900,6 +900,19 @@ shall be one of:</p>
 
 <h3> <a name="path-constructors"> <code>
 path</code> constructors</a> [path.construct]</h3>
+<pre>path();</pre>
+<blockquote>
+  <p><i>Effects:</i> Constructs an object of class <code>path</code>.</p>
+  <p><i>Postconditions:</i> <code>empty()</code>.</p>
+</blockquote>
+<pre>path(const path&amp; p);
+path(path&amp;&amp; p) noexcept;</pre>
+<blockquote>
+  <p><i>Effects:</i> Constructs an object of class <code>path</code> with <code>
+  pathname</code> having the original value of <code>p.pathname</code>. In the 
+  second form, <code>p</code> is left in a valid but unspecified state.</p>
+  <p><i>Postconditions:</i> empty().</p>
+</blockquote>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path(Source const&amp; source$CODECVT_ARG2;);
 template &lt;class InputIterator&gt;
@@ -957,11 +970,29 @@ fs::create_directory(fs::path(latin1_string, latin1_locale);</pre>
 </blockquote>
 <h3> <a name="path-assignments"> <code>
 path</code> assignments</a> [path.assign]</h3>
+<pre>path&amp; operator=(const path&amp; p);</pre>
+<blockquote>
+  <p><i>Effects: </i>If <code>*this</code> and <code>p</code> are the same 
+  object, has no effect. Otherwise, modifies <code>pathname</code> to have the 
+  original value of <code>p.pathname</code>.</p>
+  <p>
+  <i>Returns: </i><code>*this</code></p>
+</blockquote>
+<pre>path&amp; operator=(path&amp;&amp; p) noexcept;</pre>
+<blockquote>
+  <p><i>Effects: </i>If <code>*this</code> and <code>p</code> are the same 
+  object, has no effect. Otherwise, modifies <code>pathname</code> to have the 
+  original value of <code>p.pathname</code>.&nbsp; <code>p</code> is left in a 
+  valid but unspecified state. [<i>Note:</i> A valid implementation is <code>
+  swap(p)</code>. <i>—end note</i>]</p>
+  <p>
+  <i>Returns: </i><code>*this</code></p>
+</blockquote>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; operator=(Source const&amp; source);
-$if $TARGET; == BOOST  template &lt;class <a href="#Source">Source</a>&gt;
+template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; assign(Source const&amp; source$CODECVT_ARG2;);
-$endif;  template &lt;class InputIterator&gt;
+template &lt;class InputIterator&gt;
   path&amp; assign(InputIterator begin, InputIterator end$CODECVT_ARG2;);</pre>
 <blockquote>
   <p><i>Effects:</i> Stores the effective range of <code>source</code> ([<a href="#path-Requirements">path.req</a>]) 
@@ -993,9 +1024,9 @@ $endif;  template &lt;class InputIterator&gt;
 </blockquote>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; operator/=(Source const &amp; source);
-$if $TARGET; == BOOST  template &lt;class <a href="#Source">Source</a>&gt;
+template &lt;class <a href="#Source">Source</a>&gt;
   path&amp; append(Source const &amp; source$CODECVT_ARG2;);
-$endif;  template &lt;class InputIterator&gt;
+template &lt;class InputIterator&gt;
   path&amp; append(InputIterator begin, InputIterator end$CODECVT_ARG2;);</pre>
 <blockquote>
   <p><i>Effects:</i></p>
@@ -1025,8 +1056,8 @@ template &lt;class Source&gt;
   path&amp; operator+=(Source const&amp; x);
 template &lt;class charT&gt;
   path&amp; operator+=(charT x);
-template &lt;class InputIterator&gt;
-  path&amp; concat(InputIterator begin, InputIterator end);
+template &lt;class Source&gt;
+  path&amp; concat(Source const&amp; x$CODECVT_ARG2;);
 template &lt;class InputIterator&gt;
   path&amp; concat(InputIterator begin, InputIterator end$CODECVT_ARG2;);</pre>
 <blockquote><p><i>Postcondition:</i> <code>native() == prior_native + <i>effective-argument</i></code>,

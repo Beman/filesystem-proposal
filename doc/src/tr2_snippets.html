@@ -130,11 +130,13 @@ Library Proposal (Revision 4). Changes include:</p>
   <li>Editorial: Corrections reported by Jens Maurer.</li>
   <li>Editorial: Cleanup of operating system references.</li>
   <li>Editorial: Change document HTML encoding to <code>charset=utf-8</code>.</li>
-  <li>Editorial: Replace all uses of &quot;native encoding&quot; and similar terms with 
-  more explicit wording such as &quot;current operating system dependent narrow 
-  character encoding for path names&quot; or &quot;execution wide-character set (C++ 
-  standard [lex.charset]) encoding&quot; in response to request for clarification 
-  from Jean-Marc Bourguet.</li>
+  <li>Editorial: Add &quot;native encoding&quot; definition for both narrow and 
+  wide encoding, and then replace uses of &quot;native encoding&quot; with &quot;native narrow 
+  encoding&quot; or &quot;native wide encode&quot; in response to request for clarification 
+  from Jean-Marc Bourguet, and a suggestion to add definition from Pete Becker.</li>
+  <li>Fix some class <code>path</code> editorial issues, remove &quot;<code>= default</code>&quot; 
+  from special member functions, and supply semantics for these functions. 
+  (Daniel Krügler, Alberto Ganesh Barbati)</li>
   <li>Remove all <code>codecvt</code> arguments, as agreed by the SG in Portland.</li>
   <li>Add three class <code>path</code> constructors and three <code>path</code> 
   factory functions, with the UTF-8 and locale functionality agreed on by the SG in Portland. 
