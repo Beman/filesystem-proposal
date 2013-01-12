@@ -20,7 +20,7 @@ $id frontmatter=
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2013-01-11<!--webbot bot="Timestamp" endspan i-checksum="12049" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2013-01-12<!--webbot bot="Timestamp" endspan i-checksum="12051" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -138,14 +138,14 @@ Library Proposal (Revision 4). Changes include:</p>
   from special member functions, and supply semantics for these functions. 
   (Daniel Krügler, Alberto Ganesh Barbati)</li>
   <li>Remove all <code>codecvt</code> arguments, as agreed by the SG in Portland.</li>
-  <li>Add three class <code>path</code> constructors and three <code>path</code> 
+  <li>Add two class <code>path</code> constructors and two <code>path</code> 
   factory functions, with the UTF-8 and locale functionality agreed on by the SG in Portland. 
   The functionality for the constructors and factory functions were reversed compared to 
   the Portland discussion. This eliminated the need for an encoding enum, 
   shortened the UTF-8 use case from <code>path(my_string, encoding::utf8)</code> 
   to <code>u8path(my_string)</code>, and shortened the locale argument use case 
   from <code>make_path(my_string, my_locale)</code> to <code>path(my_string, 
-  my_locale)</code>.</li>
+  my_locale)</code>. Thanks to Daniel Krügler for help with the exact semantics.</li>
   <li>Add class <code>path</code> observer functions <code>u8string()</code> 
   and <code>generic_u8string()</code>, as agreed by the SG in Portland.</li>
   <li >Add <code>operator string_type() const;</code> to class <code>path</code>. 

@@ -299,8 +299,8 @@ $endif;    void swap(path&amp; lhs, path&amp; rhs) noexcept;
     $STD;basic_istream&lt;charT, traits&gt;&amp;
     operator&gt;&gt;($STD;basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);
 
-    <ins>path u8path(const char* s);</ins>
-    <ins>path u8path(const $STD;string&amp; s);</ins>
+    <ins>template &lt;class <a href="#Source">Source</a>&gt;</ins>  
+      <ins>path u8path(Source const&amp; source);</ins>
     <ins>template &lt;class InputIterator&gt;</ins>
       <ins>path u8path(InputIterator begin, InputIterator end);</ins>
 
@@ -571,8 +571,8 @@ $endif;
           path(Source const&amp; source$CODECVT_ARG2;);
         template &lt;class InputIterator&gt;
           path(InputIterator begin, InputIterator end$CODECVT_ARG2;);
-        <ins>path(const string&amp; s, const $STD;locale&amp; loc);</ins>
-        <ins>path(const char* s, const $STD;locale&amp; loc);</ins>
+        <ins>template &lt;class <a href="#Source">Source</a>&gt;</ins>  
+          <ins>path(Source const&amp; source, const $STD;locale&amp; loc);</ins>
         <ins>template &lt;class InputIterator&gt;</ins>
           <ins>path(InputIterator begin, InputIterator end, const $STD;locale&amp; loc);</ins>
        ~path() = default;
@@ -895,7 +895,7 @@ shall be one of:</p>
   path::value_type</code> and its encoding. <i>-- end note</i>]</p>
 </blockquote>
 
-  <p>Pointer to NTCTS arguments to class <code>path</code> member functions 
+  <p>Arguments of type <code>Source</code> 
   shall not be null pointers.</p>
 
 <h3> <a name="path-constructors"> <code>
@@ -922,15 +922,15 @@ template &lt;class InputIterator&gt;
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
 </blockquote>
-<pre>path(const string&amp; s, const $STD;locale&amp; loc);
-path(const char* s, const $STD;locale&amp; loc);
+<pre>template &lt;class <a href="#Source">Source</a>&gt;
+  path(Source const&amp; source, const $STD;locale&amp; loc);
 template &lt;class InputIterator&gt;
   path(InputIterator begin, InputIterator end, const $STD;locale&amp; loc);</pre>
   <blockquote>
-  <p><i>Requires:</i> The value type of <code>InputIterator</code> is <code>
+  <p><i>Requires:</i> The value type of <code>Source</code> and <code>InputIterator</code> is <code>
   char</code>.</p>
   <p><i>Effects:</i> Constructs an object of class <code>path</code>, storing the effective range of <code>
-  s</code> 
+  source</code> 
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, 
   after converting format if required and after converting the encoding as 
   follows:</p>
@@ -1576,28 +1576,28 @@ p = tmp;</pre>
   <p><i>Returns:</i> <code>is</code></p>
   </blockquote>
 <h3><a name="path.factory"><code>path</code> factory functions [path.factory]</a></h3>
-<pre>path u8path(const char* s);
-path u8path(const $STD;string&amp; s);
+<pre>template &lt;class <a href="#Source">Source</a>&gt;  
+  path u8path(Source const&amp; source);
 template &lt;class InputIterator&gt;
- path u8path(InputIterator begin, InputIterator end);</pre>
+  path u8path(InputIterator begin, InputIterator end);</pre>
 <blockquote>
-  <p><i>Requires:</i> The <code>s</code> and [<code>begin</code>,<code>end</code>) 
+  <p><i>Requires:</i> The <code>source</code> and [<code>begin</code>,<code>end</code>) 
   sequences are UTF-8 encoded. The value type of <code>
-  InputIterator</code> is <code>char</code>. <code>s</code> is not a null 
-  pointer.</p>
+  Source</code> and <code>
+  InputIterator</code> is <code>char</code>. </p>
   <p><i>Returns:</i></p>
   <blockquote>
     <ul>
       <li>If <code>value_type</code> is <code>char</code> and the current native 
-      narrow encoding ([fs.def.native.encode]) is UTF-8, <code>path(s)</code> or <code>path(begin, end)</code>, 
+      narrow encoding ([fs.def.native.encode]) is UTF-8, <code>path(source)</code> or <code>path(begin, end)</code>, 
       else</li>
       <li>if <code>value_type</code> is <code>wchar_t </code>and the 
       native wide encoding is UTF-16, or if <code>value_type</code> is <code>char16_t</code> 
-      or <code>char32_t</code>,&nbsp; convert <code>s</code> or [<code>begin</code>,<code>end</code>) 
+      or <code>char32_t</code>,&nbsp; convert <code>source</code> or [<code>begin</code>,<code>end</code>) 
       to a temporary, <code>tmp</code>, of type <code>string_type</code> and 
       return <code>path(tmp)</code>, 
       else</li>
-      <li>convert <code>s</code> or [<code>begin</code>,<code>end</code>) 
+      <li>convert <code>source</code> or [<code>begin</code>,<code>end</code>) 
       to a temporary, <code>tmp</code>, of type <code>u32string</code> and 
       return <code>path(tmp)</code>.</li>
     </ul>
