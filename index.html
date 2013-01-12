@@ -31,12 +31,12 @@ del   { background-color:#FFD7D7 }
   <table border="0">
     <tr>
       <td>Document number:&nbsp;&nbsp; </td>
-      <td><span style="background-color: #FFFF99">D3505</span></td>
+      <td>N3505</td>
     </tr>
     <tr>
       <td>Date:</td>
       <td>
-      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2013-01-11<!--webbot bot="Timestamp" endspan i-checksum="12049" --></td>
+      <!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%Y-%m-%d" startspan -->2013-01-12<!--webbot bot="Timestamp" endspan i-checksum="12051" --></td>
     </tr>
     <tr>
       <td>Project:</td>
@@ -49,8 +49,7 @@ del   { background-color:#FFD7D7 }
   </table>
 
 
-<h1>Filesystem Library Proposal (Revision 4)
-<span style="background-color: #FFFF99">DRAFT</span></h1>
+<h1>Filesystem Library Proposal (Revision 4)</h1>
 
 
       <a href="#Introduction">Introduction</a><br>
@@ -132,7 +131,8 @@ encoding problems.</p>
 <h2><a name="Revision-history">Revision history</a></h2>
 
 
-<p><span style="background-color: #FFFF99">Dxxxx</span>, Filesystem 
+<p><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2013/n3505.html">
+N3505</a>, Filesystem 
 Library Proposal (Revision 4). Changes include:</p>
 
 
@@ -144,6 +144,7 @@ Library Proposal (Revision 4). Changes include:</p>
   met.</li>
   <li>Editorial:  Remove the TODO list. Items have either been completed or moved elsewhere.</li>
   <li>Editorial: Corrections reported by Jens Maurer.</li>
+  <li>Editorial: Corrections reported by Daniel Krügler.</li>
   <li>Editorial: Cleanup of operating system references.</li>
   <li>Editorial: Change document HTML encoding to <code>charset=utf-8</code>.</li>
   <li>Editorial: Add &quot;native encoding&quot; definition for both narrow and 
@@ -154,14 +155,14 @@ Library Proposal (Revision 4). Changes include:</p>
   from special member functions, and supply semantics for these functions. 
   (Daniel Krügler, Alberto Ganesh Barbati)</li>
   <li>Remove all <code>codecvt</code> arguments, as agreed by the SG in Portland.</li>
-  <li>Add three class <code>path</code> constructors and three <code>path</code> 
+  <li>Add two class <code>path</code> constructors and two <code>path</code> 
   factory functions, with the UTF-8 and locale functionality agreed on by the SG in Portland. 
   The functionality for the constructors and factory functions were reversed compared to 
   the Portland discussion. This eliminated the need for an encoding enum, 
   shortened the UTF-8 use case from <code>path(my_string, encoding::utf8)</code> 
   to <code>u8path(my_string)</code>, and shortened the locale argument use case 
   from <code>make_path(my_string, my_locale)</code> to <code>path(my_string, 
-  my_locale)</code>.</li>
+  my_locale)</code>. Thanks to Daniel Krügler for help with the exact semantics.</li>
   <li>Add class <code>path</code> observer functions <code>u8string()</code> 
   and <code>generic_u8string()</code>, as agreed by the SG in Portland.</li>
   <li >Add <code>operator string_type() const;</code> to class <code>path</code>. 
@@ -705,8 +706,8 @@ exposing numerous implementation details so is not proposed here.</i></span></p>
     basic_istream&lt;charT, traits&gt;&amp;
     operator&gt;&gt;(basic_istream&lt;charT, traits&gt;&amp; is, path&amp; p);
 
-    <ins>path u8path(const char* s);</ins>
-    <ins>path u8path(const string&amp; s);</ins>
+    <ins>template &lt;class <a href="#Source">Source</a>&gt;</ins>  
+      <ins>path u8path(Source const&amp; source);</ins>
     <ins>template &lt;class InputIterator&gt;</ins>
       <ins>path u8path(InputIterator begin, InputIterator end);</ins>
 
@@ -961,8 +962,8 @@ system or for a particular file system.</p>
           path(Source const&amp; source);
         template &lt;class InputIterator&gt;
           path(InputIterator begin, InputIterator end);
-        <ins>path(const string&amp; s, const locale&amp; loc);</ins>
-        <ins>path(const char* s, const locale&amp; loc);</ins>
+        <ins>template &lt;class <a href="#Source">Source</a>&gt;</ins>  
+          <ins>path(Source const&amp; source, const locale&amp; loc);</ins>
         <ins>template &lt;class InputIterator&gt;</ins>
           <ins>path(InputIterator begin, InputIterator end, const locale&amp; loc);</ins>
        ~path() = default;
@@ -1275,7 +1276,7 @@ shall be one of:</p>
   path::value_type</code> and its encoding. <i>-- end note</i>]</p>
 </blockquote>
 
-  <p>Pointer to NTCTS arguments to class <code>path</code> member functions 
+  <p>Arguments of type <code>Source</code> 
   shall not be null pointers.</p>
 
 <h3>1.6.4   <a name="path-constructors"> <code>
@@ -1302,15 +1303,15 @@ template &lt;class InputIterator&gt;
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, converting format and 
   encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]).</p>
 </blockquote>
-<pre>path(const string&amp; s, const locale&amp; loc);
-path(const char* s, const locale&amp; loc);
+<pre>template &lt;class <a href="#Source">Source</a>&gt;
+  path(Source const&amp; source, const locale&amp; loc);
 template &lt;class InputIterator&gt;
   path(InputIterator begin, InputIterator end, const locale&amp; loc);</pre>
   <blockquote>
-  <p><i>Requires:</i> The value type of <code>InputIterator</code> is <code>
+  <p><i>Requires:</i> The value type of <code>Source</code> and <code>InputIterator</code> is <code>
   char</code>.</p>
   <p><i>Effects:</i> Constructs an object of class <code>path</code>, storing the effective range of <code>
-  s</code> 
+  source</code> 
   or the range [<code>begin</code>,<code>end</code>) in <code>pathname</code>, 
   after converting format if required and after converting the encoding as 
   follows:</p>
@@ -1390,8 +1391,7 @@ template &lt;class InputIterator&gt;
 <blockquote>
   <p><i>Effects:</i></p>
   <blockquote>
-    Appends <code>path::preferred_separator</code> to <code>pathname</code>, 
-    converting format and encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]), unless:<ul>
+    Appends <code>path::preferred_separator</code> to <code>pathname</code> unless:<ul>
     <li>an added separator 
     would be redundant, or</li>
     <li>would change an relative path to an absolute path, or</li>
@@ -1403,9 +1403,9 @@ template &lt;class InputIterator&gt;
   <p><i>Returns: </i><code>*this</code></p>
 </blockquote>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
-  path&amp; operator/=(Source const &amp; source);
+  path&amp; operator/=(Source const&amp; source);
 template &lt;class <a href="#Source">Source</a>&gt;
-  path&amp; append(Source const &amp; source);
+  path&amp; append(Source const&amp; source);
 template &lt;class InputIterator&gt;
   path&amp; append(InputIterator begin, InputIterator end);</pre>
 <blockquote>
@@ -1870,28 +1870,28 @@ p = tmp;</pre>
   <p><i>Returns:</i> <code>is</code></p>
   </blockquote>
 <h3>1.6.17  <a name="path.factory"><code>path</code> factory functions [path.factory]</a></h3>
-<pre>path u8path(const char* s);
-path u8path(const string&amp; s);
+<pre>template &lt;class <a href="#Source">Source</a>&gt;  
+  path u8path(Source const&amp; source);
 template &lt;class InputIterator&gt;
- path u8path(InputIterator begin, InputIterator end);</pre>
+  path u8path(InputIterator begin, InputIterator end);</pre>
 <blockquote>
-  <p><i>Requires:</i> The <code>s</code> and [<code>begin</code>,<code>end</code>) 
+  <p><i>Requires:</i> The <code>source</code> and [<code>begin</code>,<code>end</code>) 
   sequences are UTF-8 encoded. The value type of <code>
-  InputIterator</code> is <code>char</code>. <code>s</code> is not a null 
-  pointer.</p>
+  Source</code> and <code>
+  InputIterator</code> is <code>char</code>. </p>
   <p><i>Returns:</i></p>
   <blockquote>
     <ul>
       <li>If <code>value_type</code> is <code>char</code> and the current native 
-      narrow encoding ([fs.def.native.encode]) is UTF-8, <code>path(s)</code> or <code>path(begin, end)</code>, 
+      narrow encoding ([fs.def.native.encode]) is UTF-8, <code>path(source)</code> or <code>path(begin, end)</code>, 
       else</li>
       <li>if <code>value_type</code> is <code>wchar_t </code>and the 
       native wide encoding is UTF-16, or if <code>value_type</code> is <code>char16_t</code> 
-      or <code>char32_t</code>,&nbsp; convert <code>s</code> or [<code>begin</code>,<code>end</code>) 
+      or <code>char32_t</code>,&nbsp; convert <code>source</code> or [<code>begin</code>,<code>end</code>) 
       to a temporary, <code>tmp</code>, of type <code>string_type</code> and 
       return <code>path(tmp)</code>, 
       else</li>
-      <li>convert <code>s</code> or [<code>begin</code>,<code>end</code>) 
+      <li>convert <code>source</code> or [<code>begin</code>,<code>end</code>) 
       to a temporary, <code>tmp</code>, of type <code>u32string</code> and 
       return <code>path(tmp)</code>.</li>
     </ul>
@@ -2248,8 +2248,7 @@ they are very familiar and ingrained for many  users.</span></i></p>
 
 <tr><td>
   <p><code>none</code></td><td><code>0</code></td><td></td>
-  <td>There are no permissions set for the file. Note: <code>
-  file_type::not_found</code> is <code>no_perms</code> rather than <code>perms_not_known</code></td>
+  <td>There are no permissions set for the file.</td>
 </tr>
 <tr><td><code>owner_read</code></td><td><code>0400</code></td><td> <code>S_IRUSR</code></td>
   <td> Read permission, owner</td>
@@ -2296,8 +2295,7 @@ they are very familiar and ingrained for many  users.</span></i></p>
   <td> Set-group-ID on execution</td>
 </tr>
 <tr><td><code><a name="sticky_bit">sticky_bit</a> </code></td><td><code>01000</code></td><td> <code>S_ISVTX</code></td>
-  <td> Operating system dependent. Inherently non-portable, even between ISO/IEC/IEEE 9945 
-  operating systems.</td>
+  <td> Operating system dependent.</td>
 </tr>
 <tr><td><code><a name="perms_mask">mask</a></code></td><td><code>07777</code></td><td> &nbsp;</td>
   <td><code>all | set_uid | set_gid | sticky_bit</code></td>
@@ -2307,13 +2305,7 @@ they are very familiar and ingrained for many  users.</span></i></p>
   is created without specifying the permissions</td>
 </tr>
 <tr><td><code><a name="symlink_perms">symlink_perms</a></code></td><td><code>0x4000</code></td><td></td><td>
-  <span style="background-color: #FFFF99">ISO-9945/POSIX </span> <code>
-  <span style="background-color: #FFFF99">permissions()</span></code><span style="background-color: #FFFF99"> resolves symlinks unless
-  </span> <code><span style="background-color: #FFFF99">symlink_perms</span></code><span style="background-color: #FFFF99"> is specified. 
-  Meaningless on Windows as </span> <code>
-  <span style="background-color: #FFFF99">permissions()</span></code><span style="background-color: #FFFF99"> never resolves symlinks. 
-  Meaningless on Mac OS X and some other BSD systems as </span> <code>
-  <span style="background-color: #FFFF99">permissions()</span></code><span style="background-color: #FFFF99"> always resolves symlinks. Get over it.</span></td>
+  Operating system dependent.</td>
 </tr>
 
 </table>
@@ -2352,7 +2344,7 @@ involved. Input from security experts is needed.</span></i></p>
   <tr>
     <td><code>follow_symlinks</code></td>
     <td><code>4</code></td>
-    <td>&nbsp;</td>
+    <td><code>permissions()</code> shall resolve symlinks</td>
   </tr>
 </table>
 <h2>1.12  <a name="file_status">Class file_status</a> [class.file_status]</h2>
