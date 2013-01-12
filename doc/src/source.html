@@ -1010,8 +1010,7 @@ template &lt;class InputIterator&gt;
 <blockquote>
   <p><i>Effects:</i></p>
   <blockquote>
-    Appends <code>path::preferred_separator</code> to <code>pathname</code>, 
-    converting format and encoding if required ([<a href="#path.arg.convert">path.arg.convert</a>]), unless:<ul>
+    Appends <code>path::preferred_separator</code> to <code>pathname</code> unless:<ul>
     <li>an added separator 
     would be redundant, or</li>
     <li>would change an relative path to an absolute path, or</li>
@@ -1023,9 +1022,9 @@ template &lt;class InputIterator&gt;
   <p><i>Returns: </i><code>*this</code></p>
 </blockquote>
 <pre>template &lt;class <a href="#Source">Source</a>&gt;
-  path&amp; operator/=(Source const &amp; source);
+  path&amp; operator/=(Source const&amp; source);
 template &lt;class <a href="#Source">Source</a>&gt;
-  path&amp; append(Source const &amp; source$CODECVT_ARG2;);
+  path&amp; append(Source const&amp; source$CODECVT_ARG2;);
 template &lt;class InputIterator&gt;
   path&amp; append(InputIterator begin, InputIterator end$CODECVT_ARG2;);</pre>
 <blockquote>
@@ -1953,8 +1952,7 @@ they are very familiar and ingrained for many  users.</span></i></p>
 
 <tr><td>
   <p><code>none</code></td><td><code>0</code></td><td></td>
-  <td>There are no permissions set for the file. Note: <code>
-  file_type::not_found</code> is <code>no_perms</code> rather than <code>perms_not_known</code></td>
+  <td>There are no permissions set for the file.</td>
 </tr>
 <tr><td><code>owner_read</code></td><td><code>0400</code></td><td> <code>S_IRUSR</code></td>
   <td> Read permission, owner</td>
@@ -2001,8 +1999,7 @@ they are very familiar and ingrained for many  users.</span></i></p>
   <td> Set-group-ID on execution</td>
 </tr>
 <tr><td><code><a name="sticky_bit">sticky_bit</a> </code></td><td><code>01000</code></td><td> <code>S_ISVTX</code></td>
-  <td> Operating system dependent. Inherently non-portable, even between ISO/IEC/IEEE 9945 
-  operating systems.</td>
+  <td> Operating system dependent.</td>
 </tr>
 <tr><td><code><a name="perms_mask">mask</a></code></td><td><code>07777</code></td><td> &nbsp;</td>
   <td><code>all | set_uid | set_gid | sticky_bit</code></td>
@@ -2012,13 +2009,7 @@ they are very familiar and ingrained for many  users.</span></i></p>
   is created without specifying the permissions</td>
 </tr>
 <tr><td><code><a name="symlink_perms">symlink_perms</a></code></td><td><code>0x4000</code></td><td></td><td>
-  <span style="background-color: #FFFF99">ISO-9945/POSIX </span> <code>
-  <span style="background-color: #FFFF99">permissions()</span></code><span style="background-color: #FFFF99"> resolves symlinks unless
-  </span> <code><span style="background-color: #FFFF99">symlink_perms</span></code><span style="background-color: #FFFF99"> is specified. 
-  Meaningless on Windows as </span> <code>
-  <span style="background-color: #FFFF99">permissions()</span></code><span style="background-color: #FFFF99"> never resolves symlinks. 
-  Meaningless on Mac OS X and some other BSD systems as </span> <code>
-  <span style="background-color: #FFFF99">permissions()</span></code><span style="background-color: #FFFF99"> always resolves symlinks. Get over it.</span></td>
+  Operating system dependent.</td>
 </tr>
 
 </table>
@@ -2057,7 +2048,7 @@ involved. Input from security experts is needed.</span></i></p>
   <tr>
     <td><code>follow_symlinks</code></td>
     <td><code>4</code></td>
-    <td>&nbsp;</td>
+    <td><code>permissions()</code> shall resolve symlinks</td>
   </tr>
 </table>
 <h2><a name="file_status">Class file_status</a> [class.file_status]</h2>
