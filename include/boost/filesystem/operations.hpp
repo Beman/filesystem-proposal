@@ -35,7 +35,9 @@
 #include <boost/cstdint.hpp>
 #include <boost/range/mutable_iterator.hpp>
 #include <boost/range/const_iterator.hpp>
+#ifndef BOOST_FILESYSTEM_USE_TIME_T
 #include <boost/chrono.hpp>
+#endif
 #include <boost/assert.hpp>
 #include <string>
 #include <utility> // for pair
